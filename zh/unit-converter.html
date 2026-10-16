@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>测量单位换算器 — 亩、公顷、平方米、英尺与米互转</title>
+<meta name="description" content="免费在线测量单位换算器：亩与公顷、平方米互转，美制测量英尺与国际英尺、链、杆、令、英亩、海里等三十余种单位。换算因子按定义精确输入，全部在浏览器本地完成，不上传数据、无需登录。">
+<link rel="canonical" href="https://coordcalc.com/zh/unit-converter.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/unit-converter.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/unit-converter.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/unit-converter.html">
+<meta property="og:title" content="测量单位换算器 — 亩、公顷、平方米、英尺与米互转">
+<meta property="og:description" content="亩、公顷、平方米、平方英尺、英亩与美制测量英尺、链、杆、令、海里的精确换算，边输边算，浏览器本地完成。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/unit-converter.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "一亩等于多少平方米？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一亩等于 666.6666667 平方米，也就是 2000/3 平方米。1 公顷 = 15 亩，所以 1 亩 = 1/15 公顷 ≈ 0.0666667 公顷；反算 1 平方米 = 0.0015 亩。一块 12000 平方米的场地约合 18 亩。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一公顷等于多少亩？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "15 亩。公顷是国际单位，1 公顷 = 10000 平方米，即 100 米见方；亩是中国市制面积单位，按 1 公顷 = 15 亩换算，1 亩 ≈ 666.67 平方米。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "美国测量英尺和国际英尺有什么区别？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "国际英尺按定义等于 0.3048 米；美国测量英尺等于 1200/3937 米，即 0.304800609601219 米，长约百万分之二，在一英里上约 3.2 毫米。2023 年 1 月 1 日起测量英尺在新项目中停止使用，但旧州平面坐标、已登记地籍图和路权文件仍在用它。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一链、一令、一杆分别等于多少英尺？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "冈特链 66 英尺，令 0.66 英尺，杆（pole、perch）16.5 英尺。1 链 = 100 令 = 4 杆，1 法定英里 = 80 链。旧地契里的边长常用链和令书写。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一英亩等于多少亩？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一英亩 = 4046.8564224 平方米 ≈ 6.07 亩；反之 1 亩 ≈ 0.1647 英亩。涉外用地的报批材料从英亩换到亩或公顷时，务必按这一因子核对口径，避免数量级错误。另有「美制测量英亩」= 4046.8726 平方米，略大于国际英亩。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一平方英尺等于多少平方米？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "0.09290304 平方米（国际英尺制）。反过来 1 平方米 = 10.7639104 平方英尺。1 平方米 = 9 平方市尺，这个等式在国内图纸与市制单位混用时很常见。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "英里和海里有什么区别？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "法定英里 = 5280 英尺 = 1609.344 米；海里 = 1852 米，约为法定英里的 1.1508 倍。海里等于纬度 1 分的弧长，海上与空中导航用它；陆地距离和地籍用法定英里。1 节 = 1 海里/小时 ≈ 1.852 千米/小时。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "度分秒和弧度怎么换？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "1 弧度 = 57.295779513°，1° = 0.0174532925 弧度。度分秒是 60 进制：1° = 60′ = 3600″。测绘常用的还有百分度（gon，1 周 = 400 gon = 360°）与密位（北约制 6400 密位/周，1 密位 = 0.05625°）。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "换算结果是精确值吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "计算过程使用双精度浮点数，不做中间取整；屏幕上显示的位数是按有效数字截断后的结果。标注为「按定义精确」的因子（1200/3937、0.3048、1852 等）是不折不扣的精确值，其余显示值仅供核对参考。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "瓦拉（vara）等于多少米？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "得克萨斯瓦拉 = 33⅓ 英寸 = 0.846667 米；加利福尼亚瓦拉 = 33 英寸 = 0.8382 米。瓦拉随管辖区与年代变化，处理决定界线的历史单位时，换算因子必须连同依据一并记录。"
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  .wrap{max-width:840px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.35;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:18px;font-weight:600;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  select{font-size:15px;font-weight:500;}
+  button.ghost{font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 14px;border-radius:9px;
+    border:1px solid #cfd6e0;background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  button.ghost:hover{border-color:var(--accent);color:var(--accent-d);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;}
+  .big .bv{font-size:27px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:840px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:23px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* embed view: headerless, chrome-free, sized for an iframe (add ?embed=1) */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .tabs{margin-bottom:14px;}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3b4353;margin:18px 0 0;}
+  .note b{color:var(--text);}
+  .note a{color:var(--accent-d);}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../unit-converter.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › 测量单位换算器
+  </nav>
+
+  <h1>测量单位换算器</h1>
+
+  <p class="lead">
+    这个换算器处理的是实际资料里真正会出现的那些单位——亩、公顷、平方米、平方英尺、英亩，
+    以及美制测量英尺、国际英尺、链、令、杆、海里、瓦拉等等。选一个单位、输入数值，
+    就能看到同一个量在其他所有单位下的写法；换算因子一律按定义精确输入，不用查表。
+    全部计算在你的浏览器里完成，不登录、不上传。
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="len" type="button">长度</button>
+      <button class="tab" data-tab="area" type="button">面积</button>
+      <button class="tab" data-tab="ang" type="button">角度</button>
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:0 0 150px;">
+        <label for="u-val">数值</label>
+        <input id="u-val" type="number" step="any" value="1" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="u-from">从</label>
+        <select id="u-from"></select>
+      </div>
+      <div class="field">
+        <label for="u-to">到</label>
+        <select id="u-to"></select>
+      </div>
+      <button class="ghost" id="u-swap" type="button" style="flex:0 0 auto;">交换</button>
+      <button class="ghost" id="u-link" type="button" style="flex:0 0 auto;">复制链接</button>
+    </div>
+
+    <p class="hint">
+      精确因子：美国测量英尺为 <code>1200 / 3937</code> 米，国际英尺按定义等于 <code>0.3048</code> 米，
+      亩为 <code>2000 / 3</code> 平方米。面积换算中 <code>ft²</code> 用国际英尺，
+      「英亩（美制测量）」用美国测量英尺。
+    </p>
+    <p class="err" id="u-err">请输入要换算的数值。</p>
+
+    <div class="results" id="u-results">
+      <div class="big">
+        <span class="bk" id="u-bk">换算结果</span>
+        <span class="bv" id="u-bv">—</span>
+      </div>
+      <div id="u-rows"></div>
+    </div>
+    <p class="hint" id="u-linkmsg" style="display:none;"></p>
+  </div>
+
+  <div class="note embed-hide">
+    <b>可链接、可嵌入。</b> 一次换算可以从网址复现 ——
+    <code>?value=1&amp;from=mu&amp;to=m2</code>、<code>?mode=area&amp;value=1&amp;from=ha&amp;to=mu</code>
+    或 <code>?mode=ang&amp;value=1&amp;from=dms&amp;to=rad</code>。加上 <code>&amp;embed=1</code>
+    就得到适合 iframe 的无边框面板。<b>复制链接</b>会按当前屏幕上的状态生成网址；
+    参数表与 JavaScript 接口见<a href="../developers.html">开发者页面</a>。
+  </div>
+
+  <section class="card">
+    <h2>换算原理</h2>
+    <p>
+      长度单位统一折算到「米」这个基准：1 链按定义为 66 英尺，所以存成
+      <code>66 × 0.3048 = 20.1168 米</code>；输入值乘以源单位因子再除以目标单位因子即得结果。
+      面积单位直接以平方米定义：英亩为 <code>43,560 ft² = 4046.8564224 平方米</code>，
+      公顷恰为 <code>10000 平方米</code>，亩为 <code>666.6667 平方米</code>。
+      因为面积是长度的平方量，两种英尺在面积上的相对差别约为长度上的两倍，也就是百万分之四左右。
+    </p>
+    <p>
+      角度单位统一经过「度」折算：<code>1 弧度 = 57.295779513°</code>，
+      <code>1 百分度（gon）= 0.9°</code>，北约密位为 <code>0.05625°</code>，炮兵密位为
+      <code>0.06°</code>。做角度换算时，工具会额外给出度分秒写法，方便直接抄录到图纸或记录表上。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>亩、公顷、平方米、英亩之间的关系</h2>
+    <p>
+      国内土地面积最常用的三个量是亩、公顷和平方米，换算关系固定：
+      <b>1 公顷 = 15 亩 = 10000 平方米</b>，所以 <b>1 亩 = 666.6666667 平方米</b>，
+      反算则是 <b>1 平方米 = 0.0015 亩</b>。记住「除以 666.67」比记一串小数更实用：
+      一块 12000 平方米的场地大约是 18 亩；常说的「一亩三分地」是 866.67 平方米。
+    </p>
+    <p>
+      英亩（acre）是英美体系里的面积单位，恰好等于 43,560 平方英尺，即
+      <code>4046.8564224 平方米</code>，折合约 6.07 亩。之所以要提醒这一点，是因为
+      涉外项目的用地表、租赁合同或估值报告常常只写英亩，而国内报批材料要写亩或公顷，
+      中间差了 6 倍，一不留神就是数量级错误。公顷换算英亩的因子是
+      <code>2.4710538</code>，英亩换算公顷是 <code>0.40468564</code>。
+    </p>
+    <p>
+      还有一个容易踩的坑：<b>美制测量英亩</b>——43,560 个<em>测量</em>英尺的平方——等于
+      4046.8726 平方米，比国际英亩略大。历史上以测量英尺推算出的面积就带着这个略大的英亩，
+      换算到公顷时要保持口径一致。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>美制测量英尺与国际英尺</h2>
+    <p>
+      美国历史上存在过两种英尺。<b>国际英尺</b>按定义等于 <code>0.3048</code> 米；
+      <b>美制测量英尺</b>按定义等于 <code>1200 / 3937</code> 米，即
+      <code>0.304800609601219</code> 米。也就是说，测量英尺比国际英尺长
+      0.0000006096 米，约为<b>百万分之二</b>。
+    </p>
+    <p>
+      百万分之二听着无所谓，落到长边线上就不一样了。1000 英尺上相差 0.002 英尺，
+      约 0.6 毫米；一英里上相差 0.0106 英尺，约 3.2 毫米。跨过一整条州平面坐标带
+      或一块狭长宗地时，这点差别就足以成为需要核实的问题，这正是一直把两种英尺分开
+      保留的原因。
+    </p>
+    <p>
+      这一分立于 <b>2023 年 1 月 1 日</b>结束：美制测量英尺在新项目中正式停止使用，
+      国际英尺成为美国的标准英尺。但实际工作中它并没有消失——早期州平面坐标、
+      已登记的地籍图、路权文件以及部分州交通部门的图纸仍以测量英尺书写。
+      判断原则很简单：<b>旧测量资料里的「英尺」大概率是测量英尺，现行图纸里的「英尺」
+      是国际英尺</b>。资料没写明用的是哪一种时，应当把它当成风险点，回头核对基准与单位说明。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>链、令、杆：丈量土地的老单位</h2>
+    <p>
+      在电子测距出现之前，土地是用一根 66 英尺长的<b>冈特链</b>量出来的，
+      链条由 100 个「令」组成，每十令有一个标牌。这些单位至今仍嵌在地籍体系里：
+      <b>链</b>折合 66 英尺，<b>令</b>折合 0.66 英尺，<b>杆</b>（也叫 pole、perch）
+      折合 16.5 英尺。
+    </p>
+    <p>
+      这组数并非随意：66 英尺正好等于 4 杆，而 80 链恰为一法定英里，所以北美公共土地
+      测量系统把标准地块（section）划成 80 链见方。面积也随之而来：1 平方链
+      = 4356 平方英尺，恰好是十分之一英亩；1 英亩 = 10 平方链 = 160 平方杆。
+      在旧式地界描述（metes and bounds）里，边长用链和令写的概率并不比用英尺低，
+      要落图、要算面积，第一步就是把它们换成英尺或米。
+    </p>
+    <p>
+      英亩这个单位本身就是从测链推出来的：一英亩是一链宽、十链长的矩形——66 英尺 × 660 英尺，
+      这就是 43,560 平方英尺的来历，也解释了为什么 660 英尺（一弗隆）和一英亩
+      在历史上是同一个测链在两个方向上的读数。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>英里与海里</h2>
+    <p>
+      <b>法定英里</b>等于 5280 英尺，即 1609.344 米。<b>海里</b>按定义等于 1852 米，
+      约合 6076.115 国际英尺，因此海里大约是法定英里的 <b>1.1508 倍</b>，
+      多出约 15%。
+    </p>
+    <p>
+      差别的根源在于海里的定义与地球绑定，而不是与丈量历史绑定：1 海里等于纬度 1 分的弧长，
+      所以 60 海里正好是纬度 1 度，而纬度 1 度的地面距离在全球各地基本相同。
+      法定英里只是一个历史上的陆地长度单位，没有任何大地测量含义。海上与空中导航、
+      所有以「节」为单位的速度用海里，道路里程、地块边长、测量图上的距离用法定英里。
+      两者的换算只是比例因子，不存在投影问题；但速度单位同样要留意：1 节 = 1 海里/小时，
+      约 1.852 千米/小时。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>瓦拉与其他历史单位</h2>
+    <p>
+      得克萨斯、加利福尼亚以及美国西南部的西班牙与墨西哥土地授予文件是用
+      <b>瓦拉（vara）</b>量的，这些数据仍在产权链条之中。得克萨斯瓦拉等于
+      <code>33 1/3</code> 英寸，折合 2.7778 英尺或 0.846667 米；加利福尼亚瓦拉等于
+      33 英寸，折合 2.75 英尺。在土地授予语境下，1 里格（league）= 5000 瓦拉，
+      1 labor = 1 000 000 平方瓦拉。
+    </p>
+    <p>
+      处理历史单位的通行原则是：永远不要盲目换算。瓦拉随管辖区和年代而变，西班牙尺、
+      巴黎尺会出现在早期殖民时期文件中，用错了地方标准，界线可能要挪动几十米。
+      当历史单位决定了一条界线时，换算因子应当连同出处一起写入测量记录。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>常用换算速查</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>换算</th><th>精确值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 亩</td><td>666.6666667 m²</td><td>恰为 2000/3；1 公顷 = 15 亩</td></tr>
+        <tr><td>1 公顷</td><td>10000 m² = 15 亩</td><td>100 米 × 100 米</td></tr>
+        <tr><td>1 英亩</td><td>43560 ft² = 4046.8564224 m²</td><td>≈ 6.07 亩；1 公顷 ≈ 2.4711 英亩</td></tr>
+        <tr><td>1 平方英尺</td><td>0.09290304 m²</td><td>国际英尺制</td></tr>
+        <tr><td>1 平方千米</td><td>100 公顷 = 1500 亩</td><td>1 km² = 1 000 000 m²</td></tr>
+        <tr><td>1 美国测量英尺</td><td>0.304800609601219 m</td><td>精确为 1200 / 3937</td></tr>
+        <tr><td>1 米</td><td>3.2808333333 ftUS</td><td>精确为 3937 / 1200</td></tr>
+        <tr><td>1 国际英尺</td><td>0.3048 m</td><td>精确值；现为美国标准英尺</td></tr>
+        <tr><td>1 链</td><td>66 ft = 20.1168 m</td><td>100 令；10 链 = 1 弗隆</td></tr>
+        <tr><td>1 令</td><td>0.66 ft = 0.201168 m</td><td>百分之一链</td></tr>
+        <tr><td>1 杆（pole、perch）</td><td>16.5 ft = 5.0292 m</td><td>4 杆 = 1 链</td></tr>
+        <tr><td>1 法定英里</td><td>5280 ft = 1609.344 m</td><td>陆地距离</td></tr>
+        <tr><td>1 海里</td><td>1852 m</td><td>纬度 1 分的弧长</td></tr>
+        <tr><td>1 市里</td><td>500 m</td><td>中国市制长度单位</td></tr>
+        <tr><td>1 瓦拉（得克萨斯）</td><td>33⅓ in = 0.846667 m</td><td>西班牙与墨西哥土地授予</td></tr>
+        <tr><td>1 度</td><td>60′ = 3600″ = 0.0174532925 rad</td><td>度分秒为 60 进制</td></tr>
+        <tr><td>1 gon（百分度）</td><td>0.9°</td><td>400 gon = 1 周</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      标注「精确」的因子按定义即为精确值；显示到十位有效数字仅为屏幕取整，
+      计算过程使用完整的双精度浮点数。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <ul class="readon">
+      <li><a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺：你手上的资料用的是哪一种？</a>
+        <small>百万分之二为什么能挪动一条界线，2023 年的变更对旧资料意味着什么。</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">度分秒怎么读、怎么算</a>
+        <small>60 进制坐标的读法、换算与常见抄录错误。</small></li>
+      <li><a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>
+        <small>国内图纸用高斯-克吕格，不是UTM；参数差在哪里。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="land-area-calculator.html">坐标推算地块面积<small>输入一圈坐标算面积与周长</small></a>
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>WGS84 经纬度 ↔ UTM 投影坐标</small></a>
+      <a href="cut-fill-calculator.html">场地土方量计算<small>挖方、填方与净土方</small></a>
+      <a href="../map-scale-calculator.html" hreflang="en">地图比例尺换算<small>图上距离 ↔ 实地距离</small></a>
+      <a href="../dms-converter.html" hreflang="en">度分秒转换器<small>十进制度 ↔ 度分秒</small></a>
+      <a href="../distance-bearing-calculator.html" hreflang="en">两点距离与方位角<small>椭球面上的测地距离</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>一亩等于多少平方米？</summary>
+      <p>一亩等于 666.6666667 平方米，也就是 2000/3 平方米。1 公顷 = 15 亩，所以 1 亩 = 1/15 公顷 ≈ 0.0666667 公顷；反算 1 平方米 = 0.0015 亩。一块 12000 平方米的场地约合 18 亩。</p>
+    </details>
+    <details>
+      <summary>一公顷等于多少亩？</summary>
+      <p>15 亩。公顷是国际单位，1 公顷 = 10000 平方米，即 100 米见方；亩是中国市制面积单位，按 1 公顷 = 15 亩换算，1 亩 ≈ 666.67 平方米。</p>
+    </details>
+    <details>
+      <summary>美国测量英尺和国际英尺有什么区别？</summary>
+      <p>国际英尺按定义等于 0.3048 米；美国测量英尺等于 1200/3937 米，即 0.304800609601219 米，长约百万分之二，在一英里上约 3.2 毫米。2023 年 1 月 1 日起测量英尺在新项目中停止使用，但旧州平面坐标、已登记地籍图和路权文件仍在用它。</p>
+    </details>
+    <details>
+      <summary>一链、一令、一杆分别等于多少英尺？</summary>
+      <p>冈特链 66 英尺，令 0.66 英尺，杆（pole、perch）16.5 英尺。1 链 = 100 令 = 4 杆，1 法定英里 = 80 链。旧地契里的边长常用链和令书写。</p>
+    </details>
+    <details>
+      <summary>一英亩等于多少亩？</summary>
+      <p>一英亩 = 4046.8564224 平方米 ≈ 6.07 亩；反之 1 亩 ≈ 0.1647 英亩。涉外用地的报批材料从英亩换到亩或公顷时，务必按这一因子核对口径，避免数量级错误。另有「美制测量英亩」= 4046.8726 平方米，略大于国际英亩。</p>
+    </details>
+    <details>
+      <summary>一平方英尺等于多少平方米？</summary>
+      <p>0.09290304 平方米（国际英尺制）。反过来 1 平方米 = 10.7639104 平方英尺。1 平方米 = 9 平方市尺，这个等式在国内图纸与市制单位混用时很常见。</p>
+    </details>
+    <details>
+      <summary>英里和海里有什么区别？</summary>
+      <p>法定英里 = 5280 英尺 = 1609.344 米；海里 = 1852 米，约为法定英里的 1.1508 倍。海里等于纬度 1 分的弧长，海上与空中导航用它；陆地距离和地籍用法定英里。1 节 = 1 海里/小时 ≈ 1.852 千米/小时。</p>
+    </details>
+    <details>
+      <summary>度分秒和弧度怎么换？</summary>
+      <p>1 弧度 = 57.295779513°，1° = 0.0174532925 弧度。度分秒是 60 进制：1° = 60′ = 3600″。测绘常用的还有百分度（gon，1 周 = 400 gon = 360°）与密位（北约制 6400 密位/周，1 密位 = 0.05625°）。</p>
+    </details>
+    <details>
+      <summary>换算结果是精确值吗？</summary>
+      <p>计算过程使用双精度浮点数，不做中间取整；屏幕上显示的位数是按有效数字截断后的结果。标注为「按定义精确」的因子（1200/3937、0.3048、1852 等）是不折不扣的精确值，其余显示值仅供核对参考。</p>
+    </details>
+    <details>
+      <summary>瓦拉（vara）等于多少米？</summary>
+      <p>得克萨斯瓦拉 = 33⅓ 英寸 = 0.846667 米；加利福尼亚瓦拉 = 33 英寸 = 0.8382 米。瓦拉随管辖区与年代变化，处理决定界线的历史单位时，换算因子必须连同依据一并记录。</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、报批或结算前，
+    请按项目采用的标准与规范复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+
+  var USFT = 1200 / 3937;         /* exact metres per US survey foot */
+  var INFT = 0.3048;              /* exact metres per international foot */
+  var ACRE = 43560 * INFT * INFT; /* exact m^2 */
+  var USACRE = 43560 * USFT * USFT;
+
+  var SETS = {
+    len: {
+      label: "长度",
+      order: ["m","km","cm","ft","usft","in","yd","ch","lk","rd","fur","fath","mi","nmi","li","lea","vara"],
+      units: {
+        m:    {n:"米 (m)",                 f:1},
+        ft:   {n:"国际英尺 (ft)",   f:INFT},
+        usft: {n:"美制测量英尺 (ftUS)",     f:USFT},
+        in:   {n:"英寸 (in)",                 f:0.0254},
+        cm:   {n:"厘米 (cm)",           f:0.01},
+        km:   {n:"千米 (km)",            f:1000},
+        yd:   {n:"码 (yd)",                 f:0.9144},
+        ch:   {n:"冈特链 (ch)",       f:20.1168},
+        lk:   {n:"令 (lk)",                 f:0.201168},
+        rd:   {n:"杆 / 竿 / 栖 (rd)",   f:5.0292},
+        fur:  {n:"弗隆",                   f:201.168},
+        fath: {n:"英寻",                    f:1.8288},
+        mi:   {n:"英里 (mi)",         f:1609.344},
+        nmi:  {n:"海里 (NM)",        f:1852},
+        li:   {n:"市里 (li)",                  f:500},
+        lea:  {n:"里格（法定）",          f:4828.032},
+        vara: {n:"瓦拉（得克萨斯，33 1/3 英寸）",   f:(100/3)*0.0254}
+      }
+    },
+    area: {
+      label: "面积",
+      order: ["m2","mu","ha","km2","ft2","acre","usacre","mi2","yd2","are","rood","sqch","sqrd","section","township"],
+      units: {
+        m2:       {n:"平方米 (m\u00B2)",            f:1},
+        ft2:      {n:"平方英尺 (ft\u00B2)",            f:INFT*INFT},
+        acre:     {n:"英亩（国际）",              f:ACRE},
+        ha:       {n:"公顷 (ha)",                      f:10000},
+        mu:       {n:"亩 (mu)",                           f:2000/3},
+        usacre:   {n:"英亩（美制测量）",                  f:USACRE},
+        km2:      {n:"平方千米 (km\u00B2)",       f:1e6},
+        mi2:      {n:"平方英里 (mi\u00B2)",            f:1609.344*1609.344},
+        yd2:      {n:"平方码 (yd\u00B2)",            f:0.9144*0.9144},
+        are:      {n:"公亩（100 平方米）",                 f:100},
+        rood:     {n:"路得（1/4 英亩）",                f:ACRE/4},
+        sqch:     {n:"平方链",                      f:20.1168*20.1168},
+        sqrd:     {n:"平方杆",                        f:5.0292*5.0292},
+        section:  {n:"section（640 英亩）",               f:640*ACRE},
+        township: {n:"township（36 平方英里）",            f:36*1609.344*1609.344}
+      }
+    },
+    ang: {
+      label: "角度",
+      order: ["deg","dms","rad","grad","milN","milA","turn","amin","asec"],
+      special: "deg",
+      units: {
+        deg:  {n:"度 (\u00B0)",                 f:1},
+        dms:  {n:"度分秒",         f:1, fmt:"dms"},
+        rad:  {n:"弧度 (rad)",                    f:180/Math.PI},
+        grad: {n:"百分度 / gon",                      f:0.9},
+        milN: {n:"密位（北约，6400/周）",       f:360/6400},
+        milA: {n:"密位（炮兵，6000/周）",  f:360/6000},
+        turn: {n:"周（整圈）",              f:360},
+        amin: {n:"角分 (\u2032)",          f:1/60},
+        asec: {n:"角秒 (\u2033)",          f:1/3600}
+      }
+    }
+  };
+
+  var mode = "len";
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 12});
+
+  function fmtDMS(deg){
+    var sign = deg < 0 ? "-" : "";
+    var a = Math.abs(deg);
+    var d = Math.floor(a);
+    var m = Math.floor((a - d) * 60);
+    var s = ((a - d) * 60 - m) * 60;
+    if (s >= 59.99999) { s = 0; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    return sign + d + "\u00B0 " + m + "\u2032 " + (Math.round(s*100)/100) + "\u2033";
+  }
+
+  function show(v){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-6 || a >= 1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+
+  function buildSelects(){
+    var set = SETS[mode];
+    var keepFrom = el("u-from").value, keepTo = el("u-to").value;
+    var html = "";
+    for (var i = 0; i < set.order.length; i++){
+      var k = set.order[i];
+      html += '<option value="' + k + '">' + set.units[k].n + "</option>";
+    }
+    el("u-from").innerHTML = html;
+    el("u-to").innerHTML = html;
+    if (set.units[keepFrom]) el("u-from").value = keepFrom;
+    if (set.units[keepTo]) el("u-to").value = keepTo;
+    if (!set.units[keepFrom]) el("u-from").value = set.special || set.order[0];
+    if (!set.units[keepTo]){
+      if (mode === "len") el("u-to").value = "ft";
+      else if (mode === "area") el("u-to").value = "mu";
+      else el("u-to").value = "rad";
+    }
+    if (el("u-from").value === el("u-to").value) el("u-to").value = set.order[set.order.length-1];
+    if (el("u-from").value === el("u-to").value) el("u-to").value = set.order[0];
+  }
+
+  function calc(){
+    var set = SETS[mode];
+    var raw = el("u-val").value;
+    var v = parseFloat(raw);
+    var err = el("u-err"), res = el("u-results");
+    if (raw === "" || isNaN(v)){
+      err.classList.toggle("show", raw !== "");
+      res.classList.remove("show");
+      el("u-val").classList.toggle("bad", raw !== "");
+      return;
+    }
+    err.classList.remove("show");
+    el("u-val").classList.remove("bad");
+
+    var from = set.units[el("u-from").value];
+    var to = set.units[el("u-to").value];
+    var out = (v * from.f) / to.f;
+
+    el("u-bk").textContent = el("u-from").selectedOptions[0].textContent + "  \u2192  " + el("u-to").selectedOptions[0].textContent;
+    el("u-bv").textContent = to.fmt === "dms" ? fmtDMS(out) : show(out);
+
+    var rows = "";
+    for (var i = 0; i < set.order.length; i++){
+      var k = set.order[i];
+      if (k === el("u-to").value) continue;
+      var u = set.units[k];
+      var val = (v * from.f) / u.f;
+      rows += '<div class="result-row"><span class="k">' + u.n + '</span><span class="v">'
+            + (u.fmt === "dms" ? fmtDMS(val) : show(val)) + "</span></div>";
+    }
+    el("u-rows").innerHTML = rows;
+    res.classList.add("show");
+    syncUrl();
+  }
+
+  /* ---------------------------------------------------------------------
+     Linkable state. A conversion is reproducible from the query string:
+       ?value=100&from=usft&to=m
+       ?mode=area&value=1&from=acre&to=ha
+       ?mode=ang&value=1&from=deg&to=rad
+       ?embed=1                     chrome-free layout for an iframe
+     --------------------------------------------------------------------- */
+  function query() {
+    var out = {}, s = location.search.replace(/^\?/, "");
+    if (!s) { return out; }
+    var parts = s.split("&");
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i] === "") { continue; }
+      var eq = parts[i].indexOf("=");
+      var key = (eq < 0 ? parts[i] : parts[i].slice(0, eq)).toLowerCase();
+      var val = eq < 0 ? "" : parts[i].slice(eq + 1);
+      try { val = decodeURIComponent(val.replace(/\+/g, " ")); } catch (e) { /* keep the raw value */ }
+      out[key] = val;
+    }
+    return out;
+  }
+
+  var STATE_ON = false;
+  function markState() { STATE_ON = true; }
+
+  var MODE_ALIAS = { len: "len", length: "len", area: "area", ang: "ang", angle: "ang" };
+
+  function applyUrl() {
+    var q = query();
+    var used = false;
+    var keys = ["mode", "tab", "from", "f", "to", "t", "value", "v"];
+    for (var i = 0; i < keys.length; i++) { if (q[keys[i]] !== undefined) { used = true; } }
+    if (q.embed === "1" || q.embed === "true") { document.body.classList.add("embed"); }
+
+    var m = MODE_ALIAS[String(q.mode || q.tab || "").toLowerCase()];
+    var set;
+    if (!m) {
+      /* no mode given: take it from the unit keys, preferring the set that holds both ends */
+      var want = String(q.from || q.f || "").toLowerCase();
+      var alt = String(q.to || q.t || "").toLowerCase();
+      var names = ["len", "area", "ang"];
+      for (var s = 0; s < names.length; s++) {
+        if (SETS[names[s]].units[want]) {
+          if (alt === "" || SETS[names[s]].units[alt]) { m = names[s]; break; }
+        }
+      }
+    }
+    if (m) {
+      mode = m;
+      for (var t = 0; t < tabs.length; t++) {
+        tabs[t].classList.toggle("active", tabs[t].getAttribute("data-tab") === m);
+      }
+    }
+    buildSelects();
+
+    var raw = q.value !== undefined ? q.value : q.v;
+    if (raw !== undefined && raw !== "" && !isNaN(parseFloat(raw))) { el("u-val").value = raw; }
+
+    set = SETS[mode];
+    var f = String(q.from || q.f || "").toLowerCase();
+    var to = String(q.to || q.t || "").toLowerCase();
+    if (set.units[f]) { el("u-from").value = f; }
+    if (set.units[to] && to !== el("u-from").value) { el("u-to").value = to; }
+
+    STATE_ON = STATE_ON || used;
+    calc();
+  }
+
+  function stateUrl() {
+    return location.href.split("?")[0].split("#")[0]
+      + "?mode=" + mode
+      + "&value=" + encodeURIComponent(el("u-val").value)
+      + "&from=" + el("u-from").value
+      + "&to=" + el("u-to").value;
+  }
+
+  function syncUrl() {
+    if (!STATE_ON || document.body.classList.contains("embed")) { return; }
+    try { history.replaceState(null, "", stateUrl()); } catch (e) { /* file:// or sandboxed frame */ }
+  }
+
+  function copyLink() {
+    var url = stateUrl(), msg = el("u-linkmsg");
+    function done(ok) {
+      msg.textContent = ok ? "链接已复制 \u2014 " + url : url;
+      msg.style.display = "block";
+      clearTimeout(msg._t);
+      msg._t = setTimeout(function () { msg.style.display = "none"; }, ok ? 1800 : 9000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+    } else { done(false); }
+  }
+
+  document.addEventListener("input", markState, true);
+  document.addEventListener("change", markState, true);
+
+  var tabs = document.querySelectorAll(".tab");
+  for (var t = 0; t < tabs.length; t++){
+    tabs[t].addEventListener("click", function(){
+      markState();
+      for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove("active");
+      this.classList.add("active");
+      mode = this.getAttribute("data-tab");
+      buildSelects();
+      calc();
+    });
+  }
+
+  el("u-swap").addEventListener("click", function(){
+    markState();
+    var a = el("u-from").value;
+    el("u-from").value = el("u-to").value;
+    el("u-to").value = a;
+    calc();
+  });
+
+  el("u-link").addEventListener("click", copyLink);
+
+  el("u-from").addEventListener("change", calc);
+  el("u-to").addEventListener("change", calc);
+  el("u-val").addEventListener("input", calc);
+
+  buildSelects();
+  calc();
+  applyUrl();
+})();
+
+</script>
+</body>
+</html>

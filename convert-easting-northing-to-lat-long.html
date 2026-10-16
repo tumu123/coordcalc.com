@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Convert Easting and Northing to Latitude and Longitude</title>
+<meta name="description" content="Converting easting and northing to latitude and longitude takes the zone and the ellipsoid, not just a formula. The step-by-step method with a worked example.">
+<link rel="canonical" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<meta property="og:title" content="How to Convert Easting and Northing to Latitude and Longitude">
+<meta property="og:description" content="The three things you need before converting easting and northing, the inverse projection step by step, and a worked example.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "How to Convert Easting and Northing to Latitude and Longitude",
+  "description": "The inverse projection calculation that turns an easting and northing into latitude and longitude, with the zone, band, datum and worked numbers.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/convert-easting-northing-to-lat-long.html"},
+  "articleSection": "Coordinates"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Easting / northing to lat long
+  </nav>
+
+  <h1>How to Convert Easting and Northing to Latitude and Longitude</h1>
+
+  <p class="lead">
+    People expect this conversion to be a formula, the way a temperature conversion is a formula. It is
+    not. An easting and a northing are metres on a flat projected plane, and getting back to latitude
+    and longitude means inverting the projection that produced them — which needs the zone, the
+    hemisphere and the datum before any arithmetic can start. This guide covers what must be present,
+    what the calculation actually does, and the mistakes that send a point hundreds of kilometres away.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Inverse projection</span>
+  </p>
+
+  <h2>Three things you need before you begin</h2>
+  <ol>
+    <li><b>The zone number.</b> The same easting and northing exists in all 60 UTM zones and in every
+      State Plane zone. Without the zone there is no answer to compute — there are sixty answers.</li>
+    <li><b>The hemisphere, or the band letter.</b> Northing is measured from the equator in the north
+      and from 10,000,000&nbsp;m at 80°&nbsp;S in the south, so the sign convention has to be known.</li>
+    <li><b>The datum.</b> WGS84 and NAD83 are nearly identical in practice; NAD27 is not, and can differ
+      by up to about 100&nbsp;m. Choosing the wrong datum produces a result that is confidently wrong.</li>
+  </ol>
+  <p>
+    If a coordinate arrives as just two numbers, the honest answer is that it is not yet a coordinate.
+    That is worth saying out loud, because half of all conversion failures are not arithmetic failures —
+    they are missing-metadata failures.
+  </p>
+
+  <h2>What the calculation does</h2>
+  <p>
+    Every projected grid is built from a small set of defining parameters. For UTM they are: a central
+    meridian (177°&nbsp;W plus 6° per zone), a scale factor of exactly <code>0.9996</code> along it, a
+    false easting of <code>500,000&nbsp;m</code>, a false northing of <code>0</code> in the north or
+    <code>10,000,000&nbsp;m</code> in the south, and the GRS80 or WGS84 ellipsoid. The conversion runs in
+    four steps:
+  </p>
+  <div class="formula">1. ΔE = easting − 500,000&nbsp;&nbsp;&nbsp;(metres east of the central meridian, scaled)<br>
+2. M&nbsp; = (northing − false northing) ÷ 0.9996&nbsp;&nbsp;&nbsp;(meridian arc from the equator)<br>
+3. φ₁&nbsp;= footpoint latitude, inverted from M by series<br>
+4. φ, λ from φ₁, ΔE and the ellipsoid's eccentricity</div>
+  <p>
+    Step 3 is the part that has no closed form and is why the calculation is done by series expansion or
+    iteration rather than by a single expression. The series used by practical software — and by the
+    converters on this site — agree with the official reference implementations to well under a
+    millimetre, so precision is never the limiting factor.
+  </p>
+
+  <h2>Worked example</h2>
+  <p>
+    Take the UTM reference <code>17T 630084 4833438</code>. Zone 17 has a central meridian of
+    81°&nbsp;W, and the band T confirms the northern hemisphere.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Step</th><th>Value</th><th>Meaning</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Easting − false easting</td><td>630,084 − 500,000 = 130,084 m</td><td>Point lies 130 km east of 81°&nbsp;W</td></tr>
+        <tr><td>Northing ÷ 0.9996</td><td>4,833,438 ÷ 0.9996 ≈ 4,835,372 m</td><td>Meridian arc from the equator</td></tr>
+        <tr><td>Invert to footpoint latitude</td><td>≈ 43.633°&nbsp;N</td><td>Latitude of the point on the central meridian</td></tr>
+        <tr><td>Solve for latitude and longitude</td><td><b>43.642562°&nbsp;N, 79.387143°&nbsp;W</b></td><td>Final result, WGS84</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Two checks are worth running on any result. First, the longitude must land inside the zone's 6° band:
+    79.387°&nbsp;W sits comfortably inside 78°&nbsp;W to 72°&nbsp;W, so the zone and the answer agree.
+    Second, the latitude must sit inside the band: 43.64°&nbsp;N is inside 40°&nbsp;N to 48°&nbsp;N for
+    band T. If either check fails, the zone number or the hemisphere is wrong — the arithmetic is not.
+  </p>
+
+  <h2>The swap error, and how to catch it</h2>
+  <p>
+    Writing northing first is the classic mistake, and it is easy to make because latitude and longitude
+    are conventionally written the other way round. A swapped UTM coordinate usually produces a latitude
+    that is wildly out of range for its band, since a northing of 4,833,438 gets read as an easting
+    placing the point 4,333&nbsp;km east of the central meridian, far outside any zone.
+  </p>
+  <p>
+    The practical rule: an easting in a UTM coordinate is almost always six digits and between about
+    100,000 and 900,000. A northing is six or seven digits. If a value over 1,000,000 appears in the
+    easting position, or a value under 1,000,000 appears in the northing position north of the equator,
+    the pair is probably reversed.
+  </p>
+
+  <div class="note">
+    <p><b>Do not convert in a spreadsheet with a home-made formula.</b> Transverse Mercator inverse
+    series have several terms and a sign convention that differs between zones in the southern
+    hemisphere. A spreadsheet formula that is one term short will look right at the zone's central
+    meridian and be tens of metres out at the zone edge — which is the worst kind of error, because it
+    passes every test near the middle and fails only where the work is.</p>
+  </div>
+
+  <h2>State Plane and other grids</h2>
+  <p>
+    The same four steps apply to any projected grid, including US State Plane coordinates. What changes
+    is the parameter set. A State Plane zone is defined by either two standard parallels (Lambert
+    Conformal Conic, for zones that run east-west) or a central meridian with its own scale factor
+    (Transverse Mercator, for zones that run north-south), plus a false origin and a false easting and
+    northing. And State Plane records add one more wrinkle: coordinates may be in metres, in US survey
+    feet or in international feet, and choosing the wrong one shifts the answer by about two parts per
+    million — harmless in a car park, significant on a section line.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Easting, northing and zone to latitude and longitude</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>NAD83 State Plane to lat long and back</small></a>
+      <a href="mgrs-converter.html">mgrs to lat long<small>Grid reference strings to latitude and longitude</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Convert the result into degrees, minutes and seconds</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-read-utm-coordinates.html">How to read UTM coordinates</a>
+        <small>Zone, band, easting and northing explained from the record outward.</small></li>
+      <li><a href="what-datum-does-gps-use.html">What datum does GPS use?</a>
+        <small>Why the datum decides whether your answer is genuinely correct.</small></li>
+      <li><a href="utm-vs-mgrs.html">UTM vs MGRS: what's the difference</a>
+        <small>The same grid written in metres or in digits.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

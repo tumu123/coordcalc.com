@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>怎么读UTM坐标 — 带号、纬度带、东坐标与北坐标</title>
+<meta name="description" content="UTM坐标由带号、纬度带字母、东坐标和北坐标四部分组成。为什么东坐标从500 000米起算，纬度带字母有什么用，以及四种最常见的误读——附北京与多伦多的完整算例和位数对应的地面精度。">
+<link rel="canonical" href="https://coordcalc.com/zh/how-to-read-utm-coordinates.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-read-utm-coordinates.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-read-utm-coordinates.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-read-utm-coordinates.html">
+<meta property="og:title" content="怎么读UTM坐标 — 带号、纬度带、东坐标与北坐标">
+<meta property="og:description" content="UTM 参考的四个组成部分、东坐标为什么从 500 000 起算，以及把点放到错误大陆上的四种误读。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/how-to-read-utm-coordinates.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "怎么读UTM坐标：带号、纬度带、东坐标与北坐标",
+  "description": "UTM 坐标的四个组成部分、东坐标的起算约定、纬度带字母的作用、常见误读与位数对应的地面精度。",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-read-utm-coordinates.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../index.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 怎么读UTM坐标
+  </nav>
+
+  <h1>怎么读UTM坐标：带号、纬度带、东坐标与北坐标</h1>
+
+  <p class="lead">
+    一串 UTM 坐标不是一个数，而是四个信息叠在一起：<b>带号</b>（1–60）、
+    <b>纬度带字母</b>（C–X）、<b>东坐标</b>（米）和<b>北坐标</b>（米）。
+    少了任何一个，这个点都可能落到别的大陆上去。下面把它拆开讲清楚，
+    再用北京的实测算例走一遍。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>阅读约 8 分钟</span>
+  </p>
+
+  <h2>四个组成部分</h2>
+  <p>
+    以北京城区一点的实测结果为例：<code>50S 448491.696 4417510.315</code>。
+    把它拆开看：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>部分</th><th>本算例取值</th><th>含义</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>带号 zone</td><td>50</td><td>第 50 个 6° 带，经度范围 114°E–120°E，中央子午线 117°E</td></tr>
+        <tr><td>纬度带 band</td><td>S</td><td>北纬 32°–40° 这一条 8° 纬度带；它本身只是校验用，不是坐标</td></tr>
+        <tr><td>东坐标 easting</td><td>448 491.696 米</td><td>自中央子午线向西 51 508 米（中央子午线定为 500 000 米）</td></tr>
+        <tr><td>北坐标 northing</td><td>4 417 510.315 米</td><td>自赤道向北 4 417 510 米</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note">
+    <p><b>「50S」里的 S 不是 South。</b>北京在北纬 39.9°，纬度带字母本来就是 S
+      （S 带覆盖北纬 32°–40°）。要表达南半球，必须在坐标串之外另行写明半球，
+      或者使用南半球专用的坐标系统代码。只写「50S」而想表达「50 带南半球」，
+      是把「纬度带」和「半球」两个概念混在了一起——这类混淆在跨系统交换数据时经常出现。</p>
+  </div>
+  <p>
+    纬度带字母和下表的对应关系是固定的：南纬 80° 起每 8° 一条带，
+    依次用 C、D、E……X，字母表里的 <b>I 和 O 不用</b>（易与 1、0 混淆），
+    所以一共 20 条带，最北到北纬 84°。北纬 32°–40° 正是 S 带。
+  </p>
+  <div class="formula">
+纬度带：C 80°S–72°S　D 72°S–64°S　E 64°S–56°S　F 56°S–48°S<br>
+　　　　G 48°S–40°S　H 40°S–32°S　J 32°S–24°S　K 24°S–16°S<br>
+　　　　L 16°S–8°S　　M 8°S–0°　　N 0°–8°N　　P 8°N–16°N<br>
+　　　　Q 16°N–24°N　R 24°N–32°N　S 32°N–40°N　T 40°N–48°N<br>
+　　　　U 48°N–56°N　V 56°N–64°N　W 64°N–72°N　X 72°N–84°N
+  </div>
+
+  <h2>为什么东坐标从 500 000 起算</h2>
+  <p>
+    横轴墨卡托投影的中央子午线是一条直线，它东侧的点为正、西侧的点为负。
+    如果直接使用负值，坐标会出现正负号，排序、比较、制表都麻烦，于是约定：
+    <b>把中央子午线的东坐标定为 500 000 米</b>，这样整个带内的东坐标都是正数。
+    所以 448 491.696 这个数真正的含义是「在中央子午线以西 51 508.304 米」。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>带内位置</th><th>东坐标（米）</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>中央子午线</td><td>500 000.000</td><td>加常数本身</td></tr>
+        <tr><td>西边缘（赤道处）</td><td>166 021.443</td><td>物理下限，约 5 位数</td></tr>
+        <tr><td>东边缘（赤道处）</td><td>833 978.557</td><td>物理上限</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    这张表可以直接用来判断一个数是不是 UTM 东坐标：<b>UTM 东坐标一定落在约 166 000 到 834 000 米之间</b>。
+    如果你手上的东坐标是 4 483 000 或者 39 448 471，它就不是 UTM——多半是带号前缀没拆开，
+    或者根本是另一套坐标系统（见 <a href="gauss-kruger-vs-utm.html">高斯-克吕格与 UTM 的区别</a>）。
+  </p>
+
+  <h2>北坐标的量级</h2>
+  <p>
+    北坐标自赤道起算，北半球向上递增，南半球向下递减。为了不出现负数，
+    南半球的北坐标统一加 10 000 000 米。所以：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>位置</th><th>北坐标（米）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>赤道</td><td>0（北半球）／10 000 000（南半球）</td></tr>
+        <tr><td>北纬 84°（UTM 设计上限）</td><td>9 328 093.831</td></tr>
+        <tr><td>南纬 80°（设计下限）</td><td>1 118 414.184</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    因此一个「像 UTM 北坐标」的数应当是 6 到 7 位：
+    北半球 0–9 330 000，南半球 1 120 000–10 000 000。
+    看到 8 位数就要先怀疑是不是把东坐标的带号前缀串进来了。
+  </p>
+
+  <h2>四种最常见的误读</h2>
+  <h3>一、把北坐标当成东坐标</h3>
+  <p>
+    <code>448491.696, 4417510.315</code> 与 <code>4417510.315, 448491.696</code> 完全是两个点。
+    这是最常见的错误，因为很多表格不写列名。量级是最快的自检：
+    东坐标不会超过约 834 000，凡是 7 位的那个一定是北坐标。
+  </p>
+
+  <h3>二、带号缺失或写错</h3>
+  <p>
+    反算时带号必须正确。同一个东、北坐标组合在每一个带里都对应地球上不同的地点——
+    工具没有办法从坐标本身猜出带号，因为同一组数在每个带都「成立」。
+    常见情况是数据来自 50 带而分析时按 51 带打开，点位会整体东移几十公里。
+    正算时不存在这个问题：带号由经度自动确定。
+  </p>
+
+  <h3>三、把高斯-克吕格坐标当成 UTM</h3>
+  <p>
+    国内图纸上的平面坐标多为高斯-克吕格，长度比为 1，而 UTM 是 0.9996。
+    同一个点的北坐标会相差约 0.04%，在 4 400 公里处就是 1 767 米。
+    数值上「看起来合理」，位置却整体偏了接近 1.8 公里。详见
+    <a href="gauss-kruger-vs-utm.html">高斯-克吕格与 UTM 的区别</a>。
+  </p>
+
+  <h3>四、单位不是米</h3>
+  <p>
+    UTM 的定义单位是米；而美国州平面坐标（State Plane）既有米制也有英尺制，
+    而且历史上还有美制测量英尺与国际英尺之分。若某个东坐标是「米制值 × 3.28」的量级，
+    先确认单位再计算，否则会得到系统性 3 倍多的误差。
+    参见 <a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺</a>。
+  </p>
+
+  <h2>位数对应多少地面精度</h2>
+  <p>
+    UTM 坐标是米制，小数位与地面距离是一一对应的：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>写法</th><th>地面精度</th><th>典型用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>448 492</td><td>约 1 米</td><td>概略定位、图上量取</td></tr>
+        <tr><td>448 491.7</td><td>0.1 米</td><td>施工放样记录</td></tr>
+        <tr><td>448 491.696</td><td>1 毫米</td><td>控制点成果、平差输出</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    换成经纬度要留神：度分秒不是十进制。在北纬 40° 附近，
+    <b>纬度 1″ 约 30.84 米，经度 1″ 约 23.75 米</b>，0.0001″ 约 3 毫米。
+    所以「经纬度写到小数点后 6 位」是约 0.1 米精度，
+    「写到 8 位」才是毫米级——这一点在把 UTM 成果转回经纬度交给别人时特别容易出问题。
+  </p>
+
+  <h2>拿不准就反算一遍</h2>
+  <p>
+    最实用的核对方法不是盯着数字看，而是把它反算成经纬度，看落点是否合理。
+    以北京的算例为例：把带号 50、东坐标 448 491.696、北坐标 4 417 510.315
+    输入 <a href="utm-coordinate-converter.html">UTM 坐标与经纬度互转</a>，
+    反算结果是 <code>39.906111, 116.397400</code>。如果反算得到的纬度明显偏南、
+    经度往西偏了一个带，说明带号多半填错了。
+  </p>
+  <p>
+    半球的误读影响更大。以悉尼为例，其 UTM 参考是
+    <code>56H 334898.811 6252272.748</code>，北坐标里已经含了南半球的
+    10 000 000 米加常数。按南半球解释，反算得到南纬 33.856944°、东经 151.215278°；
+    若误按北半球解释，同一组数会落到北纬 56.386191°、东经 150.325681°——
+    纬度相差 <b>90.24 度</b>，从南半球直接跑到北半球。
+    这就是半球标注必须写清楚的原因。
+  </p>
+  <p>
+    另一个等价的核对方法是量算两点距离。若两个点的实测距离是 1 000 米，
+    但反算出来的距离是 1 040 米或 3 280 米，单位或投影必然有一个是错的。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>正算、反算与批量CSV导出</small></a>
+      <a href="gauss-kruger-vs-utm.html">高斯-克吕格与UTM的区别<small>为什么两套坐标差了 1.8 公里</small></a>
+      <a href="../mgrs-converter.html" hreflang="en">MGRS 军用网格参考转换<small>UTM 的另一种写法，精度由位数决定</small></a>
+      <a href="../distance-bearing-calculator.html" hreflang="en">两点距离与方位角<small>用距离做交叉核对</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>
+        <small>参数逐项对照，以及判断手上坐标属于哪一套的判别清单。</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">度分秒怎么读、怎么算</a>
+        <small>十进制度与度分秒互转，以及「39.5422」引发的 40 公里错误。</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺</a>
+        <small>引进图纸时那个容易忽略的百万分之二。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、报批或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

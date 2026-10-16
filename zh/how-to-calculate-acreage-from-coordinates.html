@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>用坐标计算面积 — 鞋带公式、投影影响与单位换算</title>
+<meta name="description" content="由坐标算面积的算术很短——对边界顶点跑一次循环，即鞋带公式——但难点不在算术，而在于公式假设坐标位于平面上，而经纬度不是。本文讲清计算方法、完整算例、面积比因子（scale factor）的影响，以及顶点顺序与单位约定带来的错误。">
+<link rel="canonical" href="https://coordcalc.com/zh/how-to-calculate-acreage-from-coordinates.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-acreage-from-coordinates.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html">
+<meta property="og:title" content="用坐标计算面积 — 鞋带公式与投影影响">
+<meta property="og:description" content="从边界坐标算面积：方法、算例，以及决定结果的几个假设。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/how-to-calculate-acreage-from-coordinates.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "用坐标计算面积",
+  "description": "用坐标计算面积 — 鞋带公式、投影影响与单位换算",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-calculate-acreage-from-coordinates.html"},
+  "articleSection": "面积与地界"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../how-to-calculate-acreage-from-coordinates.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 用坐标计算面积
+  </nav>
+
+<h1>用坐标计算面积</h1>
+
+  <p class="lead">
+    由坐标算面积的算术很短——对边界顶点跑一次循环，也就是鞋带公式——但难点并不在算术。
+    难点在于这个公式假设坐标位于一个平面上，而经纬度不是。本文两件事都讲：
+    方法本身，带真实数字算一遍；以及那些决定结果是准确到千分之一还是错出好几个单位的假设。
+  </p>
+
+  <p class="meta">
+    <span>面积与地界</span><span>更新于 2026年10月9日</span><span>鞋带公式</span>
+  </p>
+
+  <h2>鞋带公式</h2>
+  <p>
+    把边界顶点按顺序列出——顺时针或逆时针都行，但绝不能混着来——并在末尾重复第一个顶点
+    把环闭合。然后求交叉乘积之和：
+  </p>
+  <div class="formula">A = ½ × |Σ (xᵢ · yᵢ₊₁ − xᵢ₊₁ · yᵢ)|</div>
+  <p>
+    取绝对值是因为这个和的符号告诉你的是绕行方向，顺时针还是逆时针，而不是面积大小。
+    如果顶点顺序错了，公式仍然会返回一个数，而这个数没有意义——边界自交了。
+    核对多边形是否被描成一条简单闭合的环，是这份工作的一部分，不是走形式。
+  </p>
+
+  <h2>完整算例</h2>
+  <p>
+    取一块四边形地块，投影坐标为米，按逆时针列出：
+    <code>(0, 0)</code>、<code>(100, 0)</code>、<code>(120, 80)</code>、<code>(10, 90)</code>。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>顶点对</th><th>xᵢ · yᵢ₊₁</th><th>xᵢ₊₁ · yᵢ</th><th>差值</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0,0) → (100,0)</td><td>0 × 0 = 0</td><td>100 × 0 = 0</td><td>0</td></tr>
+        <tr><td>(100,0) → (120,80)</td><td>100 × 80 = 8,000</td><td>120 × 0 = 0</td><td>8,000</td></tr>
+        <tr><td>(120,80) → (10,90)</td><td>120 × 90 = 10,800</td><td>10 × 80 = 800</td><td>10,000</td></tr>
+        <tr><td>(10,90) → (0,0)</td><td>10 × 0 = 0</td><td>0 × 90 = 0</td><td>0</td></tr>
+        <tr><td colspan="3"><b>差值之和</b></td><td><b>18,000</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    面积 = ½ × 18,000 = <b>9,000 m²</b>。也就是 0.9 公顷，或者说 <b>2.2239 英亩</b>，
+    因为一英亩是 4,046.8564224 m²。换成英制，9,000 m² 是 96,875.2 ft²，
+    除以 43,560 得到同样的 2.2239 英亩。
+  </p>
+
+  <h2>投影带来的问题</h2>
+  <p>
+    格网面积与实地面积不是一回事，两者的差距来自投影。投影坐标是一个可展开曲面被展平之后的
+    平面位置，也就意味着这个平面相对实地要么被略微拉伸、要么被略微压缩。
+    这个比值就是<b>长度比</b>（scale factor），而面积按它的平方变化。
+  </p>
+  <div class="formula">实地面积 ≈ 格网面积 ÷ (长度比)²</div>
+  <p>
+    对 UTM 坐标而言，长度比在中央子午线上是 0.9996，向带边缘逐渐增大，所以平面在中间是压缩的，
+    中央处的格网面积比实地面积小约 0.08%，越往外则逐渐转为略大。
+    在一英亩的地块上这是几平方英尺；在 640 英亩的一个「section」上，那几乎是整整一英亩——
+    按百分比看很小，按房产交易的计价单位看则很大。
+  </p>
+  <p>
+    更大的问题在于把经纬度直接喂进公式。度不是线性距离：一度经度在赤道约 111.32&nbsp;km，
+    在纬度 45° 处约 78.85&nbsp;km。把鞋带公式用在原始度数上，得到的数其单位是「平方度」，
+    再用一个固定系数把它换算成面积，只在一小块已知纬度的区域上大致正确。
+    只要比一块地更大，或者结果要与地契比对，就先投影。
+  </p>
+
+  <div class="note">
+    <p><b>一个很有用的量级校核。</b>一英亩的正方形边长 208.71&nbsp;英尺，约 63.6&nbsp;米。
+    一个 section 是一平方英里——640 英亩、2.59&nbsp;km²。如果算出来的面积隐含一个与你
+    看到的实地形状对不上的图形，出问题的几乎总是顶点顺序或投影不匹配，而不是鞋带公式本身。</p>
+  </div>
+
+  <h2>把顶点顺序搞对</h2>
+  <p>
+    坐标清单到手时的顺序取决于数据源。有的从起始点（point of beginning）开始，像地契那样
+    顺时针走；有的完全没有排序。两项诊断能在面积报出之前抓住大部分问题。
+    第一，把图形画出来——自交的多边形在图上一看就知道，在数字里却看不出来。
+    第二，把由坐标清单算出的周长与所载各边界长度之和对比；如果不一致，说明有顶点漏了或重复了。
+  </p>
+  <p>
+    另外值得把单位和投影与结果一起记录下来。一个写着「2.22 英亩」却不说明坐标是州平面米、
+    UTM 米还是测量英尺的面积，距离完全不可用只差三个词。
+  </p>
+
+  <h2>结果的换算</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>从</th><th>到</th><th>乘以</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>平方米</td><td>英亩</td><td>0.000247105381</td></tr>
+        <tr><td>平方米</td><td>公顷</td><td>0.0001</td></tr>
+        <tr><td>平方英尺</td><td>英亩</td><td>0.0000229568411</td></tr>
+        <tr><td>英亩</td><td>公顷</td><td>0.40468564224</td></tr>
+        <tr><td>公顷</td><td>英亩</td><td>2.4710538147</td></tr>
+        <tr><td>平方英里</td><td>英亩</td><td>640</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="land-area-calculator.html">坐标算面积（亩/公顷）<small>由顶点清单求面积、亩数与周长</small></a>
+      <a href="unit-converter.html">单位换算器<small>英亩、公顷、平方英尺与平方米</small></a>
+      <a href="state-plane-converter.html">州平面坐标换算<small>先得到可以参与运算的投影坐标</small></a>
+      <a href="distance-bearing-calculator.html">两点距离与方位角<small>核对相邻顶点之间的边界长度</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../section-township-range.html">Section、Township 与 Range 详解</a>
+        <small>为什么 640 英亩是个有意义的单位，以及美国公共土地测量系统怎么排布。</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺</a>
+        <small>边界当初是用哪一种英尺量的，对面积又意味着什么。</small></li>
+      <li><a href="../how-to-calculate-closure-error.html">导线闭合差怎么算</a>
+        <small>在计算面积之前，先确认这条边界。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

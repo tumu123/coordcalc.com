@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大地水准面与椭球面的区别 — 为什么高程不等于纬度</title>
+<meta name="description" content="经纬度把点固定在一个光滑的数学曲面上，而那个曲面并不是水所找到的曲面。椭球是地球形状的整齐近似，大地水准面则是近似平均海平面的等重力位面，两者相差几十米——这正是 GNSS 接收机给出的高程不等于地形图高程的原因。">
+<link rel="canonical" href="https://coordcalc.com/zh/geoid-vs-ellipsoid.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/geoid-vs-ellipsoid.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/geoid-vs-ellipsoid.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/geoid-vs-ellipsoid.html">
+<meta property="og:title" content="大地水准面与椭球面的区别">
+<meta property="og:description" content="两个曲面，两种高度：h = H + N，以及为什么 GNSS 高程不是海拔。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/geoid-vs-ellipsoid.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "大地水准面与椭球面的区别",
+  "description": "大地水准面与椭球面的区别 — 为什么高程不等于纬度",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/geoid-vs-ellipsoid.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../geoid-vs-ellipsoid.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 大地水准面与椭球面的区别
+  </nav>
+
+<h1>大地水准面与椭球面的区别</h1>
+
+  <p class="lead">
+    经纬度把点固定在一个光滑的数学曲面上，而那个曲面并不是水所找到的曲面。
+    椭球是地球形状的整齐近似；大地水准面则是近似平均海平面的等重力位面，
+    它凹凸不平。两者相差几十米，而这个差别正是 GNSS 接收机给出的高程
+    与地形图上高程不一致的原因。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>高程基础</span>
+  </p>
+
+  <h2>两个曲面，两种用途</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th></th><th>椭球面</th><th>大地水准面</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>是什么</td><td>一个光滑的数学曲面：两极扁平的球体</td><td>地球重力场中最接近平均海平面的等位面</td></tr>
+        <tr><td>由什么定义</td><td>两个数——长半轴与扁率</td><td>重力测量、卫星测高与全球重力模型</td></tr>
+        <tr><td>形状</td><td>完全规则</td><td>不规则，全球起伏最大约 100 m</td></tr>
+        <tr><td>从它量起的高度</td><td>椭球高 <i>h</i></td><td>正高 <i>H</i>——即海拔高程</td></tr>
+        <tr><td>用于</td><td>经纬度、GNSS 定位</td><td>测量、排水、工程，以及任何涉及水往哪流的工作</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    椭球的存在是因为定位需要一个足够简单、可以在上面做数学的曲面。你见过的每一个经纬度，
+    都是从椭球上量出的角度，随之而来的椭球高就是沿法线量到那个曲面的距离。
+    大地水准面的存在是因为重力才是水、测量仪器和排水系统真正响应对象，
+    而大地水准面正是重力所定义的那个面。
+  </p>
+
+  <h2>把两者联系起来的那个公式</h2>
+  <div class="formula">h = H + N<br><br>h = 椭球高（相对椭球，GNSS 给出的就是它）<br>
+H = 正高（相对大地水准面，水准测量给出的是它）<br>
+N = 大地水准面高，又称大地水准面差距（大地水准面相对椭球的高度）</div>
+  <p>
+    高程上的每一个实际问题都来自这一个公式，以及忘记某个具体数字代表的是哪一项。
+    地图上的、水准点上的、洪水研究里的高程都是 <i>H</i>，即正高，
+    因为它们来自水准测量或大地水准面模型。GNSS 接收机给出的位置解是 <i>h</i>，
+    即椭球高，因为这是几何本身产生的结果。两者相差 <i>N</i>，
+    这个量是几十米，而且各地不同。
+  </p>
+
+  <h2>差别到底有多大？</h2>
+  <p>
+    全球范围内大地水准面起伏大约在 100&nbsp;m 上下，最低的凹陷在印度洋附近。
+    在一个国家范围内起伏小一些，但仍然远大于施工中任何人会关心的精度：
+    在美国大陆，大地水准面与椭球面的间距量级是 10 到 35&nbsp;m，在全国范围内逐渐变化。
+  </p>
+  <p>
+    这就是为什么一台报出高程为 1,600&nbsp;m 的接收机，未必在告诉你场地位于海拔 1,600&nbsp;m。
+    它说的是相对椭球的高度。要换算就需要该点处的 <i>N</i>，
+    而这来自大地水准面模型——美国的 GEOID18 及其后继版本，其他地方的 EGM2008 或某个国家模型。
+  </p>
+
+  <div class="note">
+    <p><b>一个能立刻抓到错误检验。</b>取一个已有公布高程的点，与 GNSS 接收机的原始椭球高比较。
+      相差几十米是正常且应当的；相差几米就不正常；而相差几乎为零则说明接收机内部
+      已经应用过大地水准面模型。这一点很重要，因为如果接收机应用了一次、
+      你的软件又应用了一次，这个间距就被减了两遍。</p>
+  </div>
+
+  <h2>基准面、高程，以及与水平基准面的区别</h2>
+  <p>
+    有两个听起来很像的问题值得分开。一个<b>水平基准面</b>决定经纬度意味着什么——
+    用哪个椭球、它的哪一次实现。一个<b>高程基准面</b>决定零高程意味着什么，
+    通常绑定到一个参考潮位站加一个水准网，并用大地水准面模型来延伸。
+    在美国，NAVD88 是常用的高程基准面，后继版本从 2020 年代中期开始陆续铺开。
+  </p>
+  <p>
+    两者相互独立。更换水平基准面会让点在图上移动；更换高程基准面会改变附在它高度上的数字。
+    一份数据可能在一个上正确、在另一个上错误，而这个错误只有与做了相反选择的数据合并时才会暴露。
+  </p>
+
+  <h2>实践中这意味着什么</h2>
+  <ol>
+    <li><b>给高程做标注。</b>「高程 214.6 m」应当说明用的是哪个高程基准面，
+      如果来自 GNSS，还要说明有没有应用大地水准面模型。</li>
+    <li><b>不要悄悄混用水准高程和 GNSS 高程。</b>水准测量得到的是正高；
+      原始的 GNSS 高程是椭球高。不做换算就把两者平均，会得到一个看着还挺光滑、
+      实际上毫无意义的曲面。</li>
+    <li><b>用与区域和历元匹配的大地水准面模型。</b>全球模型能给你到米级，现代国家模型会好得多。</li>
+    <li><b>记住坡度不受影响。</b>高程上的一个常数偏移不改变坡度。如果每个点都移动相同的量，
+      它们之间的坡度不变——这就是为什么这个错误能在多年的场地平整工作中一直不被发现。</li>
+  </ol>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>WGS84 椭球上的水平位置</small></a>
+      <a href="slope-calculator.html">坡度计算器<small>由高差与水平距离求坡度</small></a>
+      <a href="cut-fill-calculator.html">土方计算器<small>由深度与面积计算土方量</small></a>
+      <a href="state-plane-converter.html">州平面坐标换算<small>绑定到 NAD83 的投影坐标</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../what-datum-does-gps-use.html">GPS 用的是哪个基准面？</a>
+        <small>同一个故事的横向那一半。</small></li>
+      <li><a href="../how-to-calculate-slope-percentage.html">坡度百分比怎么算</a>
+        <small>为什么一个常数高程偏移不会改变坡度。</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">度分秒详解</a>
+        <small>水平方向的角度是怎么写下来的。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

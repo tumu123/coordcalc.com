@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Degrees, Minutes, Seconds Explained</title>
+<meta name="description" content="Degrees, minutes and seconds are sexagesimal: 60 minutes to a degree, 60 seconds to a minute. How to convert DMS to decimal degrees, and what precision buys.">
+<link rel="canonical" href="https://coordcalc.com/degrees-minutes-seconds-explained.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/degrees-minutes-seconds-explained.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/degrees-minutes-seconds-explained.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/degrees-minutes-seconds-explained.html">
+<meta property="og:title" content="Degrees, Minutes, Seconds Explained">
+<meta property="og:description" content="DMS to decimal degrees and back, what DDM means, and how many metres a tenth of a second is worth.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/degrees-minutes-seconds-explained.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "Degrees, Minutes, Seconds Explained",
+  "description": "How the DMS format works, conversions to and from decimal degrees, the DDM variant, and the precision implied by each decimal place.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/degrees-minutes-seconds-explained.html"},
+  "articleSection": "Coordinates"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Degrees, minutes and seconds
+  </nav>
+
+  <h1>Degrees, Minutes, Seconds Explained</h1>
+
+  <p class="lead">
+    Degrees, minutes and seconds are a base-60 way of writing an angle, inherited from Babylonian
+    astronomy and still in daily use on survey plans, nautical charts and aviation documents. The
+    arithmetic is simple — 60 minutes to a degree, 60 seconds to a minute — but the format carries a
+    hidden trap: the number of decimal places does not tell you how precise the angle is, and two
+    angles written to different precisions are not the same measurement. This guide covers the
+    conversions and the precision question.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Angle formats</span>
+  </p>
+
+  <h2>The three units</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Unit</th><th>Symbol</th><th>Definition</th><th>Notation</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Degree</td><td>°</td><td>1/360 of a full circle</td><td>40°</td></tr>
+        <tr><td>Minute</td><td>′</td><td>1/60 of a degree</td><td>45′</td></tr>
+        <tr><td>Second</td><td>″</td><td>1/60 of a minute, 1/3600 of a degree</td><td>55.56″</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    A single angle written in full looks like <code>40° 45′ 55.56″ N</code>. The hemisphere letter is part
+    of the notation, not decoration: without it, the sign of the angle has to be carried as a minus for
+    south and west, which is how decimal degrees handle it.
+  </p>
+
+  <h2>DMS to decimal degrees</h2>
+  <p>
+    Decimal degrees is the format software prefers, because it is a single number that can be sorted,
+    interpolated and used in trigonometry directly. The conversion is:
+  </p>
+  <div class="formula">decimal degrees = degrees + (minutes ÷ 60) + (seconds ÷ 3600)</div>
+  <p>
+    Take <code>40° 45′ 55.56″</code>. The minutes contribute <code>45 ÷ 60 = 0.75</code>, and the seconds
+    contribute <code>55.56 ÷ 3600 = 0.01543</code>. Adding them to the 40° gives
+    <b>40.76543°</b>. A southern or western angle carries a minus sign, so
+    <code>104° 59′ 15.56″ W</code> becomes <b>−104.98766°</b>.
+  </p>
+
+  <h2>Decimal degrees to DMS</h2>
+  <p>Going the other way reverses the steps, and it is an iterative process rather than one formula:</p>
+  <ol>
+    <li>The whole-number part is the degrees.</li>
+    <li>Multiply the fractional part by 60. The whole-number part of that is the minutes.</li>
+    <li>Multiply the remaining fraction by 60 again. That gives the seconds.</li>
+  </ol>
+  <p>
+    For <code>38.8977°</code>: the degrees are 38, the fraction 0.8977 × 60 = 53.862 minutes, and the
+    remaining 0.862 × 60 = 51.72 seconds. So <code>38.8977°</code> is
+    <b>38° 53′ 51.72″</b>. There is one subtlety worth knowing: rounding can produce
+    <code>60″</code>, which is invalid and has to be carried into the minutes, and then possibly into the
+    degrees. Any converter that can output <code>60″</code> has a bug that only appears on specific
+    inputs.
+  </p>
+
+  <h2>The third format: DDM</h2>
+  <p>
+    Degrees and decimal minutes — DDM — is a hybrid, written as <code>40° 45.926′ N</code>. It is common
+    in marine navigation because a minute of latitude is a nautical mile, so decimal minutes map directly
+    onto distance. DDM is neither DMS nor decimal degrees, and mixing it into a calculator that expects
+    one of the other two produces an error that is small enough to miss: reading
+    <code>45.926′</code> as 45.926 <i>seconds</i> instead of minutes puts the point about 1.4 km away.
+  </p>
+
+  <h2>How much precision does each decimal place buy?</h2>
+  <p>
+    Latitude changes by about 111.32&nbsp;km per degree, so the value of a unit is easy to work out. The
+    same calculation for longitude depends on latitude, because lines of longitude converge towards the
+    poles.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Angular units</th><th>Latitude</th><th>Longitude at 45° N/S</th><th>Type of work it supports</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1°</td><td>111.3 km</td><td>78.7 km</td><td>Regional</td></tr>
+        <tr><td>1′</td><td>1,855 m</td><td>1,312 m</td><td>Map sheet</td></tr>
+        <tr><td>1″</td><td>30.9 m</td><td>21.9 m</td><td>Field navigation</td></tr>
+        <tr><td>0.1″</td><td>3.1 m</td><td>2.2 m</td><td>Handheld GNSS</td></tr>
+        <tr><td>0.01″</td><td>0.31 m</td><td>0.22 m</td><td>Mapping-grade GNSS</td></tr>
+        <tr><td>0.001″</td><td>3.1 cm</td><td>2.2 cm</td><td>Survey-grade GNSS</td></tr>
+        <tr><td>0.0001°</td><td>11.1 m</td><td>7.9 m</td><td>Six decimal places of DD</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The table explains why survey records so often give seconds to two decimal places: that is
+    0.31&nbsp;m, which is the right order for legal boundary description and comfortably finer than most
+    total station work. It also explains why giving latitude and longitude to eight decimal places in
+    decimal degrees is not more accurate — it is the same measurement written with more digits, and the
+    extra digits are noise.
+  </p>
+
+  <div class="note">
+    <p><b>Trailing zeros are meaningful here.</b> In DMS notation, <code>45.10″</code> and
+    <code>45.1″</code> denote the same angle but claim different precision — one is stated to a
+    hundredth of a second, the other to a tenth. When a record rounds, report the rounding rather than
+    silently extending the digits.</p>
+  </div>
+
+  <h2>Where each format is used</h2>
+  <p>
+    Decimal degrees dominates GIS, web mapping and any dataset that a computer will process. DMS dominates
+    survey plats, deeds, aviation and legacy map annotation, because a person reads it and because a
+    minute of latitude is a known distance. DDM dominates marine navigation. The practical consequence is
+    the same in every case: a coordinate without a stated format is ambiguous, and the ambiguity is only
+    visible on the rare input where the two readings differ enough to notice.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="dms-converter.html">decimal degrees to dms<small>DMS, DDM and decimal degrees, all three ways</small></a>
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Angles in DMS and decimal degrees</small></a>
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Convert lat long in either format to a grid</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>Projected coordinates from either angle format</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="bearing-vs-azimuth.html">Bearing vs azimuth: what's the difference</a>
+        <small>Angles of direction, and the quadrant notation they come in.</small></li>
+      <li><a href="how-to-read-utm-coordinates.html">How to read UTM coordinates</a>
+        <small>The grid alternative to writing angles at all.</small></li>
+      <li><a href="geoid-vs-ellipsoid.html">Geoid vs ellipsoid</a>
+        <small>Why latitude and longitude are not enough to fix a point in space.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

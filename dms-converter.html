@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Decimal Degrees to DMS Converter — and DMS to Decimal Degrees</title>
+<meta name="description" content="Convert decimal degrees to DMS instantly — or DMS to decimal degrees. Free, no login. Degrees, minutes and seconds, plus DDM and hemisphere output, adjustable precision.">
+<link rel="canonical" href="https://coordcalc.com/dms-converter.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/dms-converter.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/dms-converter.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/dms-converter.html">
+<meta property="og:title" content="Decimal Degrees to DMS Converter — and DMS to Decimal Degrees">
+<meta property="og:description" content="Instantly convert decimal degrees to degrees, minutes and seconds (DMS) and back, with DDM output and adjustable precision.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/dms-converter.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert decimal degrees to DMS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Take the whole number as degrees. Multiply the decimal fraction by 60 for minutes, then multiply the remaining fraction by 60 again for seconds. Example: 39.906111 becomes 39° 54′ 22.00″."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between decimal degrees and DMS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Decimal degrees express a coordinate as one decimal number such as 39.906111. DMS expresses the same angle in degrees, minutes and seconds such as 39° 54′ 22.00″. GIS and databases usually store DD; survey plans and map labels often use DMS."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I handle negative coordinates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A negative value is south of the equator for latitude, or west of the prime meridian for longitude. So −39.906111 is 39° 54′ 22.00″ S, and −77.0365 is 77° 02′ 11.40″ W. The hemisphere letter is applied automatically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is DDM and when should I use it?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DDM is degrees and decimal minutes, such as N 39° 54.367′. It is common in marine and aviation navigation. Use it when a chart or device expects decimal minutes instead of seconds."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is this coordinate converter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tool uses double-precision arithmetic, and you can set the seconds to as many as 6 decimal places. Seconds to 4 decimal places is 0.0001 of a second, about 3 mm on the ground at the equator — far finer than consumer GPS accuracy."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this tool free and does it require an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is free, with no login, no account and no limit. The calculation runs entirely in your browser, so no coordinate is ever sent to a server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert DMS to decimal degrees?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add the parts together: decimal = degrees + minutes ÷ 60 + seconds ÷ 3600. For example, 39° 54′ 22.00″ becomes 39 + 54/60 + 22/3600 = 39.906111. For southern latitudes and western longitudes the result is negative."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:20px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  #dd-input{font-size:19px;font-weight:600;letter-spacing:.3px;width:260px;}
+  .dms-fields{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+  .dms-fields .num{display:flex;flex-direction:column;gap:6px;}
+  .dms-fields .num input{width:104px;text-align:center;font-size:19px;font-weight:600;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);white-space:nowrap;}
+  .result-row .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .btn{border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-d);}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+  .examples{margin-top:16px;font-size:13px;color:var(--sub);}
+  .examples a{color:var(--accent);cursor:pointer;text-decoration:none;border-bottom:1px dotted var(--accent);margin-right:14px;}
+  section.card h2{margin-top:0;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:12px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  table.lookup td.nw{white-space:nowrap;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:#1f2430;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;opacity:0;
+    transition:.25s;pointer-events:none;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    #dd-input{width:100%;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+  }
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#2563eb;}
+  @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#coordinates">Coordinate Converters</a> › Decimal Degrees to DMS
+  </nav>
+
+  <h1>Decimal Degrees to DMS Converter</h1>
+
+  <p class="lead">
+    This free decimal degrees to DMS converter turns a latitude or longitude number into degrees,
+    minutes and seconds, and converts DMS to decimal degrees just as quickly the other way. Enter a
+    decimal coordinate and you get the DMS value, the degrees-and-decimal-minutes (DDM) value and
+    the correct hemisphere letter instantly. No login, no upload, everything runs in your browser.
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-dd" role="tab" aria-selected="true">Decimal → DMS</button>
+      <button class="tab" id="tab-dms" role="tab" aria-selected="false">DMS → Decimal</button>
+    </div>
+
+    <!-- Decimal degrees input panel -->
+    <div id="panel-dd">
+      <div class="row">
+        <div class="field">
+          <label for="dd-input">Decimal degrees</label>
+          <input type="text" id="dd-input" inputmode="decimal" placeholder="e.g. 39.906111" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="coord-type">Coordinate type</label>
+          <select id="coord-type">
+            <option value="lat" selected>Latitude (N / S)</option>
+            <option value="lon">Longitude (E / W)</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="precision">Seconds precision</label>
+          <select id="precision">
+            <option value="0">0</option>
+            <option value="1">1</option>
+            <option value="2" selected>2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+          </select>
+        </div>
+      </div>
+      <p class="hint">Use a minus sign for southern latitudes and western longitudes, e.g. <code>-77.0365</code>.</p>
+      <p class="err" id="err-dd">Please enter a valid number between -180 and 180.</p>
+      <div class="examples">
+        Try:
+        <a data-ex="39.906111" data-type="lat">39.906111 (latitude)</a>
+        <a data-ex="-77.0365" data-type="lon">-77.0365 (longitude)</a>
+        <a data-ex="116.3974" data-type="lon">116.3974 (Beijing)</a>
+      </div>
+    </div>
+
+    <!-- DMS input panel -->
+    <div id="panel-dms" style="display:none;">
+      <div class="dms-fields">
+        <div class="num">
+          <label for="in-deg" style="font-size:12.5px;font-weight:600;color:var(--sub);">Degrees</label>
+          <input type="number" id="in-deg" placeholder="39" step="1" min="0" max="180">
+        </div>
+        <div class="num">
+          <label for="in-min" style="font-size:12.5px;font-weight:600;color:var(--sub);">Minutes</label>
+          <input type="number" id="in-min" placeholder="54" step="1" min="0" max="59">
+        </div>
+        <div class="num">
+          <label for="in-sec" style="font-size:12.5px;font-weight:600;color:var(--sub);">Seconds</label>
+          <input type="number" id="in-sec" placeholder="22.00" step="any" min="0" max="59.999999">
+        </div>
+        <div class="field">
+          <label for="hemi">Hemisphere</label>
+          <select id="hemi">
+            <option value="N">N — North</option>
+            <option value="S">S — South</option>
+            <option value="E">E — East</option>
+            <option value="W">W — West</option>
+          </select>
+        </div>
+      </div>
+      <p class="hint">Minutes and seconds must be below 60. Leave seconds blank if you have whole minutes.</p>
+      <p class="err" id="err-dms">Minutes and seconds must be less than 60.</p>
+    </div>
+
+    <div class="results" id="results">
+      <div class="result-row"><span class="k">Decimal degrees (DD)</span><span class="v" id="r-dd">—</span></div>
+      <div class="result-row"><span class="k">Degrees minutes seconds (DMS)</span><span class="v" id="r-dms">—</span></div>
+      <div class="result-row"><span class="k">DMS with hemisphere</span><span class="v" id="r-dmsh">—</span></div>
+      <div class="result-row"><span class="k">Degrees decimal minutes (DDM)</span><span class="v" id="r-ddm">—</span></div>
+      <div class="actions">
+        <button class="btn btn-primary" id="copy-btn">Copy all results</button>
+        <button class="btn btn-ghost" id="reset-btn">Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the conversion works</h2>
+    <p>
+      A coordinate in decimal degrees packs the whole angle into one number. DMS splits that same
+      angle into three sexagesimal units, because the traditional system divides one degree into
+      60 minutes and one minute into 60 seconds.
+    </p>
+    <p>
+      Going from decimal degrees to DMS is a two-step extraction. First, the part of the number
+      before the decimal point is the degrees. Second, multiply the remaining fraction by 60 to
+      obtain the minutes; the whole part of that result is the minutes, and multiplying the leftover
+      fraction by 60 once more gives the seconds. For example, <code>39.906111°</code> yields
+      <code>39° 54′ 22.00″</code>. The reverse direction simply adds the parts back together:
+      <code>decimal = degrees + minutes / 60 + seconds / 3600</code>.
+    </p>
+    <p>
+      The hemisphere letter is not part of the arithmetic — it is carried by the sign. Negative
+      latitude is south (S) and negative longitude is west (W). Because degrees, minutes and seconds
+      are base-60, rounding the seconds field can push the value up to the next minute or degree;
+      this converter accounts for that carry so you never see an invalid result such as
+      <code>60″</code>.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked Example: Decimal Degrees to DMS</h2>
+    <p>
+      The method is easiest to follow on a real number. Take the latitude <code>39.906111°</code> in the
+      northern hemisphere: the whole part, 39, is the degrees; multiply the leftover 0.906111 by 60 to
+      get 54.36666, so 54 is the minutes; multiply the remaining 0.36666 by 60 to get 22.00 seconds.
+      The answer is <code>39° 54′ 22.00″ N</code>.
+    </p>
+    <p>
+      A negative value simply adds the hemisphere at the end. For the longitude <code>−77.0365°</code>,
+      work with the absolute value 77.0365 and apply the sign as W: 0.0365 × 60 = 2.19 minutes, leaving
+      0.19 × 60 = 11.40 seconds, giving <code>77° 02′ 11.40″ W</code>. The table below lists values the
+      converter produces — you can type any of them into the box above to check the rounding yourself.
+    </p>
+    <table class="lookup">
+      <thead>
+        <tr><th>Decimal degrees</th><th>Hemisphere</th><th>DMS</th><th>DDM</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="nw">39.906111</td><td>N</td><td class="nw">39° 54′ 22.00″</td><td class="nw">N 39° 54.367′</td></tr>
+        <tr><td class="nw">−77.0365</td><td>W</td><td class="nw">77° 02′ 11.40″</td><td class="nw">W 77° 02.190′</td></tr>
+        <tr><td class="nw">−0.1276</td><td>W</td><td class="nw">0° 07′ 39.36″</td><td class="nw">W 0° 07.656′</td></tr>
+        <tr><td class="nw">116.3974</td><td>E</td><td class="nw">116° 23′ 50.64″</td><td class="nw">E 116° 23.844′</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">The calculator's default is two decimal places on the seconds; the DDM column is shown to three decimal places on the minutes, as most charts are.</p>
+  </section>
+
+  <section class="card">
+    <h2>Converting DMS Back to Decimal Degrees</h2>
+    <p>
+      The reverse direction — DMS to decimal degrees — is a single sum rather than a repeated
+      multiplication: <code>decimal = degrees + minutes / 60 + seconds / 3600</code>. Applied to
+      39° 54′ 22.00″ it gives 39 + 54/60 + 22/3600 = 39.906111. Watch the sign: for southern latitudes
+      and western longitudes the whole result is negative, so 77° 02′ 11.40″ W becomes
+      <code>−77.0365</code>.
+    </p>
+    <p>
+      In the <strong>DMS → Decimal</strong> tab above you can type the degrees, minutes and seconds
+      directly and pick the hemisphere; the converter applies the sign for you and returns the decimal
+      degree value at the precision you set.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>DDM and Other Coordinate Formats</h2>
+    <p>
+      Degrees and decimal minutes (DDM) is the third common format: a whole degree value plus minutes
+      carried to several decimal places, such as <code>N 39° 54.367′</code>. It is standard in marine
+      charts, in aviation and in many older GPS receivers. All three formats — DD, DMS and DDM —
+      describe the same point, so conversion is lossless provided you keep enough decimal places.
+    </p>
+    <p>
+      The converter shows all three side by side, so you can copy whichever one the device, chart or
+      document expects without re-entering the coordinate.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>When to use this converter</h2>
+    <p>
+      You typically need a decimal degrees to DMS conversion when the format a device or document
+      expects differs from the one you hold. Common cases include:
+    </p>
+    <ul>
+      <li>Reading a value from GIS software or a database and writing it onto a survey plan, map label or field note that uses DMS.</li>
+      <li>Typing coordinates from a paper plan into a GPS unit or mobile app that only accepts decimal degrees.</li>
+      <li>Cross-checking a marine chart or aviation reference that uses degrees and decimal minutes (DDM).</li>
+      <li>Preparing construction setting-out sheets, cadastral records or excavation stake coordinates.</li>
+      <li>Converting quick decimal results to a readable format for reports and coursework.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="degrees-minutes-seconds-explained.html">Degrees, minutes and seconds explained<small>DMS, DDM and how much precision each decimal place buys</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related converters and calculators</h2>
+    <div class="links">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>WGS84 / UTM zone ↔ lat-long</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Two coordinates → distance and azimuth</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Acreage and area from coordinates</small></a>
+      <a href="mgrs-converter.html">mgrs to lat long<small>Military grid reference conversion</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance to ground distance</small></a>
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Bearing to azimuth and back</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do I convert decimal degrees to DMS?</summary>
+      <p>Take the whole number as degrees. Multiply the decimal fraction by 60 for minutes, then multiply the remaining fraction by 60 again for seconds. Example: 39.906111 becomes 39° 54′ 22.00″.</p>
+    </details>
+    <details>
+      <summary>What is the difference between decimal degrees and DMS?</summary>
+      <p>Decimal degrees express a coordinate as one decimal number such as 39.906111. DMS expresses the same angle in degrees, minutes and seconds such as 39° 54′ 22.00″. GIS and databases usually store DD; survey plans and map labels often use DMS.</p>
+    </details>
+    <details>
+      <summary>How do I handle negative coordinates?</summary>
+      <p>A negative value is south of the equator for latitude, or west of the prime meridian for longitude. So −39.906111 is 39° 54′ 22.00″ S, and −77.0365 is 77° 02′ 11.40″ W. The hemisphere letter is applied automatically.</p>
+    </details>
+    <details>
+      <summary>What is DDM and when should I use it?</summary>
+      <p>DDM is degrees and decimal minutes, such as N 39° 54.367′. It is common in marine and aviation navigation. Use it when a chart or device expects decimal minutes instead of seconds.</p>
+    </details>
+    <details>
+      <summary>How accurate is this coordinate converter?</summary>
+      <p>The tool uses double-precision arithmetic, and you can set the seconds to as many as 6 decimal places. Seconds to 4 decimal places is 0.0001 of a second, about 3 mm on the ground at the equator — far finer than consumer GPS accuracy.</p>
+    </details>
+    <details>
+      <summary>Is this tool free and does it require an account?</summary>
+      <p>It is free, with no login, no account and no limit. The calculation runs entirely in your browser, so no coordinate is ever sent to a server.</p>
+    </details>
+    <details>
+      <summary>How do I convert DMS to decimal degrees?</summary>
+      <p>Add the parts together: decimal = degrees + minutes ÷ 60 + seconds ÷ 3600. For example, 39° 54′ 22.00″ becomes 39 + 54/60 + 22/3600 = 39.906111. For southern latitudes and western longitudes the result is negative.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Verify critical coordinates against your project's
+    coordinate reference system before use in the field.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var tabDD = el("tab-dd"), tabDMS = el("tab-dms");
+  var panelDD = el("panel-dd"), panelDMS = el("panel-dms");
+  var ddInput = el("dd-input"), coordType = el("coord-type"), precision = el("precision");
+  var inDeg = el("in-deg"), inMin = el("in-min"), inSec = el("in-sec"), hemi = el("hemi");
+  var results = el("results");
+  var errDD = el("err-dd"), errDMS = el("err-dms");
+  var toast = el("toast");
+  var mode = "dd";
+
+  function showToast(msg){
+    toast.textContent = msg;
+    toast.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(function(){ toast.classList.remove("show"); }, 1600);
+  }
+
+  function pad(n, len){
+    n = String(n);
+    while (n.length < len) { n = "0" + n; }
+    return n;
+  }
+
+  function hemisphereFor(value, type){
+    if (type === "lat") { return value < 0 ? "S" : "N"; }
+    return value < 0 ? "W" : "E";
+  }
+
+  function decimalToDMS(value, prec, type){
+    var neg = value < 0;
+    var abs = Math.abs(value);
+    var totalSeconds = abs * 3600;
+    var factor = Math.pow(10, prec);
+    totalSeconds = Math.round(totalSeconds * factor) / factor;
+
+    var d = Math.floor(totalSeconds / 3600);
+    var rem = totalSeconds - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = rem - m * 60;
+    s = Math.round(s * factor) / factor;
+
+    // fix float drift / carry
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+
+    var h = hemisphereFor(neg ? -abs : abs, type);
+
+    var sInt = Math.floor(s);
+    var secStr;
+    if (prec === 0) {
+      secStr = pad(Math.round(s), 2);
+    } else {
+      secStr = pad(sInt, 2) + s.toFixed(prec).slice(String(sInt).length);
+    }
+
+    var dms = d + "\u00B0 " + pad(m,2) + "\u2032 " + secStr + "\u2033";
+    var dmsh = h + " " + dms;
+
+    // DDM: degrees + decimal minutes (round first, then split, so 60' carries correctly).
+    // Minutes carry one decimal more than the seconds field, and never fewer than the three
+    // decimals charts and flight plans use — 0.001' is about 1.9 m on the ground.
+    var dmMinPrec = Math.max(prec + 1, 3);
+    var dmFactor = Math.pow(10, dmMinPrec);
+    var dmTotal = Math.round(abs * 60 * dmFactor) / dmFactor;
+    var dmD = Math.floor(dmTotal / 60);
+    var dmM = dmTotal - dmD * 60;
+    if (dmM >= 60) { dmM -= 60; dmD += 1; }
+    var dmMStr = dmM.toFixed(dmMinPrec);
+    var dmInt = Math.floor(dmM);
+    var dmMPadded = pad(dmInt, 2) + dmMStr.slice(String(dmInt).length);
+    var ddm = h + " " + dmD + "\u00B0 " + dmMPadded + "\u2032";
+
+    return {
+      decimal: (neg ? "-" : "") + abs.toFixed(Math.max(8, prec + 4)).replace(/0+$/,"").replace(/\.$/,""),
+      dms: dms,
+      dmsh: dmsh,
+      ddm: ddm
+    };
+  }
+
+  function renderDD(){
+    var raw = ddInput.value.trim().replace(/\s+/g,"");
+    if (raw === "") { results.classList.remove("show"); errDD.classList.remove("show"); return; }
+    var v = Number(raw);
+    if (!isFinite(v) || Math.abs(v) > 180) { errDD.classList.add("show"); results.classList.remove("show"); return; }
+    errDD.classList.remove("show");
+
+    var prec = parseInt(precision.value, 10);
+    var type = coordType.value;
+    var out = decimalToDMS(v, prec, type);
+
+    el("r-dd").textContent = out.decimal + "\u00B0";
+    el("r-dms").textContent = out.dms;
+    el("r-dmsh").textContent = out.dmsh;
+    el("r-ddm").textContent = out.ddm;
+    results.classList.add("show");
+  }
+
+  function renderDMS(){
+    var dStr = inDeg.value.trim(), mStr = inMin.value.trim(), sStr = inSec.value.trim();
+    if (dStr === "" && mStr === "" && sStr === "") { results.classList.remove("show"); errDMS.classList.remove("show"); return; }
+    var d = dStr === "" ? 0 : Number(dStr);
+    var m = mStr === "" ? 0 : Number(mStr);
+    var s = sStr === "" ? 0 : Number(sStr);
+
+    if (!isFinite(d) || !isFinite(m) || !isFinite(s) ||
+        d < 0 || m < 0 || s < 0 || m >= 60 || s >= 60 || d > 180) {
+      errDMS.classList.add("show"); results.classList.remove("show"); return;
+    }
+    errDMS.classList.remove("show");
+
+    var h = hemi.value;
+    var sign = (h === "S" || h === "W") ? -1 : 1;
+    var dec = sign * (d + m / 60 + s / 3600);
+    var prec = parseInt(precision.value, 10);
+    var out = decimalToDMS(dec, prec, (h === "N" || h === "S") ? "lat" : "lon");
+
+    el("r-dd").textContent = out.decimal + "\u00B0";
+    el("r-dms").textContent = out.dms;
+    el("r-dmsh").textContent = out.dmsh;
+    el("r-ddm").textContent = out.ddm;
+    results.classList.add("show");
+  }
+
+  function update(){
+    if (mode === "dd") { renderDD(); } else { renderDMS(); }
+  }
+
+  function switchMode(next){
+    mode = next;
+    if (next === "dd") {
+      tabDD.classList.add("active"); tabDMS.classList.remove("active");
+      tabDD.setAttribute("aria-selected","true"); tabDMS.setAttribute("aria-selected","false");
+      panelDD.style.display = ""; panelDMS.style.display = "none";
+    } else {
+      tabDMS.classList.add("active"); tabDD.classList.remove("active");
+      tabDMS.setAttribute("aria-selected","true"); tabDD.setAttribute("aria-selected","false");
+      panelDMS.style.display = ""; panelDD.style.display = "none";
+    }
+    update();
+  }
+
+  tabDD.addEventListener("click", function(){ switchMode("dd"); });
+  tabDMS.addEventListener("click", function(){ switchMode("dms"); });
+
+  ddInput.addEventListener("input", renderDD);
+  coordType.addEventListener("change", renderDD);
+  precision.addEventListener("change", update);
+  inDeg.addEventListener("input", renderDMS);
+  inMin.addEventListener("input", renderDMS);
+  inSec.addEventListener("input", renderDMS);
+  hemi.addEventListener("change", renderDMS);
+
+  // example presets
+  Array.prototype.forEach.call(document.querySelectorAll(".examples a"), function(a){
+    a.addEventListener("click", function(){
+      switchMode("dd");
+      ddInput.value = a.getAttribute("data-ex");
+      var t = a.getAttribute("data-type");
+      if (t === "lat" || t === "lon") { coordType.value = t; }
+      else { coordType.value = "auto"; }
+      renderDD();
+    });
+  });
+
+  el("reset-btn").addEventListener("click", function(){
+    ddInput.value = ""; inDeg.value = ""; inMin.value = ""; inSec.value = "";
+    coordType.value = "auto"; precision.value = "2"; hemi.value = "N";
+    results.classList.remove("show"); errDD.classList.remove("show"); errDMS.classList.remove("show");
+  });
+
+  el("copy-btn").addEventListener("click", function(){
+    var lines = [
+      "Decimal degrees (DD): " + el("r-dd").textContent,
+      "DMS: " + el("r-dms").textContent,
+      "DMS (hemisphere): " + el("r-dmsh").textContent,
+      "DDM: " + el("r-ddm").textContent
+    ];
+    var text = lines.join("\n");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function(){ showToast("Copied to clipboard"); },
+        function(){ fallbackCopy(text); });
+    } else { fallbackCopy(text); }
+  });
+
+  function fallbackCopy(text){
+    var ta = document.createElement("textarea");
+    ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); showToast("Copied to clipboard"); }
+    catch(e){ showToast("Press Ctrl+C to copy"); }
+    document.body.removeChild(ta);
+  }
+
+  // initial state
+  switchMode("dd");
+})();
+</script>
+</body>
+</html>

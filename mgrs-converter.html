@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MGRS to Lat Long Converter — Military Grid Reference (Free)</title>
+<meta name="description" content="Free MGRS to lat long converter: decode a military grid reference into latitude and longitude, or convert lat long to MGRS on WGS84. Runs in your browser.">
+<link rel="canonical" href="https://coordcalc.com/mgrs-converter.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/mgrs-converter.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/mgrs-converter.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/mgrs-converter.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:title" content="MGRS to Lat Long Converter — Military Grid Reference (Free)">
+<meta property="og:description" content="Free MGRS to lat long converter: military grid reference system strings to latitude and longitude, and latitude and longitude to MGRS, on WGS84. No login, runs in your browser.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/mgrs-converter.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert an MGRS grid reference to latitude and longitude?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter the full reference including the zone number, the latitude band letter, the two-letter 100 km square and the digits, for example 17T PJ 30084 33438. The converter decodes the 100 km square, adds the digits, converts the easting and northing to geographic coordinates on WGS84, and returns latitude and longitude in both decimal degrees and DMS."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is an MGRS grid reference?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Accuracy depends on the number of digits. Two digits per axis (four digits in total) locate a point to 1 km, four digits per axis to 10 m, and five digits per axis to 1 m. The converter reports the applied resolution with every result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why are the letters I and O missing from MGRS?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Both letters are omitted so that they cannot be misread as the digits 1 and 0 on a map, a radio log or a handwritten field book. The latitude bands therefore run C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, and the 100 km row letters skip I and O in the same way."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the same MGRS reference appear in more than one place?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The 100 km row letters repeat every 2,000,000 m, so a reference without its latitude band letter could in principle match two or three positions north of the equator. The band letter removes that ambiguity, which is why a complete MGRS reference always includes it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does MGRS work anywhere in the world?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "MGRS covers 80 degrees south to 84 degrees north, the same latitude range as UTM. Polar regions are covered by a different grid, the Universal Polar Stereographic system, which is not part of MGRS."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this MGRS converter free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. It is free with no login, no account and no usage limit, and the conversion runs entirely in your browser so no coordinates are uploaded."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert MGRS to lat long in one step?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Paste the full reference, including the zone number and the latitude band letter, into the MGRS to latitude / longitude tab and the converter returns latitude and longitude in both decimal degrees and DMS in a single pass. Leaving out the zone or the band letter is the usual reason a reference will not convert, because a 100 km square on its own is ambiguous."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--warn:#b45309;--soft:#eef2f9;
+    --cat:#2563eb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  header.site{background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+    letter-spacing:-.2px;text-decoration:none;}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  .wrap{max-width:820px;margin:0 auto;padding:26px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.3px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:20px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;
+    flex-wrap:wrap;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .row.tight{gap:10px;}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .field.grow{flex:1;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],textarea,select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;min-width:0;width:100%;}
+  textarea{font-size:14px;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    resize:vertical;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.big{font-size:19px;font-weight:600;letter-spacing:.3px;}
+  .w-lg{width:230px;}
+  .w-md{width:132px;}
+  .w-sm{width:92px;}
+  .w-xs{width:74px;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .hint code,.note code,p code,li code{background:var(--soft);padding:2px 6px;border-radius:5px;
+    font-size:13px;color:var(--accent-d);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--cat);
+    border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3b4353;margin:16px 0 0;}
+  .note.warn{border-left-color:var(--warn);background:#fffbeb;}
+  .note b{color:var(--text);}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);white-space:nowrap;}
+  .result-row .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;
+    word-break:break-all;}
+  .result-row.small .v{font-size:15px;font-weight:600;}
+  .result-row.transient .v{color:var(--cat);}
+  .btn{border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-d);}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+  .examples{margin-top:16px;font-size:13px;color:var(--sub);}
+  .examples a{color:var(--accent);cursor:pointer;text-decoration:none;
+    border-bottom:1px dotted var(--accent);margin-right:14px;}
+  .chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--sub);}
+  .chips button{font-family:inherit;font-size:12px;padding:4px 10px;border-radius:14px;border:1px solid var(--line);
+    background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  .chips button:hover{border-color:var(--accent);color:var(--accent);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:14px;
+    font-variant-numeric:tabular-nums;}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:var(--sub);font-weight:700;}
+  th:first-child,td:first-child{text-align:left;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr.tot td{font-weight:700;border-top:1px solid var(--line);}
+  .tbl-scroll{overflow-x:auto;margin-top:6px;}
+  section.card h2:first-child{margin-top:0;}
+  section.card h3:first-child{margin-top:0;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;
+    padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"\2013";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  .formula{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;color:var(--text);
+    margin:12px 0;overflow-x:auto;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);
+    padding-top:18px;}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:#1f2430;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;opacity:0;
+    transition:.25s;pointer-events:none;z-index:60;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+  summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .w-lg,.w-md,.w-sm,.w-xs{width:100%;}
+    .field{flex:1 1 100%;}
+  }
+
+  :root{--cat:#2563eb;}
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#coordinates">Coordinate conversion</a> › MGRS to Lat Long
+  </nav>
+
+  <h1>MGRS to Lat Long Converter</h1>
+
+  <p class="lead">
+    This MGRS to lat long converter translates between the Military Grid Reference System and latitude
+    and longitude. Type a grid reference such as <code>17T PJ 30084 33438</code> to get the position, or
+    enter coordinates and choose a precision from 10 km down to 1 m. MGRS is built on the UTM grid,
+    so the converter also shows the underlying zone, easting and northing.
+  </p>
+
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-fwd" role="tab" aria-selected="true" type="button">Latitude / longitude &rarr; MGRS</button>
+      <button class="tab" id="tab-inv" role="tab" aria-selected="false" type="button">MGRS &rarr; latitude / longitude</button>
+    </div>
+
+    <div id="panel-fwd">
+      <div class="row">
+        <div class="field"><label for="lat">Latitude</label><input type="text" id="lat" inputmode="decimal" autocomplete="off" spellcheck="false" value="43.642567" class="big w-lg" placeholder="e.g. 43.642567"></div>
+        <div class="field"><label for="lon">Longitude</label><input type="text" id="lon" inputmode="decimal" autocomplete="off" spellcheck="false" value="-79.387139" class="big w-lg" placeholder="e.g. -79.387139"></div>
+      </div>
+      <div class="row tight" style="margin-top:14px;">
+        <div class="field w-lg"><label for="digits">Precision</label><select id="digits"><option value="5" selected>5 digits — 1 m</option><option value="4">4 digits — 10 m</option><option value="3">3 digits — 100 m</option><option value="2">2 digits — 1 km</option><option value="1">1 digit — 10 km</option></select></div>
+      </div>
+      <p class="hint">Accepted only between 80&deg;S and 84&deg;N, the latitude range that MGRS covers.</p>
+      <div class="chips">
+        <span>Try:</span>
+        <button type="button" data-lat="43.642567" data-lon="-79.387139">CN Tower</button>
+        <button type="button" data-lat="39.906111" data-lon="116.3974">Beijing</button>
+        <button type="button" data-lat="-33.856944" data-lon="151.215278">Sydney</button>
+      </div>
+      <p class="err" id="err-fwd"></p>
+      <div class="results" id="res-fwd">
+        <div class="result-row"><span class="k">MGRS</span><span class="v" id="f-mgrs">&mdash;</span></div>
+        <div class="result-row small"><span class="k">100 km square</span><span class="v" id="f-square">&mdash;</span></div>
+        <div class="result-row small"><span class="k">UTM zone and band</span><span class="v" id="f-zone">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Easting (m)</span><span class="v" id="f-easting">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Northing (m)</span><span class="v" id="f-northing">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Applied resolution</span><span class="v" id="f-res">&mdash;</span></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-fwd" type="button">Copy results</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-inv" style="display:none;">
+      <div class="row">
+        <div class="field"><label for="mgrs">MGRS grid reference</label><input type="text" id="mgrs" inputmode="decimal" autocomplete="off" spellcheck="false" value="17T PJ 30084 33438" class="big w-lg" placeholder="e.g. 17T PJ 30084 33438" style="width:100%;max-width:420px;"></div>
+      </div>
+      <p class="hint">Spaces, case and separators are ignored: <code>17TPJ3008433438</code>, <code>17T PJ 30084 33438</code> and <code>17T PJ 3008 4334</code> are all accepted.</p>
+      <p class="err" id="err-inv"></p>
+      <div class="results" id="res-inv">
+        <div class="result-row"><span class="k">Latitude (DD)</span><span class="v" id="i-latdd">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Latitude (DMS)</span><span class="v" id="i-latdms">&mdash;</span></div>
+        <div class="result-row"><span class="k">Longitude (DD)</span><span class="v" id="i-londd">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Longitude (DMS)</span><span class="v" id="i-londms">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Zone and band</span><span class="v" id="i-zone">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Easting / northing (m)</span><span class="v" id="i-en">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Resolution</span><span class="v" id="i-res">&mdash;</span></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-inv" type="button">Copy results</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>MGRS is a compact way of writing a UTM position. A reference such as <code>17T PJ 30084 33438</code>
+      has four parts: the <b>zone</b> number (17), the <b>latitude band</b> letter (T), the
+      <b>100 km square</b> identifier (PJ) and the numeric digits that locate the point inside that
+      square. The digits are always split evenly: the first half is the easting offset and the second
+      half the northing offset, so the resolution depends on how many digits are printed — two pairs
+      of five digits locate a point to 1 m, while four digits in total locate it to 1 km.</p>
+    <p>The latitude band is a letter from C to X covering eight degrees of latitude from 80&deg;S, with
+      the letters I and O left out to avoid confusion with 1 and 0. The 100 km square uses a
+      different set of letters in each zone, and the row letters repeat every 2,000,000 m northwards,
+      which is why the band letter must be present: without it a grid reference is ambiguous. This
+      converter resolves that ambiguity by picking the candidate position that falls inside the
+      stated latitude band.</p>
+    <p>Because MGRS sits on UTM, all values here use the WGS84 ellipsoid, and the standard zone
+      numbering applies. Grid references near the poles are not defined: MGRS stops at 84&deg;N and
+      80&deg;S.</p>
+  </section>
+
+  <section class="card">
+    <h2>MGRS to Latitude and Longitude</h2>
+    <p>Converting MGRS to latitude longitude reverses the forward routine. The converter splits the
+      reference into its zone, latitude band, two-letter 100 km square and digits, rebuilds the easting
+      and northing of that square, then projects the point onto the WGS84 ellipsoid. For example
+      <code>17T PJ 30084 33438</code> decodes to latitude 43.642567 and longitude -79.387139, the
+      ten-figure reference for the CN Tower in Toronto.</p>
+    <p>Because a 100 km grid square only fixes the point to the nearest 100 km, the latitude band does the
+      heavy lifting: it is what lets the converter pick the correct repetition of the row letters and
+      return a single, unambiguous position. A reference such as <code>PJ 30084 33438</code> without its
+      zone and band is therefore not enough to convert MGRS to lat long. The precision you get back is
+      set by the digits you supply — five digits per axis resolves 1 m, three digits 100 m, and a bare
+      100 km square is the square itself.</p>
+    <p>If you need the underlying grid numbers rather than a geographic position, note that this page
+      and the <a href="utm-coordinate-converter.html">utm to lat long</a> converter share the same WGS84
+      engine, so the easting and northing reported here match the UTM grid result to the millimetre.</p>
+  </section>
+
+  <section class="card">
+    <h2>When to use this tool</h2>
+    <p>MGRS is the working reference format for military, emergency and search-and-rescue mapping, and it appears on plenty of civilian plans as well. Typical uses:</p>
+    <ul>
+      <li>Reading a grid reference from a tactical map, incident log or radio message and plotting the position on a civilian map or GIS layer.</li>
+      <li>Writing a short, unambiguous position for a team in the field, where a ten-figure reference is easier to pass over the radio than a full latitude and longitude.</li>
+      <li>Recording a location from a GPS unit set to MGRS and checking it against a dataset held in latitude and longitude.</li>
+      <li>Preparing briefing material, exercise documentation or training scenarios that must quote grid references.</li>
+      <li>Cross-checking a hand-written grid reference against the coordinates recorded by a mapping application.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="utm-vs-mgrs.html">UTM vs MGRS: what's the difference<small>One grid, two notations, and what the digits mean</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related converters and calculators</h2>
+    <div class="links">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>WGS84 lat-long to UTM easting, northing and zone</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Decimal degrees to DMS, DDM and back</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Two coordinates to ground distance and azimuth</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, acreage and perimeter from coordinates</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance to ground distance for any scale</small></a>
+      <a href="traverse-calculator.html">traverse calculator<small>Coordinates, closure error and Bowditch adjustment</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+      <details open>
+      <summary>How do I convert an MGRS grid reference to latitude and longitude?</summary>
+      <p>Enter the full reference including the zone number, the latitude band letter, the two-letter 100 km square and the digits, for example 17T PJ 30084 33438. The converter decodes the 100 km square, adds the digits, converts the easting and northing to geographic coordinates on WGS84, and returns latitude and longitude in both decimal degrees and DMS.</p>
+    </details>
+      <details>
+      <summary>How accurate is an MGRS grid reference?</summary>
+      <p>Accuracy depends on the number of digits. Two digits per axis (four digits in total) locate a point to 1 km, four digits per axis to 10 m, and five digits per axis to 1 m. The converter reports the applied resolution with every result.</p>
+    </details>
+      <details>
+      <summary>Why are the letters I and O missing from MGRS?</summary>
+      <p>Both letters are omitted so that they cannot be misread as the digits 1 and 0 on a map, a radio log or a handwritten field book. The latitude bands therefore run C, D, E, F, G, H, J, K, L, M, N, P, Q, R, S, T, U, V, W, X, and the 100 km row letters skip I and O in the same way.</p>
+    </details>
+      <details>
+      <summary>Why does the same MGRS reference appear in more than one place?</summary>
+      <p>The 100 km row letters repeat every 2,000,000 m, so a reference without its latitude band letter could in principle match two or three positions north of the equator. The band letter removes that ambiguity, which is why a complete MGRS reference always includes it.</p>
+    </details>
+      <details>
+      <summary>Does MGRS work anywhere in the world?</summary>
+      <p>MGRS covers 80 degrees south to 84 degrees north, the same latitude range as UTM. Polar regions are covered by a different grid, the Universal Polar Stereographic system, which is not part of MGRS.</p>
+    </details>
+      <details>
+      <summary>Is this MGRS converter free?</summary>
+      <p>Yes. It is free with no login, no account and no usage limit, and the conversion runs entirely in your browser so no coordinates are uploaded.</p>
+    </details>
+      <details>
+      <summary>Can I convert MGRS to lat long in one step?</summary>
+      <p>Yes. Paste the full reference, including the zone number and the latitude band letter, into the MGRS to latitude / longitude tab and the converter returns latitude and longitude in both decimal degrees and DMS in a single pass. Leaving out the zone or the band letter is the usual reason a reference will not convert, because a 100 km square on its own is ambiguous.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Verify critical values against your project's
+    coordinate reference system and specification before use in the field.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+/* ---- shared geodesy library (WGS84), verified against published reference values ---- */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+
+/* ---- page logic ---- */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll(lines) {
+    var text = lines.join("\n");
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); showToast("Copied to clipboard"); }
+      catch (e) { showToast("Press Ctrl+C to copy"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Copied to clipboard"); }, fallback);
+    } else { fallback(); }
+  }
+  function readResults(root) {
+    var out = [], nodes = root.querySelectorAll(".result-row");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].querySelector(".k"), v = nodes[i].querySelector(".v");
+      if (k && v && v.textContent !== "\u2014") { out.push(k.textContent + ": " + v.textContent); }
+    }
+    return out;
+  }
+  function num(id) {
+    var s = $(id).value.trim();
+    if (s === "") { return NaN; }
+    var v = Number(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function ang(id, kind) {
+    var s = $(id).value.trim();
+    return s === "" ? NaN : Geo.parseAngle(s, kind || "lat");
+  }
+  function txt(id, v) { $(id).textContent = v; }
+  function setErr(show, msg, id) {
+    var e = $(id || "err");
+    if (!e) { return; }
+    if (msg) { e.textContent = msg; }
+    e.classList.toggle("show", !!show);
+  }
+  function show(v, id) { $(id || "results").classList.toggle("show", v !== false); }
+  function bind(ids, fn) {
+    for (var i = 0; i < ids.length; i++) {
+      $(ids[i]).addEventListener("input", fn);
+      $(ids[i]).addEventListener("change", fn);
+    }
+  }
+  function bindChips(fn) {
+    var c = document.querySelectorAll(".chips button");
+    for (var i = 0; i < c.length; i++) {
+      c[i].addEventListener("click", function () { fn(this); });
+    }
+  }
+
+
+  var MODE = "fwd";
+  function switchMode(m) {
+    MODE = m;
+    var f = m === "fwd";
+    $("tab-fwd").classList.toggle("active", f);
+    $("tab-inv").classList.toggle("active", !f);
+    $("tab-fwd").setAttribute("aria-selected", String(f));
+    $("tab-inv").setAttribute("aria-selected", String(!f));
+    $("panel-fwd").style.display = f ? "" : "none";
+    $("panel-inv").style.display = f ? "none" : "";
+  }
+
+  function resolutionText(per) {
+    var m = Math.pow(10, 5 - per);
+    return per + " digits per axis \u2014 about " + (m >= 1000 ? (m / 1000) + " km" : m + " m");
+  }
+
+  function renderFwd() {
+    var ls = $("lat").value.trim(), os = $("lon").value.trim();
+    if (ls === "" || os === "") { setErr(false, "", "err-fwd"); show(false, "res-fwd"); return; }
+    var lat = Geo.parseAngle(ls, "lat"), lon = Geo.parseAngle(os, "lon");
+    if (isNaN(lat) || isNaN(lon)) {
+      setErr(true, "Enter a valid latitude (-90 to 90) and longitude (-180 to 180).", "err-fwd");
+      show(false, "res-fwd");
+      return;
+    }
+    if (lat < -80 || lat > 84) {
+      setErr(true, "MGRS is only defined between 80\u00B0S and 84\u00B0N. This latitude is outside that range.", "err-fwd");
+      show(false, "res-fwd");
+      return;
+    }
+    setErr(false, "", "err-fwd");
+    var per = parseInt($("digits").value, 10);
+    var m = Geo.mgrsForward(lat, lon, per);
+    txt("f-mgrs", m.mgrs);
+    txt("f-square", m.square);
+    txt("f-zone", m.zone + m.band);
+    txt("f-easting", Geo.fmt(m.easting, 3));
+    txt("f-northing", Geo.fmt(m.northing, 3));
+    txt("f-res", resolutionText(per));
+    show(true, "res-fwd");
+  }
+
+  function renderInv() {
+    var s = $("mgrs").value.trim();
+    if (s === "") { setErr(false, "", "err-inv"); show(false, "res-inv"); return; }
+    var g = Geo.mgrsInverse(s);
+    if (!g) {
+      setErr(true, "That reference could not be read. Use zone (1-60), a band letter C-X without I or O, two square letters, then an even number of digits, for example 17T PJ 30084 33438.", "err-inv");
+      show(false, "res-inv");
+      return;
+    }
+    setErr(false, "", "err-inv");
+    txt("i-latdd", Geo.fmt(g.lat, 7) + "\u00B0");
+    txt("i-latdms", Geo.formatDMS(g.lat, 3, "lat"));
+    txt("i-londd", Geo.fmt(g.lon, 7) + "\u00B0");
+    txt("i-londms", Geo.formatDMS(g.lon, 3, "lon"));
+    txt("i-zone", g.zone + g.band);
+    txt("i-en", Geo.fmt(g.easting, 0) + " E / " + Geo.fmt(g.northing, 0) + " N");
+    var clean = String(s).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var per = Math.max(0, (clean.length - 5) / 2);
+    txt("i-res", per === 0 ? "100 km square only" : resolutionText(per));
+    show(true, "res-inv");
+  }
+
+  $("tab-fwd").addEventListener("click", function () { switchMode("fwd"); });
+  $("tab-inv").addEventListener("click", function () { switchMode("inv"); });
+  bind(["lat", "lon", "digits"], renderFwd);
+  bind(["mgrs"], renderInv);
+  bindChips(function (btn) {
+    $("lat").value = btn.getAttribute("data-lat");
+    $("lon").value = btn.getAttribute("data-lon");
+    switchMode("fwd");
+    renderFwd();
+  });
+
+  $("copy-fwd").addEventListener("click", function () { copyAll(readResults($("res-fwd"))); });
+  $("copy-inv").addEventListener("click", function () { copyAll(readResults($("res-inv"))); });
+
+  switchMode("fwd");
+  renderFwd();
+  renderInv();
+
+})();
+</script>
+</body>
+</html>

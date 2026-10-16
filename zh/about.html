@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>关于 CoordCalc — 免费测绘计算器，算法公开可核验</title>
+<meta name="description" content="CoordCalc 是什么、写给谁用、计算器如何构建并对照 PROJ 与 EPSG 注册库校验，以及如何联系我们。">
+<link rel="canonical" href="https://coordcalc.com/zh/about.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/about.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/about.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/about.html">
+<meta property="og:title" content="关于 CoordCalc — 免费测绘计算器，算法公开可核验">
+<meta property="og:description" content="CoordCalc 是什么、写给谁用、计算器如何构建与校验，以及如何联系我们。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/about.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "name": "关于 CoordCalc",
+  "description": "CoordCalc 测绘计算器是什么，如何构建与校验，以及如何联系本站。",
+  "url": "https://coordcalc.com/zh/about.html",
+  "inLanguage": "zh-CN",
+  "isPartOf": {"@type": "WebSite", "name": "CoordCalc 测绘计算器", "url": "https://coordcalc.com/zh/"}
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../about.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › 关于本站
+  </nav>
+
+<h1>关于 CoordCalc</h1>
+
+  <p class="lead">
+    CoordCalc 是一组共十五个计算器和十三篇中文教程，覆盖一项测量工作周边的全部算术：坐标转换、
+    距离与面积、单位与地籍、坡度、比例尺、曲线与导线。它免费、完全在你的浏览器里运行，
+    写给的是需要拿出一个经得起追问的数字的人——核对图纸的测量员、正在解题的学生、
+    查看 CAD 文件的工程师、梳理基准的 GIS 技术人员。
+  </p>
+
+  <div class="card">
+    <h2>为什么做这个站</h2>
+    <p>
+      大多数坐标问题难的不是数学，而是<i>记账</i>：该用哪个基准、哪个投影带、哪种英尺，
+      以及三个看起来一样其实不一样的代码谁是谁。网上有很多转换器只给一个结果、别的什么都不说，
+      而它们出错的后果总是一样的——一个错得理直气壮的数字，没人质疑它，因为它是某个网站给出的。
+    </p>
+    <p>
+      所以这里的每个计算器都做两件事：算出结果，并说明它假设了什么——用哪个椭球、
+      假原点在哪里、单位习惯是什么、两种英尺差在哪里、投影面积为什么不是地表面积。
+      教程则更进一步，讲的都是算术周边真正会遇到的问题：UTM 坐标怎么读、
+      MGRS 往返换算为什么会差出一米、椭球下面的似大地水准面在做什么、
+      美国测量英尺为什么一直活到 2023 年才退场。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>计算是怎么构建的</h2>
+    <p>
+      所有工具背后是同一个大地测量库。它是无依赖、不联网的原生 JavaScript，
+      写法取的是保守的那一路：横轴墨卡托投影用公开的级数式；反算不是套一个截断的反向公式，
+      而是对同一个级数做牛顿迭代求解；距离用 WGS84 椭球上的 Vincenty 反算，
+      对近对跖点回退到球面算法；挪威与斯瓦尔巴的投影带特例是真正实现的，不是忽略掉的。
+    </p>
+    <p>
+      这个库是被量出来的，不是被信任的。对照 PROJ——pyproj 与 QGIS 背后的参考实现——
+      从赤道到北纬 78° 的测试点上，UTM 东坐标优于 0.1 mm，北坐标优于 0.9 mm，
+      正算再反算的往返闭合差在几纳米量级。
+      <a href="epsg-code-lookup.html">EPSG 代码查询</a>是从 EPSG 注册库程序化生成的，
+      不是手敲进去的，所以它的名称、单位、适用范围和投影参数都是注册库自己的。
+      <a href="developers.html">开发者指南</a>列出了这些精确数字，并演示如何在浏览器控制台里复现它们。
+    </p>
+    <p>
+      测试上用的是同一套规矩：每个计算器上线前都要在真实的浏览器文档里、
+      对照已确认的数值跑一遍；批量转换器对照的是手工核对过的坐标清单，而不是它自己的输出。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>站点是怎么构建的</h2>
+    <p>
+      页面是手写的 HTML、CSS 和 JavaScript，不用框架、没有构建步骤，
+      因此在野外用手机也打得开，打开后又能离线使用。
+      没有登录、没有上传、没有广告、没有 Cookie；<a href="privacy.html">隐私政策</a>之所以短，
+      是因为实在没什么可说的。计算器还支持嵌入：任一个都能用 <code>embed=1</code>
+      放进别的页面或内网，具体写在与 <a href="developers.html">URL 与 JavaScript API</a> 一起的文档里。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>我们的立场</h2>
+    <p>
+      每个页面都会写明自己的假设和边界，每个计算器的页脚都带着同一句提醒：
+      结果仅供参考；凡涉及边界、施工放样或结算的事项，都必须由持证专业人员按适用标准复核。
+      这不是为自保而贴上去的法律套话，而是对一个网页计算器最诚实的描述。
+    </p>
+    <p>
+      凡是约定可以两立的，页面会说清它选了哪一边；凡是显示时做了舍入的，
+      页面会说明计算过程用的是全精度；凡是两种权威说法不一致的——两种英尺、两种墨卡托、
+      似大地水准面与椭球——这种分歧本身就是正文的主题，而不是脚注。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>资金来源</h2>
+    <p>
+      本站没有广告、没有推广链接、没有付费软文，也没有付费等级。
+      万一将来变了，会先在这里明明白白地说出来。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>联系与勘误</h2>
+    <p>
+      算错了、解释不清、或者缺了你需要的某个单位与投影——这些都值得告诉我们，
+      能改的我们直接改，不去争辩。最有用的反馈请附上：你的输入、你期望的输出及其依据，以及你用的是哪个工具。
+    </p>
+    <p>
+      也欢迎建议新增工具，尤其是那些枯燥重复的：这里现有的计算器，
+      起初多半都是某个人被迫反复填的表格。
+      使用本站所适用的条款见<a href="terms.html">使用条款</a>。
+    </p>
+  </div>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

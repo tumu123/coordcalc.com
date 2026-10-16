@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>度分秒怎么读、怎么算 — 与十进制度互转及常见错误</title>
+<meta name="description" content="度分秒是60进制，不是十进制。39°54′22″等于39.906111°，而若把「39.5422」直接当成十进制，纬度就差0.363911°，约40.4公里。附互转公式、秒值对应的地面距离表与抄录错误清单。">
+<link rel="canonical" href="https://coordcalc.com/zh/degrees-minutes-seconds-explained.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/degrees-minutes-seconds-explained.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/degrees-minutes-seconds-explained.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/degrees-minutes-seconds-explained.html">
+<meta property="og:title" content="度分秒怎么读、怎么算 — 与十进制度互转及常见错误">
+<meta property="og:description" content="60 进制与十进制的互换方法、秒值对应的地面距离，以及一个能差出 40 公里的读法错误。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/degrees-minutes-seconds-explained.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "度分秒怎么读、怎么算",
+  "description": "度分秒与十进制度的互换公式、实际算例、秒值对应的地面距离，以及抄录与读法错误的清单。",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/degrees-minutes-seconds-explained.html"},
+  "articleSection": "角度与坐标"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../index.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 度分秒怎么读、怎么算
+  </nav>
+
+  <h1>度分秒怎么读、怎么算</h1>
+
+  <p class="lead">
+    度分秒是 <b>60 进制</b>，不是十进制。这不是一个记法上的细节——把
+    <code>39°54′22″</code> 误当成 <code>39.5422°</code> 来用，纬度就差 0.363911 度，
+    在北纬 40° 附近是 <b>40.4 公里</b>。下面把三种写法、互转公式、
+    以及每一秒值多少米都算清楚。
+  </p>
+
+  <p class="meta">
+    <span>角度与坐标</span><span>更新于 2026年10月9日</span><span>阅读约 7 分钟</span>
+  </p>
+
+  <h2>同一个角的三种写法</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>写法</th><th>示例</th><th>进制</th><th>使用场合</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>度分秒（DMS）</td><td>39°54′22″N</td><td>60 / 60 / 十进制秒</td><td>控制点成果表、地形图、地籍资料</td></tr>
+        <tr><td>度分（DDM）</td><td>39°54.3667′N</td><td>60 / 十进制分</td><td>导航设备、部分航海与航空资料</td></tr>
+        <tr><td>十进制度（DD）</td><td>39.906111</td><td>十进制</td><td>GIS、GPS、程序接口、计算器</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    三者是同一个角的三种记法，与精度无关。它们的差别只在「角被切成了几段」：
+    度分秒把度切成分（1° = 60′）、再把分切成秒（1′ = 60″），
+    所以 1° = 3600″；度分只切到分；十进制度不再切分。
+  </p>
+
+  <h2>互转公式与算例</h2>
+  <h3>度分秒 → 十进制度</h3>
+  <div class="formula">
+十进制度 = 度 + 分 ÷ 60 + 秒 ÷ 3600
+  </div>
+  <p>
+    以 <code>39°54′22″</code> 为例：<code>54 ÷ 60 = 0.9</code>，
+    <code>22 ÷ 3600 = 0.006111…</code>，相加得
+    <code>39 + 0.9 + 0.0061111 = 39.9061111°</code>，
+    即 <b>39.906111°</b>。南纬或西经在最后加负号。
+  </p>
+
+  <h3>十进制度 → 度分秒</h3>
+  <div class="formula">
+度 = 取整数部分<br>
+分 = 取小数部分 × 60 的整数部分<br>
+秒 = 剩余小数 × 60
+  </div>
+  <p>
+    反算 <code>39.906111°</code>：<code>0.906111 × 60 = 54.36666′</code>，
+    取整得 <b>54′</b>；余下 <code>0.36666 × 60 = 22.0″</code>，结果回到
+    <code>39°54′22″</code>。整个往返过程中不需要任何查表。
+  </p>
+
+  <div class="note">
+    <p><b>反过来算也很重要。</b>把 <code>39.5422</code> 当成十进制度读，
+      它对应 <code>39°32′31.92″</code>——小数部分 0.5422 度是 32.532 分，
+      不是 54 分 22 秒。两种读法相差 0.363911 度。
+      在北纬 40° 附近，纬度 1 度约 111 042 米，所以这个「读法问题」
+      是 <b>40 409.6 米，约 40.4 公里</b>的地理位置差。</p>
+  </div>
+
+  <h2>一秒值多少米</h2>
+  <p>
+    判断精度时用得最多的一张表。纬度方向几乎恒定，经度方向随纬度急剧收缩：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>纬度</th><th>1″ 对应的纬度距离</th><th>1″ 对应的经度距离</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>0°（赤道）</td><td>30.715 米</td><td>30.922 米</td></tr>
+        <tr><td>20°</td><td>30.751 米</td><td>29.069 米</td></tr>
+        <tr><td>40°（北京附近）</td><td>30.842 米</td><td>23.753 米</td></tr>
+        <tr><td>60°</td><td>30.948 米</td><td>15.500 米</td></tr>
+        <tr><td>80°</td><td>31.017 米</td><td>5.387 米</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    读法上，只要记住「<b>纬度 1″ 约 30 米，经度 1″ 约 30 米 × cos(纬度)</b>」就能估：
+    北纬 40° 处 cos ≈ 0.766，30.8 × 0.766 ≈ 23.6 米，与表中实测的 23.753 米
+    相差不到 1%，用来口算精度够用。
+    1′ 是 1″ 的 60 倍，所以北纬 40° 附近 <b>纬度 1′ = 1850.550 米</b>。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>秒的小数位</th><th>纬度方向精度</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>整秒</td><td>约 31 米</td><td>概略位置</td></tr>
+        <tr><td>0.1″</td><td>约 3.1 米</td><td>手持 GPS、图上量取</td></tr>
+        <tr><td>0.01″</td><td>约 0.31 米</td><td>常规控制点成果表</td></tr>
+        <tr><td>0.001″</td><td>约 0.03 米</td><td>高精度控制网、GNSS 静态成果</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>度分秒的加减要借位</h2>
+  <p>
+    因为进制是 60，做加减时借位与进位都按 60 走，不能按 100：
+  </p>
+  <div class="formula">
+39°54′22″ + 0°07′50″ = 40°02′12″<br>
+39°54′22″ − 0°07′50″ = 39°46′32″
+  </div>
+  <p>
+    第一条：22″ + 50″ = 72″ = 1′12″，进位 1′；54′ + 7′ + 1′ = 62′ = 1°02′，
+    再进位 1°；39° + 0° + 1° = 40°，得 40°02′12″。
+    第二条：22″ 减 50″ 不够减，从分借 1′（= 60″），
+    82″ − 50″ = 32″，分变成 53′；53′ − 7′ = 46′，得 39°46′32″。
+    如果按十进制的习惯去借位（借 100 而不是借 60），秒会算成 72″，
+    规范化之后是 39°47′12″，比正确结果多了 40″。
+  </p>
+
+  <h2>抄录与读法错误清单</h2>
+  <ul>
+    <li><b>把 DDMMSS 当十进制读。</b>最常见的错误，代价见上文那 40.4 公里。</li>
+    <li><b>分或秒写成 60 以上。</b><code>39°60′00″</code> 不是合法写法，
+      它等于 <code>40°00′00″</code>；同样 <code>39°54′60″</code> 等于
+      <code>39°55′00″</code>。软件遇到这种输入往往会静默接受并算出偏移的结果。</li>
+    <li><b>方位字母与正负号重复。</b><code>N 39°54′22″</code> 与
+      <code>39°54′22″N</code> 都是正纬度；写成 <code>N -39°54′22″</code> 则自相矛盾，
+      不同软件的取舍不同，结果不确定。</li>
+    <li><b>东经西经、南纬北纬配错。</b>北京的经度是东经 116°，
+      如果按西经解释，点位会跑到太平洋东侧；纬度按南纬解释则落到南半球。
+      写成果表时把方位字母写全，是成本最低的保险。</li>
+    <li><b>纬度与经度次序颠倒。</b>国内资料常见「先纬度后经度」，
+      而部分国际数据源用「先经度后纬度」。看数值范围可以区分：
+      纬度不会超过 ±90，经度可以到 ±180。</li>
+    <li><b>度分秒符号丢失。</b>纯数字粘贴时 <code>39 54 22</code> 与
+      <code>39.5422</code> 在不同软件里可能被解释成不同的东西。
+      需要跨软件传递时，写明用哪种记法。</li>
+  </ul>
+
+  <h2>测绘中的其他角度单位</h2>
+  <p>
+    除了度与度分秒，还会遇到另外几种角度单位，换算时都经过「度」：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>单位</th><th>与度的关系</th><th>使用场合</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>弧度（rad）</td><td>1 rad = 57.295779513°</td><td>程序接口、公式推导</td></tr>
+        <tr><td>百分度 / gon</td><td>1 gon = 0.9°（1 周 = 400 gon）</td><td>欧洲测量仪器、部分全站仪显示</td></tr>
+        <tr><td>密位（北约制）</td><td>1 mil = 0.05625°（1 周 = 6400 mil）</td><td>军用方位、火炮</td></tr>
+        <tr><td>密位（炮兵制）</td><td>1 mil = 0.06°（1 周 = 6000 mil）</td><td>部分国家炮兵体系</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    方位角与象限角的换算在测绘中也会频繁出现：象限角用
+    <code>N 45°00′00″ E</code> 这样的四象限格式，方位角用 0°–360° 的整圆格式。
+    两者之间的换算规则随象限不同，需要单独成表，本页不再展开。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="../dms-converter.html" hreflang="en">度分秒转换器<small>十进制度 ↔ 度分秒，支持方位字母</small></a>
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>度分秒可直接作为输入</small></a>
+      <a href="land-area-calculator.html">坐标推算地块面积<small>接受度分秒格式的边界坐标</small></a>
+      <a href="unit-converter.html">测量单位换算器<small>度、弧度、百分度、密位互换</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+        <small>为什么东坐标从 500 000 起算，以及四种最常见的误读。</small></li>
+      <li><a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>
+        <small>同一族投影、两套参数，以及判断手上坐标属于哪一套的方法。</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺：你手上的资料用的是哪一种</a>
+        <small>引进图纸时那个容易忽略的百万分之二。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、报批或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>两点距离与方位角计算器 — 经纬度算距离</title>
+<meta name="description" content="免费在线两点距离计算器：输入两个经纬度坐标，按 WGS84 椭球解 Vincenty 反算，给出大地线距离（米、公里、英里、英尺）与起始、终止、返程方位角。浏览器本地完成、无需登录。">
+<link rel="canonical" href="https://coordcalc.com/zh/distance-bearing-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/distance-bearing-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/distance-bearing-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/distance-bearing-calculator.html">
+<meta property="og:title" content="两点距离与方位角计算器 — 经纬度算距离">
+<meta property="og:description" content="两个坐标 → 大地线距离与起始/终止/返程方位角，WGS84 椭球 Vincenty 反算，附北京—上海算例。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/distance-bearing-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "两个坐标之间的距离怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "把两点的经纬度按十进制度输入。计算器在 WGS84 椭球上解 Vincenty 反算问题，得到的是大地线距离，不是平面近似。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "起始方位角和终止方位角有什么区别？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "起始方位角是出发时的朝向，终止方位角是到达时的朝向。大地线的朝向在不断变化（正南北向或沿赤道除外），所以两者不同。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "返程方位角是什么？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "从终点指回起点的方位角，等于起始方位角 ± 180° 后归一到 0–360°。测量上常用来检查导线闭合。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "长距离下准吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "准。WGS84 上的 Vincenty 反算在椭球面上精度约 0.5 毫米。接近对跖点迭代不收敛时，自动退回球面 haversine 公式并给出提示。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "距离输出哪些单位？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "四种同时给出：米、公里、英里、英尺，对应同一条大地线。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "能输入度分秒吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "本页要十进制度。请先用度分秒转换器把 DMS 或度分格式换算成十进制度，再粘贴过来。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么和地图软件量出来的不一样？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "地图上量到的往往是投影平面距离，被投影拉伸或压缩过；本页算的是椭球面上的真实大地线。短距离差别很小，距离越远、纬度越高差别越大。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "收费吗？需要注册吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "完全免费，无需登录，没有次数限制。全部计算在浏览器本地完成，坐标不上传。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .point{border:1px solid var(--line);border-radius:11px;padding:15px 16px;margin-bottom:12px;background:#fcfdff;}
+  .point .ptitle{font-size:13px;font-weight:700;color:var(--accent-d);margin-bottom:11px;letter-spacing:.2px;}
+  .prow{display:flex;gap:12px;flex-wrap:wrap;}
+  .field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;}
+  .field>label{font-size:12px;font-weight:600;color:var(--sub);}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:16px;padding:9px 11px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:4px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .btn{border:0;border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .results{margin-top:6px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12.5px;font-weight:500;color:var(--sub);}
+  .flag{font-size:12px;color:#b7791f;background:#fdf3e3;border-radius:6px;padding:2px 8px;
+    display:inline-block;margin-top:8px;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+  }
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#0d9488;}
+  @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../distance-bearing-calculator.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › 距离与方位角
+  </nav>
+
+<h1>两点距离与方位角计算器</h1>
+
+  <p class="lead">
+    输入两个经纬度坐标，本页给出两点间的大地线距离和从 A 点指向 B 点的方位角——距离同时用
+    米、公里、英里、英尺表示，方位角给出起始、终止和返程三个值。计算在 WGS84 椭球上完成，
+    与 GPS 使用的基准一致；全部在浏览器里算，不上传坐标。
+  </p>
+
+  <div class="card">
+    <div class="point">
+      <div class="ptitle">A 点 — 起点</div>
+      <div class="prow">
+        <div class="field">
+          <label for="lat1">纬度（°）</label>
+          <input type="number" id="lat1" step="any" placeholder="39.906111">
+        </div>
+        <div class="field">
+          <label for="lon1">经度（°）</label>
+          <input type="number" id="lon1" step="any" placeholder="116.397400">
+        </div>
+      </div>
+    </div>
+
+    <div class="point">
+      <div class="ptitle">B 点 — 终点</div>
+      <div class="prow">
+        <div class="field">
+          <label for="lat1">纬度（°）</label>
+          <input type="number" id="lat2" step="any" placeholder="31.230400">
+        </div>
+        <div class="field">
+          <label for="lon1">经度（°）</label>
+          <input type="number" id="lon2" step="any" placeholder="121.473700">
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-ghost" id="swap">交换两点</button>
+      <button class="btn btn-ghost" id="clear">清空</button>
+    </div>
+
+    <p class="hint">坐标用十进制度。手上是度分秒或度分？先用<a href="dms-converter.html">度分秒转换器</a>换算。</p>
+    <p class="err" id="err">纬度应在 −90 到 90 之间，经度应在 −180 到 180 之间。</p>
+
+    <div class="results" id="results">
+      <div class="result-row">
+        <span class="k">大地线距离</span>
+        <span class="v" id="r-dist">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">起始方位角（A → B）</span>
+        <span class="v" id="r-ib">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">终止方位角（在 B 点）</span>
+        <span class="v" id="r-fb">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">返程方位角（B → A）</span>
+        <span class="v" id="r-bb">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">Δ纬度 / Δ经度</span>
+        <span class="v" id="r-delta">—</span>
+      </div>
+      <span class="flag" id="fallback" style="display:none;">两点接近对跖点，已退回球面公式计算，结果精度略低。</span>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <p>
+      地球表面上两点的最短线是大地线，不是平面地图上的直线。本页在 WGS84 椭球上解
+      <strong>Vincenty 反算问题</strong>——与 GPS 使用同一套基准。迭代直到相邻两次经度估计之差
+      小于 10<sup>−12</sup> 弧度，椭球面上的距离精度达到亚毫米级。
+    </p>
+    <p>
+      方位角是这条大地线在起点处的前进方位角，从真北起算、顺时针为正。因为大地线的朝向
+      在不断变化，到达 B 点时的朝向与从 A 点出发时不同——所以起始和终止两个方位角都要给。
+      返程方位角是从 B 指回 A 的方向，检查导线闭合时用得上。
+    </p>
+    <p>
+      两点非常接近、或接近对跖点时，迭代可能不收敛。此时计算器自动退回以平均半径
+      6&nbsp;371&nbsp;008.8&nbsp;m 的球面套用 haversine 公式，并显示提示，
+      让你知道这个数来自哪个模型。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>算例：北京 → 上海</h2>
+    <p>
+      把两点的经纬度填进去，结果如下。你可以直接把表里的数字输进上面的输入框核对。
+    </p>
+    <table class="lookup">
+      <thead>
+        <tr><th>项目</th><th>A → B（北京 → 上海）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>A 点</td><td class="nw">39.906111, 116.397400</td></tr>
+        <tr><td>B 点</td><td class="nw">31.230400, 121.473700</td></tr>
+        <tr><td>大地线距离</td><td class="nw">1,066.424 km（1,066,424.3 m）</td></tr>
+        <tr><td>起始方位角</td><td class="nw">152° 55′ 56.66″（152.93°，南南东）</td></tr>
+        <tr><td>终止方位角</td><td class="nw">155° 53′ 41.78″（155.89°，南南东）</td></tr>
+        <tr><td>返程方位角</td><td class="nw">332° 55′ 56.66″（332.93°，北北西）</td></tr>
+        <tr><td>Δ纬度 / Δ经度</td><td class="nw">−8.675711° / +5.076300°</td></tr>
+      </tbody>
+    </table>
+    <p>
+      两个值得留意的细节：<b>距离对调方向不变</b>，但方位角不是简单加 180°——把两点对调后，
+      新的起始方位角是 335° 53′ 41.78″，恰好等于正向的终止方位角加 180°。这正是大地线
+      朝向随位置变化的直接体现。
+    </p>
+    <p>
+      再看一条短线：在北纬 39.9° 上向东取 Δ经度 48.88″（0.013578°），实测距离 1,161.1 米，
+      与「经度 1″ ≈ 23.75 米」的估算一致。输错小数位时，用这种数量级核对最容易发现。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>图上量距和实地距离不是一回事</h2>
+    <p>
+      地图上两个点之间用尺子量的长度，不等于实地的距离——投影已经把地球表面拉伸或压缩过了。
+      本页直接在椭球面上算，给出的是真实的大地线：两点相距几公里时与平面计算的差别很小，
+      但距离越远、纬度越高差别越大，到权属界线或长输管线这种量级就不能忽略了。
+    </p>
+    <p>
+      如果手上只有纸质图或带比例尺的屏幕，先量图上距离，再用<a href="../map-scale-calculator.html" hreflang="en">图幅比例尺换算</a>折算；
+      手上有坐标时才用本页。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>当 GPS 测距工具用</h2>
+    <p>
+      测绘型与户外型 GNSS 接收机、手机 App 记录的点位都是十进制度经纬度，正是本页要的输入格式：
+      把两组定位结果粘进来，直接读距离和方位角。因为计算就在 GPS 使用的 WGS84 椭球上进行，
+      已经是 WGS84 的点位不需要再做基准转换。
+    </p>
+    <p>
+      一组定位对足够写外业记录、做放样核对或估算徒步里程。如果需要整条导线的闭合差与平差，
+      请用<a href="traverse-calculator.html">导线平差计算器</a>。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>方位角与象限角</h2>
+    <p>
+      本页输出的方位角是从真北起算、顺时针 0–360° 的整圆方位角。日常口语里「方位角」和
+      「象限角」常混用，但测量上两者不同：象限角写成 N 45° E 这种带象限的形式，
+      方位角是整圆角度。需要两种写法互转时，用<a href="../azimuth-calculator.html" hreflang="en">方位角换算器</a>，
+      四个象限都能处理，结果归一到 0–360°。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>什么时候用这个计算器</h2>
+    <ul>
+      <li>核对两个测站点或控制点之间的实地距离与方向；</li>
+      <li>检查放样线：计算的方位角与设计值是否一致；</li>
+      <li>把两组 GPS 定位换算成外业记录或报告里的距离与路线方向；</li>
+      <li>现场踏勘前，先按坐标估算运距或管线长度；</li>
+      <li>讲解大圆几何——对比起始与终止方位角，看大地线如何弯。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <div class="links">
+      <a href="../bearing-vs-azimuth.html" hreflang="en">方位角与象限角的区别<small>象限角、整圆方位角与返程方位角</small></a>
+      <a href="degrees-minutes-seconds-explained.html">度分秒是怎么算的<small>小数位对应多少米</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="dms-converter.html">度分秒转换器<small>坐标换算成 DMS 或度分</small></a>
+      <a href="../azimuth-calculator.html" hreflang="en">方位角换算<small>象限角 ↔ 方位角</small></a>
+      <a href="../land-area-calculator.html" hreflang="en">坐标算面积<small>边界坐标 → 面积与周长</small></a>
+      <a href="traverse-calculator.html">导线平差计算器<small>闭合差与相对精度</small></a>
+      <a href="utm-coordinate-converter.html">UTM 坐标与经纬度互转<small>经纬度 ↔ UTM 东坐标、北坐标</small></a>
+      <a href="../slope-calculator.html" hreflang="en">坡度计算器<small>坡度百分比与坡角</small></a>
+    </div>
+  </section>
+
+  <section class="card embed-hide">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>两个坐标之间的距离怎么算？</summary>
+      <p>把两点的经纬度按十进制度输入。计算器在 WGS84 椭球上解 Vincenty 反算问题，得到的是大地线距离，不是平面近似。</p>
+    </details>
+    <details>
+      <summary>起始方位角和终止方位角有什么区别？</summary>
+      <p>起始方位角是出发时的朝向，终止方位角是到达时的朝向。大地线的朝向在不断变化（正南北向或沿赤道除外），所以两者不同。</p>
+    </details>
+    <details>
+      <summary>返程方位角是什么？</summary>
+      <p>从终点指回起点的方位角，等于起始方位角 ± 180° 后归一到 0–360°。测量上常用来检查导线闭合。</p>
+    </details>
+    <details>
+      <summary>长距离下准吗？</summary>
+      <p>准。WGS84 上的 Vincenty 反算在椭球面上精度约 0.5 毫米。接近对跖点迭代不收敛时，自动退回球面 haversine 公式并给出提示。</p>
+    </details>
+    <details>
+      <summary>距离输出哪些单位？</summary>
+      <p>四种同时给出：米、公里、英里、英尺，对应同一条大地线。</p>
+    </details>
+    <details>
+      <summary>能输入度分秒吗？</summary>
+      <p>本页要十进制度。请先用度分秒转换器把 DMS 或度分格式换算成十进制度，再粘贴过来。</p>
+    </details>
+    <details>
+      <summary>为什么和地图软件量出来的不一样？</summary>
+      <p>地图上量到的往往是投影平面距离，被投影拉伸或压缩过；本页算的是椭球面上的真实大地线。短距离差别很小，距离越远、纬度越高差别越大。</p>
+    </details>
+    <details>
+      <summary>收费吗？需要注册吗？</summary>
+      <p>完全免费，无需登录，没有次数限制。全部计算在浏览器本地完成，坐标不上传。</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var ids = ["lat1","lon1","lat2","lon2"];
+  var inputs = ids.map(el);
+  var results = el("results"), err = el("err"), fallback = el("fallback");
+
+  function vincenty(lat1, lon1, lat2, lon2){
+    var a = 6378137.0, f = 1/298.257223563, b = (1-f)*a;
+    var phi1 = lat1*Math.PI/180, phi2 = lat2*Math.PI/180;
+    var L = (lon2-lon1)*Math.PI/180;
+    var U1 = Math.atan((1-f)*Math.tan(phi1));
+    var U2 = Math.atan((1-f)*Math.tan(phi2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lambda = L, lambdaPrev, sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, cos2SigmaM, C, i = 0;
+
+    do {
+      var sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
+      var t1 = cU2*sinLambda, t2 = cU1*sU2 - sU1*cU2*cosLambda;
+      sinSigma = Math.sqrt(t1*t1 + t2*t2);
+      if (sinSigma === 0) { return { distance:0, initial:0, final:0, converged:true }; }
+      cosSigma = sU1*sU2 + cU1*cU2*cosLambda;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1*cU2*sinLambda/sinSigma;
+      cosSqAlpha = 1 - sinAlpha*sinAlpha;
+      cos2SigmaM = cosSqAlpha !== 0 ? cosSigma - 2*sU1*sU2/cosSqAlpha : 0;
+      C = f/16*cosSqAlpha*(4 + f*(4 - 3*cosSqAlpha));
+      lambdaPrev = lambda;
+      lambda = L + (1-C)*f*sinAlpha*(sigma + C*sinSigma*(cos2SigmaM + C*cosSigma*(-1 + 2*cos2SigmaM*cos2SigmaM)));
+    } while (Math.abs(lambda - lambdaPrev) > 1e-12 && ++i < 200);
+
+    var converged = i < 200;
+    var sinLambda2 = Math.sin(lambda), cosLambda2 = Math.cos(lambda);
+    var d1 = cU2*sinLambda2, d2 = cU1*sU2 - sU1*cU2*cosLambda2;
+    var f1 = cU1*sinLambda2, f2 = -sU1*cU2 + cU1*sU2*cosLambda2;
+    var initial = (Math.atan2(d1, d2)*180/Math.PI + 360) % 360;
+    var finalB = (Math.atan2(f1, f2)*180/Math.PI + 360) % 360;
+
+    if (!converged) {
+      var hav = haversine(lat1, lon1, lat2, lon2);
+      return { distance: hav, initial: initial, final: finalB, converged: false };
+    }
+
+    var sLam = Math.sin(lambda), cLam = Math.cos(lambda);
+    var sinSigma2 = Math.sqrt((cU2*sLam)*(cU2*sLam) + (cU1*sU2 - sU1*cU2*cLam)*(cU1*sU2 - sU1*cU2*cLam));
+    var cosSigma2 = sU1*sU2 + cU1*cU2*cLam;
+    var sigma2 = Math.atan2(sinSigma2, cosSigma2);
+    var sinAlpha2 = cU1*cU2*sLam/sinSigma2;
+    var cosSqAlpha2 = 1 - sinAlpha2*sinAlpha2;
+    var cos2SigmaM2 = cosSqAlpha2 !== 0 ? cosSigma2 - 2*sU1*sU2/cosSqAlpha2 : 0;
+    var uSq = cosSqAlpha2*(a*a - b*b)/(b*b);
+    var A = 1 + uSq/16384*(4096 + uSq*(-768 + uSq*(320 - 175*uSq)));
+    var B = uSq/1024*(256 + uSq*(-128 + uSq*(74 - 47*uSq)));
+    var deltaSigma = B*sinSigma2*(cos2SigmaM2 + B/4*(cosSigma2*(-1 + 2*cos2SigmaM2*cos2SigmaM2)
+      - B/6*cos2SigmaM2*(-3 + 4*sinSigma2*sinSigma2)*(-3 + 4*cos2SigmaM2*cos2SigmaM2)));
+    var distance = b*A*(sigma2 - deltaSigma);
+
+    return { distance: distance, initial: initial, final: finalB, converged: true };
+  }
+
+  function haversine(lat1, lon1, lat2, lon2){
+    var R = 6371008.8;
+    var p1 = lat1*Math.PI/180, p2 = lat2*Math.PI/180;
+    var dp = (lat2-lat1)*Math.PI/180, dl = (lon2-lon1)*Math.PI/180;
+    var aa = Math.sin(dp/2)*Math.sin(dp/2) + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)*Math.sin(dl/2);
+    return R*2*Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));
+  }
+
+  function toDMS(value){
+    var neg = value < 0, abs = Math.abs(value);
+    var total = Math.round(abs*3600*100)/100;
+    var d = Math.floor(total/3600);
+    var rem = total - d*3600;
+    var m = Math.floor(rem/60);
+    var s = rem - m*60;
+    s = Math.round(s*100)/100;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    function pad(n, l){ n = String(n); while (n.length < l) { n = "0" + n; } return n; }
+    var sec = pad(Math.floor(s), 2) + s.toFixed(2).slice(String(Math.floor(s)).length);
+    return d + "\u00B0 " + pad(m, 2) + "\u2032 " + sec + "\u2033";
+  }
+
+  function compass(bearing){
+    var dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    return dirs[Math.round(bearing/22.5) % 16];
+  }
+
+  function fmt(n, dp){ return n.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp }); }
+
+  function readInputs(){
+    var v = [], ok = true;
+    err.classList.remove("show");
+    inputs.forEach(function(inp){
+      var raw = inp.value.trim();
+      inp.classList.remove("bad");
+      if (raw === "") { ok = false; return; }
+      var n = Number(raw);
+      if (!isFinite(n)) { inp.classList.add("bad"); ok = false; return; }
+      v.push(n);
+    });
+    if (!ok || v.length !== 4) return null;
+    if (Math.abs(v[0]) > 90 || Math.abs(v[2]) > 90) { err.classList.add("show"); return null; }
+    if (Math.abs(v[1]) > 180 || Math.abs(v[3]) > 180) { err.classList.add("show"); return null; }
+    return v;
+  }
+
+  function run(){
+    var v = readInputs();
+    if (!v) {
+      if (inputs.some(function(i){ return i.value.trim() !== ""; })) {
+        results.classList.add("show");
+      } else {
+        results.classList.remove("show");
+        err.classList.remove("show");
+      }
+      return;
+    }
+    err.classList.remove("show");
+
+    var r = vincenty(v[0], v[1], v[2], v[3]);
+    var back = (r.initial + 180) % 360;
+    fallback.style.display = r.converged ? "none" : "inline-block";
+
+    el("r-dist").innerHTML =
+      fmt(r.distance/1000, 3) + " km<small>" + fmt(r.distance, 1) + " m &nbsp;·&nbsp; " +
+      fmt(r.distance/1609.344, 3) + " mi &nbsp;·&nbsp; " + fmt(r.distance/0.3048, 1) + " ft</small>";
+
+    el("r-ib").innerHTML = toDMS(r.initial) + "<small>" +
+      fmt(r.initial, 2) + "\u00B0（真北）&nbsp;·&nbsp; " + compass(r.initial) + "</small>";
+
+    el("r-fb").innerHTML = toDMS(r.final) + "<small>" +
+      fmt(r.final, 2) + "\u00B0（真北）&nbsp;·&nbsp; " + compass(r.final) + "</small>";
+
+    el("r-bb").innerHTML = toDMS(back) + "<small>" +
+      fmt(back, 2) + "\u00B0（真北）&nbsp;·&nbsp; " + compass(back) + "</small>";
+
+    el("r-delta").innerHTML = fmt(v[2]-v[0], 6) + "\u00B0<small>" + fmt(v[3]-v[1], 6) + "\u00B0</small>";
+
+    results.classList.add("show");
+  }
+
+  inputs.forEach(function(i){ i.addEventListener("input", run); });
+
+  el("swap").addEventListener("click", function(){
+    var t1 = el("lat1").value, t2 = el("lon1").value;
+    el("lat1").value = el("lat2").value; el("lon1").value = el("lon2").value;
+    el("lat2").value = t1; el("lon2").value = t2;
+    run();
+  });
+
+  el("clear").addEventListener("click", function(){
+    inputs.forEach(function(i){ i.value = ""; i.classList.remove("bad"); });
+    results.classList.remove("show"); err.classList.remove("show");
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXF 坐标提取 — 从 CAD 图纸读取点与多段线顶点</title>
+<meta name="description" content="免费的 DXF 坐标提取工具：导入 ASCII DXF，列出点、直线、多段线、圆与圆弧的图层、顶点数、长度和闭合面积，并按图面单位换算面积，顶点可导出 CSV，文件不上传。">
+<link rel="canonical" href="https://coordcalc.com/zh/dxf-coordinate-extractor.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/dxf-coordinate-extractor.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/dxf-coordinate-extractor.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/dxf-coordinate-extractor.html">
+<meta property="og:title" content="DXF 坐标提取 — 从 CAD 图纸读取点与多段线顶点">
+<meta property="og:description" content="免费的 DXF 坐标提取工具：导入 ASCII DXF，列出点、直线、多段线、圆与圆弧的图层、顶点数、长度和闭合面积，并按图面单位换算面积，顶点可导出 CSV，文件不上传。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/dxf-coordinate-extractor.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "DXF 文件是什么？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DXF（Drawing Exchange Format）是 AutoCAD 推出的图纸交换格式，内容是一串「组码 + 值」的文本行，用来描述图形实体。它与 DWG 并列，但因为是纯文本，更容易被程序读取和解析。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "怎么从 DXF 里取出坐标？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "把 ASCII DXF 粘贴到上面的文本框或直接选择文件，工具会解析 ENTITIES 段，列出每个实体的类型、图层、顶点数、长度和面积，并把每个顶点逐行列出。点「下载顶点 CSV」可以把全部顶点导出为表格，用于电子表格或别的计算器。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么算出的 DXF 面积不对？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "最常见的原因是注记文字、边界框或辅助线也被当成了闭合实体。请核对表格里参与面积计算的实体清单。其次是单位没在文件里声明，或图形含圆弧而面积按弦长近似——两种情况都会让结果偏离实际。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支持二进制 DXF 吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不支持。二进制 DXF 无法作为文本读取，工具会给出提示。请在 CAD 里另存为 ASCII DXF 后重试。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "块（block）和外部参照（xref）会被读入吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不会。块和外部参照的内容不在 ENTITIES 段里直接展开。如果图纸大量使用块，请先执行「炸开」把块转为多段线等基本实体，再另存为 DXF。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "工具会读取哪些 DXF 实体？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "读取 POINT、LINE、LWPOLYLINE / POLYLINE、CIRCLE 和 ARC。其余实体（文字、填充、标注、样条曲线等）会在「未测量实体」一栏里计数但不参与长度与面积统计。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "多段线的面积是怎么算的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "用鞋带公式（高斯面积公式）对闭合多段线的顶点序列求面积。顶点顺序和起点不影响结果，公式取的是绝对值，所以顺时针和逆时针画出的多段线得到相同面积。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "DXF 文件会被上传吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不会。解析和计算全部在浏览器本地完成，文件不会发送到任何服务器，也不会被保存。图纸含有涉密信息时也可以放心使用。"
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../dxf-coordinate-extractor.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › DXF 坐标提取
+  </nav>
+
+<h1>DXF 坐标提取</h1>
+
+  <p class="lead">
+    DXF 是图纸文件，但在测量人员眼里，它往往只是一份穿着图纸外衣的坐标清单。
+    把 ASCII DXF 放进来，工具会列出其中每一个点、直线、多段线、圆和圆弧，连同图层、顶点数、
+    长度、闭合实体的围合面积，以及文件声明的图面单位。全部顶点可以导出为 CSV，
+    交给电子表格或别的计算器继续处理。文件不会离开你的浏览器。
+  </p>
+
+  <p class="meta">
+    <span>ASCII DXF，R12 及以后版本</span><span>完全在浏览器本地运行</span><span>2026 年 10 月 9 日更新</span>
+  </p>
+
+  <section class="card">
+    <h2>打开 DXF</h2>
+    <div class="toolbar">
+      <input type="file" id="file" accept=".dxf,.txt,text/plain">
+      <button type="button" class="btn" id="sample">载入示例地块</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn primary" id="dl" disabled>下载顶点 CSV</button>
+    </div>
+    <p class="hint" style="margin-top:0;">
+      也可以在下方直接粘贴文件内容。不支持二进制 DXF——请在 CAD 里另存为 ASCII DXF，即可正常读取。
+    </p>
+    <textarea class="box" id="text" rows="10" spellcheck="false" placeholder="0&#10;SECTION&#10;2&#10;ENTITIES&#10;0&#10;LWPOLYLINE&#10;8&#10;PARCEL&#10;90&#10;4&#10;70&#10;1&#10;10&#10;0.0&#10;20&#10;0.0 &#10;&hellip;"></textarea>
+    <p class="err" id="err" style="display:none;"></p>
+  </section>
+
+  <section class="card" id="outcard" style="display:none;">
+    <h2>文件内容概要</h2>
+    <ul class="kv" id="summary"></ul>
+  </section>
+
+  <section class="card" id="tblcard" style="display:none;">
+    <h2>实体列表</h2>
+    <div class="scroll">
+      <table class="data">
+        <thead><tr><th>序号</th><th>实体</th><th>图层</th><th>顶点数</th><th>长度</th><th>面积</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px;">
+      长度与面积均为图面单位。只有标记为闭合的多段线和圆会给出面积。
+      多段线内部的圆弧段按两端之间的弦长测量。
+    </p>
+  </section>
+
+  <section class="card" id="vercard" style="display:none;">
+    <h2>顶点列表</h2>
+    <div class="scroll" style="max-height:380px;">
+      <table class="data">
+        <thead><tr><th>实体</th><th>图层</th><th>点号</th><th>X</th><th>Y</th></tr></thead>
+        <tbody id="vb"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px;">
+      此处最多显示前 500 个顶点；CSV 下载包含全部顶点。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>DXF 怎样存储坐标</h2>
+    <p>DXF 不是二进制数据块，而是一串<b>组码对</b>的文本文件：一行是组码，下一行是该组码对应的值。
+      组码 <code>10</code> 是 X 坐标，<code>20</code> 是它的 Y 坐标，<code>8</code> 是图层名，
+      <code>0</code> 开始一个新实体。要取出坐标，其实就是顺序读取这些胶对，按实体分段。</p>
+    <p>常见实体各有各的写法：<code>POINT</code> 只有一个坐标；<code>LINE</code> 有起点和终点两个
+      坐标（组码 10/20 与 11/21）；<code>LWPOLYLINE</code> 先声明顶点个数再连续给出各顶点；
+      <code>CIRCLE</code> 给出圆心和半径；<code>ARC</code> 给出圆心、半径和起止角度。
+      本工具按这套规则逐段解析 <code>ENTITIES</code> 段。</p>
+    <p>一个要点：DXF 本身不带大地坐标信息，它只是一组平面直角坐标数字。这些数字是不是测量坐标，
+      取决于画图时采用什么坐标系——国内图纸多为高斯-克吕格平面坐标，国外图纸可能是
+      UTM 或州平面坐标。本工具只忠实读出数字，坐标含义要靠使用者的项目约定判断。</p>
+  </section>
+
+  <section class="card">
+    <h2>能读什么，读出什么</h2>
+    <p>工具读取的是 <code>ENTITIES</code> 段中的几何实体，并逐条统计：</p>
+    <ul>
+      <li><b>POINT</b>——单点，只给一个坐标。</li>
+      <li><b>LINE</b>——直线，两个顶点，长度即两点距离。</li>
+      <li><b>LWPOLYLINE / POLYLINE</b>——多段线，给出全部顶点、累计长度；闭合的多段线再算围合面积。</li>
+      <li><b>CIRCLE</b>——圆，按圆心与半径算周长和面积。</li>
+      <li><b>ARC</b>——圆弧，按圆心、半径和起止角算弧长。</li>
+    </ul>
+    <p>表格里会显示实体类型、所在图层、顶点数、长度和面积；下方另有一张顶点表，逐点列出
+      实体序号、图层、点号、X 和 Y。点号是按读取顺序编的，不是图纸里的点号注记。</p>
+    <p>面积只对<b>标记为闭合</b>的多段线和圆给出。多段线内部的圆弧段按两端之间的弦长测量，
+      因此当多段线含大量圆弧时，长度会比实际弧长略短；需要精确弧长时应改用圆弧实体或先炸开。</p>
+  </section>
+
+  <section class="card">
+    <h2>单位问题</h2>
+    <p>DXF 文件头里的 <code>$INSUNITS</code> 变量声明图纸采用的单位，例如 6 表示米、1 表示英寸、
+      4 表示毫米。本工具会读出这个值并显示，同时按它把面积换算成公顷和英亩——因为
+      <code>5,314.159</code> 这个数字在缺少单位时是没意义的。</p>
+    <p>但要留意：不少图纸的 <code>$INSUNITS</code> 是空的或错的，因为制图人员常按习惯画图而
+      不设置这个变量。当工具显示「文件未声明」时，表格里的长度和面积仍是图面单位下的纯净数字，
+      你需要按项目的实际单位自行解释。例如测绘图通常以米为单位，那么长度单位就是米、面积单位
+      就是平方米。</p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>点「载入示例地块」会读入一段包含四个实体的 DXF：一个 100 × 50 米的闭合矩形多段线
+      （图层 PARCEL）、一条 100 米直线（SETOUT）、一个控制点（CONTROL）和一个半径 10 米的圆
+      （TANK），另有一段文字实体。读取结果：</p>
+    <ul>
+      <li>共 4 个实体、8 个顶点，图面单位声明为米（组码 6）。</li>
+      <li>总长度 462.832 米；闭合实体 2 个（矩形多段线与圆）。</li>
+      <li>围合总面积 5 314.159 m²，即 0.5314 公顷、1.3132 英亩。</li>
+      <li>1 个实体未测量：TEXT——文字实体不携带可测量的几何。</li>
+    </ul>
+    <p>矩形自身面积 5 000 m²，圆面积 314.159 m²，两者相加正好是工具给出的总面积。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <div class="links">
+      <a href="how-to-read-utm-coordinates.html">怎样读懂 UTM 坐标<small>东坐标、北坐标、带号与纬度带</small></a>
+      <a href="epsg-code-lookup.html">EPSG 代码查询<small>坐标系代码、单位与适用范围速查</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="land-area-calculator.html">地块面积计算<small>由坐标算面积、亩数和周长</small></a>
+      <a href="distance-bearing-calculator.html">两点距离与方位角<small>两个坐标算地面距离和方位角</small></a>
+      <a href="traverse-calculator.html">导线平差计算器<small>坐标、闭合差与博迪茨调整</small></a>
+      <a href="../state-plane-converter.html" hreflang="en">美国州平面坐标转换（英文）<small>NAD83 州平面各分带的英尺与米</small></a>
+      <a href="utm-coordinate-converter.html">UTM 坐标转经纬度<small>WGS84 经纬度与 UTM 网格互转</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+      <details open>
+      <summary>DXF 文件是什么？</summary>
+      <p>DXF（Drawing Exchange Format）是 AutoCAD 推出的图纸交换格式，内容是一串「组码 + 值」的文本行，用来描述图形实体。它与 DWG 并列，但因为是纯文本，更容易被程序读取和解析。</p>
+    </details>
+      <details>
+      <summary>怎么从 DXF 里取出坐标？</summary>
+      <p>把 ASCII DXF 粘贴到上面的文本框或直接选择文件，工具会解析 ENTITIES 段，列出每个实体的类型、图层、顶点数、长度和面积，并把每个顶点逐行列出。点「下载顶点 CSV」可以把全部顶点导出为表格，用于电子表格或别的计算器。</p>
+    </details>
+      <details>
+      <summary>为什么算出的 DXF 面积不对？</summary>
+      <p>最常见的原因是注记文字、边界框或辅助线也被当成了闭合实体。请核对表格里参与面积计算的实体清单。其次是单位没在文件里声明，或图形含圆弧而面积按弦长近似——两种情况都会让结果偏离实际。</p>
+    </details>
+      <details>
+      <summary>支持二进制 DXF 吗？</summary>
+      <p>不支持。二进制 DXF 无法作为文本读取，工具会给出提示。请在 CAD 里另存为 ASCII DXF 后重试。</p>
+    </details>
+      <details>
+      <summary>块（block）和外部参照（xref）会被读入吗？</summary>
+      <p>不会。块和外部参照的内容不在 ENTITIES 段里直接展开。如果图纸大量使用块，请先执行「炸开」把块转为多段线等基本实体，再另存为 DXF。</p>
+    </details>
+      <details>
+      <summary>工具会读取哪些 DXF 实体？</summary>
+      <p>读取 POINT、LINE、LWPOLYLINE / POLYLINE、CIRCLE 和 ARC。其余实体（文字、填充、标注、样条曲线等）会在「未测量实体」一栏里计数但不参与长度与面积统计。</p>
+    </details>
+      <details>
+      <summary>多段线的面积是怎么算的？</summary>
+      <p>用鞋带公式（高斯面积公式）对闭合多段线的顶点序列求面积。顶点顺序和起点不影响结果，公式取的是绝对值，所以顺时针和逆时针画出的多段线得到相同面积。</p>
+    </details>
+      <details>
+      <summary>DXF 文件会被上传吗？</summary>
+      <p>不会。解析和计算全部在浏览器本地完成，文件不会发送到任何服务器，也不会被保存。图纸含有涉密信息时也可以放心使用。</p>
+    </details>
+  </section>
+
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var INSUNITS = {
+    0: "未声明单位", 1: "英寸", 2: "英尺", 3: "英里", 4: "毫米",
+    5: "厘米", 6: "米", 7: "公里", 8: "微英寸", 9: "密尔",
+    10: "码", 11: "埃", 12: "纳米", 13: "微米", 14: "分米",
+    15: "十米", 16: "百米", 17: "吉米", 18: "天文单位",
+    19: "光年", 20: "秒差距", 21: "美制测量英尺", 22: "美制测量英寸"
+  };
+  /* metres per drawing unit, for the areas that are worth converting */
+  var TO_M = { 1: 0.0254, 2: 0.3048, 3: 1609.344, 4: 0.001, 5: 0.01, 6: 1, 7: 1000,
+    10: 0.9144, 14: 0.1, 15: 10, 16: 100, 21: 1200 / 3937, 22: 1200 / 3937 / 12 };
+  var ENT = null;
+
+  function num(s) {
+    var v = parseFloat(s);
+    return isFinite(v) ? v : null;
+  }
+
+  /* --- DXF is a stream of (group code, value) pairs ---------------------- */
+  function pairs(text) {
+    var lines = text.split(/\r\n|\r|\n/);
+    var out = [], i = 0;
+    while (i < lines.length) {
+      var code = lines[i].trim();
+      if (code === "") { i++; continue; }
+      var val = lines[i + 1];
+      if (val === undefined) { out.push([code, ""]); break; }
+      out.push([parseInt(code, 10), val]);
+      i += 2;
+    }
+    return out;
+  }
+
+  function findUnits(ps) {
+    for (var i = 0; i < ps.length - 1; i++) {
+      if (ps[i][0] === 9 && String(ps[i][1]).trim() === "$INSUNITS"
+        && ps[i + 1][0] === 70) {
+        return num(ps[i + 1][1]);
+      }
+    }
+    return null;
+  }
+
+  function seglen(a, b) {
+    var dx = b[0] - a[0], dy = b[1] - a[1];
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function shoelace(v) {
+    var s = 0;
+    for (var i = 0; i < v.length; i++) {
+      var j = (i + 1) % v.length;
+      s += v[i][0] * v[j][1] - v[j][0] * v[i][1];
+    }
+    return Math.abs(s) / 2;
+  }
+
+  /* --- the ENTITIES section, one entity at a time ------------------------ */
+  function parseDxf(text) {
+    var ps = pairs(text);
+    if (!ps.length) { return { err: "这看起来不是 DXF 文件——没有读到任何内容。" }; }
+    if (/AutoCAD Binary DXF/i.test(text.slice(0, 400))) {
+      return { err: "这是二进制 DXF。请在 CAD 里另存为 ASCII DXF 后再读取。" };
+    }
+    if (ps[0][0] !== 0 || String(ps[0][1]).trim() !== "SECTION") {
+      return { err: "这看起来不是 DXF 文件——开头没有 SECTION 标记。请确认整个文件都已粘贴完整。" };
+    }
+
+    var units = findUnits(ps);
+    var i = 0, inEnt = false, ent = null, ents = [], unsupported = {};
+    var pendingSection = false;
+    var SUPPORTED = { POINT: 1, LINE: 1, LWPOLYLINE: 1, POLYLINE: 1, CIRCLE: 1, ARC: 1, INSERT: 1 };
+
+    function flush() {
+      if (!ent) { return; }
+      var t = ent.type, v = ent.verts;
+      var res = { type: t, layer: ent.layer || "0", flags: ent.flags || 0 };
+
+      if (t === "POINT" || t === "INSERT") { res.n = v.length; res.pts = v.slice(); }
+      else if (t === "LINE") {
+        var a = v.length ? v[0] : null;
+        var b = ent.x1 != null && ent.y1 != null ? [ent.x1, ent.y1] : null;
+        res.pts = a && b ? [a, b] : (a ? [a] : []);
+        res.n = res.pts.length;
+        if (a && b) { res.len = seglen(a, b); }
+      } else if (t === "LWPOLYLINE" || t === "POLYLINE") {
+        res.n = v.length;
+        res.closed = (ent.flags & 1) === 1;
+        var L = 0;
+        for (var k = 0; k + 1 < v.length; k++) { L += seglen(v[k], v[k + 1]); }
+        if (res.closed && v.length > 2) { L += seglen(v[v.length - 1], v[0]); res.area = shoelace(v); }
+        res.len = L;
+        res.pts = v.slice();
+      } else if (t === "CIRCLE") {
+        res.n = v.length;
+        res.pts = v.slice();
+        if (ent.r != null) { res.len = 2 * Math.PI * ent.r; res.area = Math.PI * ent.r * ent.r; }
+      } else if (t === "ARC") {
+        res.n = v.length;
+        res.pts = v.slice();
+        if (ent.r != null && ent.a0 != null && ent.a1 != null) {
+          var d = ent.a1 - ent.a0;
+          while (d <= 0) { d += 360; }
+          res.len = ent.r * d * Math.PI / 180;
+        }
+      }
+      ents.push(res);
+      ent = null;
+    }
+
+    for (i = 0; i < ps.length; i++) {
+      var code = ps[i][0], val = String(ps[i][1]).trim();
+
+      /* the section name arrives as a code-2 tag straight after 0 SECTION */
+      if (pendingSection) {
+        if (code === 2) { inEnt = (val === "ENTITIES"); pendingSection = false; }
+        continue;
+      }
+
+      if (code === 0) {
+        if (val === "SECTION") { pendingSection = true; inEnt = false; ent = null; continue; }
+        if (val === "EOF") { flush(); break; }
+        if (val === "ENDSEC") { flush(); inEnt = false; continue; }
+        if (!inEnt) { continue; }
+        /* a POLYLINE's vertices arrive as VERTEX sub-entities, one pair of
+           coordinates each, so they are absorbed into the polyline in hand */
+        if (val === "VERTEX" && ent && ent.type === "POLYLINE") { continue; }
+        flush();
+        if (val === "SEQEND") { continue; }
+        if (SUPPORTED[val]) {
+          ent = { type: val, verts: [] };
+        } else {
+          unsupported[val] = (unsupported[val] || 0) + 1;
+          unsupported._n = (unsupported._n || 0) + 1;
+          ent = null;
+        }
+        continue;
+      }
+      if (!inEnt || !ent) { continue; }
+
+      if (code === 8) { ent.layer = val; }
+      else if (code === 10) { ent.px = num(val); }
+      else if (code === 20) {
+        var y = num(val);
+        if (ent.px != null && y != null) { ent.verts.push([ent.px, y]); ent.px = null; }
+      } else if (code === 11) { ent.x1 = num(val); }
+      else if (code === 21) { ent.y1 = num(val); }
+      else if (code === 40) { ent.r = num(val); }
+      else if (code === 50) { ent.a0 = num(val); }
+      else if (code === 51) { ent.a1 = num(val); }
+      else if (code === 70) { ent.flags = parseInt(val, 10) || 0; }
+    }
+    flush();
+
+    /* a POLYLINE's vertices arrive as VERTEX entities straight after it, and
+       both share the accumulated vertex list */
+    ents = ents.filter(function (e) { return e.type !== "VERTEX" && e.type !== "SEQEND"; });
+
+    var totLen = 0, totArea = 0, totVerts = 0, closed = 0;
+    ents.forEach(function (e) {
+      totLen += e.len || 0;
+      totArea += e.area || 0;
+      totVerts += e.n || 0;
+      if (e.area != null) { closed++; }
+    });
+
+    return {
+      ents: ents, units: units, unsupported: unsupported,
+      totLen: totLen, totArea: totArea, totVerts: totVerts, closed: closed
+    };
+  }
+
+  var SAMPLE = [
+    "0", "SECTION", "2", "HEADER",
+    "9", "$INSUNITS", "70", "6",
+    "9", "$ACADVER", "1", "AC1015",
+    "0", "ENDSEC",
+    "0", "SECTION", "2", "ENTITIES",
+    "0", "LWPOLYLINE", "8", "PARCEL", "90", "4", "70", "1",
+    "10", "0.0", "20", "0.0", "10", "100.0", "20", "0.0",
+    "10", "100.0", "20", "50.0", "10", "0.0", "20", "50.0",
+    "0", "LINE", "8", "SETOUT", "10", "0.0", "20", "0.0", "11", "100.0", "21", "0.0",
+    "0", "POINT", "8", "CONTROL", "10", "50.0", "20", "25.0",
+    "0", "CIRCLE", "8", "TANK", "10", "200.0", "20", "200.0", "40", "10.0",
+    "0", "TEXT", "8", "NOTES", "10", "5.0", "20", "60.0", "1", "Parcel 12",
+    "0", "ENDSEC",
+    "0", "EOF"
+  ].join("\n");
+
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+
+  function render(res) {
+    ENT = res;
+    var n = res.ents ? res.ents.length : 0;
+    var showOut = !res.err && res.ents;
+    $("outcard").style.display = showOut ? "" : "none";
+    $("tblcard").style.display = showOut && n ? "" : "none";
+    $("vercard").style.display = showOut && n ? "" : "none";
+    $("dl").disabled = !showOut || !n;
+
+    var err = $("err");
+    if (res.err) {
+      err.style.display = "";
+      err.textContent = res.err;
+      return;
+    }
+    err.style.display = "none";
+    if (!res.ents) { return; }
+
+    var u = res.units, uName = u == null ? null : INSUNITS[u];
+    var m = TO_M[u];
+    var items = [
+      ["读取到的实体", res.ents.length],
+      ["顶点数", res.totVerts],
+      ["图面单位（$INSUNITS）", uName == null ? "文件未声明" : uName + "（组码 " + u + "）"],
+      ["总长度", fmt(res.totLen, 3) + (uName && m ? " " + uName : " 图面单位")],
+      ["闭合实体", res.closed],
+      ["围合总面积", res.closed
+        ? fmt(res.totArea, 3) + (m ? " " + (u === 6 ? "m\u00B2" : "平方" + uName.replace(/s$/, ""))
+          + "   =   " + fmt(res.totArea * m * m / 10000, 4) + " 公顷   =   "
+          + fmt(res.totArea * m * m / 4046.8564224, 4) + " 英亩" : "")
+        : "\u2014"],
+      ["未测量实体", res.unsupported._n ? res.unsupported._n + " 个（"
+        + Object.keys(res.unsupported).filter(function (k) { return k.charAt(0) !== "_"; })
+          .slice(0, 4).join("、") + "）" : "无"]
+    ];
+    $("summary").innerHTML = items.map(function (it) {
+      return "<li><span class=\"k\">" + it[0] + "</span><span class=\"v\">" + it[1] + "</span></li>";
+    }).join("");
+
+    var rows = "", show = Math.min(res.ents.length, 300);
+    for (var i = 0; i < show; i++) {
+      var e = res.ents[i];
+      rows += "<tr><td>" + (i + 1) + "</td><td>" + e.type + "</td><td>" + e.layer + "</td><td>"
+        + (e.n == null ? "\u2014" : e.n) + "</td><td>" + fmt(e.len, 3) + "</td><td>"
+        + fmt(e.area, 3) + "</td></tr>";
+    }
+    if (res.ents.length > show) {
+      rows += "<tr><td colspan=\"6\">&hellip; 另有 " + (res.ents.length - show)
+        + " 个实体未显示。CSV 下载包含全部内容。</td></tr>";
+    }
+    $("tb").innerHTML = rows;
+
+    var vrows = "", shown = 0;
+    for (i = 0; i < res.ents.length && shown < 500; i++) {
+      var e2 = res.ents[i];
+      if (!e2.pts || !e2.pts.length) { continue; }
+      for (var k = 0; k < e2.pts.length && shown < 500; k++) {
+        vrows += "<tr><td>" + (i + 1) + " " + e2.type + "</td><td>" + e2.layer + "</td><td>"
+          + (k + 1) + "</td><td>" + fmt(e2.pts[k][0], 4) + "</td><td>" + fmt(e2.pts[k][1], 4)
+          + "</td></tr>";
+        shown++;
+      }
+    }
+    $("vb").innerHTML = vrows;
+  }
+
+  /* --- CSV -------------------------------------------------------------- */
+  function csvRows() {
+    var out = [["entity_index", "entity", "layer", "point", "x", "y"]];
+    ENT.ents.forEach(function (e, i) {
+      (e.pts || []).forEach(function (p, k) {
+        out.push([i + 1, e.type, e.layer, k + 1, p[0], p[1]]);
+      });
+    });
+    return out;
+  }
+  function downloadCsv(filename, rows) {
+    var body = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c);
+        return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\r\n");
+    var blob = new Blob(["\ufeff" + body], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+  $("dl").addEventListener("click", function () {
+    if (!ENT || !ENT.ents) { return; }
+    downloadCsv("dxf-coordinates.csv", csvRows());
+  });
+
+  $("sample").addEventListener("click", function () {
+    $("text").value = SAMPLE;
+    render(parseDxf(SAMPLE));
+  });
+
+  $("text").addEventListener("input", function () {
+    var v = this.value.trim();
+    render(v ? parseDxf(v) : { err: null });
+  });
+
+  $("file").addEventListener("change", function () {
+    var f = this.files && this.files[0];
+    if (!f) { return; }
+    var fr = new FileReader();
+    fr.onload = function () {
+      $("text").value = String(fr.result);
+      render(parseDxf(String(fr.result)));
+    };
+    fr.onerror = function () { render({ err: "文件读取失败。" }); };
+    fr.readAsText(f);
+  });
+
+  /* show nothing until something arrives */
+  render({ err: null });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cut and Fill Calculator — Earthwork Volumes (Free)</title>
+<meta name="description" content="Free cut and fill calculator: volumes from cross sections by average end area or from a depth grid, with swell and shrinkage. Cubic metres, yards and feet.">
+<link rel="canonical" href="https://coordcalc.com/cut-fill-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/cut-fill-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/cut-fill-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/cut-fill-calculator.html">
+<meta property="og:title" content="Cut and Fill Calculator — Earthwork Volumes (Free)">
+<meta property="og:description" content="Average end area and grid-method earthwork volumes with swell and shrinkage — free, in-browser, in m³, yd³ or ft³.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/cut-fill-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate cut and fill volume?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For each pair of adjacent cross sections, multiply the distance between them by the mean of the two areas: V = L × (A₁ + A₂) ÷ 2. Compute cut and fill separately, then sum along the whole alignment. For wide areas, use the grid method instead and average the four corner depths of each cell."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the average end area method?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The standard earthwork method. It treats the ground between two sections as a prism whose volume is length times the mean end area. It suits anything linear — roads, rail, pipelines, canals — and is accurate to a few percent when sections are spaced at 15–30 m in ground that is changing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "When should I use the grid method?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "When the area is wide in both directions rather than linear: a pad, a lot, a borrow pit or a stockpile. Depth is measured at grid nodes, each cell volume is its area times the average of its four corner depths, and the cells are summed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the prismoidal correction?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A refinement of average end area. The prism assumption slightly overstates volume when two sections differ in shape as well as size. The prismoidal formula uses a mid-section area — V = L ÷ 6 × (A₁ + 4Am + A₂) — and worth applying on high-value earthwork."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do I need to apply swell and shrinkage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, if the volumes are going to be used for truck counts, haulage, borrow or fill capacity. Bank volumes are what is in the ground; loose volumes are what you haul, and compacted volumes are what you place. Swell typically runs 5–45 percent and shrinkage about 5–15 percent, depending on soil."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert cubic yards to cubic metres?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply cubic yards by 0.764554858 to get cubic metres, or multiply cubic metres by 1.30795062 to get cubic yards. Cubic yards come from cubic feet divided by 27."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How close should cut and fill balance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a balanced site, the compacted fill requirement should be compared with the usable compacted volume yielded by the cut, not with the bank volume of the cut. A cut of 10,000 m³ of bank soil at 10 percent shrinkage yields only about 9,000 m³ of compacted fill, so an apparently balanced site can still need imported borrow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this cut and fill calculator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no project data is uploaded."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  textarea{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;
+    min-height:132px;resize:vertical;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad,textarea.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#surveying">Professional surveying</a> › Cut and Fill Calculator
+  </nav>
+
+  <h1>Cut and Fill Calculator</h1>
+
+  <p class="lead">
+    This cut and fill calculator turns the sections you already measured into earthwork volumes. Enter
+    cross sections station by station and it applies the average end area method; or enter a grid of
+    depths over a pad, a lot or a borrow pit and it applies the corner-average grid method. Both modes
+    report cut and fill separately, net the two, and apply a swell or shrinkage factor so the numbers
+    match what the trucks and the compactor will actually do. Free, in your browser, no login.
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="xs" type="button">Cross sections</button>
+      <button class="tab" data-tab="grid" type="button">Grid method</button>
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:0 0 210px;">
+        <label for="cf-units">Unit system</label>
+        <select id="cf-units">
+          <option value="m">Metres (m, m², m³)</option>
+          <option value="ft">Feet (ft, ft², yd³)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="cf-swell">Swell / shrinkage</label>
+        <input id="cf-swell" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <p class="hint" style="flex:1;margin:0;">
+        Enter swell as a positive percentage (soil loosens on excavation, so 1 m³ in the ground becomes
+        more in the truck) or shrinkage as a negative percentage (fill compacts to less than its bank
+        volume). Leave at 0 for raw bank volumes.
+      </p>
+    </div>
+
+    <div id="cf-xs" style="margin-top:16px;">
+      <label style="font-size:12.5px;font-weight:600;color:var(--sub);">Cross sections — one per line: station, cut area, fill area</label>
+      <textarea id="cf-xstext" spellcheck="false">0, 12.4, 0
+50, 18.9, 0
+100, 7.2, 3.1
+150, 0, 14.6
+200, 0, 21.3</textarea>
+      <p class="hint">
+        Areas are in m² for metric units and ft² for imperial. Stations are distances along the
+        alignment in the same length unit — station numbers such as <code>12+50</code> are accepted and
+        read as 1250.
+      </p>
+    </div>
+
+    <div id="cf-grid" style="margin-top:16px;display:none;">
+      <div class="row">
+        <div class="field" style="flex:0 0 200px;">
+          <label for="cf-spacing">Grid spacing</label>
+          <input id="cf-spacing" type="number" step="any" value="10" autocomplete="off">
+        </div>
+        <p class="hint" style="flex:1;margin:0;">
+          Spacing is the side of one square cell, in metres or feet to match the unit system. Each row of
+          the grid below is one line; positive depths are cut and negative depths are fill.
+        </p>
+      </div>
+      <label style="font-size:12.5px;font-weight:600;color:var(--sub);">Depth grid — rows of depths, comma or space separated</label>
+      <textarea id="cf-gridtext" spellcheck="false">0.4 0.6 0.5 0.2
+0.7 0.9 0.8 0.4
+0.5 0.3 -0.2 -0.5
+0.1 -0.4 -0.8 -0.6</textarea>
+      <p class="hint">
+        Every row must have the same number of depths. With <i>n</i> rows and <i>m</i> columns the tool
+        computes (<i>n</i>&nbsp;−&nbsp;1)&nbsp;&times;&nbsp;(<i>m</i>&nbsp;−&nbsp;1) cells, each by the average of its four corners.
+      </p>
+    </div>
+
+    <p class="err" id="cf-err">Check the input — every line needs the same shape, and numbers must be readable.</p>
+
+    <div class="results" id="cf-results">
+      <div class="big">
+        <span class="bk" id="cf-bk">Net volume</span>
+        <span class="bv" id="cf-bv">—</span>
+      </div>
+      <div id="cf-rows"></div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>Average end area (cross sections)</h3>
+    <p>
+      Each pair of adjacent sections forms a prism. Its volume is the distance between the sections
+      multiplied by the mean of the two areas:
+      <code>V = L × (A₁ + A₂) ÷ 2</code>. Cut and fill are computed on the same pairs but kept apart, so
+      a section that changes from cut to fill produces both a cut prism and a fill prism. A section with
+      cut on one side of the centre line and fill on the other is normally split at the centre line
+      before the areas are entered.
+    </p>
+    <h3>Grid method (corner average)</h3>
+    <p>
+      Over an area that is broad in both directions, depths are taken at grid nodes. Each cell of the
+      grid contributes <code>V = cell area × (d₁ + d₂ + d₃ + d₄) ÷ 4</code>, where the four depths are
+      the corners of that cell. Summing the cells gives the total, and because cut cells and fill cells
+      are signed differently they can be summed separately. This is sometimes called the borrow pit
+      method, and it is the natural companion to a survey of a pad or a stockpile.
+    </p>
+    <h3>Swell and shrinkage</h3>
+    <p>
+      The volumes above are <b>bank volumes</b> — the volume as measured in the ground. What leaves the
+      site is a larger <b>loose volume</b>, because excavation breaks the soil apart and adds voids.
+      What arrives in the fill is a smaller <b>compacted volume</b>, because compaction removes voids.
+      The calculator applies your percentage to both cut and fill totals and reports the adjusted
+      figures alongside the bank figures, so you can see the difference the factor makes.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Average end area or grid method — which to use?</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Method</th><th>Best for</th><th>Field data needed</th><th>Typical accuracy</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Average end area</td>
+          <td>Roads, railways, canals, pipelines, anything linear</td>
+          <td>Cross-section areas at regular stations</td>
+          <td>Within a few percent when sections are spaced at 15–30 m in changing ground</td>
+        </tr>
+        <tr>
+          <td>Grid (corner average)</td>
+          <td>Building pads, parking lots, borrow pits, stockpiles, subdivisions</td>
+          <td>Spot depths at the nodes of a regular grid</td>
+          <td>Governed by the grid spacing; halving the spacing roughly quarters the error</td>
+        </tr>
+        <tr>
+          <td>Prismoidal</td>
+          <td>High-value earthwork where a few percent is money</td>
+          <td>Cross sections plus a mid-section area</td>
+          <td>Closer than average end area, at the cost of extra survey work</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      The two methods are not competing answers to the same question, they are answers to different
+      questions. A road is a long thin solid, so it is cut into prisms. A pad is a wide flat solid, so it
+      is cut into cells. Where an alignment widens into a pad — an interchange, a lay-by, a treatment
+      works — the earthwork is often split, with the linear part done by sections and the wide part by
+      grid, and the two results added.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Swell, shrinkage and the three volumes you must keep apart</h2>
+    <p>
+      Almost every disagreement between a contractor and a designer about earthwork quantities is a
+      disagreement about which volume is being counted. There are three, and they are different numbers.
+    </p>
+    <table class="lookup">
+      <thead>
+        <tr><th>Volume</th><th>Where it exists</th><th>Used for</th><th>Typical relation to bank volume</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Bank (in situ)</td><td>In the ground</td><td>Payment quantities, project totals</td><td>1.00 by definition</td></tr>
+        <tr><td>Loose</td><td>In the truck or the stockpile</td><td>Truck counts, haulage, stockpile space</td><td>1.05–1.45 depending on soil</td></tr>
+        <tr><td>Compacted</td><td>Placed and rolled in the fill</td><td>Borrow quantity, fill capacity</td><td>0.85–0.95 depending on soil and specification</td></tr>
+      </tbody>
+    </table>
+    <p>
+      The practical consequence is that cut and fill totals rarely balance even when the design intends
+      them to. Suppose a site needs 10,000 m³ of compacted fill and offers 10,000 m³ of bank cut of the
+      same material with a shrinkage of 10 percent. The usable fill from the cut is 9,000 m³ compacted,
+      so roughly 1,100 m³ of bank borrow has to be imported — an outcome nobody would predict from
+      comparing the two headline numbers. Run the conversion before the quantities are priced.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked example</h2>
+    <p>
+      Take the default sections in the calculator. Between station 0, with 12.4 m² of cut, and station
+      50, with 18.9 m² of cut, the average end area method gives
+      <code>50 × (12.4 + 18.9) ÷ 2 = 782.5 m³</code> of cut. Between station 100 (7.2 m² cut, 3.1 m² fill)
+      and station 150 (0 m² cut, 14.6 m² fill), the cut prism is
+      <code>50 × (7.2 + 0) ÷ 2 = 180.0 m³</code> and the fill prism is
+      <code>50 × (3.1 + 14.6) ÷ 2 = 442.5 m³</code>. The cut prism ends where the cut area reaches zero,
+      which is what makes the mid-section the natural transition point.
+    </p>
+    <p>
+      In grid mode, a 10 m grid with corner depths of 0.4, 0.6, 0.5 and 0.2 m gives an average depth of
+      0.425 m over a 100 m² cell, or 42.5 m³ of cut in that one cell. Four rows and four columns of
+      depths create a 3 × 3 grid of cells, so the default grid above is nine cells and about 400 m² of
+      ground — small enough to check by hand, which is exactly what a calculator of this kind should
+      let you do.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Common earthwork conversions</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Conversion</th><th>Value</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 cubic yard</td><td>27 ft³ = 0.764554858 m³</td><td>The default US earthwork unit</td></tr>
+        <tr><td>1 cubic metre</td><td>1.30795062 yd³ = 35.3146667 ft³</td><td>Metric earthwork unit</td></tr>
+        <tr><td>1 acre-foot</td><td>43,560 ft³ = 1,233.4818375 m³</td><td>One acre covered one foot deep</td></tr>
+        <tr><td>1 m³ of water</td><td>1,000 kg = 1 tonne</td><td>Useful for soil moisture sanity checks</td></tr>
+        <tr><td>Truck load, tandem axle</td><td>Roughly 10–14 bank m³</td><td>Varies with machine, soil and permits</td></tr>
+        <tr><td>Fills placed in 200 mm layers</td><td>About 20 m² per m³ of compacted fill</td><td>Layer thickness governs compaction cost</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      Swell and shrinkage factors vary widely with soil type, moisture content and the compaction
+      specification. Always use the factors stated in the project specification or measured on site
+      rather than a general figure from a web page.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-closure-error.html">How to calculate closure error in a traverse</a>
+        <small>The adjustment step that has to happen before any earthwork quantity is trustworthy.</small></li>
+      <li><a href="how-to-calculate-acreage-from-coordinates.html">How to calculate acreage from coordinates</a>
+        <small>Getting the plan area that a grid-method volume is spread over.</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">Survey foot vs international foot</a>
+        <small>Which foot your volumes were computed in, and why it changes the answer.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Plan area from a coordinate list</small></a>
+      <a href="slope-calculator.html">slope percentage calculator<small>Cut and fill slopes, batters and grades</small></a>
+      <a href="traverse-calculator.html">traverse calculator<small>Closure error and Bowditch adjustment</small></a>
+      <a href="unit-converter.html">us survey foot to meter<small>Cubic yards, cubic metres and survey feet</small></a>
+      <a href="curve-calculator.html">horizontal curve calculator<small>Alignment geometry for earthwork take-off</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Scale check on a drawing take-off</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do you calculate cut and fill volume?</summary>
+      <p>For each pair of adjacent cross sections, multiply the distance between them by the mean of the two areas: V = L × (A₁ + A₂) ÷ 2. Compute cut and fill separately, then sum along the whole alignment. For wide areas, use the grid method instead and average the four corner depths of each cell.</p>
+    </details>
+    <details>
+      <summary>What is the average end area method?</summary>
+      <p>The standard earthwork method. It treats the ground between two sections as a prism whose volume is length times the mean end area. It suits anything linear — roads, rail, pipelines, canals — and is accurate to a few percent when sections are spaced at 15–30 m in ground that is changing.</p>
+    </details>
+    <details>
+      <summary>When should I use the grid method?</summary>
+      <p>When the area is wide in both directions rather than linear: a pad, a lot, a borrow pit or a stockpile. Depth is measured at grid nodes, each cell volume is its area times the average of its four corner depths, and the cells are summed.</p>
+    </details>
+    <details>
+      <summary>What is the prismoidal correction?</summary>
+      <p>A refinement of average end area. The prism assumption slightly overstates volume when two sections differ in shape as well as size. The prismoidal formula uses a mid-section area — V = L ÷ 6 × (A₁ + 4A<sub>m</sub> + A₂) — and worth applying on high-value earthwork.</p>
+    </details>
+    <details>
+      <summary>Do I need to apply swell and shrinkage?</summary>
+      <p>Yes, if the volumes are going to be used for truck counts, haulage, borrow or fill capacity. Bank volumes are what is in the ground; loose volumes are what you haul, and compacted volumes are what you place. Swell typically runs 5–45 percent and shrinkage about 5–15 percent, depending on soil.</p>
+    </details>
+    <details>
+      <summary>How do I convert cubic yards to cubic metres?</summary>
+      <p>Multiply cubic yards by 0.764554858 to get cubic metres, or multiply cubic metres by 1.30795062 to get cubic yards. Cubic yards come from cubic feet divided by 27.</p>
+    </details>
+    <details>
+      <summary>How close should cut and fill balance?</summary>
+      <p>On a balanced site, the compacted fill requirement should be compared with the usable compacted volume yielded by the cut, not with the bank volume of the cut. A cut of 10,000 m³ of bank soil at 10 percent shrinkage yields only about 9,000 m³ of compacted fill, so an apparently balanced site can still need imported borrow.</p>
+    </details>
+    <details>
+      <summary>Is this cut and fill calculator free?</summary>
+      <p>Yes — free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no project data is uploaded.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing design standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var mode = "xs";
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 10});
+
+  function station(v){
+    var m = String(v).trim().match(/^(\d+)\+(\d+(\.\d+)?)$/);
+    if (m) return parseFloat(m[1]) * 1000 + parseFloat(m[2]);
+    return parseFloat(v);
+  }
+  function show(v){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-6 || a >= 1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+  function row(k,v,sub){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small>'+sub+'</small>' : '')+'</span></div>';
+  }
+
+  function calcXs(){
+    var metric = el("cf-units").value === "m";
+    var lines = el("cf-xstext").value.split(/\r?\n/);
+    var pts = [];
+    for (var i = 0; i < lines.length; i++){
+      var s = lines[i].trim();
+      if (!s) continue;
+      var parts = s.split(/[,\t;]+|\s{1,}/).filter(function(x){ return x !== ""; });
+      if (parts.length < 3) return {bad:true};
+      var st = station(parts[0]), ca = parseFloat(parts[1]), fa = parseFloat(parts[2]);
+      if (isNaN(st) || isNaN(ca) || isNaN(fa)) return {bad:true};
+      pts.push({s:st, c:ca, f:fa});
+    }
+    if (pts.length < 2) return {bad:true};
+    for (var j = 1; j < pts.length; j++) if (pts[j].s <= pts[j-1].s) return {bad:true};
+
+    var cut = 0, fill = 0, rows = "";
+    for (var k = 1; k < pts.length; k++){
+      var L = pts[k].s - pts[k-1].s;
+      var vc = L * (pts[k-1].c + pts[k].c) / 2;
+      var vf = L * (pts[k-1].f + pts[k].f) / 2;
+      cut += vc; fill += vf;
+      rows += row(show(pts[k-1].s)+" \u2192 "+show(pts[k].s)+"  ("+show(L)+")",
+        "cut "+show(vc)+"  /  fill "+show(vf), "segment volume");
+    }
+    return {bad:false, cut:cut, fill:fill, n:pts.length-1, rows:rows};
+  }
+
+  function calcGrid(){
+    var lines = el("cf-gridtext").value.split(/\r?\n/);
+    var g = [];
+    for (var i = 0; i < lines.length; i++){
+      var s = lines[i].trim();
+      if (!s) continue;
+      var nums = s.split(/[,\t;\s]+/).filter(function(x){ return x !== ""; }).map(parseFloat);
+      for (var j = 0; j < nums.length; j++) if (isNaN(nums[j])) return {bad:true};
+      g.push(nums);
+    }
+    if (g.length < 2) return {bad:true};
+    var m = g[0].length;
+    if (m < 2) return {bad:true};
+    for (var r = 1; r < g.length; r++) if (g[r].length !== m) return {bad:true};
+
+    var sp = parseFloat(el("cf-spacing").value);
+    if (isNaN(sp) || sp <= 0) return {bad:true};
+    var cellArea = sp * sp;
+    var cut = 0, fill = 0;
+
+    for (var a = 0; a < g.length - 1; a++){
+      for (var b = 0; b < m - 1; b++){
+        var d = (g[a][b] + g[a][b+1] + g[a+1][b] + g[a+1][b+1]) / 4;
+        var v = d * cellArea;
+        if (v > 0) cut += v; else fill += -v;
+      }
+    }
+    return {bad:false, cut:cut, fill:fill, cells:(g.length-1)*(m-1), nodes:g.length*m, area:(g.length-1)*(m-1)*cellArea};
+  }
+
+  function calc(){
+    var metric = el("cf-units").value === "m";
+    var unit = metric ? "m\u00B3" : "yd\u00B3";
+    var areaUnit = metric ? "m\u00B2" : "ft\u00B2";
+    var sw = parseFloat(el("cf-swell").value);
+    if (isNaN(sw)) sw = 0;
+    var err = el("cf-err"), res = el("cf-results");
+    var r = (mode === "xs") ? calcXs() : calcGrid();
+    var box = (mode === "xs") ? el("cf-xstext") : el("cf-gridtext");
+    box.classList.toggle("bad", r.bad);
+    err.classList.toggle("show", r.bad);
+    if (r.bad){ res.classList.remove("show"); return; }
+
+    var f = metric ? 1 : (1/27);
+    var cut = (mode === "xs") ? r.cut : r.cut * f;
+    var fill = (mode === "xs") ? r.fill : r.fill * f;
+    var factor = 1 + sw/100;
+    var cutAdj = cut * factor, fillAdj = fill * factor;
+    var net = cutAdj - fillAdj;
+
+    el("cf-bk").textContent = "Net " + (net >= 0 ? "cut" : "fill") + " after swell / shrinkage";
+    el("cf-bv").textContent = show(Math.abs(net)) + " " + unit;
+
+    var rows = "";
+    if (mode === "xs") rows += r.rows;
+    else rows += row("Cells computed", show(r.cells), "grid of " + (r.nodes) + " nodes");
+    if (mode === "grid") rows += row("Grid area", show(r.area) + " " + areaUnit, "cells \u00D7 cell area");
+
+    rows += row("Cut volume (bank)", show(cut) + " " + unit, "as measured in the ground");
+    rows += row("Fill volume (bank)", show(fill) + " " + unit, "as measured in the ground");
+    rows += row("Swell / shrinkage applied", (sw > 0 ? "+" : "") + sw + " %", "bank \u00D7 " + (Math.round(factor*10000)/10000));
+    rows += row("Cut after factor", show(cutAdj) + " " + unit, "loose volume to haul");
+    rows += row("Fill after factor", show(fillAdj) + " " + unit, "volume required after compaction");
+    rows += row("Import / export", show(Math.abs(net)) + " " + unit, net >= 0 ? "surplus cut to export" : "deficit fill to import");
+    if (!metric){
+      rows += row("Cut in cubic metres", show(cutAdj*0.764554858) + " m\u00B3", "for reference");
+      rows += row("Fill in cubic metres", show(fillAdj*0.764554858) + " m\u00B3", "for reference");
+    }
+
+    el("cf-rows").innerHTML = rows;
+    res.classList.add("show");
+  }
+
+  var tabs = document.querySelectorAll(".tab");
+  for (var t = 0; t < tabs.length; t++){
+    tabs[t].addEventListener("click", function(){
+      for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove("active");
+      this.classList.add("active");
+      mode = this.getAttribute("data-tab");
+      el("cf-xs").style.display = (mode === "xs") ? "block" : "none";
+      el("cf-grid").style.display = (mode === "grid") ? "block" : "none";
+      calc();
+    });
+  }
+
+  el("cf-units").addEventListener("change", calc);
+  el("cf-swell").addEventListener("input", calc);
+  el("cf-spacing").addEventListener("input", calc);
+  el("cf-xstext").addEventListener("input", calc);
+  el("cf-gridtext").addEventListener("input", calc);
+
+  calc();
+})();
+</script>
+</body>
+</html>

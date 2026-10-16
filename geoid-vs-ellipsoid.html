@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Geoid vs Ellipsoid: Why Elevation Isn't Latitude</title>
+<meta name="description" content="The ellipsoid is a smooth mathematical Earth; the geoid is the lumpy equal-gravity surface. They differ by tens of metres, so GNSS height is not map elevation.">
+<link rel="canonical" href="https://coordcalc.com/geoid-vs-ellipsoid.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/geoid-vs-ellipsoid.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/geoid-vs-ellipsoid.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/geoid-vs-ellipsoid.html">
+<meta property="og:title" content="Geoid vs Ellipsoid: Why Elevation Isn't Latitude">
+<meta property="og:description" content="The two surfaces, the equation that links them, and why the height your GPS reports differs from sea-level elevation by tens of metres.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/geoid-vs-ellipsoid.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "Geoid vs Ellipsoid: Why Elevation Isn't Latitude",
+  "description": "How the ellipsoid and the geoid differ, the relationship between ellipsoidal and orthometric height, and why a GNSS height needs a geoid model.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/geoid-vs-ellipsoid.html"},
+  "articleSection": "Coordinates"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Geoid vs ellipsoid
+  </nav>
+
+  <h1>Geoid vs Ellipsoid: Why Elevation Isn't Latitude</h1>
+
+  <p class="lead">
+    Latitude and longitude pin a point to a smooth mathematical surface, and that surface is not the one
+    water finds. The ellipsoid is a tidy approximation of the Earth's shape; the geoid is the lumpy
+    surface of equal gravitational potential that approximates mean sea level. They differ by tens of
+    metres, and that difference is the reason an elevation from a GNSS receiver is not the elevation on a
+    topographical map.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Height fundamentals</span>
+  </p>
+
+  <h2>Two surfaces, two purposes</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th></th><th>Ellipsoid</th><th>Geoid</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>What it is</td><td>A smooth mathematical surface: a sphere flattened at the poles</td><td>The equipotential surface of the Earth's gravity field closest to mean sea level</td></tr>
+        <tr><td>Defined by</td><td>Two numbers — semi-major axis and flattening</td><td>Gravity measurements, satellite altimetry and a global gravity model</td></tr>
+        <tr><td>Shape</td><td>Perfectly regular</td><td>Irregular, undulating by up to about 100 m worldwide</td></tr>
+        <tr><td>Height measured from it</td><td>Ellipsoidal height, <i>h</i></td><td>Orthometric height, <i>H</i> — elevation above sea level</td></tr>
+        <tr><td>Used for</td><td>Latitude, longitude, GNSS positioning</td><td>Surveying, drainage, engineering, anything that involves water flowing</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The ellipsoid exists because positioning needs a surface simple enough to do mathematics on. Every
+    latitude and longitude you have ever seen is an angle measured from the ellipsoid, and the ellipsoidal
+    height that comes with it is the distance above that surface along the normal. The geoid exists
+    because gravity is what water, surveying instruments and drainage systems actually respond to, and the
+    geoid is the surface that gravity defines.
+  </p>
+
+  <h2>The equation that links them</h2>
+  <div class="formula">h = H + N<br><br>h = ellipsoidal height (from the ellipsoid, what GNSS gives)<br>
+H = orthometric height (above the geoid, what a levelling survey gives)<br>
+N = geoid height, or geoid undulation (the geoid's height above the ellipsoid)</div>
+  <p>
+    Every practical problem in height comes from this one equation and from forgetting which term a
+    particular number represents. Elevation on a map, on a bench mark, on a flood study — those are
+    <i>H</i>, orthometric height, because they are derived from spirit levelling or from a geoid model.
+    The position solution from a GNSS receiver gives <i>h</i>, ellipsoidal height, because that is what
+    the geometry produces. They differ by <i>N</i>, which is tens of metres and which varies from place to
+    place.
+  </p>
+
+  <h2>How big is the difference?</h2>
+  <p>
+    Worldwide, geoid undulations range over roughly 100&nbsp;m, with the deepest low near the Indian
+    Ocean. Over a single country the range is smaller but still far larger than any elevation precision
+    anyone cares about in construction: across the continental United States the separation between the
+    geoid and the ellipsoid is of the order of 10 to 35&nbsp;m, changing gradually across the country.
+  </p>
+  <p>
+    That is why a receiver reporting an altitude of, say, 1,600&nbsp;m is not necessarily telling you the
+    site is at 1,600&nbsp;m above sea level. It is telling you the height above the ellipsoid. Converting
+    it needs <i>N</i> at that point, which comes from a geoid model — GEOID18 and its successors in the
+    United States, EGM2008 or a national model elsewhere.
+  </p>
+
+  <div class="note">
+    <p><b>A test that catches the error immediately.</b> Take a point with a published elevation and
+    compare it with the raw ellipsoidal height from a GNSS receiver. A difference of tens of metres is
+    normal and expected; a difference of a few metres is not, and a difference of nearly zero suggests
+    the receiver has already applied a geoid model internally. That matters, because if the receiver
+    applies one and your software applies another, you have subtracted the separation twice.</p>
+  </div>
+
+  <h2>Datums, height and the difference from a horizontal datum</h2>
+  <p>
+    It is worth separating two questions that sound alike. A <b>horizontal datum</b> decides what
+    latitude and longitude mean — which ellipsoid and which realisation of it. A <b>vertical datum</b>
+    decides what zero elevation means, and is usually tied to a reference tide gauge plus a levelling
+    network, with a geoid model used to extend it. In the United States, NAVD88 is the commonly used
+    vertical datum, with a successor being rolled out from the mid-2020s onwards.
+  </p>
+  <p>
+    The two are independent. Changing the horizontal datum moves a point around on the map; changing the
+    vertical datum changes the number attached to its height. A dataset can be correct in one and wrong
+    in the other, and the error will only show up when it is merged with data that made the opposite
+    choice.
+  </p>
+
+  <h2>What this means in practice</h2>
+  <ol>
+    <li><b>Label heights.</b> "Elevation 214.6 m" should say which vertical datum and, if it came from
+      GNSS, whether a geoid model was applied.</li>
+    <li><b>Do not mix levelled and GNSS heights silently.</b> Spirit-levelled elevations are orthometric;
+      raw GNSS heights are ellipsoidal. Averaging them without conversion produces a nonsense surface
+      that still looks smooth.</li>
+    <li><b>Use the right geoid model for the region and the epoch.</b> A global model will get you within
+      a metre; a modern national model will do much better.</li>
+    <li><b>Remember that slope is unaffected.</b> A constant offset in height does not change a
+      gradient. If every point moves by the same amount, the slope between them is unchanged — which is
+      why the error can persist unnoticed through years of grading work.</li>
+  </ol>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Horizontal position on the WGS84 ellipsoid</small></a>
+      <a href="slope-calculator.html">slope percentage calculator<small>Gradient from rise and run</small></a>
+      <a href="cut-fill-calculator.html">cut and fill calculator<small>Earthwork volumes from depths and areas</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>Projected coordinates tied to NAD83</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="what-datum-does-gps-use.html">What datum does GPS use?</a>
+        <small>The horizontal half of the same story.</small></li>
+      <li><a href="how-to-calculate-slope-percentage.html">How to calculate slope percentage</a>
+        <small>Why a constant height offset leaves gradients untouched.</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">Degrees, minutes and seconds explained</a>
+        <small>How the horizontal angles are written down.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

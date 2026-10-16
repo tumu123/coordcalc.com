@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>高斯-克吕格投影与UTM的区别 — 参数、带号与坐标对照</title>
+<meta name="description" content="高斯-克吕格投影和UTM其实是同一族横轴墨卡托投影，差别只在分带宽度、长度比（1 与 0.9996）和东坐标约定。同一个点在北京的两套坐标实测相差：东坐标 20.6 米、北坐标 1767.7 米。附判别清单与EPSG代码对照。">
+<link rel="canonical" href="https://coordcalc.com/zh/gauss-kruger-vs-utm.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/gauss-kruger-vs-utm.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/zh/gauss-kruger-vs-utm.html">
+<meta property="og:title" content="高斯-克吕格投影与UTM的区别 — 参数、带号与坐标对照">
+<meta property="og:description" content="同一族投影，两套参数。为什么国内图纸的 y 坐标是 44 万而 UTM 是 44.8 万，为什么北坐标差了 1.7 公里。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/gauss-kruger-vs-utm.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "高斯-克吕格投影与UTM的区别",
+  "description": "高斯-克吕格投影与UTM的参数差异、同一个点上的数值对照、带号与中央子午线的换算方法，以及判断手上坐标属于哪一套的判别清单。",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/gauss-kruger-vs-utm.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../guides.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 高斯-克吕格投影与UTM的区别
+  </nav>
+
+  <h1>高斯-克吕格投影与UTM的区别</h1>
+
+  <p class="lead">
+    两个字都指同一族投影——横轴墨卡托（Transverse Mercator）。真正的差别只有三个：
+    <b>分带宽度</b>（3° 或 6°，对 6°）、<b>长度比</b>（1 对 0.9996）、以及
+    <b>东坐标的加常数与带号前缀</b>。参数不同，同一个点算出来的坐标就不同——不是舍入误差，
+    是两套坐标。用错一套，点位会整体偏移上千米。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>阅读约 9 分钟</span>
+  </p>
+
+  <h2>两者是同一族投影</h2>
+  <p>
+    高斯-克吕格投影是横轴墨卡托投影在椭球上的等角投影，UTM（Universal Transverse Mercator，
+    通用横轴墨卡托）是它的一种工程化特例。国内教材里的「高斯投影正算公式」通常是
+    在克拉索夫斯基椭球或 1975 国际椭球上按经差展开的级数，与国外通用的 Snyder 级数
+    形式不同，但本质等价：都是把椭球面按经差分带展平到圆柱面上，中央子午线不变形，
+    离中央子午线越远变形越大。
+  </p>
+  <p>
+    所以「高斯-克吕格和 UTM 是不是同一个投影」这个问题，答案取决于问的是数学还是参数。
+    数学上是一回事，工程上必须当成两套坐标系统对待，因为带号、中央子午线、长度比、
+    东坐标起点全都不一样。
+  </p>
+
+  <h2>参数逐项对照</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>项目</th><th>高斯-克吕格（中国常规）</th><th>UTM</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>投影类型</td><td>横轴墨卡托（等角）</td><td>横轴墨卡托（等角）</td></tr>
+        <tr><td>分带宽度</td><td>3° 带（大比例尺）或 6° 带（中小比例尺），另有 1.5° 带与任意带</td><td>固定 6°</td></tr>
+        <tr><td>中央子午线长度比 k₀</td><td>1.000000（严格）</td><td>0.999600</td></tr>
+        <tr><td>东坐标起点</td><td>中央子午线为 500 000 米</td><td>中央子午线为 500 000 米</td></tr>
+        <tr><td>带号前缀</td><td>常见做法是在 y 前加带号（如 39 448471.084）</td><td>不写前缀，靠带号单独说明</td></tr>
+        <tr><td>南北半球约定</td><td>中国全在北半球，北坐标即自赤道起算</td><td>南半球北坐标加 10 000 000 米</td></tr>
+        <tr><td>纬度带字母</td><td>无</td><td>有（C–X，共 20 条 8° 纬度带，不用 I 和 O）</td></tr>
+        <tr><td>最大长度变形</td><td>中央子午线 0；6° 带边缘约 +0.14%（赤道）至 +0.08%（中纬度）；3° 带边缘约 +0.03% 至 +0.02%
+        </td><td>中央子午线 −0.04%；6° 带边缘约 +0.10%（赤道）至 +0.04%（中纬度）</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    k₀ = 0.9996 的含义是：UTM 在中央子午线上把地面长度缩小万分之四，
+    换来到带边缘变形不超过约万分之一。它是一种「把误差分摊到整个带内」的取舍。
+    高斯-克吕格取 k₀ = 1，中央子午线完全不变形，代价是带边缘变形更大，
+    因此国内工程测量才需要细分到 3° 带，甚至 1.5° 带和任意带。
+  </p>
+
+  <h2>同一个点，两套坐标</h2>
+  <p>
+    以北京天安门附近 <code>39.906111, 116.3974</code> 为例。这个点的中央子午线
+    恰好都是 117°E——3° 带 39 带、6° 带 20 带、UTM 第 50 带的中央子午线都是 117°E，
+    所以这是一次干净可比的对照：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>坐标系统</th><th>EPSG</th><th>东坐标 / y（米）</th><th>北坐标 / x（米）</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CGCS2000 3° 带，中央子午线 117°E（不加带号）</td><td>4548</td><td>448 471.084</td><td>4 419 278.026</td></tr>
+        <tr><td>CGCS2000 3° 带 39 带（加带号前缀）</td><td>4527</td><td>39 448 471.084</td><td>4 419 278.026</td></tr>
+        <tr><td>CGCS2000 6° 带，中央子午线 117°E（不加带号）</td><td>4509</td><td>448 471.084</td><td>4 419 278.026</td></tr>
+        <tr><td>CGCS2000 6° 带 20 带（加带号前缀）</td><td>4498</td><td>20 448 471.084</td><td>4 419 278.026</td></tr>
+        <tr><td>WGS 84 / UTM 第 50 带</td><td>32650</td><td>448 491.696</td><td>4 417 510.315</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    两件事在这一张表里同时出现了。第一，<b>3° 带 39 带和 6° 带 20 带算出的平面坐标完全相同</b>
+    （都是 448 471.084 / 4 419 278.026），因为两者中央子午线同为 117°E、
+    长度比同为 1、加常数同为 500 公里——区别只在带号前缀写 39 还是写 20。
+    第二，UTM 的东坐标多 20.612 米、北坐标少 1 767.711 米。
+  </p>
+  <p>
+    北坐标这 1 767.711 米不是投影误差，而是 k₀ 的直接后果：
+    <code>4 419 278.026 × 0.9996 = 4 417 510.315</code>，
+    差值比例恰好是 <code>1/0.9996 − 1 = 0.0004</code>。也就是说，
+    把高斯坐标直接当成 UTM 用，点位会沿子午线方向整体挪动将近 1.8 公里；
+    反过来把 UTM 当成高斯用，同样差 1.8 公里。这类错误在现场很常见，
+    因为两串数字看起来「都像坐标」。
+  </p>
+
+  <div class="note">
+    <p><b>记住一个数量级就够了：</b>在高斯-克吕格与 UTM 之间直接混用坐标，
+      典型偏差是<b>东坐标几十米、北坐标一两千米</b>。几十米像是「精度问题」，
+      一两千米则是「位置错误」。</p>
+  </div>
+
+  <h2>带号与中央子午线怎么算</h2>
+  <p>
+    6° 带与 3° 带都从 0° 经线起算，但编号方式不同：
+  </p>
+  <div class="formula">
+6° 带：中央子午线 = 6 × 带号 − 3　　范围 6° 带号−6° 至 6° 带号<br>
+3° 带：中央子午线 = 3 × 带号　　　　范围 3° 带号−1.5° 至 3° 带号+1.5°
+  </div>
+  <p>
+    中国的经度范围大致是 73°E 到 135°E，对应 6° 带的 13 至 23 带、
+    3° 带的 25 至 45 带。两个带系的中央子午线会重合：
+    当 6 × n − 3 = 3 × m 时，即 m = 2n − 1，3° 带号为奇数时才与某个 6° 带同中央子午线。
+    北京的 39 带与 20 带正是这种关系（39 = 2 × 20 − 1）。
+  </p>
+  <p>
+    选择哪一套，一般按比例尺确定：<b>1:25 000 及更小比例尺用 6° 带，1:10 000 及更大比例尺用 3° 带</b>；
+    城市测量与大型工程中还常用 1.5° 带、以测区中心子午线为中央子午线的任意带，
+    或者直接采用地方独立坐标系。所以同一份资料上标注「中央子午线 117°」时，
+    还必须同时确认带号与是否加了带号前缀。
+  </p>
+  <p>
+    常用写法是把带号写在东坐标前面：<code>39 448471.084</code>。
+    这样做的好处是不会拿错带号，坏处是这个数看起来有 8 位，
+    容易被误读成「三千九百多万米」。写成果表时最稳妥的做法是
+    把「带号 39、中央子午线 117°、3° 带、y 加 500 公里常数」整句写进图签。
+  </p>
+
+  <h2>怎么判断手上的坐标是哪一套</h2>
+  <p>在没有坐标系统说明的情况下，可以按下面的顺序过一遍：</p>
+  <ul>
+    <li><b>先看总量级。</b>北坐标在中国陆地范围内是 7 位数（约 2 000 000–5 950 000 米），
+      南海诸岛纬度低，可降到 6 位。东坐标只有 6 位（10 万–90 万）说明未加带号前缀；
+      8 位（2 000 万–4 500 万）说明带了前缀，前两位就是带号。</li>
+    <li><b>看东坐标离 500 000 有多远。</b>东坐标正好 500 000 表示点位就在中央子午线上，
+      这类数常出现在控制点成果表里，是判断「加常数是否为 500 公里」的直接线索。</li>
+    <li><b>看偏离 500 000 的量。</b>3° 带内东坐标偏离 500 000 一般不超过约 170 公里
+      （中纬度约 130 公里，低纬度约 160 公里）；6° 带内约为其两倍，赤道处可到约 330 公里。
+      偏离超过 170 公里就不可能是 3° 带。</li>
+    <li><b>看单位。</b>国内成果一律用米；若数值量级像英尺（同一地点大 3.28 倍），
+      多半是引进的美国图纸。</li>
+    <li><b>最后看文件本身。</b>图签、成果表封面、CAD 图纸的坐标系统说明、
+      或者 GIS 数据的 <code>.prj</code> 文件，是唯一可靠的依据。
+      上面的经验判别只能用来发现矛盾，不能用来替代说明。</li>
+  </ul>
+
+  <div class="note">
+    <p><b>一个真实场景。</b>拿到一份 CAD 图纸，上面写「本图坐标 y = 448471.084，
+      x = 4419278.026」。东坐标 6 位、离 500 公里常数偏西 51.5 公里，
+      北坐标 441 万米——这个组合与 117°E 中央子午线、39.9°N 完全吻合。
+      但 y 是 44.8 万还是 44.85 万，只有算一遍才知道，
+      所以下一步应当用它反算经纬度，核对是否落在预期位置，
+      而不是凭「看起来差不多」直接使用。</p>
+  </div>
+
+  <h2>常用 EPSG 代码速查</h2>
+  <p>
+    在 GIS 软件或坐标转换工具里选择坐标系统时，直接按 EPSG 代码指定最不容易出错。
+    中国常用的几个：
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>坐标系统</th><th>EPSG</th><th>中央子午线</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>CGCS2000 地理坐标</td><td>4490</td><td>—</td><td>2000 国家大地坐标系，经纬度</td></tr>
+        <tr><td>CGCS2000 / 3° 带 zone 25–45</td><td>4513–4533</td><td>75°E–135°E</td><td>东坐标加带号前缀</td></tr>
+        <tr><td>CGCS2000 / 3° 带 CM 75E–135E</td><td>4534–4554</td><td>75°E–135°E</td><td>不加带号前缀</td></tr>
+        <tr><td>CGCS2000 / 6° 带 zone 13–23</td><td>4491–4501</td><td>75°E–135°E</td><td>东坐标加带号前缀</td></tr>
+        <tr><td>CGCS2000 / 6° 带 CM 75E–135E</td><td>4502–4512</td><td>75°E–135°E</td><td>不加带号前缀</td></tr>
+        <tr><td>WGS 84 地理坐标</td><td>4326</td><td>—</td><td>GPS 原始输出</td></tr>
+        <tr><td>WGS 84 / UTM 第 43–53 带（北）</td><td>32643–32653</td><td>75°E–135°E</td><td>覆盖中国全境</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    国内还有两套历史坐标系统需要识别：<b>北京54 坐标系</b>采用克拉索夫斯基椭球
+    （长半轴 6 378 245 米，扁率 1/298.3），<b>西安80 坐标系</b>采用 1975 国际椭球
+    （长半轴 6 378 140 米，扁率 1/298.257）。CGCS2000 的长半轴 6 378 137 米、
+    扁率 1/298.257 222 101，与 WGS84（6 378 137 米、1/298.257 223 563）差异极小，
+    在多数工程中可视为一致。但北京54 与西安80 到 CGCS2000 之间的转换不是简单换椭球，
+    需要转换参数，且参数随地区不同。
+  </p>
+
+  <h2>换算时最容易踩的四个坑</h2>
+  <ul>
+    <li><b>把 y 当 x。</b>国内习惯纵轴为 x、横轴为 y，也习惯 x 在前；而 UTM 与多数国外软件
+      用 easting（东坐标）在前。粘贴坐标前先确认列顺序，量级差异（几百万对几万）是最快的自检。</li>
+    <li><b>漏掉带号前缀。</b>39 448 471.084 与 448 471.084 是同一个点的两种写法，
+      但与其他带的 448 471.084 完全不是一回事——同一个东、北坐标组合，
+      在每个带都对应地球上不同的地点。</li>
+    <li><b>把 UTM 的 k₀ 套在高斯坐标上。</b>这是本文反复强调的那 1.8 公里，
+      也是「为什么坐标看着对、点却画错位置」的头号原因。</li>
+    <li><b>忽略椭球与基准。</b>北京54、西安80、CGCS2000 的椭球与定位都不同，
+      跨基准转换必须用七参数或经国家批准的转换参数，不能只改投影。</li>
+  </ul>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>经纬度 ↔ UTM，支持批量与CSV导出</small></a>
+      <a href="land-area-calculator.html">坐标推算地块面积<small>输入一圈坐标算面积与周长</small></a>
+      <a href="epsg-code-lookup.html">EPSG 代码查询<small>486 个常用坐标系的单位与投影参数</small></a>
+      <a href="unit-converter.html">测量单位换算器<small>米、英尺、亩、公顷互换</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+        <small>为什么东坐标从 500 000 起算，以及四种最常见的误读。</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">度分秒怎么读、怎么算</a>
+        <small>60 进制坐标的换算，以及「39.5422」引发的 40 公里错误。</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺：你手上的资料用的是哪一种</a>
+        <small>国外图纸里那个容易忽略的百万分之二。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、报批或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

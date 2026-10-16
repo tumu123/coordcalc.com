@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About CoordCalc — Free Surveying Calculators, Verified in the Open</title>
+<meta name="description" content="What CoordCalc is, who it is for, how the calculators are built and verified against PROJ and the EPSG registry, and how to get in touch.">
+<link rel="canonical" href="https://coordcalc.com/about.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/about.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/about.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/about.html">
+<meta property="og:title" content="About CoordCalc — Free Surveying Calculators, Verified in the Open">
+<meta property="og:description" content="What CoordCalc is, who it is for, how the calculators are built and verified, and how to get in touch.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/about.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  "inLanguage": "en",
+  "name": "About CoordCalc",
+  "description": "What the CoordCalc surveying calculators are, how they are built and verified, and how to contact the site.",
+  "url": "https://coordcalc.com/about.html",
+  "isPartOf": {"@type": "WebSite", "name": "CoordCalc", "url": "https://coordcalc.com/"}
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › About
+  </nav>
+
+  <h1>About CoordCalc</h1>
+
+  <p class="lead">
+    CoordCalc is a set of fifteen calculators and twelve guides for the arithmetic that surrounds a
+    survey: coordinate conversions, distances and areas, units and land records, slope, scale, curves
+    and traverses. It is free, it runs entirely in your browser, and it is written for the person who
+    needs a number they can defend — a surveyor checking a plan, a student working through a
+    problem, an engineer reading a CAD file, a GIS technician untangling a datum.
+  </p>
+
+  <div class="card">
+    <h2>Why it exists</h2>
+    <p>
+      Most coordinate questions are not hard mathematics; they are hard <i>bookkeeping</i>. Which
+      datum, which zone, which foot, which of the three codes that look the same but are not. The
+      web has plenty of converters that return an answer and nothing else, and the failure mode is
+      always the same: a confidently wrong number that nobody questioned because a website produced
+      it.
+    </p>
+    <p>
+      So each calculator here does two things. It computes, and it explains what it assumed — the
+      ellipsoid, the false origin, the unit convention, the difference between the two feet, the
+      reason a projected area is not a ground area. The guides go further and cover the questions
+      that come up around the arithmetic: how to read a UTM reference, why an MGRS round trip lands a
+      metre away, what a geoid is doing under an ellipsoid, why the US survey foot took until 2023 to
+      die.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>How the calculations are built</h2>
+    <p>
+      One shared geodesy library sits behind every tool. It is plain JavaScript with no dependencies
+      and no network access, and it is written the cautious way: the transverse Mercator projection
+      uses the published series, the inverse is solved by Newton iteration against that same series
+      rather than by a truncated reverse formula, distances use Vincenty's inverse on the WGS84
+      ellipsoid with a spherical fallback for near-antipodal pairs, and the Norway and Svalbard zone
+      exceptions are applied rather than ignored.
+    </p>
+    <p>
+      The library is measured, not trusted. Against PROJ — the reference implementation behind pyproj
+      and QGIS — the UTM easting agrees to better than 0.1 mm and the northing to better than 0.9 mm
+      across test points from the equator to 78° N, and a forward-then-inverse round trip closes to a
+      few nanometres. The <a href="epsg-code-lookup.html">EPSG code lookup</a> is generated
+      programmatically from the EPSG registry itself rather than typed in, so its names, units, areas
+      of use and projection parameters are the registry's own. The
+      <a href="developers.html">developer guide</a> quotes the exact figures and shows how to reproduce
+      them in a browser console.
+    </p>
+    <p>
+      The same discipline applies to the tests: every calculator is exercised in a real browser
+      document against known values before it ships, and the batch converters are checked against
+      hand-verified coordinate lists rather than against themselves.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>How the site is built</h2>
+    <p>
+      The pages are hand-written HTML, CSS and JavaScript with no framework and no build step, which
+      keeps them small enough to load on a phone in the field and simple enough to work offline once
+      open. There is no login, no upload, no advertising and no cookie; the
+      <a href="privacy.html">privacy policy</a> is short because there is almost nothing to report.
+      The calculators are also embeddable: any of them can be dropped into another page or an
+      intranet with <code>embed=1</code>, which is documented with the rest of the
+      <a href="developers.html">URL and JavaScript API</a>.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Editorial position</h2>
+    <p>
+      Every page states its assumptions and its limits, and every calculator carries the same
+      reminder in its footer: results are for reference, and anything that governs a boundary, a
+      construction line or a payment must be verified by a licensed professional under the standard
+      that applies. That is not a legal formality bolted on for protection — it is the honest
+      description of what a web calculator is.
+    </p>
+    <p>
+      Where a convention could go either way, the page says which way it went. Where a number is
+      rounded for display, the page says the calculation used full precision. Where two authorities
+      disagree — the two feet, the two Mercators, the geoid and the ellipsoid — the disagreement is
+      the subject of the page rather than a footnote.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Funding</h2>
+    <p>
+      The site carries no advertising, no affiliate links and no sponsored content, and there is no
+      paid tier. If that ever changes it will be said here first, plainly.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Contact and corrections</h2>
+    <p>
+      Wrong answer, unclear explanation, a unit or a projection you need that is missing — all of
+      those are worth hearing about, and corrections are fixed rather than argued. The most useful
+      report includes the input, the output you expected with its source, and the tool you used.
+    </p>
+    <p>
+      Suggestions for new tools are welcome too, particularly the tedious ones: the calculators that
+      exist here began as someone's repetitive spreadsheet job.
+    </p>
+  </div>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+    <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

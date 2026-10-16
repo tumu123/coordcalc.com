@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>隐私政策 — CoordCalc 收集什么，永远不做什么</title>
+<meta name="description" content="CoordCalc 隐私政策（大白话版）：所有计算都在你的浏览器里完成，不上传任何坐标，统计为主动勾选且不使用 Cookie。">
+<link rel="canonical" href="https://coordcalc.com/zh/privacy.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/privacy.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/privacy.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/privacy.html">
+<meta property="og:title" content="隐私政策 — CoordCalc 收集什么，永远不做什么">
+<meta property="og:description" content="每一次计算都在你的浏览器里完成，你输入的内容不会被上传。统计为主动勾选，且不使用 Cookie。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/privacy.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "name": "CoordCalc 隐私政策",
+  "description": "CoordCalc 计算器收集什么、永远不收集什么，以及主动勾选的统计是如何工作的。",
+  "url": "https://coordcalc.com/zh/privacy.html",
+  "inLanguage": "zh-CN",
+  "isPartOf": {"@type": "WebSite", "name": "CoordCalc 测绘计算器", "url": "https://coordcalc.com/zh/"}
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../privacy.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › 隐私与 Cookie
+  </nav>
+
+<h1>隐私政策</h1>
+
+  <p class="meta">
+    <span>最后更新：2026 年 10 月 9 日</span>
+    <span>适用于本站所有页面</span>
+  </p>
+
+  <p class="lead">
+    本站是一组计算器，关于隐私，最简短也最诚实的总结是这一句：
+    <b>计算器在你的设备上运行，你输入的数字留在你的设备上。</b>
+    没有账号、没有表单、没有上传、没有服务器端计算。本页用与站内其他部分一样的大白话，
+    解释为数不多的几个例外——一份 Web 服务器日志、一个需主动勾选的统计脚本，以及一个 localStorage 键。
+  </p>
+
+  <div class="card">
+    <h2>一句话版本</h2>
+    <ul>
+      <li><b>坐标、数值和粘贴进来的清单永远不会离开你的浏览器。</b>
+          每一次换算、平差、面积与体积计算都由运行在你机器上的 JavaScript 完成。
+          计算器背后没有 API 调用，也没有任何服务器能看到你的输入。</li>
+      <li><b>没有广告，没有广告联盟，没有跨站跟踪。</b>任何页面都不加载第三方广告或社交脚本。</li>
+      <li><b>统计需要主动勾选，且不使用 Cookie。</b>只有一个统计脚本，而且只有在你点击
+          <b>接受统计</b>之后才会加载。它记录页面浏览量和使用了哪个工具，
+          不设置 Cookie，也不建立任何会跟着你的画像。</li>
+      <li><b>只有一个 localStorage 键。</b>写进你浏览器的唯一内容是
+          <code>coordcalc-consent</code>，用来记住你在横幅里做过的选择。你随时可以删掉它。</li>
+      <li><b>Web 服务器会保留普通日志。</b>任何 Web 服务器都会：
+          你的 IP 地址、请求的页面、时间，以及浏览器的 User-Agent。
+          这些日志用于运维和保障站点安全，不用于画像。</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>什么永远不会离开你的浏览器</h2>
+    <p>
+      你输入计算器的所有内容，都由你已经加载好的这个页面处理。
+      横轴墨卡托级数、Vincenty 距离算法、最小二乘导线平差、鞋带公式面积求和、
+      以及 DXF 文件解析器，全都是文档里的 JavaScript。
+      当你把 <code>43.642567, -79.387139</code> 换算成 UTM 坐标，
+      或从 CAD 文件里读出顶点时，数据是从本地的文件选择框或文本框中读入，再写回同一个页面的。
+    </p>
+    <p>
+      整个流程中没有任何一步会把你的输入序列化后发往别处。你可以自己验证：
+      打开浏览器开发者工具，盯着网络面板，然后用任意一个计算器。页面、样式表和脚本加载完毕之后，
+      使用这些工具不会产生任何请求。页面打开后计算器还能离线使用，
+      而这只可能是因为没有任何数据要往返于服务器。
+    </p>
+    <p>
+      文件也是一样。<a href="dxf-coordinate-extractor.html">DXF 坐标提取</a>
+      用浏览器自带的 <code>FileReader</code> 接口读取你选中的文件，全程在内存中完成。
+      文件不会上传、不会排队、不会存储，关掉标签页就没了。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Web 服务器能看到什么</h2>
+    <p>
+      要把这个页面送达，Web 服务器就必须响应你的请求，因而会产生一条日志记录，
+      每个网站都是如此：请求的 URL、日期时间、你的 IP 地址、
+      你的浏览器愿意发送的来源页面，以及浏览器的 User-Agent 字符串。
+      这是标准做法，无法避免，也不是本站额外加的东西。
+    </p>
+    <p>
+      这些日志用于维持站点正常运转——错误率、失效链接、滥用流量——
+      不会与你在计算器里做的任何操作相关联，因为本站从来收不到你在计算器里做了什么。
+      日志保存有限的一段时间后即删除。
+    </p>
+  </div>
+
+  <div class="card" id="analytics">
+    <h2>统计，以及同意横幅</h2>
+    <p>
+      本站使用一个尊重隐私的统计脚本，用来了解哪些计算器有人用、哪些没人用，
+      好把力气花在有用的地方。该脚本<b>不使用 Cookie</b>：不设置 Cookie、不读取已有 Cookie、
+      不对你的设备做指纹识别，也不会跟到任何其他网站去。
+      它记录页面名称、事件（一次浏览、某个计算器被使用、某个外链被点击）
+      以及来源页面这类粗粒度信息。
+    </p>
+    <p>
+      它<b>只在你说接受之后</b>才加载。页面底部的横幅提供两个选项：
+    </p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>你的选择</th><th>会发生什么</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>接受统计</b></td>
+            <td>统计脚本在本次及以后的访问中加载。页面浏览量和工具使用事件会被计数。
+                你输入计算器的内容不在其中——事件只说明某个工具被用过，不包含你换算的是什么。</td>
+          </tr>
+          <tr>
+            <td><b>仅必要 Cookie</b></td>
+            <td>统计脚本在本次及以后的访问中都不加载。站点表现完全相同；你只是什么都没告诉我们。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">
+      在你做出选择之前，不会有任何统计请求发出——闸门是在脚本有机会加载之前就关上的，
+      而不是之后。如果你选择<b>仅必要 Cookie</b>，它就一直关着。
+      如果你选了<b>接受统计</b>又想反悔，用下面的按钮：选择会立即反转，
+      下次访问时脚本就不会加载了。
+    </p>
+  </div>
+
+  <div class="card" id="cookies">
+    <h2>Cookie 与 localStorage</h2>
+    <p>
+      本站<b>不设置任何 Cookie</b>。它唯一存储的东西，是你浏览器 localStorage 里的一条记录。
+      localStorage 是按站点隔离的存储区，不像 Cookie 那样会随请求发给服务器：
+    </p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>键</th><th>值</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>coordcalc-consent</code></td>
+            <td><code>granted</code> 或 <code>essential</code></td>
+            <td>记住你对同意横幅的回答，免得在每个页面反复询问。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">
+      以上就是完整清单。没有会话标识符、没有偏好设置存储，也没有任何形式的第三方存储。
+      清除浏览器中本站的站点数据即可删除这个键，横幅会在你下次访问时再问一次。
+    </p>
+    <p>
+      <button class="btn" id="cookie-settings" type="button">Cookie 设置</button>
+      <span style="display:block;font-size:13px;color:var(--sub);margin-top:8px;">
+        重新打开横幅，以便修改你的选择。你当前的回答：<code id="consent-now">…</code>
+      </span>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>被嵌入的计算器</h2>
+    <p>
+      计算器可以用 <code>embed=1</code> 嵌入到别的网站，详见
+      <a href="developers.html">开发者指南</a>。被嵌入的计算器只会更私密，不会更差：
+      框架内不显示横幅，统计脚本也永不加载，因为同意的决定权属于承载嵌入的那个网站。
+      被嵌入的工具在加载完成后不发出任何请求、不写入任何存储，也不读取它周围页面的任何内容。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>我们没有的数据</h2>
+    <p>
+      因为没有账号、没有邮件订阅、没有评论框，本站不持有任何人的姓名、邮箱地址、
+      通信地址或电话号码。没有用户名单可供泄露、出售或移交，也没有办法把一次计算与某个人关联起来。
+      如果监管方或收购方索要本站访客的个人数据，诚实的回答是：一份都没有。
+    </p>
+    <p>
+      本站不卖数据、不出租数据，也不与广告联盟、数据经纪商或社交平台共享数据。没有什么可共享的。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>你的选择与权利</h2>
+    <p>
+      拒绝统计并不影响你在本站做任何事，这也正是多数隐私监管机构本来就倾向的立场。除此之外：
+    </p>
+    <ul>
+      <li><b>随时更改同意状态</b>，用上面的按钮即可。</li>
+      <li><b>删除已存储的选择</b>，在浏览器中清除本站的站点数据即可。</li>
+      <li><b>彻底拦截该脚本</b>，任何内容拦截工具都行；没有它，所有计算器都能正常工作。</li>
+      <li><b>有任何疑问都可以问</b>，通过下方的联系方式提出，你会得到真人回复，而不是模板回信。</li>
+    </ul>
+    <p>
+      在隐私法赋予你查阅、更正或删除权利的场合，这些权利在本站是轻而易举就能满足的：
+      唯一可能与你有关的记录，是一条匿名日志或一个匿名统计事件，而两者之中都没有任何能追溯到你本人的标识。
+      使用本站所适用的条款见<a href="terms.html">使用条款</a>。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>本政策的变更</h2>
+    <p>
+      如果本站将来增加了收集内容超出本页所述的东西——账号体系、邮件订阅、换一家统计服务商——
+      本页会先被重写，顶部的日期也会随之改变。实质性变更会在站内公告，而不是埋在这里。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>联系方式</h2>
+    <p>
+      关于本政策、关于计算器，或关于某个看起来不对的结果，请见
+      <a href="about.html">关于本站</a>了解联系方式。
+    </p>
+  </div>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var btn = document.getElementById("cookie-settings");
+  var now = document.getElementById("consent-now");
+  function paint() {
+    var v = "尚未选择";
+    if (window.geoConsent) {
+      var s = window.geoConsent.status();
+      v = s === "unset" ? "尚未选择" : s;
+    }
+    now.textContent = v;
+  }
+  if (btn) {
+    btn.addEventListener("click", function () {
+      if (window.geoConsent) {
+        window.geoConsent.open();
+        paint();
+      }
+    });
+  }
+  paint();
+})();
+</script>
+</body>
+</html>

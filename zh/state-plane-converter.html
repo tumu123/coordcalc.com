@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美国州平面坐标转换 — NAD83 State Plane 与经纬度互转</title>
+<meta name="description" content="免费的 NAD83 州平面坐标转换工具：50 州全部 134 个分带内置，经纬度与州平面坐标双向转换，支持米、美制测量英尺与国际英尺，投影计算与 EPSG 参考实现一致（优于 0.05 mm），全部在浏览器本地完成。">
+<link rel="canonical" href="https://coordcalc.com/zh/state-plane-converter.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/state-plane-converter.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/state-plane-converter.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/state-plane-converter.html">
+<meta property="og:title" content="美国州平面坐标转换 — NAD83 State Plane 与经纬度互转">
+<meta property="og:description" content="NAD83 州平面 134 个分带与经纬度双向转换，支持米、美制测量英尺与国际英尺。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/state-plane-converter.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "州平面坐标怎样转换为经纬度？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "对东距和北距施加该带投影的逆变换：先减去假定东距与假定北距得到相对投影原点的偏移， 再换算回椭球上的半径或子午线距离，最后解出经纬度。州平面坐标转换器做的就是这件事， 而且必须指明分带——同一组数字在不同带里代表不同的位置。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "我在哪个州平面带里？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "分带按州定义，大州再按区域细分。先选州，再选包含作业区域的带。若靠近边界， 使用你的点在资料中登记的带，并始终把带号与坐标一起记录。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "应该输入米还是英尺？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按资料来。历史上的州平面坐标通常是美制测量英尺（每英尺 1200/3937 米）； 现行成果通常是米或国际英尺（每英尺严格 0.3048 米）。两者相差约百万分之二—— 每英里 3.2 毫米——长边上的影响不可忽略。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "哪些州用兰勃特带，哪些用横轴墨卡托？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "大致东西向延伸的带用兰勃特等角圆锥（两条标准纬线）；大致南北向延伸的带用 横轴墨卡托（中央子午线加 0.9999 比例因子，阿拉斯加 0.9996）。 选定分带后，本工具会自动套用正确的投影。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "州平面坐标系统用什么基准？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "现行分带同时存在于 NAD83 与 NAD27 两种基准下。本工具使用 NAD83（GRS80 椭球）。 NAD27 坐标与 NAD83 相差局部可达约 100 米，必须先做基准变换。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "转换精度如何？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在覆盖全部带型的检验点上，本实现与 EPSG 参考实现的最大偏差为正向 0.017 mm、 反向 0.046 mm。更大的误差来源几乎总是你的输入精度和源坐标的基准。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么很多带的假定东距都是 500,000 米？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因为假定东距不承担地理含义——它只需要保证带内所有坐标为正且数字足够短。 取整 500,000 米就能满足宽几百公里的带，于是各州沿用同一数值。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个转换器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费，无需登录、无账户、无使用次数限制。每次转换都在你的浏览器本地完成， 坐标不会上传。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:17px;font-weight:600;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  select{font-size:15px;font-weight:500;}
+  button.ghost{font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 14px;border-radius:9px;
+    border:1px solid #cfd6e0;background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  button.ghost:hover{border-color:var(--accent);color:var(--accent-d);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:23px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../state-plane-converter.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › 州平面坐标转换
+  </nav>
+
+<h1>美国州平面坐标转换（State Plane）</h1>
+
+  <p class="lead">
+    本工具在 NAD83 州平面坐标与经纬度之间双向转换。选择州与分带，输入以米、美制测量英尺或
+    国际英尺表示的东距与北距即可得到经纬度；也可以反向粘贴经纬度读取带内坐标。
+    50 州全部 134 个 NAD83 州平面分带内置，投影计算与 EPSG 参考实现一致（优于 0.05&nbsp;mm）。
+    免费、纯浏览器本地运行、无需登录、不上传数据。
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="toSp" type="button">经纬度 → 州平面</button>
+      <button class="tab" data-tab="toLl" type="button">州平面 → 经纬度</button>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label for="sp-state">州</label>
+        <select id="sp-state"></select>
+      </div>
+      <div class="field">
+        <label for="sp-zone">分带</label>
+        <select id="sp-zone"></select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="sp-unit">坐标单位</label>
+        <select id="sp-unit">
+          <option value="m">米</option>
+          <option value="ftus">美制测量英尺</option>
+          <option value="ftint">国际英尺</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;" id="sp-infield-ll">
+      <div class="field">
+        <label for="sp-lat">纬度（反向模式下为北距输入）</label>
+        <input id="sp-lat" type="text" value="38.200000" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="sp-lon">经度</label>
+        <input id="sp-lon" type="text" value="-84.500000" autocomplete="off">
+      </div>
+    </div>
+    <p class="hint" id="sp-hint-ll">
+      经纬度可用十进制度，也可用度分秒如 <code>38 12 00 N</code>。西经与南纬取负值。
+      需要度分秒转换？用<a href="dms-converter.html">度分秒转换器</a>。
+    </p>
+
+    <div class="row" style="margin-top:16px;display:none;" id="sp-infield-sp">
+      <div class="field">
+        <label for="sp-e">东距（X）</label>
+        <input id="sp-e" type="number" step="any" value="500000" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="sp-n">北距（Y）</label>
+        <input id="sp-n" type="number" step="any" value="3830000" autocomplete="off">
+      </div>
+    </div>
+    <p class="hint" style="display:none;" id="sp-hint-sp">
+      按资料原样输入坐标，并在上方把坐标单位设为一致。若旧图标注的是测量英尺，
+      请选美制测量英尺——而不是国际英尺。
+    </p>
+    <p class="err" id="sp-err">请输入有效数字后再转换。</p>
+
+    <div class="results" id="sp-results">
+      <div class="big">
+        <span class="bk" id="sp-bk">结果</span>
+        <span class="bv" id="sp-bv">—</span>
+      </div>
+      <div id="sp-rows"></div>
+    </div>
+  </div>
+
+    <section class="card">
+    <h2>计算原理</h2>
+    <p>州平面坐标是一种投影平面坐标，把它转回经纬度，就是把当初的投影“逆”回去。
+      共用到两种投影，选哪个分带决定了用哪一种。</p>
+    <p><b>兰勃特等角圆锥（Lambert Conformal Conic, 2SP）</b>分带用于大致东西向延伸的条带，
+      由两条标准纬线定义。圆锥常数为
+      <code>n = ln(m₁ / m₂) ÷ ln(t₁ / t₂)</code>，其中
+      <code>m = cos φ ÷ √(1 − e² sin²φ)</code>，等距函数为
+      <code>t = tan(45° − φ/2) ÷ ((1 − e sinφ) ÷ (1 + e sinφ))^(e/2)</code>。
+      点到锥顶的半径为 <code>ρ = a F tⁿ</code>，<code>F = m₁ ÷ (n t₁ⁿ)</code>，
+      平面坐标由 <code>E = E₀ + ρ sin θ</code>、<code>N = N₀ + ρ₀ − ρ cos θ</code> 给出，
+      其中 <code>θ = n (λ − λ₀)</code>。</p>
+    <p><b>横轴墨卡托（Transverse Mercator）</b>分带用于大致南北向延伸的条带，由一条中央子午线和
+      一个略小于 1 的比例因子定义——通常为 <code>0.9999</code>，阿拉斯加为 <code>0.9996</code>——
+      使格网距离在整个带宽内尽量接近实地距离。东距与北距由 Snyder 级数按子午线弧长
+      <code>M</code> 与相对中央子午线的经差展开。</p>
+    <p>反方向（州平面 → 经纬度）则是先反算子午线弧长求出垂足纬度，再代入反算级数；
+      兰勃特分带则对极坐标方程做迭代求解。两种路径都使用 GRS80 椭球
+      （<code>a = 6,378,137 m</code>，<code>1/f = 298.257222101</code>），这正是 NAD83 的椭球。</p>
+  </section>
+
+  <section class="card">
+    <h2>什么是州平面坐标系统</h2>
+    <p>州平面坐标系统诞生于 20 世纪 30 年代，原因是平面格网远比经纬度便于计算。每个州——
+      大州内部再细分——都有各自的投影平面，选取的原则是“把地球展平”带来的变形控制在限差之内。
+      最初的设计目标是长度误差不超过约万分之一，即带内每一千英尺约 0.1 英尺。</p>
+    <p>为守住这个限差，各州划分了分带。南北向的窄带用横轴墨卡托投影，因为横置的圆柱可以
+      沿一条子午线紧贴椭球；东西向的宽带用兰勃特等角圆锥投影，因为圆锥能贴合一段纬度带。
+      又宽又高的州就分多个带——得克萨斯 5 个、加利福尼亚 6 个、阿拉斯加 10 个——
+      每个点在它所属的带内换算。</p>
+    <p>每个分带由一小组参数定义：投影原点的经纬度、标准纬线或中央子午线比例因子，
+      以及假定东距与假定北距。假定值的存在只是为了让带内所有坐标保持正值且数字简短——
+      这也是为什么那么多分带的假定东距恰好是 500,000 米或 2,000,000 米。</p>
+  </section>
+
+  <section class="card">
+    <h2>兰勃特与横轴墨卡托：各州如何选择</h2>
+    <p>本工具内置的 134 个 NAD83 分带中，74 个是兰勃特等角圆锥，60 个是横轴墨卡托。
+      这种划分按地理形态而非行政决定。</p>
+    <table class="lookup">
+      <thead>
+        <tr><th>投影</th><th>带形</th><th>典型分带</th><th>定义参数</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>兰勃特等角圆锥（2SP）</td>
+          <td>宽，东西向延伸</td>
+          <td>得克萨斯 North / Central / South Central；加利福尼亚 1–6 带的一部分；堪萨斯、内布拉斯加、艾奥瓦、达科他、蒙大拿、华盛顿</td>
+          <td>两条标准纬线加一个假定原点</td>
+        </tr>
+        <tr>
+          <td>横轴墨卡托</td>
+          <td>窄，南北向延伸</td>
+          <td>阿拉斯加 1–10 带；亚利桑那 East / Central / West；伊利诺伊 East / West；印第安纳 East / West；多数东部沿海州</td>
+          <td>中央子午线加比例因子（0.9999，阿拉斯加 0.9996）</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>投影选择有实际影响。兰勃特带内，长度误差随离开标准纬线南北的距离增大；
+      横轴墨卡托带内，误差随离开中央子午线东西的距离增大。因此在错误的带内换算，
+      仍会得到一组经纬度，但点偏离应属的分带越远，误差越大。若点位靠近分带边界，
+      请使用该点在资料中登记的带，并在成果中注明坐标属于哪个带——
+      不带分带号的州平面坐标不是一份完整的坐标。</p>
+  </section>
+
+  <section class="card">
+    <h2>米、美制测量英尺与国际英尺</h2>
+    <p>无论选哪种单位，投影本身不变，变的只是数字。州平面坐标既有米制定义也有英尺制定义，
+      英尺版只是把米制定义重新表述，二者之间是固定的比例换算。</p>
+    <p>陷阱在于“英尺”有两种。2023 年 1 月 1 日之前，州平面坐标通常以<b>美制测量英尺</b>发布，
+      1 英尺 = <code>1200 ÷ 3937 = 0.304800609601219 m</code>。测量英尺废止后，
+      现行成果使用米或<b>国际英尺</b>，1 英尺严格等于 <code>0.3048 m</code>。
+      两者相差约百万分之二，即每英里 0.0106 英尺（约 3.2 毫米）。基线一长，
+      用错英尺的坐标会偏离应有位置好几米，而且乍看毫无破绽。</p>
+    <p>单位要跟资料走，不要跟习惯走。1990 年代的图纸写英尺，几乎必然是美制测量英尺；
+      当年的图纸写英尺则几乎必然是国际英尺。由于同一个带同时存在米制与测量英尺制两个
+      EPSG 代码，查源数据的 EPSG 代码是裁决的最可靠办法。</p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>取肯塔基 North 带（EPSG:2205）中的一点，该带标准纬线为 37°58′ 与 38°58′，
+      假定原点 37°30′ N, 84°15′ W，假定东距 500,000 米。点 38.200000° N, 84.500000° W
+      换算得东距 <b>478,102.274 m</b>、北距 <b>77,727.277 m</b>。由于该带以米定义，
+      同一点的美制测量英尺东距为 <b>1,568,573.877 ftUS</b>——米值乘以 3937 ÷ 1200。</p>
+    <p>检查州平面坐标有个实用口诀：北距应为正，量级与该带到带原点纬线的距离相当；
+      东距应落在假定东距附近几百公里之内。若东距远离假定东距，或本不应出现负北距的带里
+      出现负值，几乎可以断定是选错了带或用错了单位。</p>
+  </section>
+
+  <section class="card">
+    <h2>覆盖范围与精度</h2>
+    <p>本工具覆盖 50 州全部 134 个 NAD83 州平面分带——凡用兰勃特等角圆锥（2SP）或
+      横轴墨卡托定义的带都在其中。两组被有意排除：Albers 等积面积的 statewide 系统
+      （如 Alaska Albers、Hawaii Albers），它们是制图格网而非州平面带；
+      以及密歇根 GeoRef 斜轴墨卡托带，它采用不同的投影公式，不属于经典州平面带。</p>
+    <p>精度方面，我们把实现与 EPSG 参考定义在覆盖两类投影、多个州的检验点上作了对比：
+      最大偏差正向 0.017 mm、反向 0.046 mm——远低于任何测量的精度，也低于你读到的坐标的
+      舍入位数。换句话说，算术不是瓶颈：输入精度，以及源坐标的基准与历元，才是。</p>
+    <p>一个限制要明说。本工具基于 NAD83。NAD27 下的坐标与 NAD83 相差可达约 100 米，
+      这属于基准变换而非投影问题，换一个分带解决不了。若你的数据源是 NAD27，
+      必须先做基准变换。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <ul class="readon">
+      <li><a href="what-datum-does-gps-use.html">GPS 用的是什么基准？</a>
+        <small>WGS84、NAD83、ITRF，以及它们对你的测量坐标为什么重要。</small></li>
+      <li><a href="convert-easting-northing-to-lat-long.html">东距北距怎样转经纬度</a>
+        <small>同一问题在 UTM 形式下的分步解法。</small></li>
+      <li><a href="how-to-read-utm-coordinates.html">怎样读 UTM 坐标</a>
+        <small>从记录出发理解带号、带字母、东距与北距。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关工具</h2>
+    <div class="links">
+            <a href="epsg-code-lookup.html">EPSG 代码查询<small>每个坐标系统背后的编号</small></a>
+<a href="utm-coordinate-converter.html">UTM 坐标转换<small>WGS84 经纬度 ↔ UTM 格网</small></a>
+      <a href="dms-converter.html">度分秒转换器<small>度分秒 ↔ 十进制度</small></a>
+      <a href="distance-bearing-calculator.html">两点距离与方位角<small>两点间的距离与方位角</small></a>
+      <a href="land-area-calculator.html">坐标算面积<small>由坐标列表计算面积</small></a>
+      <a href="traverse-calculator.html">导线平差计算器<small>闭合差与博迪茨调整</small></a>
+      <a href="unit-converter.html">单位换算器<small>测量英尺、链、杆与英亩</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>州平面坐标怎样转换为经纬度？</summary>
+      <p>对东距和北距施加该带投影的逆变换：先减去假定东距与假定北距得到相对投影原点的偏移，
+        再换算回椭球上的半径或子午线距离，最后解出经纬度。州平面坐标转换器做的就是这件事，
+        而且必须指明分带——同一组数字在不同带里代表不同的位置。</p>
+    </details>
+    <details>
+      <summary>我在哪个州平面带里？</summary>
+      <p>分带按州定义，大州再按区域细分。先选州，再选包含作业区域的带。若靠近边界，
+        使用你的点在资料中登记的带，并始终把带号与坐标一起记录。</p>
+    </details>
+    <details>
+      <summary>应该输入米还是英尺？</summary>
+      <p>按资料来。历史上的州平面坐标通常是美制测量英尺（每英尺 1200/3937 米）；
+        现行成果通常是米或国际英尺（每英尺严格 0.3048 米）。两者相差约百万分之二——
+        每英里 3.2 毫米——长边上的影响不可忽略。</p>
+    </details>
+    <details>
+      <summary>哪些州用兰勃特带，哪些用横轴墨卡托？</summary>
+      <p>大致东西向延伸的带用兰勃特等角圆锥（两条标准纬线）；大致南北向延伸的带用
+        横轴墨卡托（中央子午线加 0.9999 比例因子，阿拉斯加 0.9996）。
+        选定分带后，本工具会自动套用正确的投影。</p>
+    </details>
+    <details>
+      <summary>州平面坐标系统用什么基准？</summary>
+      <p>现行分带同时存在于 NAD83 与 NAD27 两种基准下。本工具使用 NAD83（GRS80 椭球）。
+        NAD27 坐标与 NAD83 相差局部可达约 100 米，必须先做基准变换。</p>
+    </details>
+    <details>
+      <summary>转换精度如何？</summary>
+      <p>在覆盖全部带型的检验点上，本实现与 EPSG 参考实现的最大偏差为正向 0.017 mm、
+        反向 0.046 mm。更大的误差来源几乎总是你的输入精度和源坐标的基准。</p>
+    </details>
+    <details>
+      <summary>为什么很多带的假定东距都是 500,000 米？</summary>
+      <p>因为假定东距不承担地理含义——它只需要保证带内所有坐标为正且数字足够短。
+        取整 500,000 米就能满足宽几百公里的带，于是各州沿用同一数值。</p>
+    </details>
+    <details>
+      <summary>这个转换器免费吗？</summary>
+      <p>免费，无需登录、无账户、无使用次数限制。每次转换都在你的浏览器本地完成，
+        坐标不会上传。</p>
+    </details>
+  </section>
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+var ZONES=[
+["Alabama","East",26929,"tm",null,null,30.5,-85.833333333333,0.99996,200000.0,0.0],
+["Alabama","West",26930,"tm",null,null,30.0,-87.5,0.999933333,600000.0,0.0],
+["Alaska","zone 10",26940,"lcc",53.833333333333,51.833333333333,51.0,-176.0,null,1000000.0,0.0],
+["Alaska","zone 2",26932,"tm",null,null,54.0,-142.0,0.9999,500000.0,0.0],
+["Alaska","zone 3",26933,"tm",null,null,54.0,-146.0,0.9999,500000.0,0.0],
+["Alaska","zone 4",26934,"tm",null,null,54.0,-150.0,0.9999,500000.0,0.0],
+["Alaska","zone 5",26935,"tm",null,null,54.0,-154.0,0.9999,500000.0,0.0],
+["Alaska","zone 6",26936,"tm",null,null,54.0,-158.0,0.9999,500000.0,0.0],
+["Alaska","zone 7",26937,"tm",null,null,54.0,-162.0,0.9999,500000.0,0.0],
+["Alaska","zone 8",26938,"tm",null,null,54.0,-166.0,0.9999,500000.0,0.0],
+["Alaska","zone 9",26939,"tm",null,null,54.0,-170.0,0.9999,500000.0,0.0],
+["Arizona","Central",26949,"tm",null,null,31.0,-111.916666666667,0.9999,213360.0,0.0],
+["Arizona","East",26948,"tm",null,null,31.0,-110.166666666667,0.9999,213360.0,0.0],
+["Arizona","West",26950,"tm",null,null,31.0,-113.75,0.999933333,213360.0,0.0],
+["Arkansas","North",26951,"lcc",36.233333333333,34.933333333333,34.333333333333,-92.0,null,400000.0,0.0],
+["Arkansas","South",26952,"lcc",34.766666666667,33.3,32.666666666667,-92.0,null,400000.0,400000.0],
+["California","zone 1",26941,"lcc",41.666666666667,40.0,39.333333333333,-122.0,null,2000000.0,500000.0],
+["California","zone 2",26942,"lcc",39.833333333333,38.333333333333,37.666666666667,-122.0,null,2000000.0,500000.0],
+["California","zone 3",26943,"lcc",38.433333333333,37.066666666667,36.5,-120.5,null,2000000.0,500000.0],
+["California","zone 4",26944,"lcc",37.25,36.0,35.333333333333,-119.0,null,2000000.0,500000.0],
+["California","zone 5",26945,"lcc",35.466666666667,34.033333333333,33.5,-118.0,null,2000000.0,500000.0],
+["California","zone 6",26946,"lcc",33.883333333333,32.783333333333,32.166666666667,-116.25,null,2000000.0,500000.0],
+["Colorado","Central",26954,"lcc",39.75,38.45,37.833333333333,-105.5,null,914401.8289,304800.6096],
+["Colorado","North",26953,"lcc",40.783333333333,39.716666666667,39.333333333333,-105.5,null,914401.8289,304800.6096],
+["Colorado","South",26955,"lcc",38.433333333333,37.233333333333,36.666666666667,-105.5,null,914401.8289,304800.6096],
+["Connecticut","",26956,"lcc",41.866666666667,41.2,40.833333333333,-72.75,null,304800.6096,152400.3048],
+["Delaware","",26957,"tm",null,null,38.0,-75.416666666667,0.999995,200000.0,0.0],
+["Florida","East",26958,"tm",null,null,24.333333333333,-81.0,0.999941177,200000.0,0.0],
+["Florida","North",26960,"lcc",30.75,29.583333333333,29.0,-84.5,null,600000.0,0.0],
+["Florida","West",26959,"tm",null,null,24.333333333333,-82.0,0.999941177,200000.0,0.0],
+["Georgia","East",26966,"tm",null,null,30.0,-82.166666666667,0.9999,200000.0,0.0],
+["Georgia","West",26967,"tm",null,null,30.0,-84.166666666667,0.9999,700000.0,0.0],
+["Hawaii","zone 1",26961,"tm",null,null,18.833333333333,-155.5,0.999966667,500000.0,0.0],
+["Hawaii","zone 2",26962,"tm",null,null,20.333333333333,-156.666666666667,0.999966667,500000.0,0.0],
+["Hawaii","zone 3",26963,"tm",null,null,21.166666666667,-158.0,0.99999,500000.0,0.0],
+["Hawaii","zone 4",26964,"tm",null,null,21.833333333333,-159.5,0.99999,500000.0,0.0],
+["Hawaii","zone 5",26965,"tm",null,null,21.666666666667,-160.166666666667,1.0,500000.0,0.0],
+["Idaho","Central",26969,"tm",null,null,41.666666666667,-114.0,0.999947368,500000.0,0.0],
+["Idaho","East",26968,"tm",null,null,41.666666666667,-112.166666666667,0.999947368,200000.0,0.0],
+["Idaho","Transverse Mercator",8826,"tm",null,null,42.0,-114.0,0.9996,2500000.0,1200000.0],
+["Idaho","West",26970,"tm",null,null,41.666666666667,-115.75,0.999933333,800000.0,0.0],
+["Illinois","East",26971,"tm",null,null,36.666666666667,-88.333333333333,0.999975,300000.0,0.0],
+["Illinois","West",26972,"tm",null,null,36.666666666667,-90.166666666667,0.999941177,700000.0,0.0],
+["Indiana","East",26973,"tm",null,null,37.5,-85.666666666667,0.999966667,100000.0,250000.0],
+["Indiana","West",26974,"tm",null,null,37.5,-87.083333333333,0.999966667,900000.0,250000.0],
+["Iowa","North",26975,"lcc",43.266666666667,42.066666666667,41.5,-93.5,null,1500000.0,1000000.0],
+["Iowa","South",26976,"lcc",41.783333333333,40.616666666667,40.0,-93.5,null,500000.0,0.0],
+["Kansas","LCC",6922,"lcc",39.5,37.5,36.0,-98.25,null,400000.0,0.0],
+["Kansas","North",26977,"lcc",39.783333333333,38.716666666667,38.333333333333,-98.0,null,400000.0,0.0],
+["Kansas","South",26978,"lcc",38.566666666667,37.266666666667,36.666666666667,-98.5,null,400000.0,400000.0],
+["Kentucky","North",2205,"lcc",37.966666666667,38.966666666667,37.5,-84.25,null,500000.0,0.0],
+["Kentucky","Single Zone",3088,"lcc",37.083333333333,38.666666666667,36.333333333333,-85.75,null,1500000.0,1000000.0],
+["Kentucky","South",26980,"lcc",37.933333333333,36.733333333333,36.333333333333,-85.75,null,500000.0,500000.0],
+["Louisiana","North",26981,"lcc",32.666666666667,31.166666666667,30.5,-92.5,null,1000000.0,0.0],
+["Louisiana","Offshore",32199,"lcc",27.833333333333,26.166666666667,25.5,-91.333333333333,null,1000000.0,0.0],
+["Louisiana","South",26982,"lcc",30.7,29.3,28.5,-91.333333333333,null,1000000.0,0.0],
+["Maine","CS2000 Central",3463,"tm",null,null,43.5,-69.125,0.99998,500000.0,0.0],
+["Maine","CS2000 East",3072,"tm",null,null,43.833333333333,-67.875,0.99998,700000.0,0.0],
+["Maine","CS2000 West",3074,"tm",null,null,42.833333333333,-70.375,0.99998,300000.0,0.0],
+["Maine","East",26983,"tm",null,null,43.666666666667,-68.5,0.9999,300000.0,0.0],
+["Maine","West",26984,"tm",null,null,42.833333333333,-70.166666666667,0.999966667,900000.0,0.0],
+["Maryland","",26985,"lcc",39.45,38.3,37.666666666667,-77.0,null,400000.0,0.0],
+["Massachusetts","Island",26987,"lcc",41.483333333333,41.283333333333,41.0,-70.5,null,500000.0,0.0],
+["Massachusetts","Mainland",26986,"lcc",42.683333333333,41.716666666667,41.0,-71.5,null,200000.0,750000.0],
+["Michigan","Central",26989,"lcc",45.7,44.183333333333,43.316666666667,-84.366666666667,null,6000000.0,0.0],
+["Michigan","North",26988,"lcc",47.083333333333,45.483333333333,44.783333333333,-87.0,null,8000000.0,0.0],
+["Michigan","South",26990,"lcc",43.666666666667,42.1,41.5,-84.366666666667,null,4000000.0,0.0],
+["Minnesota","Central",26992,"lcc",47.05,45.616666666667,45.0,-94.25,null,800000.0,100000.0],
+["Minnesota","North",26991,"lcc",48.633333333333,47.033333333333,46.5,-93.1,null,800000.0,100000.0],
+["Minnesota","South",26993,"lcc",45.216666666667,43.783333333333,43.0,-94.0,null,800000.0,100000.0],
+["Mississippi","East",26994,"tm",null,null,29.5,-88.833333333333,0.99995,300000.0,0.0],
+["Mississippi","TM",3814,"tm",null,null,32.5,-89.75,0.9998335,500000.0,1300000.0],
+["Mississippi","West",26995,"tm",null,null,29.5,-90.333333333333,0.99995,700000.0,0.0],
+["Missouri","Central",26997,"tm",null,null,35.833333333333,-92.5,0.999933333,500000.0,0.0],
+["Missouri","East",26996,"tm",null,null,35.833333333333,-90.5,0.999933333,250000.0,0.0],
+["Missouri","West",26998,"tm",null,null,36.166666666667,-94.5,0.999941177,850000.0,0.0],
+["Montana","",32100,"lcc",49.0,45.0,44.25,-109.5,null,600000.0,0.0],
+["Nebraska","",32104,"lcc",43.0,40.0,39.833333333333,-100.0,null,500000.0,0.0],
+["Nevada","Central",32108,"tm",null,null,34.75,-116.666666666667,0.9999,500000.0,6000000.0],
+["Nevada","East",32107,"tm",null,null,34.75,-115.583333333333,0.9999,200000.0,8000000.0],
+["Nevada","West",32109,"tm",null,null,34.75,-118.583333333333,0.9999,800000.0,4000000.0],
+["New Hampshire","",32110,"tm",null,null,42.5,-71.666666666667,0.999966667,300000.0,0.0],
+["New Jersey","",32111,"tm",null,null,38.833333333333,-74.5,0.9999,150000.0,0.0],
+["New Mexico","Central",32113,"tm",null,null,31.0,-106.25,0.9999,500000.0,0.0],
+["New Mexico","East",32112,"tm",null,null,31.0,-104.333333333333,0.999909091,165000.0,0.0],
+["New Mexico","West",32114,"tm",null,null,31.0,-107.833333333333,0.999916667,830000.0,0.0],
+["New York","Central",32116,"tm",null,null,40.0,-76.583333333333,0.9999375,250000.0,0.0],
+["New York","East",32115,"tm",null,null,38.833333333333,-74.5,0.9999,150000.0,0.0],
+["New York","Long Island",32118,"lcc",41.033333333333,40.666666666667,40.166666666667,-74.0,null,300000.0,0.0],
+["New York","West",32117,"tm",null,null,40.0,-78.583333333333,0.9999375,350000.0,0.0],
+["North Carolina","",32119,"lcc",36.166666666667,34.333333333333,33.75,-79.0,null,609601.22,0.0],
+["North Dakota","North",32120,"lcc",48.733333333333,47.433333333333,47.0,-100.5,null,600000.0,0.0],
+["North Dakota","South",32121,"lcc",47.483333333333,46.183333333333,45.666666666667,-100.5,null,600000.0,0.0],
+["Ohio","North",32122,"lcc",41.7,40.433333333333,39.666666666667,-82.5,null,600000.0,0.0],
+["Ohio","South",32123,"lcc",40.033333333333,38.733333333333,38.0,-82.5,null,600000.0,0.0],
+["Oklahoma","North",32124,"lcc",36.766666666667,35.566666666667,35.0,-98.0,null,600000.0,0.0],
+["Oklahoma","South",32125,"lcc",35.233333333333,33.933333333333,33.333333333333,-98.0,null,600000.0,0.0],
+["Oregon","LCC (m)",2991,"lcc",43.0,45.5,41.75,-120.5,null,400000.0,0.0],
+["Oregon","North",32126,"lcc",46.0,44.333333333333,43.666666666667,-120.5,null,2500000.0,0.0],
+["Oregon","South",32127,"lcc",44.0,42.333333333333,41.666666666667,-120.5,null,1500000.0,0.0],
+["Pennsylvania","North",32128,"lcc",41.95,40.883333333333,40.166666666667,-77.75,null,600000.0,0.0],
+["Pennsylvania","South",32129,"lcc",40.966666666667,39.933333333333,39.333333333333,-77.75,null,600000.0,0.0],
+["Rhode Island","",32130,"tm",null,null,41.083333333333,-71.5,0.99999375,100000.0,0.0],
+["South Carolina","",32133,"lcc",34.833333333333,32.5,31.833333333333,-81.0,null,609600.0,0.0],
+["South Dakota","North",32134,"lcc",45.683333333333,44.416666666667,43.833333333333,-100.0,null,600000.0,0.0],
+["South Dakota","South",32135,"lcc",44.4,42.833333333333,42.333333333333,-100.333333333333,null,600000.0,0.0],
+["Tennessee","",32136,"lcc",36.416666666667,35.25,34.333333333333,-86.0,null,600000.0,0.0],
+["Texas","Central",32139,"lcc",31.883333333333,30.116666666667,29.666666666667,-100.333333333333,null,700000.0,3000000.0],
+["Texas","Centric Lambert Conformal",3082,"lcc",27.5,35.0,18.0,-100.0,null,1500000.0,5000000.0],
+["Texas","North",32137,"lcc",36.183333333333,34.65,34.0,-101.5,null,200000.0,1000000.0],
+["Texas","North Central",32138,"lcc",33.966666666667,32.133333333333,31.666666666667,-98.5,null,600000.0,2000000.0],
+["Texas","South",32141,"lcc",27.833333333333,26.166666666667,25.666666666667,-98.5,null,300000.0,5000000.0],
+["Texas","South Central",32140,"lcc",30.283333333333,28.383333333333,27.833333333333,-99.0,null,600000.0,4000000.0],
+["Texas","State Mapping System",3081,"lcc",27.416666666667,34.916666666667,31.166666666667,-100.0,null,1000000.0,1000000.0],
+["Utah","Central",32143,"lcc",40.65,39.016666666667,38.333333333333,-111.5,null,500000.0,2000000.0],
+["Utah","North",32142,"lcc",41.783333333333,40.716666666667,40.333333333333,-111.5,null,500000.0,1000000.0],
+["Utah","South",32144,"lcc",38.35,37.216666666667,36.666666666667,-111.5,null,500000.0,3000000.0],
+["Vermont","",32145,"tm",null,null,42.5,-72.5,0.999964286,500000.0,0.0],
+["Virginia","Lambert",3968,"lcc",37.0,39.5,36.0,-79.5,null,0.0,0.0],
+["Virginia","North",32146,"lcc",39.2,38.033333333333,37.666666666667,-78.5,null,3500000.0,2000000.0],
+["Virginia","South",32147,"lcc",37.966666666667,36.766666666667,36.333333333333,-78.5,null,3500000.0,1000000.0],
+["Washington","North",32148,"lcc",48.733333333333,47.5,47.0,-120.833333333333,null,500000.0,0.0],
+["Washington","South",32149,"lcc",47.333333333333,45.833333333333,45.333333333333,-120.5,null,500000.0,0.0],
+["West Virginia","North",32150,"lcc",40.25,39.0,38.5,-79.5,null,600000.0,0.0],
+["West Virginia","South",32151,"lcc",38.883333333333,37.483333333333,37.0,-81.0,null,600000.0,0.0],
+["Wisconsin","Central",32153,"lcc",45.5,44.25,43.833333333333,-90.0,null,600000.0,0.0],
+["Wisconsin","North",32152,"lcc",46.766666666667,45.566666666667,45.166666666667,-90.0,null,600000.0,0.0],
+["Wisconsin","South",32154,"lcc",44.066666666667,42.733333333333,42.0,-90.0,null,600000.0,0.0],
+["Wisconsin","Transverse Mercator",3070,"tm",null,null,0.0,-90.0,0.9996,520000.0,-4480000.0],
+["Wyoming","East",32155,"tm",null,null,40.5,-105.166666666667,0.9999375,200000.0,0.0],
+["Wyoming","East Central",32156,"tm",null,null,40.5,-107.333333333333,0.9999375,400000.0,100000.0],
+["Wyoming","Lambert",32159,"lcc",41.0,45.0,41.0,-107.5,null,500000.0,200000.0],
+["Wyoming","West",32158,"tm",null,null,40.5,-110.083333333333,0.9999375,800000.0,100000.0],
+["Wyoming","West Central",32157,"tm",null,null,40.5,-108.75,0.9999375,600000.0,0.0]
+];
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var A = 6378137, F = 1/298.257222101;          /* GRS80 */
+  var E2 = F*(2-F), E = Math.sqrt(E2), EP2 = E2/(1-E2);
+
+  var mode = "toSp";
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 12});
+  var num6 = new Intl.NumberFormat("en-US", {minimumFractionDigits: 6, maximumFractionDigits: 6});
+
+  function mf(p){ return Math.cos(p)/Math.sqrt(1-E2*Math.sin(p)*Math.sin(p)); }
+  function tf(p){ var s=Math.sin(p); return Math.tan(Math.PI/4-p/2)/Math.pow((1-E*s)/(1+E*s), E/2); }
+  function arcM(p){
+    var e4=E2*E2, e6=e4*E2;
+    return A*((1-E2/4-3*e4/64-5*e6/256)*p
+      -(3*E2/8+3*e4/32+45*e6/1024)*Math.sin(2*p)
+      +(15*e4/256+45*e6/1024)*Math.sin(4*p)
+      -(35*e6/3072)*Math.sin(6*p));
+  }
+  function lccConst(z){
+    var p1=z[4]*D2R, p2=z[5]*D2R, p0=z[6]*D2R;
+    var m1=mf(p1), m2=mf(p2), t1=tf(p1), t2=tf(p2);
+    var n = (Math.abs(p1-p2)<1e-12) ? Math.sin(p1) : Math.log(m1/m2)/Math.log(t1/t2);
+    return {n:n, F:m1/(n*Math.pow(t1,n)), p0:p0, l0:z[7]*D2R, rho0:A*(m1/(n*Math.pow(t1,n)))*Math.pow(tf(p0),n)};
+  }
+  function lccFwd(z, lat, lon){
+    var c=lccConst(z), phi=lat*D2R;
+    var rho=A*c.F*Math.pow(tf(phi), c.n);
+    var th=c.n*(lon*D2R-c.l0);
+    return {E:z[9]+rho*Math.sin(th), N:z[10]+c.rho0-rho*Math.cos(th)};
+  }
+  function lccInv(z, Ee, Nn){
+    var c=lccConst(z);
+    var dx=Ee-z[9], dy=c.rho0-(Nn-z[10]);
+    var rho=Math.sqrt(dx*dx+dy*dy); if(c.n<0) rho=-rho;
+    var th=Math.atan2(dx,dy);
+    var t=Math.pow(rho/(A*c.F), 1/c.n);
+    var phi=Math.PI/2-2*Math.atan(t);
+    for(var i=0;i<40;i++){
+      var s=Math.sin(phi);
+      var np=Math.PI/2-2*Math.atan(t*Math.pow((1-E*s)/(1+E*s), E/2));
+      if(Math.abs(np-phi)<1e-14){phi=np;break;}
+      phi=np;
+    }
+    return {lat:phi*R2D, lon:(c.l0+th/c.n)*R2D};
+  }
+  function tmFwd(z, lat, lon){
+    var p0=z[6]*D2R, l0=z[7]*D2R, k0=z[8], phi=lat*D2R;
+    var s=Math.sin(phi), c=Math.cos(phi), t=Math.tan(phi);
+    var N=A/Math.sqrt(1-E2*s*s), T=t*t, C=EP2*c*c, Ad=(lon*D2R-l0)*c;
+    var M=arcM(phi)-arcM(p0);
+    return {
+      E: z[9]+k0*N*(Ad+(1-T+C)*Math.pow(Ad,3)/6+(5-18*T+T*T+72*C-58*EP2)*Math.pow(Ad,5)/120),
+      N: z[10]+k0*(M+N*t*(Ad*Ad/2+(5-T+9*C+4*C*C)*Math.pow(Ad,4)/24+(61-58*T+T*T+600*C-330*EP2)*Math.pow(Ad,6)/720))
+    };
+  }
+  function tmInv(z, Ee, Nn){
+    var p0=z[6]*D2R, l0=z[7]*D2R, k0=z[8];
+    var M=arcM(p0)+(Nn-z[10])/k0;
+    var mu=M/(A*(1-E2/4-3*E2*E2/64-5*Math.pow(E2,3)/256));
+    var e1=(1-Math.sqrt(1-E2))/(1+Math.sqrt(1-E2));
+    var ph=mu+(3*e1/2-27*Math.pow(e1,3)/32)*Math.sin(2*mu)
+      +(21*e1*e1/16-55*Math.pow(e1,4)/32)*Math.sin(4*mu)
+      +(151*Math.pow(e1,3)/96)*Math.sin(6*mu)+(1097*Math.pow(e1,4)/512)*Math.sin(8*mu);
+    var s=Math.sin(ph), c=Math.cos(ph), t=Math.tan(ph);
+    var C1=EP2*c*c, T1=t*t, N1=A/Math.sqrt(1-E2*s*s);
+    var R1=A*(1-E2)/Math.pow(1-E2*s*s,1.5), D=(Ee-z[9])/(N1*k0);
+    var lat=ph-(N1*t/R1)*(D*D/2-(5+3*T1+10*C1-4*C1*C1-9*EP2)*Math.pow(D,4)/24
+      +(61+90*T1+298*C1+45*T1*T1-252*EP2-3*C1*C1)*Math.pow(D,6)/720);
+    var lon=l0+(D-(1+2*T1+C1)*Math.pow(D,3)/6
+      +(5-2*C1+28*T1-3*C1*C1+8*EP2+24*T1*T1)*Math.pow(D,5)/120)/c;
+    return {lat:lat*R2D, lon:lon*R2D};
+  }
+
+  var U2M = {m:1, ftus:1200/3937, ftint:0.3048};
+
+  function findZone(){
+    var st=el("sp-state").value, nm=el("sp-zone").value;
+    for(var i=0;i<ZONES.length;i++) if(ZONES[i][0]===st && ZONES[i][1]===nm) return ZONES[i];
+    return null;
+  }
+  function fillStates(){
+    var seen={}, order=[];
+    for(var i=0;i<ZONES.length;i++) if(!seen[ZONES[i][0]]){seen[ZONES[i][0]]=1;order.push(ZONES[i][0]);}
+    order.sort();
+    var h="";
+    for(var j=0;j<order.length;j++) h+='<option value="'+order[j]+'">'+order[j]+"</option>";
+    el("sp-state").innerHTML=h;
+    fillZones();
+  }
+  function fillZones(){
+    var st=el("sp-state").value, h="";
+    for(var i=0;i<ZONES.length;i++) if(ZONES[i][0]===st) h+='<option value="'+ZONES[i][1]+'">'+ZONES[i][1]+"</option>";
+    el("sp-zone").innerHTML=h;
+  }
+
+  function parseAngle(str, isLat){
+    if(!str) return NaN;
+    var s=String(str).trim().toUpperCase();
+    var hemi="";
+    var m=s.match(/[NSEW]/);
+    if(m) hemi=m[0];
+    var nums=s.match(/-?\d+(\.\d+)?/g);
+    if(!nums||!nums.length) return NaN;
+    var v=Math.abs(parseFloat(nums[0]));
+    if(nums.length>1) v+=Math.abs(parseFloat(nums[1]))/60;
+    if(nums.length>2) v+=Math.abs(parseFloat(nums[2]))/3600;
+    var neg = /^-/.test(nums[0]) || hemi==="S" || hemi==="W";
+    if(hemi && (hemi==="N"||hemi==="E")) neg=false;
+    var lim = isLat ? 90 : 180;
+    if(v>lim) return NaN;
+    return neg ? -v : v;
+  }
+  function fmtDMS(v, isLat){
+    var h = isLat ? (v>=0?"N":"S") : (v>=0?"E":"W");
+    var a=Math.abs(v), d=Math.floor(a), m=Math.floor((a-d)*60), s=((a-d)*60-m)*60;
+    if(s>=59.995){s=0;m+=1;} if(m>=60){m-=60;d+=1;}
+    return d+"\u00B0 "+(m<10?"0":"")+m+"\u2032 "+(s<10?"0":"")+(Math.round(s*100)/100)+"\u2033 "+h;
+  }
+  function fmt(v){
+    if(!isFinite(v)) return "—";
+    var a=Math.abs(v);
+    if(a!==0 && (a<1e-6||a>=1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+
+  function calc(){
+    var z=findZone();
+    var err=el("sp-err"), res=el("sp-results");
+    if(!z){ res.classList.remove("show"); return; }
+    var unit=el("sp-unit").value, lab=el("sp-unit").selectedOptions[0].textContent;
+    var rows="";
+
+    if(mode==="toSp"){
+      var lat=parseAngle(el("sp-lat").value, true), lon=parseAngle(el("sp-lon").value, false);
+      var bad = isNaN(lat)||isNaN(lon);
+      el("sp-lat").classList.toggle("bad", bad); el("sp-lon").classList.toggle("bad", bad);
+      err.classList.toggle("show", bad);
+      if(bad){ res.classList.remove("show"); return; }
+      var r = (z[3]==="lcc") ? lccFwd(z,lat,lon) : tmFwd(z,lat,lon);
+      var k=U2M[unit];
+      el("sp-bk").textContent = z[0]+" · "+z[1]+" · 东距 / 北距";
+      el("sp-bv").textContent = fmt(r.E/k)+" E,  "+fmt(r.N/k)+" N";
+      rows += row("东距（X）", fmt(r.E/k), lab);
+      rows += row("北距（Y）", fmt(r.N/k), lab);
+      rows += row("纬度", fmt(lat), fmtDMS(lat,true));
+      rows += row("经度", fmt(lon), fmtDMS(lon,false));
+    } else {
+      var Ee=parseFloat(el("sp-e").value), Nn=parseFloat(el("sp-n").value);
+      var bad2 = isNaN(Ee)||isNaN(Nn);
+      el("sp-e").classList.toggle("bad", bad2); el("sp-n").classList.toggle("bad", bad2);
+      err.classList.toggle("show", bad2);
+      if(bad2){ res.classList.remove("show"); return; }
+      var k2=U2M[unit];
+      var g = (z[3]==="lcc") ? lccInv(z, Ee*k2, Nn*k2) : tmInv(z, Ee*k2, Nn*k2);
+      el("sp-bk").textContent = z[0]+" · "+z[1]+" · 经纬度";
+      el("sp-bv").textContent = fmt6(g.lat)+"°,  "+fmt6(g.lon)+"°";
+      rows += row("纬度", fmt6(g.lat)+"°", fmtDMS(g.lat,true));
+      rows += row("经度", fmt6(g.lon)+"°", fmtDMS(g.lon,false));
+      rows += row("输入的东距（X）", fmt(Ee), lab);
+      rows += row("输入的北距（Y）", fmt(Nn), lab);
+    }
+
+    rows += row("分带 EPSG 代码", "EPSG:"+z[2], (z[3]==="lcc") ? "Lambert Conformal Conic (2SP)·兰勃特等角圆锥" : "Transverse Mercator·横轴墨卡托");
+    if(z[3]==="lcc"){
+      rows += row("标准纬线", fmt6(z[4])+"° / "+fmt6(z[5])+"°", "标准纬线 1 / 2");
+      rows += row("假定原点", fmt6(z[6])+"° N, "+fmt6(z[7])+"° E", "原点经纬度");
+    } else {
+      rows += row("自然原点", fmt6(z[6])+"° N, "+fmt6(z[7])+"° E", "原点经纬度");
+      rows += row("原点比例因子", z[8], "中央子午线比例因子");
+    }
+    rows += row("假定东距 / 北距", fmt(z[9])+" m / "+fmt(z[10])+" m", "按米定义");
+    rows += row("基准", "NAD83（GRS80）", "NAD83 / GRS80 椭球");
+
+    el("sp-rows").innerHTML=rows;
+    res.classList.add("show");
+  }
+  function row(k,v,sub){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      +(sub?'<small>'+sub+'</small>':'')+'</span></div>';
+  }
+  function fmt6(v){
+    if(!isFinite(v)) return "—";
+    return (Math.round(v*1e6)/1e6).toFixed(6);
+  }
+
+  var tabs=document.querySelectorAll(".tab");
+  for(var t=0;t<tabs.length;t++){
+    tabs[t].addEventListener("click", function(){
+      for(var j=0;j<tabs.length;j++) tabs[j].classList.remove("active");
+      this.classList.add("active");
+      mode=this.getAttribute("data-tab");
+      var sp = (mode==="toLl");
+      el("sp-infield-ll").style.display = sp?"none":"flex";
+      el("sp-hint-ll").style.display = sp?"none":"block";
+      el("sp-infield-sp").style.display = sp?"flex":"none";
+      el("sp-hint-sp").style.display = sp?"block":"none";
+      calc();
+    });
+  }
+  el("sp-state").addEventListener("change", function(){ fillZones(); calc(); });
+  el("sp-zone").addEventListener("change", calc);
+  el("sp-unit").addEventListener("change", calc);
+  el("sp-lat").addEventListener("input", calc);
+  el("sp-lon").addEventListener("input", calc);
+  el("sp-e").addEventListener("input", calc);
+  el("sp-n").addEventListener("input", calc);
+
+  fillStates();
+  calc();
+})();
+</script>
+</body>
+</html>

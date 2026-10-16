@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Slope Percentage Calculator — Rise Over Run, Degrees, Roof Pitch</title>
+<meta name="description" content="Free slope calculator: rise over run to percent, degrees, a 1:n ratio and roof pitch in x:12, with slope length and ADA ramp checks. No login required.">
+<link rel="canonical" href="https://coordcalc.com/slope-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/slope-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/slope-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/slope-calculator.html">
+<meta property="og:title" content="Slope Percentage Calculator — Rise Over Run, Degrees, Roof Pitch">
+<meta property="og:description" content="Work out percent slope from rise over run, then see the same gradient as degrees, a 1:n ratio, a roof pitch in x:12 and the slope length — instantly and free.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/slope-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate slope percentage?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Percent slope equals rise ÷ run × 100. A rise of 1 metre over a run of 12 metres is 8.33%."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you convert percent slope to degrees?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Angle = arctan(percent ÷ 100). So 100% becomes arctan(1) = 45°. In reverse, percent = tan(angle) × 100."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does a 1:12 slope mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One unit of rise for every 12 units of run — 8.33% or 4.76°. It is the standard ratio form for ramps and drainage, and equals a 1:12 roof pitch."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is roof pitch and how is it written?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Roof pitch is the rise over 12 units of run, written x:12. A 4:12 pitch rises 4 units for every 12 units of horizontal run."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you calculate slope length?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Slope length = √(rise² + run²), by Pythagoras' theorem — the diagonal distance along the slope, which is what you need when ordering roofing, pipe or fencing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is considered a steep slope?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "As a general guide: under 2% nearly level, 2–5% gentle, 5–10% moderate, 10–20% steep, above 20% very steep. Always check the applicable design standard, as acceptable limits vary by application."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I use a slope percentage calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter the rise and the horizontal run in the same unit. The slope percentage calculator divides the rise by the run and multiplies by 100, then shows the same gradient as an angle, a 1:n ratio and a roof pitch in x:12. Measure the run horizontally, not along the sloping surface."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What slope is required for an ADA ramp?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The ADA standard caps a ramp's running slope at 1:12 — 8.33% or 4.76°. A slope of 1:20 (5%) or flatter is treated as a walkway rather than a ramp. Confirm the current edition of the governing code, as thresholds are updated periodically."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is rise over run, and what is elevation grade?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Rise over run is the vertical rise divided by the horizontal run — a slope of 1 in 4, written 1:4. Multiply by 100 to get the elevation grade: a rise of 1 over a run of 4 is 25 percent. The same gradient is 14.04 degrees and a roof pitch of 3:12."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:18px;font-weight:600;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  select{font-size:15px;font-weight:500;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:27px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:23px;}
+  }
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#slope">Slope, elevation &amp; map scale</a> › Slope Percentage Calculator
+  </nav>
+
+  <h1>Slope Percentage Calculator</h1>
+
+  <p class="lead">
+    This slope percentage calculator turns rise over run into percent slope, degrees, a 1:n ratio and
+    roof pitch, and converts between slope angle and percent grade in both directions. It also returns
+    the slope length, so you can check a roof pitch, a ramp or a drainage fall in one place —
+    free, with no login and no upload.
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-rr" role="tab" aria-selected="true">Rise / Run</button>
+      <button class="tab" id="tab-ap" role="tab" aria-selected="false">Angle &amp; Percent</button>
+    </div>
+
+    <!-- Rise / Run -->
+    <div id="panel-rr">
+      <div class="row">
+        <div class="field">
+          <label for="rise">Rise (vertical)</label>
+          <input type="number" id="rise" step="any" placeholder="1">
+        </div>
+        <div class="field">
+          <label for="run">Run (horizontal)</label>
+          <input type="number" id="run" step="any" placeholder="12">
+        </div>
+        <div class="field" style="flex:0 0 130px;">
+          <label for="unit">Unit</label>
+          <select id="unit">
+            <option value="m">metres</option>
+            <option value="ft">feet</option>
+          </select>
+        </div>
+      </div>
+      <p class="hint">Rise and run must use the same unit. Leave rise at 0 for a level surface.</p>
+      <p class="err" id="err-rr">Run must be greater than 0, and both values must be positive numbers.</p>
+
+      <div class="results" id="res-rr">
+        <div class="big">
+          <span class="bk">Percent slope</span>
+          <span class="bv" id="rr-pct">—</span>
+        </div>
+        <div class="result-row"><span class="k">Slope angle</span><span class="v" id="rr-deg">—</span></div>
+        <div class="result-row"><span class="k">Ratio (1 : n)</span><span class="v" id="rr-ratio">—</span></div>
+        <div class="result-row"><span class="k">Roof pitch (x : 12)</span><span class="v" id="rr-pitch">—</span></div>
+        <div class="result-row"><span class="k">Slope length (diagonal)</span><span class="v" id="rr-len">—</span></div>
+        <div class="result-row"><span class="k">Terrain</span><span class="v" id="rr-class">—</span></div>
+      </div>
+    </div>
+
+    <!-- Angle & Percent -->
+    <div id="panel-ap" style="display:none;">
+      <div class="row">
+        <div class="field">
+          <label for="in-deg">Slope angle (°)</label>
+          <input type="number" id="in-deg" step="any" placeholder="5">
+        </div>
+        <div class="field">
+          <label for="in-pct">Slope (%)</label>
+          <input type="number" id="in-pct" step="any" placeholder="8.75">
+        </div>
+      </div>
+      <p class="hint">Type in either box — the other updates automatically. Angle must be between −89 and 89.</p>
+      <p class="err" id="err-ap">Angle must be between −89 and 89 degrees.</p>
+
+      <div class="results" id="res-ap">
+        <div class="big">
+          <span class="bk">Ratio</span>
+          <span class="bv" id="ap-ratio">—</span>
+        </div>
+        <div class="result-row"><span class="k">Rise : run</span><span class="v" id="ap-in">—</span></div>
+        <div class="result-row"><span class="k">Roof pitch (x : 12)</span><span class="v" id="ap-pitch">—</span></div>
+        <div class="result-row"><span class="k">Terrain</span><span class="v" id="ap-class">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>
+      Slope describes how much a surface rises for a given horizontal distance. Given a rise
+      (vertical change) and a run (horizontal distance), the three common expressions of the same
+      gradient are related by simple trigonometry:
+    </p>
+    <ul>
+      <li><strong>Percent slope</strong> = rise ÷ run × 100 — the rise over run ratio written as a percentage. A rise of 1 over a run of 12 is 8.33%.</li>
+      <li><strong>Angle in degrees</strong> = arctan(rise ÷ run), converted from radians by multiplying by 180 ÷ π.</li>
+      <li><strong>Ratio</strong> = 1 : n, where n = run ÷ rise. The same 1 in 12 case gives 1 : 12.</li>
+    </ul>
+    <p>
+      <strong>Roof pitch</strong> is the rise measured over a fixed run of 12, written as x:12 — a
+      convention from imperial construction practice. It is therefore just the percent slope
+      recalculated against a run of 12, and a 1:12 slope is identical to a 1:12 roof pitch.
+    </p>
+    <p>
+      The <strong>slope length</strong> is the diagonal distance along the inclined surface. By
+      Pythagoras' theorem it equals <code>√(rise² + run²)</code>. Note that percent slope and slope
+      length use different denominators: percent slope is based on the horizontal run, not on the
+      distance along the slope, which is a frequent source of error in quantity take-offs.
+    </p>
+    <p>
+      To convert degrees to percent slope or percent slope to degrees, the tool applies the inverse
+      relationship: <code>percent = tan(angle) × 100</code> and <code>angle = arctan(percent ÷ 100)</code>.
+      A 45-degree slope is therefore 100 percent, while an elevation grade of 5 percent is only
+      about 2.86 degrees — the two units diverge quickly as the angle rises.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Rise Over Run: The Slope Percentage Formula</h2>
+    <p>
+      Rise over run is the simplest definition of a slope: divide the vertical change (the rise) by
+      the horizontal distance (the run). The quotient is the gradient as a decimal, and multiplying
+      it by 100 gives the percent slope. A rise of 1 with a run of 12 is 0.0833, so 8.33 percent.
+      Using a rise over run calculator saves re-entry, because the same three numbers produce a
+      percentage, an angle in degrees, a 1:n ratio and a roof pitch in x:12 at once.
+    </p>
+    <p>
+      One caution: the run is always measured <strong>horizontally</strong>. If you substitute the
+      slope length — the distance measured along the inclined surface — the percentage comes out too
+      low, and the error grows with steepness. This is the most frequent mistake in drainage falls and
+      in quantity take-offs.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Roof Pitch Calculator (x:12)</h2>
+    <p>
+      A roof pitch calculator reports the same gradient in the units roofers use: the rise measured
+      over a fixed run of 12, written as x:12. A 4:12 pitch rises 4 units for every 12 units of
+      horizontal run, which is the same as 18.43 degrees or a 33.3 percent slope. Residential roofs
+      commonly sit between 4:12 and 9:12; below 4:12 the roof is treated as low-slope and needs more
+      careful waterproofing, and 2:12 is often quoted as the practical minimum for asphalt shingles.
+    </p>
+    <p>
+      Because pitch, degrees and percent all describe one angle, the calculator shows all three
+      together, so you can match whichever figure appears on the drawing, the material datasheet or
+      the building code.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Ramp Slope and the ADA 1:12 Rule</h2>
+    <p>
+      Ramps are where slope percentage becomes a legal limit rather than a convenience. The ADA
+      standard in the United States caps the running slope of a wheelchair ramp at 1:12 — one unit of
+      rise for every 12 units of run — which equals 8.33 percent or 4.76 degrees. A ramp slope
+      calculator lets you check a layout against that ceiling: enter the total rise and the available
+      run, and a result above 8.33 percent tells you the ramp needs a longer run, a landing or a
+      switchback.
+    </p>
+    <p>
+      The same 1:12 reference applies to kerb ramps and accessible routes, while a slope of 1:20
+      (5 percent) or flatter is generally treated as a walkway rather than a ramp. Always confirm the
+      current edition of the governing code, since thresholds and exceptions are updated periodically.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Excavation and Trench Slope</h2>
+    <p>
+      In excavation, slope is a safety control. An excavation slope calculator checks whether a cut
+      batter is stable for the soil present: firm clay or rock may stand at 1:1 (45 degrees,
+      100 percent), while loose sand, gravel or previously disturbed fill usually needs 1.5:1 (about
+      34 degrees, 67 percent) or flatter. Many jurisdictions require a protective system — sloping,
+      shoring or a trench box — once a trench reaches 5 feet (1.5 m) in depth.
+    </p>
+    <p>
+      Enter the depth and the horizontal offset to get the working slope, then verify it against the
+      applicable excavation standard, because the permitted batter depends on soil classification,
+      moisture content and how long the excavation will stay open.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Common slope values at a glance</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Ratio</th><th>Percent</th><th>Angle</th><th>Roof pitch</th><th>Typical use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 : 48</td><td>2.08%</td><td>1.19°</td><td>0.25 : 12</td><td>Minimum drainage fall for a large pipe</td></tr>
+        <tr><td>1 : 12</td><td>8.33%</td><td>4.76°</td><td>1 : 12</td><td>Wheelchair ramp, common minimum roof pitch</td></tr>
+        <tr><td>1 : 8</td><td>12.50%</td><td>7.13°</td><td>1.5 : 12</td><td>Steep drainage, short ramps</td></tr>
+        <tr><td>1 : 6</td><td>16.67%</td><td>9.46°</td><td>2 : 12</td><td>Minimum roof pitch for standard shingles</td></tr>
+        <tr><td>1 : 5</td><td>20.00%</td><td>11.31°</td><td>2.4 : 12</td><td>Gentle cut slope in soil</td></tr>
+        <tr><td>1 : 4</td><td>25.00%</td><td>14.04°</td><td>3 : 12</td><td>Low-slope roof</td></tr>
+        <tr><td>1 : 3</td><td>33.33%</td><td>18.43°</td><td>4 : 12</td><td>Common residential roof pitch</td></tr>
+        <tr><td>1 : 2</td><td>50.00%</td><td>26.57°</td><td>6 : 12</td><td>Retaining and embankment batter</td></tr>
+        <tr><td>1 : 1</td><td>100.00%</td><td>45.00°</td><td>12 : 12</td><td>Rock slope, steep roof</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">Values are rounded for reference. Always confirm the governing requirement against the applicable design standard for your project.</p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="how-to-calculate-slope-percentage.html">How to calculate slope percentage<small>Rise over run, and the run-versus-slope-length mistake</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="dms-converter.html">decimal degrees to dms<small>Coordinate format conversion</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance ↔ ground distance</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Geodesic distance and bearing</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area and acreage from coordinates</small></a>
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Lat-long ↔ UTM grid</small></a>
+      <a href="curve-calculator.html">horizontal curve calculator<small>Horizontal and vertical curves</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do you calculate slope percentage?</summary>
+      <p>Percent slope equals rise ÷ run × 100. A rise of 1 metre over a run of 12 metres is 8.33%.</p>
+    </details>
+    <details>
+      <summary>How do you convert percent slope to degrees?</summary>
+      <p>Angle = arctan(percent ÷ 100). So 100% becomes arctan(1) = 45°. In reverse, percent = tan(angle) × 100.</p>
+    </details>
+    <details>
+      <summary>What does a 1:12 slope mean?</summary>
+      <p>One unit of rise for every 12 units of run — 8.33% or 4.76°. It is the standard ratio form for ramps and drainage, and equals a 1:12 roof pitch.</p>
+    </details>
+    <details>
+      <summary>What is roof pitch and how is it written?</summary>
+      <p>Roof pitch is the rise over 12 units of run, written x:12. A 4:12 pitch rises 4 units for every 12 units of horizontal run.</p>
+    </details>
+    <details>
+      <summary>How do you calculate slope length?</summary>
+      <p>Slope length = √(rise² + run²), by Pythagoras' theorem — the diagonal distance along the slope, which is what you need when ordering roofing, pipe or fencing.</p>
+    </details>
+    <details>
+      <summary>What is considered a steep slope?</summary>
+      <p>As a general guide: under 2% nearly level, 2–5% gentle, 5–10% moderate, 10–20% steep, above 20% very steep. Always check the applicable design standard, as acceptable limits vary by application.</p>
+    </details>
+    <details>
+      <summary>How do I use a slope percentage calculator?</summary>
+      <p>Enter the rise and the horizontal run in the same unit. The slope percentage calculator divides the rise by the run and multiplies by 100, then shows the same gradient as an angle, a 1:n ratio and a roof pitch in x:12. Measure the run horizontally, not along the sloping surface.</p>
+    </details>
+    <details>
+      <summary>What slope is required for an ADA ramp?</summary>
+      <p>The ADA standard caps a ramp's running slope at 1:12 — 8.33% or 4.76°. A slope of 1:20 (5%) or flatter is treated as a walkway rather than a ramp. Confirm the current edition of the governing code, as thresholds are updated periodically.</p>
+    </details>
+    <details>
+      <summary>What is rise over run, and what is elevation grade?</summary>
+      <p>Rise over run is the vertical rise divided by the horizontal run — a slope of 1 in 4, written 1:4. Multiply by 100 to get the elevation grade: a rise of 1 over a run of 4 is 25 percent. The same gradient is 14.04 degrees and a roof pitch of 3:12.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing design standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var RAD = Math.PI/180;
+
+  /* ---------- tabs ---------- */
+  var tabRR = el("tab-rr"), tabAP = el("tab-ap");
+  var panelRR = el("panel-rr"), panelAP = el("panel-ap");
+  var mode = "rr";
+
+  function switchMode(next){
+    mode = next;
+    if (next === "rr") {
+      tabRR.classList.add("active"); tabAP.classList.remove("active");
+      tabRR.setAttribute("aria-selected","true"); tabAP.setAttribute("aria-selected","false");
+      panelRR.style.display = ""; panelAP.style.display = "none";
+      runRR();
+    } else {
+      tabAP.classList.add("active"); tabRR.classList.remove("active");
+      tabAP.setAttribute("aria-selected","true"); tabRR.setAttribute("aria-selected","false");
+      panelAP.style.display = ""; panelRR.style.display = "none";
+      runAP("deg");
+    }
+  }
+  tabRR.addEventListener("click", function(){ switchMode("rr"); });
+  tabAP.addEventListener("click", function(){ switchMode("ap"); });
+
+  /* ---------- helpers ---------- */
+  function fmt(n, dp){
+    if (!isFinite(n)) return "—";
+    return n.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function ratioText(pct){
+    if (pct <= 0) return "level";
+    var n = 100/pct;
+    var s = n.toFixed(n < 10 ? 2 : 1).replace(/\.?0+$/, "");
+    return "1 : " + s;
+  }
+  function riseRunText(pct){
+    var r = pct/100;
+    if (r === 0) return "0 : 1";
+    var s = r.toFixed(r < 1 ? 4 : 2).replace(/\.?0+$/, "");
+    return s + " : 1";
+  }
+  function pitchText(pct){
+    if (pct <= 0) return "0 : 12";
+    var x = pct*12/100;
+    return fmt(x, 2).replace(/\.?0+$/,"") + " : 12";
+  }
+  function classify(pct){
+    var a = Math.abs(pct);
+    if (a < 2) return "Nearly level";
+    if (a < 5) return "Gentle";
+    if (a < 10) return "Moderate";
+    if (a < 20) return "Steep";
+    return "Very steep";
+  }
+
+  /* ---------- rise / run ---------- */
+  var riseI = el("rise"), runI = el("run"), unitI = el("unit");
+  var resRR = el("res-rr"), errRR = el("err-rr");
+
+  function runRR(){
+    var rs = riseI.value.trim(), rn = runI.value.trim();
+    riseI.classList.remove("bad"); runI.classList.remove("bad");
+    if (rs === "" && rn === "") { resRR.classList.remove("show"); errRR.classList.remove("show"); return; }
+
+    var rise = rs === "" ? 0 : Number(rs);
+    var run  = rn === "" ? NaN : Number(rn);
+
+    if (!isFinite(rise) || !isFinite(run) || rise < 0 || run <= 0) {
+      errRR.classList.add("show"); resRR.classList.remove("show");
+      if (rs !== "" && (!isFinite(rise) || rise < 0)) riseI.classList.add("bad");
+      if (rn !== "" && (!isFinite(run) || run <= 0)) runI.classList.add("bad");
+      return;
+    }
+    errRR.classList.remove("show");
+
+    var pct = rise/run*100;
+    var deg = Math.atan(rise/run)/RAD;
+    var len = Math.sqrt(rise*rise + run*run);
+
+    el("rr-pct").textContent = fmt(pct, 2) + " %";
+    el("rr-deg").innerHTML = fmt(deg, 3) + "\u00B0<small>" + fmt(rise/run, 4).replace(/\.?0+$/,"") + " rise : 1 run</small>";
+    el("rr-ratio").textContent = ratioText(pct);
+    el("rr-pitch").textContent = pitchText(pct);
+    el("rr-len").innerHTML = fmt(len, 3) + " " + unitI.value + "<small>diagonal along slope</small>";
+    el("rr-class").innerHTML = classify(pct) + "<small>" + fmt(Math.abs(pct), 2) + " %</small>";
+
+    resRR.classList.add("show");
+  }
+
+  riseI.addEventListener("input", runRR);
+  runI.addEventListener("input", runRR);
+  unitI.addEventListener("change", runRR);
+
+  /* ---------- angle & percent ---------- */
+  var degI = el("in-deg"), pctI = el("in-pct");
+  var resAP = el("res-ap"), errAP = el("err-ap");
+
+  function paintAP(deg, pct){
+    var a = Math.abs(pct);
+    el("ap-ratio").textContent = pct === 0 ? "level" : ratioText(a);
+    el("ap-in").textContent = riseRunText(pct);
+    el("ap-pitch").textContent = pitchText(a);
+    el("ap-class").innerHTML = classify(a) + "<small>" + fmt(a, 2) + " %</small>";
+    resAP.classList.add("show");
+  }
+
+  function runAP(source){
+    var degStr = degI.value.trim(), pctStr = pctI.value.trim();
+    degI.classList.remove("bad"); pctI.classList.remove("bad");
+    errAP.classList.remove("show");
+
+    if (source === "deg") {
+      if (degStr === "") { pctI.value = ""; resAP.classList.remove("show"); return; }
+      var d = Number(degStr);
+      if (!isFinite(d) || d <= -89 || d >= 89) {
+        degI.classList.add("bad"); errAP.classList.add("show"); resAP.classList.remove("show"); return;
+      }
+      var p = Math.tan(d*RAD)*100;
+      pctI.value = Math.round(p*10000)/10000;
+      paintAP(d, p);
+    } else {
+      if (pctStr === "") { degI.value = ""; resAP.classList.remove("show"); return; }
+      var pc = Number(pctStr);
+      if (!isFinite(pc)) {
+        pctI.classList.add("bad"); errAP.classList.add("show"); resAP.classList.remove("show"); return;
+      }
+      var dg = Math.atan(pc/100)/RAD;
+      degI.value = Math.round(dg*10000)/10000;
+      paintAP(dg, pc);
+    }
+  }
+
+  degI.addEventListener("input", function(){ runAP("deg"); });
+  pctI.addEventListener("input", function(){ runAP("pct"); });
+
+  /* ---------- init ---------- */
+  switchMode("rr");
+})();
+</script>
+</body>
+</html>

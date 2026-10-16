@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sections, Townships and Ranges Explained</title>
+<meta name="description" content="The public land survey system tiles the US into six-mile townships of 36 one-mile sections. How the grid is numbered, legal descriptions, and edge drift.">
+<link rel="canonical" href="https://coordcalc.com/section-township-range.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/section-township-range.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/section-township-range.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/section-township-range.html">
+<meta property="og:title" content="Sections, Townships and Ranges Explained">
+<meta property="og:description" content="How 640-acre sections and 36-section townships tile the public land survey system, how they are numbered, and where the geometry breaks down.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/section-township-range.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "Sections, Townships and Ranges Explained",
+  "description": "How the US public land survey system divides land into townships, ranges and 640-acre sections, and how legal descriptions are written from it.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/section-township-range.html"},
+  "articleSection": "Land measurement"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Sections, townships and ranges
+  </nav>
+
+  <h1>Sections, Townships and Ranges Explained</h1>
+
+  <p class="lead">
+    Most of the United States west of the original thirteen colonies is described not by metes and bounds
+    but by a rectangular grid: townships six miles square, each divided into 36 sections of one square
+    mile, each of 640 acres. The system was designed to be readable without any measurement, and it
+    largely is — which is why a legal description can be four short groups of letters and numbers and
+    still identify a parcel to the acre. This guide explains the layers and how to read them.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Public land survey system</span>
+  </p>
+
+  <h2>The three layers</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Unit</th><th>Size</th><th>Area</th><th>Where it sits relative to</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Township</td><td>6 miles × 6 miles</td><td>36 square miles = 23,040 acres</td><td>North or south of the baseline</td></tr>
+        <tr><td>Range</td><td>6 miles wide</td><td>—</td><td>East or west of the principal meridian</td></tr>
+        <tr><td>Section</td><td>1 mile × 1 mile</td><td>640 acres</td><td>Position within the township</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    A <b>principal meridian</b> is a north-south reference line, and a <b>baseline</b> is an east-west one.
+    There are more than thirty principal meridians across the country, each with its own name — the Sixth
+    Principal Meridian, the Gila and Salt River Meridian, the Boise Meridian — and the name is part of a
+    complete description, because "Township 2 North, Range 3 East" means nothing without knowing which
+    meridian and baseline it is measured from.
+  </p>
+
+  <h2>Reading a description</h2>
+  <p>
+    A description such as <code>T2N, R3E, Sec 14</code> unpacks as follows: a township two tiers north of
+    the baseline, three ranges east of the principal meridian, and section 14 within that township. The
+    layers are read from large to small, which is why a full legal description reads like a string of
+    nested boxes and ends in the smallest one.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Layer</th><th>Approximate area</th><th>Written as</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Township</td><td>23,040 acres</td><td>T2N, R3E</td></tr>
+        <tr><td>Section</td><td>640 acres</td><td>Sec 14</td></tr>
+        <tr><td>Half section</td><td>320 acres</td><td>N ½</td></tr>
+        <tr><td>Quarter section</td><td>160 acres</td><td>SE ¼</td></tr>
+        <tr><td>Quarter-quarter section</td><td>40 acres</td><td>NE ¼ SE ¼</td></tr>
+        <tr><td>Government lot</td><td>Irregular</td><td>Lot 4</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The 40-acre quarter-quarter is the smallest unit with a common name, and it is why "the back forty"
+    entered the language. It is read right to left: <code>NE ¼ SE ¼</code> is the north-east quarter of
+    the south-east quarter of the section, which is a 40-acre square in the north-east corner of the
+    south-east quarter.
+  </p>
+
+  <h2>How the sections are numbered</h2>
+  <p>
+    Sections are numbered in a boustrophedon — an ox-plough pattern — starting at the north-east corner
+    and running west across the top row, then east across the next row, and so on until section 36
+    finishes in the south-east corner. The result is that sections facing each other across a common
+    boundary always differ by one, which makes it easy to see at a glance whether two adjacent parcels
+    share a line. It also means the numbering is not a simple left-to-right raster, which is a persistent
+    source of errors in datasets built by people who assumed it was.
+  </p>
+  <div class="formula">6&nbsp;&nbsp;5&nbsp;&nbsp;4&nbsp;&nbsp;3&nbsp;&nbsp;2&nbsp;&nbsp;1<br>
+7&nbsp;&nbsp;8&nbsp;&nbsp;9&nbsp;10&nbsp;11&nbsp;12<br>
+18&nbsp;17&nbsp;16&nbsp;15&nbsp;14&nbsp;13<br>
+19&nbsp;20&nbsp;21&nbsp;22&nbsp;23&nbsp;24<br>
+30&nbsp;29&nbsp;28&nbsp;27&nbsp;26&nbsp;25<br>
+31&nbsp;32&nbsp;33&nbsp;34&nbsp;35&nbsp;36</div>
+
+  <h2>Why the edges do not fit</h2>
+  <p>
+    The grid assumes a flat, square world, and the Earth is neither. Lines of longitude converge towards
+    the poles, so a township laid out as six miles square is very slightly trapezoidal, and the
+    discrepancy accumulates as you move north. The system deals with this by surveying the south and east
+    boundaries of each township first, subdividing into regular sections, and then letting the remaining
+    error fall into the north and west tiers.
+  </p>
+  <p>
+    Those residual strips are the <b>government lots</b>, and they are irregular by design — narrower than
+    a standard section, sometimes markedly. A description that says "Lot 4" instead of a quarter-section
+    is telling you that the parcel is one of these fit-in pieces, and its area has to come from the
+    recorded plat rather than from arithmetic. Treating a government lot as if it were a quarter-section
+    is a straightforward way to be wrong by several acres.
+  </p>
+
+  <div class="note">
+    <p><b>The system covers most, not all, of the country.</b> The public land survey system applies to
+    roughly thirty of the fifty states. The original colonies and the states created from them — plus
+    Texas, and parts of a few other areas — were never laid out this way and remain in metes and bounds,
+    described by bearings and distances from monuments. A description in sections and ranges outside the
+    PLSS states is a sign that something has gone wrong upstream.</p>
+  </div>
+
+  <h2>How many acres in a section, and other numbers worth knowing</h2>
+  <ul>
+    <li>A section is <b>640 acres</b>, which is one square mile.</li>
+    <li>A township is <b>36 sections</b>, or 23,040 acres.</li>
+    <li>A quarter section is <b>160 acres</b>, a quarter-quarter is 40 acres.</li>
+    <li>A section side is 80 chains, or 5,280 feet, or one statute mile.</li>
+    <li>A quarter-section side is 40 chains, or 2,640 feet, or half a mile.</li>
+  </ul>
+  <p>
+    The chain units are not a coincidence: the grid was laid out with a 66-foot Gunter's chain, and
+    80 chains to the mile is exactly why a mile is 5,280 feet and why a section is 640 acres rather than
+    some rounder metric number.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area and acreage from a boundary coordinate list</small></a>
+      <a href="unit-converter.html">us survey foot to meter<small>Chains, links, rods, acres and hectares</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Ground distance from a map or plat measurement</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Check a boundary line by its endpoints</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-acreage-from-coordinates.html">How to calculate acreage from coordinates</a>
+        <small>Turning a boundary into acres, and the projection assumptions behind it.</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">Survey foot vs international foot</a>
+        <small>Which foot the original surveys used, and what that means for old records.</small></li>
+      <li><a href="bearing-vs-azimuth.html">Bearing vs azimuth: what's the difference</a>
+        <small>How the metes-and-bounds states describe boundaries instead.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,19 @@
+# Cloudflare Pages redirects
+# Docs: https://developers.cloudflare.com/pages/configuration/redirects/
+#
+# Format: [source] [destination] [code]   (one rule per line, # starts a comment)
+# Limits: 2,000 static + 100 dynamic rules.
+#
+# IMPORTANT — domain-level rules are NOT supported here. A rule whose source
+# includes a hostname (e.g. "https://www.coordcalc.com/* ...") is silently ignored
+# by Pages. The www -> apex redirect therefore has to live in the Cloudflare zone:
+#   Dashboard -> coordcalc.com -> Rules -> Redirect Rules -> Create rule
+#     When incoming requests match: Hostname equals www.coordcalc.com
+#     Then: Dynamic redirect to https://coordcalc.com/${http.request.uri.path} (301)
+# See the "Custom domain" section of README.md.
+#
+# Nothing needs to be listed for the site's own pages: Pages already serves
+# /dms-converter from dms-converter.html and redirects the *.html form for you.
+# Add site-specific rules below as they come up, for example:
+#
+# /old-tool-name dms-converter 301

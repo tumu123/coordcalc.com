@@ -1,0 +1,1672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTM to Lat Long Converter — Easting, Northing, Zone &amp; Batch CSV</title>
+<meta name="description" content="Free UTM converter: easting, northing and zone to latitude and longitude and back on WGS84. Paste a coordinate list to convert in bulk and export CSV.">
+<link rel="canonical" href="https://coordcalc.com/utm-coordinate-converter.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/utm-coordinate-converter.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/utm-coordinate-converter.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/utm-coordinate-converter.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<meta property="og:title" content="UTM to Lat Long Converter — Easting, Northing, Zone &amp; Batch CSV">
+<meta property="og:description" content="Free UTM to lat long converter: latitude and longitude to UTM easting, northing and zone, and UTM back to lat-long. Millimetre-accurate Transverse Mercator on WGS84, plus batch conversion of a pasted coordinate list with CSV export.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/utm-coordinate-converter.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I convert UTM to lat long?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Switch to the \"UTM → latitude / longitude\" tab, enter the easting, northing, zone and hemisphere, and the converter returns latitude and longitude in both decimal degrees and DMS. A valid easting lies between about 100,000 m and 900,000 m, and a southern-hemisphere northing must include the 10,000,000 m false northing exactly as printed on the plan."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert latitude and longitude to UTM?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter the latitude and longitude in decimal degrees or DMS. The converter works out the UTM zone from the longitude, projects the position onto that zone's transverse Mercator plane and returns the easting and northing in metres, plus the zone and hemisphere. For example, latitude 43.642567 and longitude -79.387139 returns zone 17N with easting 630084.301 m and northing 4833438.586 m."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What zone do I need for a UTM conversion?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The zone is determined by longitude: zone 1 covers 180 degrees west to 174 degrees west, and each six-degree band increases the zone number eastwards, so longitude 0 to 6 degrees east is zone 31. To convert UTM back to latitude and longitude you must supply the zone, because the same easting and northing pair means a different place in every zone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which ellipsoid and datum does this UTM converter use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WGS84, with a semi-major axis of 6378137 m and a flattening of 1/298.257223563. This is the datum used by GPS and most modern GNSS equipment. If your plan was produced on an older local datum such as NAD27, ED50 or a national grid with its own parameters, the result will differ by up to a few hundred metres and you should convert through that datum first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my UTM easting not between 100,000 and 900,000 metres?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A point inside its own zone always has an easting between about 100,000 m and 900,000 m. Values outside that range mean the coordinate was projected in a different zone from the one you entered, or that the point is far from the zone's central meridian. The converter still returns a latitude and longitude, but check the zone before using the result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between UTM and latitude and longitude?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Latitude and longitude are angular positions on the ellipsoid and are independent of any projection. UTM is a plane coordinate system: it converts the curved surface into metres of easting and northing inside one six-degree zone, which makes distance and area arithmetic simpler but means coordinates are only valid in that zone."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this UTM converter free and does it need an account?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is completely free with no login, no account and no usage limit. All calculations run locally in your browser, so no coordinate is ever sent to a server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do easting and northing mean?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Easting is the distance in metres east of the zone's false origin, which is placed 500,000 m west of the central meridian so that the value stays positive. Northing is the distance in metres north of the equator, plus a 10,000,000 m false northing in the southern hemisphere. Together with the zone they give a unique position on the grid."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is WGS84 the same as NAD83?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "They are very close but not identical. WGS84 is the global GPS datum; NAD83 is the North American datum and moves with the North American plate, so the two currently differ by about one to two metres. For mapping and navigation the difference is negligible, but for boundary, cadastral and precise engineering work convert through an official transformation set rather than treating the two as interchangeable."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I convert a whole list of coordinates at once?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — use the Batch (CSV) tab. Paste the list, one record per line, choose the direction, and every row is converted in a single pass. Up to 2,000 records are handled at once, the on-screen table shows the first 200, and the Download CSV button always writes every converted row."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I paste coordinates from Excel or a CSV export?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Copy the cells and paste them straight into the batch box; the converter accepts comma, tab, semicolon and pipe separators. If the first line is a header row it is detected and skipped, and the remaining columns are then matched by name, so latitude, longitude, easting, northing, zone and hemisphere are found wherever they sit in the row. Any unrecognised column is carried through as a label."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What order should easting and northing be in?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Easting first, northing second, which is the conventional grid order. If a file has them the other way round the converter still reads the pair correctly, because a UTM easting never exceeds about 900,000 m while a northing routinely reaches several million — the magnitudes give the order away. Naming the columns in a header row removes the ambiguity entirely."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--warn:#b45309;--soft:#eef2f9;
+    --cat:#2563eb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  header.site{background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+    letter-spacing:-.2px;text-decoration:none;}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  .wrap{max-width:820px;margin:0 auto;padding:26px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.3px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:20px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;
+    flex-wrap:wrap;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .row.tight{gap:10px;}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .field.grow{flex:1;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],textarea,select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;min-width:0;width:100%;}
+  textarea{font-size:14px;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    resize:vertical;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.big{font-size:19px;font-weight:600;letter-spacing:.3px;}
+  .w-lg{width:230px;}
+  .w-md{width:132px;}
+  .w-sm{width:92px;}
+  .w-xs{width:74px;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .hint code,.note code,p code,li code{background:var(--soft);padding:2px 6px;border-radius:5px;
+    font-size:13px;color:var(--accent-d);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--cat);
+    border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3b4353;margin:16px 0 0;}
+  .note.warn{border-left-color:var(--warn);background:#fffbeb;}
+  .note b{color:var(--text);}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);white-space:nowrap;}
+  .result-row .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;
+    word-break:break-all;}
+  .result-row.small .v{font-size:15px;font-weight:600;}
+  .result-row.transient .v{color:var(--cat);}
+  .btn{border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-d);}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+  .examples{margin-top:16px;font-size:13px;color:var(--sub);}
+  .examples a{color:var(--accent);cursor:pointer;text-decoration:none;
+    border-bottom:1px dotted var(--accent);margin-right:14px;}
+  .chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--sub);}
+  .chips button{font-family:inherit;font-size:12px;padding:4px 10px;border-radius:14px;border:1px solid var(--line);
+    background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  .chips button:hover{border-color:var(--accent);color:var(--accent);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:14px;
+    font-variant-numeric:tabular-nums;}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:var(--sub);font-weight:700;}
+  th:first-child,td:first-child{text-align:left;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr.tot td{font-weight:700;border-top:1px solid var(--line);}
+  .tbl-scroll{overflow-x:auto;margin-top:6px;}
+  section.card h2:first-child{margin-top:0;}
+  section.card h3:first-child{margin-top:0;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;
+    padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"\2013";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  .formula{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;color:var(--text);
+    margin:12px 0;overflow-x:auto;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);
+    padding-top:18px;}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:#1f2430;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;opacity:0;
+    transition:.25s;pointer-events:none;z-index:60;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+  summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .w-lg,.w-md,.w-sm,.w-xs{width:100%;}
+    .field{flex:1 1 100%;}
+  }
+
+  /* embed view: headerless, chrome-free, sized for an iframe (add ?embed=1) */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .tabs{margin-bottom:14px;}
+  body.embed .toast{bottom:14px;}
+
+  :root{--cat:#2563eb;}
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#coordinates">Coordinate conversion</a> › UTM to Lat Long
+  </nav>
+
+  <h1>UTM to Lat Long Converter</h1>
+
+  <p class="lead">
+    This UTM to lat long converter moves between geographic latitude and longitude and the
+    Universal Transverse Mercator grid used on survey plans, GIS layers and setting-out sheets.
+    Enter a position in decimal degrees or DMS to get its zone, easting and northing — or paste
+    UTM coordinates from a plan and get the latitude and longitude back. The batch tab converts a
+    whole pasted coordinate list at once and exports it as CSV. Everything runs in your
+    browser, with no login and no upload.
+  </p>
+
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-fwd" role="tab" aria-selected="true" type="button">Latitude / longitude &rarr; UTM</button>
+      <button class="tab" id="tab-inv" role="tab" aria-selected="false" type="button">UTM &rarr; latitude / longitude</button>
+      <button class="tab" id="tab-batch" role="tab" aria-selected="false" type="button">Batch (CSV)</button>
+    </div>
+
+    <div id="panel-fwd">
+      <div class="row">
+        <div class="field"><label for="lat">Latitude</label><input type="text" id="lat" inputmode="decimal" autocomplete="off" spellcheck="false" value="43.642567" class="big w-lg" placeholder="e.g. 43.642567"></div>
+        <div class="field"><label for="lon">Longitude</label><input type="text" id="lon" inputmode="decimal" autocomplete="off" spellcheck="false" value="-79.387139" class="big w-lg" placeholder="e.g. -79.387139"></div>
+      </div>
+      <p class="hint">Decimal degrees or DMS both work: <code>43.642567</code>, <code>N 43 38 33.2</code> or <code>43 38 33.2 N</code>.</p>
+      <div class="chips" data-mode="fwd">
+        <span>Try:</span>
+        <button type="button" data-lat="43.642567" data-lon="-79.387139">CN Tower</button>
+        <button type="button" data-lat="39.906111" data-lon="116.3974">Beijing</button>
+        <button type="button" data-lat="-33.856944" data-lon="151.215278">Sydney</button>
+        <button type="button" data-lat="78.2232" data-lon="15.6469">Svalbard</button>
+      </div>
+      <p class="err" id="err-fwd"></p>
+      <div class="results" id="res-fwd">
+        <div class="result-row"><span class="k">UTM zone</span><span class="v" id="f-zone">&mdash;</span></div>
+        <div class="result-row"><span class="k">Easting (m)</span><span class="v" id="f-easting">&mdash;</span></div>
+        <div class="result-row"><span class="k">Northing (m)</span><span class="v" id="f-northing">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Central meridian</span><span class="v" id="f-cm">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Grid convergence</span><span class="v" id="f-conv">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Point scale factor</span><span class="v" id="f-k">&mdash;</span></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-fwd" type="button">Copy results</button>
+          <button class="btn btn-ghost" id="link-fwd" type="button">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-inv" style="display:none;">
+      <div class="row">
+        <div class="field"><label for="east">Easting (m)</label><input type="text" id="east" inputmode="decimal" autocomplete="off" spellcheck="false" value="630084.301" class="big w-lg" placeholder="e.g. 630084.301"></div>
+        <div class="field"><label for="north">Northing (m)</label><input type="text" id="north" inputmode="decimal" autocomplete="off" spellcheck="false" value="4833438.586" class="big w-lg" placeholder="e.g. 4833438.586"></div>
+      </div>
+      <div class="row tight" style="margin-top:14px;">
+        <div class="field w-sm"><label for="zone">Zone</label><select id="zone"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option><option value="9">9</option><option value="10">10</option><option value="11">11</option><option value="12">12</option><option value="13">13</option><option value="14">14</option><option value="15">15</option><option value="16">16</option><option value="17" selected>17</option><option value="18">18</option><option value="19">19</option><option value="20">20</option><option value="21">21</option><option value="22">22</option><option value="23">23</option><option value="24">24</option><option value="25">25</option><option value="26">26</option><option value="27">27</option><option value="28">28</option><option value="29">29</option><option value="30">30</option><option value="31">31</option><option value="32">32</option><option value="33">33</option><option value="34">34</option><option value="35">35</option><option value="36">36</option><option value="37">37</option><option value="38">38</option><option value="39">39</option><option value="40">40</option><option value="41">41</option><option value="42">42</option><option value="43">43</option><option value="44">44</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><option value="60">60</option></select></div>
+        <div class="field w-md"><label for="hemi">Hemisphere</label><select id="hemi"><option value="N" selected>North (N)</option><option value="S">South (S)</option></select></div>
+      </div>
+      <p class="hint">Northern-hemisphere northings start at 0 m; southern-hemisphere northings include the 10,000,000 m false northing, exactly as printed on survey plans.</p>
+      <p class="err" id="err-inv"></p>
+      <div class="results" id="res-inv">
+        <div class="result-row"><span class="k">Latitude (DD)</span><span class="v" id="i-latdd">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Latitude (DMS)</span><span class="v" id="i-latdms">&mdash;</span></div>
+        <div class="result-row"><span class="k">Longitude (DD)</span><span class="v" id="i-londd">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Longitude (DMS)</span><span class="v" id="i-londms">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Latitude band</span><span class="v" id="i-band">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Central meridian</span><span class="v" id="i-cm">&mdash;</span></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-inv" type="button">Copy results</button>
+          <button class="btn btn-ghost" id="link-inv" type="button">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-batch" style="display:none;">
+      <div class="row">
+        <div class="field w-md"><label for="b-dir">Direction</label><select id="b-dir">
+          <option value="fwd" selected>Latitude / longitude &rarr; UTM</option>
+          <option value="inv">UTM &rarr; latitude / longitude</option>
+          <option value="mgrs">MGRS &rarr; latitude / longitude</option>
+        </select></div>
+        <div class="field w-md"><label>Extra columns</label>
+          <div style="display:flex;gap:16px;align-items:center;padding:9px 0;font-size:14px;">
+            <label style="display:flex;gap:6px;align-items:center;font-weight:500;color:var(--sub);margin:0;"><input type="checkbox" id="b-x-mgrs" checked style="width:auto;">MGRS</label>
+            <label style="display:flex;gap:6px;align-items:center;font-weight:500;color:var(--sub);margin:0;"><input type="checkbox" id="b-x-dms" style="width:auto;">DMS</label>
+          </div>
+        </div>
+      </div>
+      <div class="row tight" style="margin-top:14px;">
+        <div class="field w-sm"><label for="b-zone">Default zone</label><input type="text" id="b-zone" inputmode="numeric" autocomplete="off" spellcheck="false" value="17"></div>
+        <div class="field w-md"><label for="b-hemi">Default hemisphere</label><select id="b-hemi"><option value="N" selected>North (N)</option><option value="S">South (S)</option></select></div>
+        <div class="field w-sm"><label for="b-digits">MGRS digits</label><select id="b-digits">
+          <option value="5" selected>5 &mdash; 1 m</option>
+          <option value="4">4 &mdash; 10 m</option>
+          <option value="3">3 &mdash; 100 m</option>
+          <option value="2">2 &mdash; 1 km</option>
+          <option value="1">1 &mdash; 10 km</option>
+          <option value="0">0 &mdash; 100 km</option>
+        </select></div>
+      </div>
+      <p class="hint">Used when a UTM row carries no zone or hemisphere of its own.</p>
+      <div class="field grow" style="margin-top:14px;">
+        <label for="b-text">Paste coordinates &mdash; one record per line</label>
+        <textarea id="b-text" rows="9" spellcheck="false" placeholder="CN Tower, 43.642567, -79.387139
+Beijing, 39.906111, 116.397400
+Sydney, -33.856944, 151.215278"></textarea>
+      </div>
+      <p class="hint">Comma, tab, semicolon or pipe separated. A leading text column is kept as a label, a header row is detected and skipped, and a pair of numbers separated only by a space is read as latitude then longitude. Up to 2,000 records are converted in one pass.</p>
+      <p class="err" id="err-batch"></p>
+      <div class="results" id="res-batch">
+        <div class="result-row"><span class="k">Records read</span><span class="v" id="b-r-read">&mdash;</span></div>
+        <div class="result-row"><span class="k">Converted</span><span class="v" id="b-r-ok">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Skipped</span><span class="v" id="b-r-skip">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Zones covered</span><span class="v" id="b-r-zones">&mdash;</span></div>
+        <div class="tbl-scroll">
+          <table id="btable">
+            <thead><tr><th>Label</th><th>A</th><th>B</th><th>Zone</th><th>C</th><th>D</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </div>
+        <p class="hint" id="b-more" style="display:none;"></p>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-batch" type="button">Copy results</button>
+          <button class="btn btn-ghost" id="dl-batch" type="button">Download CSV</button>
+          <button class="btn btn-ghost" id="link-batch" type="button">Copy link</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="note embed-hide" style="margin-top:20px;">
+      <b>Linkable and embeddable.</b> Every result has a URL you can bookmark, share or drive from
+      code: <code>?lat=43.642567&amp;lon=-79.387139</code> for a latitude and longitude,
+      <code>?e=630084.301&amp;n=4833438.586&amp;zone=17</code> for a grid coordinate, or
+      <code>?mode=batch&amp;text=…</code> for a pasted list. Add <code>&amp;embed=1</code> to strip the
+      header and the article for an iframe. <b>Copy link</b> builds the URL for whatever is on screen;
+      the full parameter list and a JavaScript API are on the
+      <a href="developers.html">developer page</a>.
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>UTM divides the world into 60 zones, each six degrees of longitude wide, numbered from 1 at
+      180&deg;W to 60 at 180&deg;E. Every zone is projected separately with a transverse Mercator
+      projection onto a cylinder touching the ellipsoid along the zone's central meridian. Inside a
+      zone, a position is given as an <b>easting</b> measured east from a false origin 500,000 m west
+      of the central meridian, and a <b>northing</b> measured north from the equator. The
+      southern hemisphere adds 10,000,000 m to the northing so the values stay positive.</p>
+    <p>The projection scale is exactly 0.9996 on the central meridian and rises to about 1.0004 near a
+      zone edge, which is why a UTM distance is slightly longer than the same line measured on the
+      ground. This converter uses the published transverse Mercator series on the WGS84 ellipsoid
+      and solves the inverse by iteration, so a forward-and-back conversion returns the original
+      position to better than a millimetre.</p>
+    <p>Two areas use non-standard zones. <b>Norway</b> keeps zone 32 across 56&deg;N to 64&deg;N so the
+      country is not split, and <b>Svalbard</b> widens zones 31, 33, 35 and 37 between 72&deg;N and
+      84&deg;N. This converter applies both exceptions automatically.</p>
+  </section>
+
+  <section class="card">
+    <h2>Easting and Northing Explained</h2>
+    <p>A UTM coordinate is written as a zone, an <b>easting</b> and a <b>northing</b>, all in metres.
+      The easting is the distance measured east from a false origin that sits 500,000 m west of the
+      zone's central meridian — the <b>false easting</b> — so that no point inside a zone ever carries
+      a negative number. The northing is the distance north of the equator, with 10,000,000 m of
+      false northing added in the southern hemisphere to keep the values positive. That is why a
+      valid easting almost always falls between about 100,000 m and 900,000 m.</p>
+    <p>To convert easting northing to latitude longitude you also need the zone and the hemisphere,
+      because the same metre pair describes a different place in every zone. This northing easting
+      converter projects the point back onto the WGS84 ellipsoid and returns both decimal degrees and
+      DMS. Grid coordinates are conventionally quoted easting first, as in
+      <code>630084.301 E, 4833438.586 N, zone 17N</code>, but swapping the order makes no difference
+      to the answer. If your coordinates are already a military grid reference, the
+      <a href="mgrs-converter.html">MGRS to lat long</a> converter handles that format directly.</p>
+  </section>
+
+  <section class="card">
+    <h2>Which UTM Zone Am I In?</h2>
+    <p>If you are asking "what UTM zone am I in?", the answer follows from longitude alone: the world
+      is divided into 60 six-degree bands, numbered from zone 1 at 180&deg;W, so dividing your
+      longitude by six gives the zone. Because the number changes exactly at the zone edge, a point
+      sitting on a boundary can legitimately be described in either of the two neighbouring zones,
+      which is a frequent cause of coordinates that refuse to line up on a plan.</p>
+    <p>This page also works as a UTM zone finder. Enter a latitude and longitude and the zone,
+      hemisphere and latitude band come back with the grid coordinates; for a local project you can
+      instead set the zone by hand and read the position back, which is useful when a drawing quotes
+      the zone explicitly. The central meridian — the line on which the projection scale is exactly
+      0.9996 — is shown in both directions, so you can sanity-check the result before using it.</p>
+  </section>
+
+  <section class="card">
+    <h2>Datums: WGS84, NAD83 and CGCS2000</h2>
+    <p>A UTM coordinate only means something together with the datum it was computed on. WGS84 is the
+      global datum used by GPS, by most modern GNSS receivers and by this converter, with a
+      semi-major axis of 6,378,137 m and a flattening of 1/298.257223563. NAD83 is the datum used on
+      North American mapping; it is tied to the North American plate and currently differs from WGS84
+      by roughly one to two metres, which is immaterial for navigation but can matter for property,
+      boundary and engineering work. CGCS2000 is the datum used on Chinese official mapping and is
+      defined to coincide with ITRF97 at epoch 2000.0, so for ordinary civilian work it agrees with
+      WGS84 to within a few centimetres.</p>
+    <p>A datum shift is a small correction rather than a different projection. Converting NAD83 to
+      WGS84 or WGS84 to NAD83 is normally done with a published transformation set, and a CGCS2000 to
+      WGS84 conversion is effectively a no-op unless you need sub-decimetre accuracy. The same logic
+      applies to ITRF to WGS84, where the differences come mainly from the reference epoch and from
+      the plate motion accumulated since each frame was defined. If your plan carries an older datum
+      such as NAD27, ED50 or a national grid with its own parameters, convert through that datum
+      first — otherwise the grid coordinates produced here can be out by hundreds of metres.</p>
+  </section>
+
+  <section class="card">
+    <h2>When to use this tool</h2>
+    <p>A UTM conversion is usually needed when the coordinate format you hold differs from the one your equipment, plan or software expects:</p>
+    <ul>
+      <li>Reading a GNSS receiver that displays latitude and longitude, then writing coordinates onto a setting-out sheet that uses UTM easting and northing.</li>
+      <li>Loading a survey plan, cadastral drawing or topographic map that quotes UTM grid coordinates into GIS software that expects geographic coordinates.</li>
+      <li>Handing coordinates to an excavator, drill rig or machine-control system that works in the grid rather than in latitude and longitude.</li>
+      <li>Checking that two data sets are in the same zone before comparing or merging them — a common cause of coordinates that appear to be hundreds of kilometres apart.</li>
+      <li>Verifying a conversion by hand for coursework, a report or a quality check on a colleague's file.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Batch conversion: a whole coordinate list at once</h2>
+    <p>The two single-point tabs handle one coordinate at a time. The <b>Batch (CSV)</b> tab handles
+      the list: paste a column of coordinates copied out of a spreadsheet, a GNSS export or a CSV file
+      and every row is converted in one pass, ready to copy back or download as CSV.</p>
+    <p>Three directions are supported. Latitude and longitude to UTM adds the zone, band, easting and
+      northing to each row. UTM to latitude and longitude runs the other way, taking easting, northing
+      and zone from the row. MGRS to latitude and longitude reads grid references with or without the
+      spaces — <code>17T PJ 30084 33438</code> and <code>17TPJ3008433438</code> are the same
+      reference.</p>
+    <h3>How the columns are read</h3>
+    <p>If the paste carries a header row the columns are matched by name, so the order does not matter.
+      <code>latitude</code>, <code>longitude</code>, <code>easting</code>, <code>northing</code>,
+      <code>zone</code>, <code>hemisphere</code>, <code>x</code>, <code>y</code> and <code>mgrs</code>
+      are all recognised, and any other column is carried through as a label. Without a header row the
+      columns are read by shape: the last two coordinate values on the line are taken as the pair, and
+      anything before them — a point number, a description — becomes the label.</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Pasted line</th><th>How it is read</th></tr></thead>
+        <tbody>
+          <tr><td><code>P12, 630084.301, 4833438.586, 17N</code></td><td>label P12; easting 630084.301; northing 4833438.586; zone 17 north</td></tr>
+          <tr><td><code>Stone 4, 43.642567, -79.387139</code></td><td>label, then latitude and longitude, comma separated</td></tr>
+          <tr><td><code>43.642567 -79.387139</code></td><td>a bare pair separated only by a space reads as latitude then longitude</td></tr>
+          <tr><td><code>N 43 38 33.2 W 79 38 33.2</code></td><td>DMS with hemisphere letters still counts as one record</td></tr>
+          <tr><td><code>17TPJ3008433438</code></td><td>an MGRS reference, in the MGRS direction</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Two details are worth knowing. A zone is read from a row only when it is written with a letter —
+      <code>17N</code>, <code>33S</code>, <code>17T</code> — because a bare number in that position is
+      far more likely to be a point number; rows that carry none take the zone from the
+      <b>Default zone</b> box, and the resolved zone is printed on every output row so a wrong
+      assumption is visible immediately. And if a UTM pair is written in the unconventional
+      northing-then-easting order, the converter spots it from the magnitudes, since a UTM easting
+      never exceeds about 900,000 m.</p>
+    <p>Bad rows are never allowed to poison the run. They are counted, the first few are named with
+      their line numbers, and the remainder of the list still converts. Up to 2,000 records are
+      processed in a single pass and the table on screen shows the first 200; the download always
+      contains every converted row.</p>
+    <p>As with the single-point tabs, the whole conversion runs in the browser. A client's coordinate
+      schedule never leaves the machine, which matters when the file describes private land or
+      critical infrastructure.</p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="how-to-read-utm-coordinates.html">How to read UTM coordinates<small>Zone, band, easting and northing explained</small></a>
+      <a href="convert-easting-northing-to-lat-long.html">Converting easting and northing to latitude and longitude<small>The inverse projection calculation, step by step</small></a>
+      <a href="utm-vs-mgrs.html">UTM vs MGRS: what's the difference<small>The same grid written in metres or in digits</small></a>
+      <a href="what-datum-does-gps-use.html">What datum does GPS use?<small>WGS84, NAD83 and ITRF compared</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related converters and calculators</h2>
+    <div class="links">
+            <a href="epsg-code-lookup.html">epsg code lookup<small>The number behind every coordinate reference system</small></a>
+<a href="mgrs-converter.html">mgrs to lat long<small>Military grid reference to latitude and longitude</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Decimal degrees to DMS, DDM and back</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Two coordinates to ground distance and azimuth</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance to ground distance for any scale</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, acreage and perimeter from coordinates</small></a>
+      <a href="traverse-calculator.html">traverse calculator<small>Coordinates, closure error and Bowditch adjustment</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+      <details>
+      <summary>How do I convert UTM to lat long?</summary>
+      <p>Switch to the "UTM &rarr; latitude / longitude" tab, enter the easting, northing, zone and hemisphere, and the converter returns latitude and longitude in both decimal degrees and DMS. A valid easting lies between about 100,000 m and 900,000 m, and a southern-hemisphere northing must include the 10,000,000 m false northing exactly as printed on the plan.</p>
+    </details>
+      <details open>
+      <summary>How do I convert latitude and longitude to UTM?</summary>
+      <p>Enter the latitude and longitude in decimal degrees or DMS. The converter works out the UTM zone from the longitude, projects the position onto that zone's transverse Mercator plane and returns the easting and northing in metres, plus the zone and hemisphere. For example, latitude 43.642567 and longitude -79.387139 returns zone 17N with easting 630084.301 m and northing 4833438.586 m.</p>
+    </details>
+      <details>
+      <summary>What zone do I need for a UTM conversion?</summary>
+      <p>The zone is determined by longitude: zone 1 covers 180 degrees west to 174 degrees west, and each six-degree band increases the zone number eastwards, so longitude 0 to 6 degrees east is zone 31. To convert UTM back to latitude and longitude you must supply the zone, because the same easting and northing pair means a different place in every zone.</p>
+    </details>
+      <details>
+      <summary>Which ellipsoid and datum does this UTM converter use?</summary>
+      <p>WGS84, with a semi-major axis of 6378137 m and a flattening of 1/298.257223563. This is the datum used by GPS and most modern GNSS equipment. If your plan was produced on an older local datum such as NAD27, ED50 or a national grid with its own parameters, the result will differ by up to a few hundred metres and you should convert through that datum first.</p>
+    </details>
+      <details>
+      <summary>Why is my UTM easting not between 100,000 and 900,000 metres?</summary>
+      <p>A point inside its own zone always has an easting between about 100,000 m and 900,000 m. Values outside that range mean the coordinate was projected in a different zone from the one you entered, or that the point is far from the zone's central meridian. The converter still returns a latitude and longitude, but check the zone before using the result.</p>
+    </details>
+      <details>
+      <summary>What is the difference between UTM and latitude and longitude?</summary>
+      <p>Latitude and longitude are angular positions on the ellipsoid and are independent of any projection. UTM is a plane coordinate system: it converts the curved surface into metres of easting and northing inside one six-degree zone, which makes distance and area arithmetic simpler but means coordinates are only valid in that zone.</p>
+    </details>
+      <details>
+      <summary>Is this UTM converter free and does it need an account?</summary>
+      <p>It is completely free with no login, no account and no usage limit. All calculations run locally in your browser, so no coordinate is ever sent to a server.</p>
+    </details>
+      <details>
+      <summary>What do easting and northing mean?</summary>
+      <p>Easting is the distance in metres east of the zone's false origin, which is placed 500,000 m west of the central meridian so that the value stays positive. Northing is the distance in metres north of the equator, plus a 10,000,000 m false northing in the southern hemisphere. Together with the zone they give a unique position on the grid.</p>
+    </details>
+      <details>
+      <summary>Is WGS84 the same as NAD83?</summary>
+      <p>They are very close but not identical. WGS84 is the global GPS datum; NAD83 is the North American datum and moves with the North American plate, so the two currently differ by about one to two metres. For mapping and navigation the difference is negligible, but for boundary, cadastral and precise engineering work convert through an official transformation set rather than treating the two as interchangeable.</p>
+    </details>
+      <details>
+      <summary>Can I convert a whole list of coordinates at once?</summary>
+      <p>Yes — use the Batch (CSV) tab. Paste the list, one record per line, choose the direction, and every row is converted in a single pass. Up to 2,000 records are handled at once, the on-screen table shows the first 200, and the Download CSV button always writes every converted row.</p>
+    </details>
+      <details>
+      <summary>How do I paste coordinates from Excel or a CSV export?</summary>
+      <p>Copy the cells and paste them straight into the batch box; the converter accepts comma, tab, semicolon and pipe separators. If the first line is a header row it is detected and skipped, and the remaining columns are then matched by name, so latitude, longitude, easting, northing, zone and hemisphere are found wherever they sit in the row. Any unrecognised column is carried through as a label.</p>
+    </details>
+      <details>
+      <summary>What order should easting and northing be in?</summary>
+      <p>Easting first, northing second, which is the conventional grid order. If a file has them the other way round the converter still reads the pair correctly, because a UTM easting never exceeds about 900,000 m while a northing routinely reaches several million — the magnitudes give the order away. Naming the columns in a header row removes the ambiguity entirely.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Verify critical values against your project's
+    coordinate reference system and specification before use in the field.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+/* ---- shared geodesy library (WGS84), verified against published reference values ---- */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+
+/* ---- page logic ---- */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll(lines, msg) {
+    msg = msg || "Copied to clipboard";
+    var text = lines.join("\n");
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); showToast(msg); }
+      catch (e) { showToast("Press Ctrl+C to copy"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast(msg); }, fallback);
+    } else { fallback(); }
+  }
+  function readResults(root) {
+    var out = [], nodes = root.querySelectorAll(".result-row");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].querySelector(".k"), v = nodes[i].querySelector(".v");
+      if (k && v && v.textContent !== "\u2014") { out.push(k.textContent + ": " + v.textContent); }
+    }
+    return out;
+  }
+  function num(id) {
+    var s = $(id).value.trim();
+    if (s === "") { return NaN; }
+    var v = Number(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function ang(id, kind) {
+    var s = $(id).value.trim();
+    return s === "" ? NaN : Geo.parseAngle(s, kind || "lat");
+  }
+  function txt(id, v) { $(id).textContent = v; }
+  function setErr(show, msg, id) {
+    var e = $(id || "err");
+    if (!e) { return; }
+    if (msg) { e.textContent = msg; }
+    e.classList.toggle("show", !!show);
+  }
+  function show(v, id) { $(id || "results").classList.toggle("show", v !== false); }
+  function bind(ids, fn) {
+    for (var i = 0; i < ids.length; i++) {
+      $(ids[i]).addEventListener("input", fn);
+      $(ids[i]).addEventListener("change", fn);
+    }
+  }
+  function bindChips(fn) {
+    var c = document.querySelectorAll(".chips button");
+    for (var i = 0; i < c.length; i++) {
+      c[i].addEventListener("click", function () { fn(this); });
+    }
+  }
+
+
+  /* ---------- batch conversion ---------------------------------------- */
+
+  var B_MAX = 2000, B_SHOW = 200;
+
+  /* Split a pasted line into fields without tripping over DMS written with spaces.
+     "43 38 33.2 N, 79 38 33.2 W"  ->  two fields
+     "N 43 38 33.2 W 79 38 33.2"   ->  two fields
+     "43.642567 -79.387139"        ->  two fields */
+  function bSplit(line) {
+    var t = line.trim();
+    if (t === "") { return []; }
+    if (/[,\t;|]/.test(t)) {
+      return t.split(/[,\t;|]+/).map(function (s) { return s.trim(); });
+    }
+    var tok = t.split(/\s+/);
+    if (tok.length <= 2) { return tok; }
+    var i;
+    function hemiAt(s) { return /^[NnSs]$/.test(s) || /^[NnSs][\d.]/.test(s); }
+    function otherAt(s) { return /^[EWew]$/.test(s) || /^[EWew][\d.]/.test(s); }
+    if (hemiAt(tok[0])) {
+      for (i = 1; i < tok.length; i++) {
+        if (otherAt(tok[i])) { return [tok.slice(0, i).join(" "), tok.slice(i).join(" ")]; }
+      }
+      return [t];
+    }
+    for (i = 0; i < tok.length - 1; i++) {
+      if (hemiAt(tok[i])) { return [tok.slice(0, i + 1).join(" "), tok.slice(i + 1).join(" ")]; }
+    }
+    return tok;
+  }
+
+  var B_HEADER = /^(lat|latitude|lon|lng|long|longitude|easting|northing|east|north|zone|hemi|hem|hemisphere|x|y|point|pt|station|stn|name|id|label|mgrs|grid|gridref|gridreference|description|note|ref|e|n)$/i;
+
+  function bIsHeader(f) {
+    if (!f.length) { return false; }
+    var hits = 0;
+    for (var i = 0; i < f.length; i++) {
+      if (B_HEADER.test(String(f[i]).trim())) { hits++; }
+    }
+    return hits > 0 && hits * 2 >= f.length;
+  }
+
+  /* Column name -> role, so a pasted export with named columns is read by name
+     rather than by position. */
+  function bRole(name) {
+    var s = String(name).trim().toLowerCase().replace(/[^a-z]/g, "");
+    if (s === "lat" || s === "latitude") { return "lat"; }
+    if (s === "lon" || s === "lng" || s === "long" || s === "longitude") { return "lon"; }
+    if (s === "easting" || s === "east" || s === "e" || s === "x") { return "east"; }
+    if (s === "northing" || s === "north" || s === "n" || s === "y") { return "nrt"; }
+    if (s === "zone" || s === "zonenumber" || s === "utmzone" || s === "zoneid") { return "zone"; }
+    if (s === "hemi" || s === "hem" || s === "hemisphere" || s === "ns") { return "hemi"; }
+    if (s === "mgrs" || s === "grid" || s === "gridref" || s === "gridreference") { return "mgrs"; }
+    return "label";
+  }
+
+  /* A zone is only read out of a row when it is written with a letter. A bare
+     number is far more likely to be a point number, so those come from the
+     default zone box instead. N and S are read as hemispheres; the remaining
+     letters as UTM latitude bands. */
+  function bZoneToken(str) {
+    var m = String(str).trim().toUpperCase().replace(/[^0-9A-Z]/g, "").match(/^(\d{1,2})([A-Z])$/);
+    if (!m) { return null; }
+    var z = Number(m[1]), L = m[2];
+    if (!(z >= 1 && z <= 60)) { return null; }
+    if (L === "N") { return { zone: z, north: true }; }
+    if (L === "S") { return { zone: z, north: false }; }
+    if ("CDEFGHJKLM".indexOf(L) >= 0) { return { zone: z, north: false }; }
+    if ("PQRSTUVWX".indexOf(L) >= 0) { return { zone: z, north: true }; }
+    return null;
+  }
+
+  function bTrim(o) {
+    o.label = o.label.replace(/[,;:\s]+$/, "").replace(/^[,;:\s]+/, "").trim();
+    return o;
+  }
+
+  /* Decide which field is which: by column name when a header was found,
+     otherwise by the shape of the line. */
+  function bFields(f, dir, roles) {
+    var o = { label: "", lat: null, lon: null, east: null, nrt: null,
+      zone: null, north: null, mgrs: null };
+    var i, n = f.length, s, zt;
+
+    if (roles && roles.length === n) {
+      for (i = 0; i < n; i++) {
+        s = String(f[i]).trim();
+        if (roles[i] === "label") { o.label += (o.label ? " " : "") + s; }
+        else if (roles[i] === "zone") {
+          zt = bZoneToken(s);
+          if (zt) { o.zone = zt.zone; o.north = zt.north; }
+          else { o.zone = /^\d{1,2}$/.test(s) ? Number(s) : null; }
+        } else if (roles[i] === "hemi") { o.north = /^N/i.test(s); }
+        else if (o[roles[i]] === null) { o[roles[i]] = s; }
+      }
+      return bTrim(o);
+    }
+
+    if (dir === "fwd") {
+      if (n < 2) { return null; }
+      o.lat = f[n - 2];
+      o.lon = f[n - 1];
+      o.label = f.slice(0, n - 2).join(" ");
+      return bTrim(o);
+    }
+
+    if (dir === "mgrs") {
+      var joined = f.join(" ");
+      var m = joined.match(/(?:^|[^0-9A-Za-z])(\d{1,2}[C-HJ-NP-X]\s*[A-HJ-NP-Z]{2}\s*(?:\d{1,5}\s*\d{1,5})?)/i);
+      if (!m) { return null; }
+      o.mgrs = m[1].replace(/\s+/g, "").toUpperCase();
+      o.label = joined.slice(0, m.index + m[0].length - m[1].length);
+      return bTrim(o);
+    }
+
+    var nums = [], label = [], i2;
+    for (i = 0; i < n; i++) {
+      s = String(f[i]).trim();
+      zt = bZoneToken(s);
+      if (zt) { o.zone = zt.zone; o.north = zt.north; continue; }
+      if (/^[NS]$/i.test(s)) { o.north = s.toUpperCase() === "N"; continue; }
+      if (/^[+-]?\d+(?:\.\d+)?$/.test(s.replace(/[,\s]/g, ""))) { nums.push({ i: i, s: s }); continue; }
+      label.push({ i: i, s: s });
+    }
+    if (nums.length < 2) { return null; }
+    var v1 = Number(nums[nums.length - 2].s.replace(/[,\s]/g, ""));
+    var v2 = Number(nums[nums.length - 1].s.replace(/[,\s]/g, ""));
+    /* a UTM easting never exceeds about 900,000 m, so a larger leading value
+       means the pair was written northing first */
+    if (Math.abs(v1) > 900000 && Math.abs(v2) <= 900000) {
+      o.nrt = nums[nums.length - 2].s;
+      o.east = nums[nums.length - 1].s;
+    } else {
+      o.east = nums[nums.length - 2].s;
+      o.nrt = nums[nums.length - 1].s;
+    }
+    /* point numbers and any other leftovers stay in the label, in the order
+       they were written */
+    var extra = nums.slice(0, nums.length - 2).concat(label);
+    extra.sort(function (a, b) { return a.i - b.i; });
+    for (i2 = 0; i2 < extra.length; i2++) { o.label += (o.label ? " " : "") + extra[i2].s; }
+    return bTrim(o);
+  }
+
+  function bHeaders(dir, opts) {
+    var h;
+    if (dir === "fwd") {
+      h = ["Label", "Latitude (DD)", "Longitude (DD)", "Zone", "Easting (m)", "Northing (m)"];
+    } else if (dir === "inv") {
+      h = ["Label", "Easting (m)", "Northing (m)", "Zone", "Latitude (DD)", "Longitude (DD)"];
+    } else {
+      h = ["Label", "MGRS", "Zone", "Latitude (DD)", "Longitude (DD)"];
+    }
+    if (opts.mgrs && dir !== "mgrs") { h.push("MGRS"); }
+    if (opts.dms) { h.push("Latitude (DMS)", "Longitude (DMS)"); }
+    return h;
+  }
+
+  function bRowOut(label, a1, a2, zoneStr, c1, c2, lat, lon, opts, dir) {
+    var row = dir === "mgrs"
+      ? [label, a1, zoneStr, c1, c2]
+      : [label, a1, a2, zoneStr, c1, c2];
+    if (opts.mgrs && dir !== "mgrs") {
+      var m = Geo.mgrsForward(lat, lon, opts.digits);
+      row.push(m ? m.mgrs : "\u2014");
+    }
+    if (opts.dms) { row.push(Geo.formatDMS(lat, 4, "lat"), Geo.formatDMS(lon, 4, "lon")); }
+    return row;
+  }
+
+  function bConvert(f, dir, opts, roles) {
+    var v = bFields(f, dir, roles);
+    if (!v) { return { err: "no coordinate pair found in this row" }; }
+    var lat, lon, u, g, zone, north, e, nn;
+
+    if (dir === "fwd") {
+      if (v.lat === null || v.lon === null) { return { err: "the header names no latitude and longitude column" }; }
+      lat = Geo.parseAngle(v.lat, "lat");
+      lon = Geo.parseAngle(v.lon, "lon");
+      if (isNaN(lat) || isNaN(lon)) { return { err: "latitude or longitude could not be read" }; }
+      if (lat < -80 || lat > 84) { return { err: "latitude outside the UTM range (-80\u00B0 to 84\u00B0)" }; }
+      u = Geo.utmForward(lat, lon);
+      return { row: bRowOut(v.label, Geo.fmt(lat, 8), Geo.fmt(lon, 8),
+        u.zone + (u.north ? "N" : "S"), Geo.fmt(u.easting, 3), Geo.fmt(u.northing, 3),
+        lat, lon, opts, dir), zone: u.zone };
+    }
+
+    if (dir === "mgrs") {
+      if (!v.mgrs) { return { err: "no MGRS reference in this row" }; }
+      g = Geo.mgrsInverse(v.mgrs);
+      if (!g) { return { err: "MGRS reference could not be read: " + v.mgrs }; }
+      return { row: bRowOut(v.label, v.mgrs, "", g.zone + (g.band >= "N" ? "N" : "S"),
+        Geo.fmt(g.lat, 8), Geo.fmt(g.lon, 8), g.lat, g.lon, opts, "mgrs"), zone: g.zone };
+    }
+
+    e = Number(String(v.east).replace(/[,\s]/g, ""));
+    nn = Number(String(v.nrt).replace(/[,\s]/g, ""));
+    if (!isFinite(e) || !isFinite(nn)) { return { err: "easting or northing is not a number" }; }
+    zone = v.zone === null ? opts.zone : v.zone;
+    north = v.north === null ? opts.north : v.north;
+    if (!(zone >= 1 && zone <= 60)) { return { err: "zone " + zone + " is outside 1 to 60" }; }
+    g = Geo.utmInverse(e, nn, zone, north);
+    if (isNaN(g.lat) || isNaN(g.lon)) { return { err: "easting and northing did not invert to a position" }; }
+    return { row: bRowOut(v.label, Geo.fmt(e, 3), Geo.fmt(nn, 3), zone + (north ? "N" : "S"),
+      Geo.fmt(g.lat, 8), Geo.fmt(g.lon, 8), g.lat, g.lon, opts, dir), zone: zone };
+  }
+
+  var B_LAST = null;
+
+  function renderBatch() {
+    var dir = $("b-dir").value;
+    var zoneIn = parseInt($("b-zone").value.trim(), 10);
+    if (!(zoneIn >= 1 && zoneIn <= 60)) { zoneIn = 17; }
+    var opts = {
+      mgrs: $("b-x-mgrs").checked,
+      dms: $("b-x-dms").checked,
+      digits: parseInt($("b-digits").value, 10),
+      zone: zoneIn,
+      north: $("b-hemi").value === "N"
+    };
+
+    var lines = $("b-text").value.split(/\r?\n/);
+    var head = bHeaders(dir, opts).slice();
+    var body = [];
+    var read = 0, ok = 0, skipped = 0, zones = {}, bad = [], truncated = false;
+    var roles = null;
+
+    for (var i = 0; i < lines.length; i++) {
+      var f = bSplit(lines[i]);
+      if (!f.length) { continue; }
+      read++;
+      if (read > B_MAX) { truncated = true; break; }
+      if (read === 1 && bIsHeader(f)) { roles = f.map(bRole); read--; continue; }
+      var res = bConvert(f, dir, opts, roles);
+      if (res.err) {
+        skipped++;
+        if (bad.length < 3) { bad.push("line " + (i + 1) + ": " + res.err); }
+        continue;
+      }
+      ok++;
+      zones[res.zone] = true;
+      body.push(res.row);
+    }
+
+    var tbody = $("btable").querySelector("tbody");
+    var thead = $("btable").querySelector("thead");
+    thead.innerHTML = "<tr>" + head.map(function (h) { return "<th>" + h + "</th>"; }).join("") + "</tr>";
+
+    var html = "";
+    var shown = Math.min(body.length, B_SHOW);
+    for (var j = 0; j < shown; j++) {
+      html += "<tr>" + body[j].map(function (c) {
+        return "<td>" + String(c === "" || c == null ? "\u2014" : c) + "</td>";
+      }).join("") + "</tr>";
+    }
+    tbody.innerHTML = html;
+
+    var zoneList = Object.keys(zones).map(Number).sort(function (a, b) { return a - b; });
+    txt("b-r-read", String(read - (truncated ? 1 : 0)));
+    txt("b-r-ok", ok + (ok ? "" : ""));
+    txt("b-r-skip", skipped + (bad.length ? "   (" + bad.join(" | ") + ")" : ""));
+    txt("b-r-zones", zoneList.length ? (zoneList.length <= 8 ? zoneList.join(", ") : zoneList.length + " different zones") : "\u2014");
+
+    var more = $("b-more");
+    if (body.length > B_SHOW) {
+      more.style.display = "";
+      more.textContent = "Showing the first " + B_SHOW + " of " + body.length
+        + " converted records. Copy results or Download CSV to get all of them.";
+    } else if (truncated) {
+      more.style.display = "";
+      more.textContent = "Only the first " + B_MAX + " records were converted. Split larger lists into several passes.";
+    } else {
+      more.style.display = "none";
+    }
+
+    if (ok === 0) {
+      setErr(true, read === 0 ? "" : "No record could be converted. Check the direction setting and the column order.", "err-batch");
+      show(ok > 0 || read > 0, "res-batch");
+    } else {
+      setErr(false, "", "err-batch");
+      show(true, "res-batch");
+    }
+    B_LAST = { head: head, body: body };
+  }
+
+  function downloadCsv(filename, rows) {
+    var body = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c);
+        return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\r\n");
+    var blob = new Blob(["\ufeff" + body], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+
+  var MODE = "fwd";
+  function switchMode(m) {
+    MODE = m;
+    var names = ["fwd", "inv", "batch"];
+    for (var i = 0; i < names.length; i++) {
+      var on = names[i] === m;
+      var t = $("tab-" + names[i]), p = $("panel-" + names[i]);
+      t.classList.toggle("active", on);
+      t.setAttribute("aria-selected", String(on));
+      p.style.display = on ? "" : "none";
+    }
+    render();
+  }
+
+  function renderFwd() {
+    var ls = $("lat").value.trim(), os = $("lon").value.trim();
+    if (ls === "" || os === "") { setErr(false, "", "err-fwd"); show(false, "res-fwd"); return; }
+    var lat = Geo.parseAngle(ls, "lat"), lon = Geo.parseAngle(os, "lon");
+    if (isNaN(lat) || isNaN(lon)) {
+      setErr(true, "Enter a valid latitude (-90 to 90) and longitude (-180 to 180). Decimal degrees and DMS are both accepted.", "err-fwd");
+      show(false, "res-fwd");
+      return;
+    }
+    setErr(false, "", "err-fwd");
+    var u = Geo.utmForward(lat, lon);
+    txt("f-zone", u.zone + (u.north ? "N" : "S") + "   (band " + u.band + ")");
+    txt("f-easting", Geo.fmt(u.easting, 3) + " m");
+    txt("f-northing", Geo.fmt(u.northing, 3) + " m");
+    txt("f-cm", Geo.formatDMS(u.centralMeridian, 0, "lon"));
+    txt("f-conv", Geo.fmt(u.convergence, 4) + "\u00B0");
+    txt("f-k", Geo.fmt(u.scaleFactor, 7));
+    show(true, "res-fwd");
+  }
+
+  function renderInv() {
+    var es = $("east").value.trim(), ns = $("north").value.trim();
+    if (es === "" || ns === "") { setErr(false, "", "err-inv"); show(false, "res-inv"); return; }
+    var e = Number(es), n = Number(ns);
+    if (!isFinite(e) || !isFinite(n)) {
+      setErr(true, "Enter numeric easting and northing in metres.", "err-inv");
+      show(false, "res-inv");
+      return;
+    }
+    setErr(false, "", "err-inv");
+    var zone = parseInt($("zone").value, 10);
+    var north = $("hemi").value === "N";
+    var g = Geo.utmInverse(e, n, zone, north);
+    txt("i-latdd", Geo.fmt(g.lat, 8) + "\u00B0");
+    txt("i-latdms", Geo.formatDMS(g.lat, 3, "lat"));
+    txt("i-londd", Geo.fmt(g.lon, 8) + "\u00B0");
+    txt("i-londms", Geo.formatDMS(g.lon, 3, "lon"));
+    var band = Geo.utmBand(g.lat);
+    txt("i-band", band ? band + "  (" + bandRange(band) + ")" : "outside the UTM latitude range");
+    txt("i-cm", Geo.formatDMS(Geo.centralMeridian(zone), 0, "lon"));
+    show(true, "res-inv");
+  }
+
+  function bandRange(band) {
+    var idx = "CDEFGHJKLMNPQRSTUVWX".indexOf(band);
+    var lo = -80 + 8 * idx, hi = idx === 19 ? 84 : lo + 8;
+    return lo + "\u00B0 to " + hi + "\u00B0 " + (idx >= 10 ? "N" : "S");
+  }
+
+  function render() {
+    if (MODE === "fwd") { renderFwd(); }
+    else if (MODE === "inv") { renderInv(); }
+    else { renderBatch(); }
+    syncUrl();
+  }
+
+  /* ---------------------------------------------------------------------
+     Linkable state. Every view is reproducible from the query string:
+       ?lat=&lon=                 latitude / longitude -> UTM
+       ?e=&n=&zone=&hemi=         UTM -> latitude / longitude
+       ?mode=batch&text=&dir=     batch conversion
+       ?embed=1                   chrome-free layout for an iframe
+     --------------------------------------------------------------------- */
+  function query() {
+    var out = {}, s = location.search.replace(/^\?/, "");
+    if (!s) { return out; }
+    var parts = s.split("&");
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i] === "") { continue; }
+      var eq = parts[i].indexOf("=");
+      var key = (eq < 0 ? parts[i] : parts[i].slice(0, eq)).toLowerCase();
+      var val = eq < 0 ? "" : parts[i].slice(eq + 1);
+      try { val = decodeURIComponent(val.replace(/\+/g, " ")); } catch (e) { /* keep the raw value */ }
+      out[key] = val;
+    }
+    return out;
+  }
+  function pick(q, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      if (q[keys[i]] !== undefined && q[keys[i]] !== "") { return q[keys[i]]; }
+    }
+    return null;
+  }
+  function applyZoneHemisphere(z, h) {
+    if (z != null) {
+      var s = String(z).trim().toUpperCase();
+      var letter = /([NS])\s*$/.exec(s);
+      if (letter) { $("hemi").value = letter[1]; $("b-hemi").value = letter[1]; s = s.slice(0, -1); }
+      var zi = parseInt(s.replace(/[^0-9]/g, ""), 10);
+      if (zi >= 1 && zi <= 60) { $("zone").value = String(zi); $("b-zone").value = String(zi); }
+    }
+    if (h != null) {
+      var hv = String(h).trim().toUpperCase().charAt(0);
+      if (hv === "N" || hv === "S") { $("hemi").value = hv; $("b-hemi").value = hv; }
+    }
+  }
+
+  var STATE_ON = false;
+  function markState() { STATE_ON = true; }
+
+  function applyUrl() {
+    var q = query();
+    var used = false;
+    var keys = ["lat", "latitude", "lon", "lng", "long", "longitude", "e", "easting", "x",
+      "n", "northing", "y", "zone", "utmzone", "hemi", "hemisphere", "text", "coords",
+      "csv", "dir", "mode", "tab", "digits"];
+    for (var i = 0; i < keys.length; i++) { if (q[keys[i]] !== undefined) { used = true; } }
+
+    if (q.embed === "1" || q.embed === "true" || q.embed === "") { document.body.classList.add("embed"); }
+
+    var lat = pick(q, ["lat", "latitude"]), lon = pick(q, ["lon", "lng", "long", "longitude"]);
+    var e = pick(q, ["e", "easting", "x"]), n = pick(q, ["n", "northing", "y"]);
+    var zone = pick(q, ["zone", "utmzone"]), hemi = pick(q, ["hemi", "hemisphere"]);
+    var text = pick(q, ["text", "coords", "csv"]);
+    var dir = String(pick(q, ["dir", "direction"]) || "").toLowerCase();
+    var digits = pick(q, ["digits", "precision"]);
+
+    var mode = String(pick(q, ["mode", "tab"]) || "").toLowerCase();
+    if (mode !== "fwd" && mode !== "inv" && mode !== "batch") {
+      if (lat != null && lon != null) { mode = "fwd"; }
+      else if (e != null && n != null) { mode = "inv"; }
+      else if (text != null) { mode = "batch"; }
+      else { mode = "fwd"; }
+    }
+
+    if (mode === "fwd") {
+      if (lat != null) { $("lat").value = lat; }
+      if (lon != null) { $("lon").value = lon; }
+    } else if (mode === "inv") {
+      if (e != null) { $("east").value = e; }
+      if (n != null) { $("north").value = n; }
+      applyZoneHemisphere(zone, hemi);
+    } else {
+      if (dir === "fwd" || dir === "inv" || dir === "mgrs") { $("b-dir").value = dir; }
+      if (digits != null && /^[0-5]$/.test(String(digits).trim())) { $("b-digits").value = String(digits).trim(); }
+      applyZoneHemisphere(zone, hemi);
+      if (q.mgrs === "0" || q.mgrs === "false") { $("b-x-mgrs").checked = false; }
+      if (q.dms === "1" || q.dms === "true") { $("b-x-dms").checked = true; }
+      if (text != null) { $("b-text").value = text; }
+    }
+    STATE_ON = STATE_ON || used;
+    switchMode(mode);
+  }
+
+  function stateUrl() {
+    var p = ["mode=" + MODE];
+    if (MODE === "fwd") {
+      p.push("lat=" + encodeURIComponent($("lat").value.trim()));
+      p.push("lon=" + encodeURIComponent($("lon").value.trim()));
+    } else if (MODE === "inv") {
+      p.push("e=" + encodeURIComponent($("east").value.trim()));
+      p.push("n=" + encodeURIComponent($("north").value.trim()));
+      p.push("zone=" + $("zone").value);
+      p.push("hemi=" + $("hemi").value);
+    } else {
+      p.push("dir=" + $("b-dir").value);
+      p.push("zone=" + $("b-zone").value.trim());
+      p.push("hemi=" + $("b-hemi").value);
+      if ($("b-digits").value !== "5") { p.push("digits=" + $("b-digits").value); }
+      if (!$("b-x-mgrs").checked) { p.push("mgrs=0"); }
+      if ($("b-x-dms").checked) { p.push("dms=1"); }
+      var t = $("b-text").value.trim();
+      if (t !== "" && t.length <= 1500) { p.push("text=" + encodeURIComponent(t)); }
+    }
+    return location.href.split("?")[0].split("#")[0] + "?" + p.join("&");
+  }
+
+  function syncUrl() {
+    if (!STATE_ON || document.body.classList.contains("embed")) { return; }
+    try { history.replaceState(null, "", stateUrl()); } catch (e) { /* file:// or sandboxed frame */ }
+  }
+
+  function copyLink() { copyAll([stateUrl()], "Link copied to clipboard"); }
+
+  document.addEventListener("input", markState, true);
+  document.addEventListener("change", markState, true);
+
+  $("tab-fwd").addEventListener("click", function () { markState(); switchMode("fwd"); });
+  $("tab-inv").addEventListener("click", function () { markState(); switchMode("inv"); });
+  $("tab-batch").addEventListener("click", function () { markState(); switchMode("batch"); });
+  bind(["lat", "lon"], render);
+  bind(["east", "north", "zone", "hemi"], render);
+  bind(["b-dir", "b-text", "b-zone", "b-hemi", "b-digits", "b-x-mgrs", "b-x-dms"], render);
+
+  $("copy-batch").addEventListener("click", function () {
+    if (!B_LAST) { return; }
+    var out = [B_LAST.head.join("\t")];
+    for (var i = 0; i < B_LAST.body.length; i++) { out.push(B_LAST.body[i].join("\t")); }
+    copyAll(out);
+  });
+  $("dl-batch").addEventListener("click", function () {
+    if (!B_LAST || !B_LAST.body.length) { showToast("Nothing to download yet"); return; }
+    downloadCsv("utm-batch.csv", [B_LAST.head].concat(B_LAST.body));
+    showToast("CSV downloaded");
+  });
+
+  bindChips(function (btn) {
+    markState();
+    $("lat").value = btn.getAttribute("data-lat");
+    $("lon").value = btn.getAttribute("data-lon");
+    switchMode("fwd");
+  });
+
+  $("copy-fwd").addEventListener("click", function () {
+    copyAll(["UTM zone: " + $("f-zone").textContent,
+      "Easting: " + $("f-easting").textContent,
+      "Northing: " + $("f-northing").textContent,
+      "Central meridian: " + $("f-cm").textContent,
+      "Grid convergence: " + $("f-conv").textContent]);
+  });
+  $("copy-inv").addEventListener("click", function () { copyAll(readResults($("res-inv"))); });
+  $("link-fwd").addEventListener("click", copyLink);
+  $("link-inv").addEventListener("click", copyLink);
+  $("link-batch").addEventListener("click", copyLink);
+
+  renderFwd();
+  renderInv();
+  renderBatch();
+  applyUrl();
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Calculate Closure Error in a Traverse</title>
+<meta name="description" content="How to compute traverse latitudes and departures, find the linear misclosure, express it as relative precision and distribute it with the compass rule.">
+<link rel="canonical" href="https://coordcalc.com/how-to-calculate-closure-error.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-closure-error.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-closure-error.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-closure-error.html">
+<meta property="og:title" content="How to Calculate Closure Error in a Traverse">
+<meta property="og:description" content="Latitudes, departures, linear misclosure, relative precision, and the compass rule adjustment — worked through with real numbers.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/how-to-calculate-closure-error.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "How to Calculate Closure Error in a Traverse",
+  "description": "Computing latitudes and departures, the linear misclosure of a closed traverse, relative precision, and the compass rule adjustment.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/how-to-calculate-closure-error.html"},
+  "articleSection": "Surveying"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Closure error in a traverse
+  </nav>
+
+  <h1>How to Calculate Closure Error in a Traverse</h1>
+
+  <p class="lead">
+    A closed traverse walks around a parcel and returns — or is supposed to return — to where it started.
+    It never quite does, and the distance by which it misses is the closure error. That single number
+    decides whether a set of measurements is good enough to use, and it is computed from two quantities
+    that do all the work in traverse mathematics: latitudes and departures. This guide covers the
+    computation, the precision it implies, and the adjustment that follows.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Compass rule</span>
+  </p>
+
+  <h2>Latitudes and departures</h2>
+  <p>
+    Each leg of a traverse has a length and an azimuth. Resolve every leg into a north-south component
+    and an east-west component:
+  </p>
+  <div class="formula">latitude&nbsp;&nbsp;&nbsp;ΔN = distance × cos(azimuth)<br>
+departure&nbsp;&nbsp;ΔE = distance × sin(azimuth)</div>
+  <p>
+    The <b>latitude</b> is positive north and negative south; the <b>departure</b> is positive east and
+    negative west. In a perfect closed traverse, the latitudes sum to zero and the departures sum to
+    zero, because the path has gone exactly as far north as it went south. Those two sums are the
+    residual misclosures in each axis:
+  </p>
+  <div class="formula">ΣΔN ≠ 0&nbsp;&nbsp;and&nbsp;&nbsp;ΣΔE ≠ 0&nbsp;&nbsp;— this is the closure error</div>
+
+  <h2>Linear misclosure and relative precision</h2>
+  <p>
+    The two axis residuals combine into one distance, the <b>linear misclosure</b>:
+  </p>
+  <div class="formula">misclosure = √(ΣΔN² + ΣΔE²)</div>
+  <p>
+    A linear misclosure on its own tells you nothing, because 50&nbsp;mm is excellent on a
+    ten-kilometre traverse and poor on a hundred-metre one. What makes it interpretable is the ratio of
+    the total traverse length to the misclosure, called the <b>relative precision</b>:
+  </p>
+  <div class="formula">relative precision = perimeter ÷ misclosure&nbsp;&nbsp;(written as 1 : n)</div>
+
+  <h2>Worked example</h2>
+  <p>
+    Take a closed loop with a perimeter of <b>521.02&nbsp;m</b> whose latitudes sum to
+    <b>+0.038&nbsp;m</b> and whose departures sum to <b>+0.021&nbsp;m</b>.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Step</th><th>Working</th><th>Result</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Linear misclosure</td><td>√(0.038² + 0.021²) = √(0.001444 + 0.000441)</td><td>0.0434 m</td></tr>
+        <tr><td>Relative precision</td><td>521.02 ÷ 0.0434</td><td>1 : 12,000</td></tr>
+        <tr><td>Latitude correction, 130.00 m leg</td><td>−0.038 × 130.00 ÷ 521.02</td><td>−0.0095 m</td></tr>
+        <tr><td>Departure correction, same leg</td><td>−0.021 × 130.00 ÷ 521.02</td><td>−0.0052 m</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    A relative precision of 1:12,000 means that after walking 12,000 metres the traverse could miss its
+    starting point by one metre. For a loop measured with a total station over ordinary ground, that is a
+    good result.
+  </p>
+
+  <h2>How good is good enough?</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Relative precision</th><th>Typical measurement class</th><th>Reading</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 : 2,000</td><td>Compass and tape, rough terrain</td><td>Usable for reconnaissance only</td></tr>
+        <tr><td>1 : 5,000</td><td>Ordinary total station work</td><td>Acceptable for many boundary and topographic jobs</td></tr>
+        <tr><td>1 : 10,000</td><td>Careful total station work</td><td>Comfortably within most cadastral requirements</td></tr>
+        <tr><td>1 : 20,000</td><td>High-order control, good geometry</td><td>Control networks and precise traverses</td></tr>
+        <tr><td>1 : 50,000 and better</td><td>GNSS-assisted or specialist</td><td>Geodetic-grade work</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    These bands are indicative only. The acceptable precision is whatever the governing standard for the
+    jurisdiction and the class of survey states, and it varies — some cadastral rules are expressed as an
+    allowable misclosure in metres rather than as a ratio, and some specify different values for urban
+    and rural work. Check the standard, not the table.
+  </p>
+
+  <h2>Adjusting: the compass rule</h2>
+  <p>
+    Once the misclosure is judged acceptable, it is distributed across the legs so that the traverse
+    closes exactly. The <b>compass rule</b>, also called the Bowditch rule, distributes in proportion to
+    leg length:
+  </p>
+  <div class="formula">latitude correction&nbsp;&nbsp;= −ΣΔN × (leg length ÷ perimeter)<br>
+departure correction = −ΣΔE × (leg length ÷ perimeter)</div>
+  <p>
+    The corrections carry the opposite sign to the residuals, so that applying them cancels the error
+    rather than doubling it. The assumption behind the compass rule is that the angular and linear errors
+    are of comparable magnitude and are distributed evenly along the traverse — which is a reasonable
+    model for a measured traverse and a poor one for a traverse whose error is concentrated in a single
+    suspected leg.
+  </p>
+  <p>
+    Where the error is known to be concentrated, or where the geometry is high-value, a <b>least squares
+    adjustment</b> is used instead: it minimises the sum of the squares of the corrections, weighting
+    each observation by its expected precision, and it returns an assessment of the residuals and their
+    uncertainty rather than a single set of adjusted coordinates.
+  </p>
+
+  <div class="note">
+    <p><b>Check the angular closure first.</b> A traverse that closes in distance still has to close in
+    angle, and a systematic angular error will distribute itself into a neat-looking displacement that
+    hides its cause. Check the sum of the interior angles against the expected total for the number of
+    sides before you look at the linear misclosure at all. A well-closing traverse built on a misread
+    bearing is a trap: it can look excellent in the ratio and still be metres from the truth.</p>
+  </div>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="traverse-calculator.html">traverse calculator<small>Latitudes, departures, misclosure and adjustment</small></a>
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Get every leg into whole-circle azimuths first</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area of the closed figure, after adjustment</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Recompute leg distances and bearings independently</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="bearing-vs-azimuth.html">Bearing vs azimuth: what's the difference</a>
+        <small>Getting every leg into one convention before you resolve it.</small></li>
+      <li><a href="how-to-calculate-acreage-from-coordinates.html">How to calculate acreage from coordinates</a>
+        <small>What the adjusted coordinates are usually for.</small></li>
+      <li><a href="how-to-calculate-slope-percentage.html">How to calculate slope percentage</a>
+        <small>The vertical counterpart to the horizontal distances in a traverse.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

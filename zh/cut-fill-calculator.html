@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>场地土方量计算器 — 断面法与方格网法，挖填分算</title>
+<meta name="description" content="免费在线土方量计算：按断面输入挖填面积用平均断面法计算，或按方格网输入深度用角点平均法计算；挖方、填方分别统计并求净量，可加松散与压实系数。全部在浏览器本地完成，无需登录。">
+<link rel="canonical" href="https://coordcalc.com/zh/cut-fill-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/cut-fill-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/cut-fill-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/cut-fill-calculator.html">
+<meta property="og:title" content="场地土方量计算器 — 断面法与方格网法">
+<meta property="og:description" content="挖方填方分算、净值与松散压实系数调整，支持断面法与方格网法两种算法，浏览器本地完成。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/cut-fill-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "土方量怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "相邻两断面之间：V = L × (A₁ + A₂) ÷ 2，挖填分开算再全线累加。大面积场地改用方格网法， 每格取四角深度的平均值乘以单格面积。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "什么是平均断面法？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "土方计算的标准方法：把两断面之间的地面当作棱柱，体积等于长度乘以两端面积的平均值。 适用于一切线状工程；地形变化地段按 15–30 米布断面时精度一般在百分之几以内。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "什么时候用方格网法？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "场地在两个方向都宽时：建筑场地、停车场、取土坑、料堆。节点测深、角点平均、逐格累加。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "棱柱体修正是什么？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "平均断面法的精细化。当两个断面不仅大小不同、形状也不同时，棱柱假设会略微高估体积。 棱柱体公式引入中间断面面积：V = L ÷ 6 × (A₁ + 4Am + A₂)，高价值土方值得采用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "要不要加松散与压实系数？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "结果若用于运量、借土或填筑能力就必须加。天然方在地下，松散方在车上，压实方在地上。 松散一般 5%–45%，压缩约 5%–15%，随土质差别很大。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "立方码与立方米怎么换算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "立方码乘 0.764554858 得立方米；立方米乘 1.30795062 得立方码。立方码由立方英尺除以 27 得到。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "挖填要平衡到什么程度？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "比较的对象应当是「挖方能提供的压实方」与「填方需要的压实方」，而不是两个天然方总数。 10,000 m³ 天然挖方按 10% 压缩只有约 9,000 m³ 可用，看似平衡的场地仍可能需要借土。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个计算器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费、无登录、无账号、无次数限制。全部计算在浏览器本地完成，项目数据不上传。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:26px;line-height:1.35;margin:0 0 12px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  textarea{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13px;line-height:1.6;
+    min-height:132px;resize:vertical;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad,textarea.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .hint code,p code,li code{background:var(--soft);padding:2px 6px;border-radius:5px;font-size:13px;
+    color:var(--accent-d);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"\2013";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  section.card h2:first-child{margin-top:0;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:22px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../cut-fill-calculator.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › 场地土方量计算
+  </nav>
+
+  <h1>场地土方量计算器</h1>
+
+  <p class="lead">
+    把你已经测得的断面或方格网数据换算成土方量。按桩号输入各断面的挖、填面积，工具用平均断面法计算；
+    按方格网输入场地各节点深度，工具用角点平均法计算。两种方式都把挖方与填方分别统计、
+    求出净值，并可施加松散或压实系数，让数字与实际运力和碾压结果对应得上。免费、在浏览器里算、无需登录。
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="xs" type="button">断面法</button>
+      <button class="tab" data-tab="grid" type="button">方格网法</button>
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:0 0 200px;">
+        <label for="cf-units">单位制</label>
+        <select id="cf-units">
+          <option value="m">公制（m、m²、m³）</option>
+          <option value="ft">英制（ft、ft²、yd³）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 170px;">
+        <label for="cf-swell">松散 / 压实系数（%）</label>
+        <input id="cf-swell" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <p class="hint" style="flex:1;margin:0;">
+        松散用正数表示（土挖松后体积变大，1 m³ 天然方装车后超过 1 m³），
+        压缩用负数表示（填土碾压后体积小于天然方）。填 0 则输出纯天然方。
+      </p>
+    </div>
+
+    <div id="cf-xs" style="margin-top:16px;">
+      <label style="font-size:12.5px;font-weight:600;color:var(--sub);">断面数据 — 每行一个断面：桩号，挖方面积，填方面积</label>
+      <textarea id="cf-xstext" spellcheck="false">0, 12.4, 0
+50, 18.9, 0
+100, 7.2, 3.1
+150, 0, 14.6
+200, 0, 21.3</textarea>
+      <p class="hint">
+        公制单位下面积为 m²，英制为 ft²。桩号是沿轴线的距离，与面积使用同一长度单位；
+        <code>12+50</code> 这类桩号写法会被识别为 1250。
+      </p>
+    </div>
+
+    <div id="cf-grid" style="margin-top:16px;display:none;">
+      <div class="row">
+        <div class="field" style="flex:0 0 190px;">
+          <label for="cf-spacing">方格间距</label>
+          <input id="cf-spacing" type="number" step="any" value="10" autocomplete="off">
+        </div>
+        <p class="hint" style="flex:1;margin:0;">
+          间距是一个方格的边长，单位随单位制取米或英尺。下面网格的每一行是一条线；
+          深度为正表示挖方，为负表示填方。
+        </p>
+      </div>
+      <label style="font-size:12.5px;font-weight:600;color:var(--sub);">深度网格 — 每行一行深度，逗号或空格分隔</label>
+      <textarea id="cf-gridtext" spellcheck="false">0.4 0.6 0.5 0.2
+0.7 0.9 0.8 0.4
+0.5 0.3 -0.2 -0.5
+0.1 -0.4 -0.8 -0.6</textarea>
+      <p class="hint">
+        每行的深度个数必须相同。<i>n</i> 行 <i>m</i> 列的网格会算出
+        (<i>n</i>&nbsp;−&nbsp;1)&nbsp;×&nbsp;(<i>m</i>&nbsp;−&nbsp;1) 个方格，每个方格按四个角点的平均值计算。
+      </p>
+    </div>
+
+    <p class="err" id="cf-err">输入有误——每行的数字个数必须一致，且都能被读成数字。</p>
+
+    <div class="results" id="cf-results">
+      <div class="big">
+        <span class="bk" id="cf-bk">净土方量</span>
+        <span class="bv" id="cf-bv">—</span>
+      </div>
+      <div id="cf-rows"></div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <h3>平均断面法（断面数据）</h3>
+    <p>
+      相邻两断面之间的土体近似为一个棱柱，体积等于断面间距乘以两端面积的平均值：
+      <code>V = L × (A₁ + A₂) ÷ 2</code>。挖方与填方在同一对断面上分别累加，
+      因此从挖转填的断面上会同时产生一个挖方棱柱和一个填方棱柱。
+      如果同一断面中线一侧为挖、另一侧为填，规范做法是先在中线处把断面分开，再把两边面积分别填入。
+    </p>
+    <h3>方格网法（角点平均）</h3>
+    <p>
+      对两个方向都很宽的场地，在方格网节点上测深度。每个方格的贡献是
+      <code>V = 单格面积 × (d₁ + d₂ + d₃ + d₄) ÷ 4</code>，四个深度即该格的角点。
+      累加所有方格即得总量；挖与填的符号相反，可以分开累计。这个方法也叫<b>方格网法</b>或
+      <b>取土坑法</b>，是场地平整、料堆测算最自然的配合工具。
+    </p>
+    <h3>松散与压实</h3>
+    <p>
+      上面算出的体积是<b>天然方</b>——土在原地面中的体积。挖出来装车后会变成更大的<b>松散方</b>，
+      因为开挖打碎了土体、增加了孔隙；填筑碾压后又是更小的<b>压实方</b>。
+      本工具把你的系数同时用于挖、填两项，并把调整后的数值与天然方并列显示，
+      方便看清这个系数到底带来多大差别。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>平均断面法还是方格网法？</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>方法</th><th>适用对象</th><th>需要的外业数据</th><th>典型精度</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>平均断面法</td>
+          <td>道路、铁路、渠道、管线等线状工程</td>
+          <td>按桩号布设的断面挖填面积</td>
+          <td>地形变化地段按 15–30 m 布断面时，误差一般在百分之几以内</td>
+        </tr>
+        <tr>
+          <td>方格网法</td>
+          <td>建筑场地、停车场、取土坑、料堆、小区竖向</td>
+          <td>规则方格网节点上的实测深度</td>
+          <td>取决于方格间距；间距减半，误差大约缩小到四分之一</td>
+        </tr>
+        <tr>
+          <td>棱柱体法</td>
+          <td>金额较大、几个百分点就是钱的土方工程</td>
+          <td>断面数据外加中间断面面积</td>
+          <td>比平均断面法更接近真值，代价是外业量增加</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      两种方法不是同一问题的两种答案，而是两个不同问题的答案。道路是细长体，所以切成棱柱；
+      场地是宽平体，所以切成方格。当线路拓宽成场地时——互通立交、港湾式停车带、处理厂——
+      土方往往分开算：线状部分用断面法，宽阔部分用方格网法，再把两个结果相加。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>松散、压实，与必须分清的三种体积</h2>
+    <p>
+      施工方与设计方关于土方量的争执，绝大多数源于双方数的是不同的体积。体积有三种，数值各不相同。
+    </p>
+    <table class="lookup">
+      <thead>
+        <tr><th>体积</th><th>存在于</th><th>用途</th><th>与天然方的关系</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>天然方（实方）</td><td>原地面中</td><td>结算工程量、项目总量</td><td>按定义取 1.00</td></tr>
+        <tr><td>松散方</td><td>车厢或料堆中</td><td>车次数、运力、堆料场地</td><td>1.05–1.45，随土质而异</td></tr>
+        <tr><td>压实方</td><td>填筑碾压完成后</td><td>借土数量、填筑能力</td><td>0.85–0.95，随土质与压实标准而异</td></tr>
+      </tbody>
+    </table>
+    <p>
+      实际后果是：即便设计上刻意做了挖填平衡，两个总量也很少相等。假设场地需要 10,000 m³ 压实填料，
+      而挖方可提供同土质天然方 10,000 m³，压缩系数 10%：这批挖方压实后只有约 9,000 m³ 可用，
+      于是还要外借约 1,100 m³ 天然方——只看两个总数完全看不出来。所以<b>计价之前先做系数换算</b>。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>
+      以计算器里默认的断面数据为例。桩号 0（挖 12.4 m²）到桩号 50（挖 18.9 m²）之间，
+      平均断面法给出 <code>50 × (12.4 + 18.9) ÷ 2 = 782.5 m³</code> 挖方。
+      桩号 100（挖 7.2 m²、填 3.1 m²）到桩号 150（挖 0、填 14.6 m²）之间，
+      挖方棱柱为 <code>50 × (7.2 + 0) ÷ 2 = 180.0 m³</code>，填方棱柱为
+      <code>50 × (3.1 + 14.6) ÷ 2 = 442.5 m³</code>。挖方面积归零的位置就是挖方棱柱的终点，
+      这也是把中间断面作为换算点最自然的原因。
+    </p>
+    <p>
+      方格网模式下，10 m 方格、四角深度 0.4、0.6、0.5、0.2 m 时，单格平均深度 0.425 m，
+      对应 100 m² 面积上 42.5 m³ 挖方。四行四列深度构成 3 × 3 的方格阵，
+      所以默认数据一共 9 个方格、约 400 m² 地面——小到可以手算核对，
+      而这正是一个计算器应该做到的。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>常用土方换算</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>换算</th><th>数值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 立方码</td><td>27 ft³ = 0.764554858 m³</td><td>美国土方默认单位</td></tr>
+        <tr><td>1 立方米</td><td>1.30795062 yd³ = 35.3146667 ft³</td><td>公制土方单位</td></tr>
+        <tr><td>1 英亩英尺</td><td>43,560 ft³ = 1,233.4818375 m³</td><td>一英亩面积上覆一英尺深</td></tr>
+        <tr><td>1 m³ 水</td><td>1,000 kg = 1 吨</td><td>土的含水率 sanity check 常用</td></tr>
+        <tr><td>双后轴自卸车一车</td><td>约 10–14 天然方 m³</td><td>随机型、土质与核准载重而异</td></tr>
+        <tr><td>按 200 mm 分层填筑</td><td>每 m³ 压实填料约摊 20 m²</td><td>分层厚度决定压实成本</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      松散与压实系数随土质、含水率和压实标准差别极大。请采用项目技术标准或现场实测的系数，
+      不要套用网页上的通用数值。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>
+        <small>看懂设计图纸坐标用的哪一套投影与加常数。</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">美国测量英尺与国际英尺</a>
+        <small>读国外图纸与土方成果时必须分清的那一个英尺。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="land-area-calculator.html">坐标算面积<small>由坐标推算地块投影面积</small></a>
+      <a href="utm-coordinate-converter.html">经纬度与UTM互转<small>坐标系统与批量换算</small></a>
+      <a href="unit-converter.html">测量单位换算<small>立方码、立方米与测量英尺</small></a>
+      <a href="../slope-calculator.html" hreflang="en">坡度计算器<small>挖填边坡与坡率</small></a>
+      <a href="traverse-calculator.html">导线平差<small>闭合差与调整</small></a>
+      <a href="../curve-calculator.html" hreflang="en">圆曲线测设计算<small>线路土方对应的平面要素</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>土方量怎么算？</summary>
+      <p>相邻两断面之间：V = L × (A₁ + A₂) ÷ 2，挖填分开算再全线累加。大面积场地改用方格网法，
+      每格取四角深度的平均值乘以单格面积。</p>
+    </details>
+    <details>
+      <summary>什么是平均断面法？</summary>
+      <p>土方计算的标准方法：把两断面之间的地面当作棱柱，体积等于长度乘以两端面积的平均值。
+      适用于一切线状工程；地形变化地段按 15–30 米布断面时精度一般在百分之几以内。</p>
+    </details>
+    <details>
+      <summary>什么时候用方格网法？</summary>
+      <p>场地在两个方向都宽时：建筑场地、停车场、取土坑、料堆。节点测深、角点平均、逐格累加。</p>
+    </details>
+    <details>
+      <summary>棱柱体修正是什么？</summary>
+      <p>平均断面法的精细化。当两个断面不仅大小不同、形状也不同时，棱柱假设会略微高估体积。
+      棱柱体公式引入中间断面面积：V = L ÷ 6 × (A₁ + 4A<sub>m</sub> + A₂)，高价值土方值得采用。</p>
+    </details>
+    <details>
+      <summary>要不要加松散与压实系数？</summary>
+      <p>结果若用于运量、借土或填筑能力就必须加。天然方在地下，松散方在车上，压实方在地上。
+      松散一般 5%–45%，压缩约 5%–15%，随土质差别很大。</p>
+    </details>
+    <details>
+      <summary>立方码与立方米怎么换算？</summary>
+      <p>立方码乘 0.764554858 得立方米；立方米乘 1.30795062 得立方码。立方码由立方英尺除以 27 得到。</p>
+    </details>
+    <details>
+      <summary>挖填要平衡到什么程度？</summary>
+      <p>比较的对象应当是「挖方能提供的压实方」与「填方需要的压实方」，而不是两个天然方总数。
+      10,000 m³ 天然挖方按 10% 压缩只有约 9,000 m³ 可用，看似平衡的场地仍可能需要借土。</p>
+    </details>
+    <details>
+      <summary>这个计算器免费吗？</summary>
+      <p>免费、无登录、无账号、无次数限制。全部计算在浏览器本地完成，项目数据不上传。</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var mode = "xs";
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 10});
+
+  function station(v){
+    var m = String(v).trim().match(/^(\d+)\+(\d+(\.\d+)?)$/);
+    if (m) return parseFloat(m[1]) * 1000 + parseFloat(m[2]);
+    return parseFloat(v);
+  }
+  function show(v){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-6 || a >= 1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+  function row(k,v,sub){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small>'+sub+'</small>' : '')+'</span></div>';
+  }
+
+  function calcXs(){
+    var metric = el("cf-units").value === "m";
+    var lines = el("cf-xstext").value.split(/\r?\n/);
+    var pts = [];
+    for (var i = 0; i < lines.length; i++){
+      var s = lines[i].trim();
+      if (!s) continue;
+      var parts = s.split(/[,\t;]+|\s{1,}/).filter(function(x){ return x !== ""; });
+      if (parts.length < 3) return {bad:true};
+      var st = station(parts[0]), ca = parseFloat(parts[1]), fa = parseFloat(parts[2]);
+      if (isNaN(st) || isNaN(ca) || isNaN(fa)) return {bad:true};
+      pts.push({s:st, c:ca, f:fa});
+    }
+    if (pts.length < 2) return {bad:true};
+    for (var j = 1; j < pts.length; j++) if (pts[j].s <= pts[j-1].s) return {bad:true};
+
+    var cut = 0, fill = 0, rows = "";
+    for (var k = 1; k < pts.length; k++){
+      var L = pts[k].s - pts[k-1].s;
+      var vc = L * (pts[k-1].c + pts[k].c) / 2;
+      var vf = L * (pts[k-1].f + pts[k].f) / 2;
+      cut += vc; fill += vf;
+      rows += row(show(pts[k-1].s)+" \u2192 "+show(pts[k].s)+"  ("+show(L)+")",
+        "挖 "+show(vc)+"  /  填 "+show(vf), "段体积");
+    }
+    return {bad:false, cut:cut, fill:fill, n:pts.length-1, rows:rows};
+  }
+
+  function calcGrid(){
+    var lines = el("cf-gridtext").value.split(/\r?\n/);
+    var g = [];
+    for (var i = 0; i < lines.length; i++){
+      var s = lines[i].trim();
+      if (!s) continue;
+      var nums = s.split(/[,\t;\s]+/).filter(function(x){ return x !== ""; }).map(parseFloat);
+      for (var j = 0; j < nums.length; j++) if (isNaN(nums[j])) return {bad:true};
+      g.push(nums);
+    }
+    if (g.length < 2) return {bad:true};
+    var m = g[0].length;
+    if (m < 2) return {bad:true};
+    for (var r = 1; r < g.length; r++) if (g[r].length !== m) return {bad:true};
+
+    var sp = parseFloat(el("cf-spacing").value);
+    if (isNaN(sp) || sp <= 0) return {bad:true};
+    var cellArea = sp * sp;
+    var cut = 0, fill = 0;
+
+    for (var a = 0; a < g.length - 1; a++){
+      for (var b = 0; b < m - 1; b++){
+        var d = (g[a][b] + g[a][b+1] + g[a+1][b] + g[a+1][b+1]) / 4;
+        var v = d * cellArea;
+        if (v > 0) cut += v; else fill += -v;
+      }
+    }
+    return {bad:false, cut:cut, fill:fill, cells:(g.length-1)*(m-1), nodes:g.length*m, area:(g.length-1)*(m-1)*cellArea};
+  }
+
+  function calc(){
+    var metric = el("cf-units").value === "m";
+    var unit = metric ? "m\u00B3" : "yd\u00B3";
+    var areaUnit = metric ? "m\u00B2" : "ft\u00B2";
+    var sw = parseFloat(el("cf-swell").value);
+    if (isNaN(sw)) sw = 0;
+    var err = el("cf-err"), res = el("cf-results");
+    var r = (mode === "xs") ? calcXs() : calcGrid();
+    var box = (mode === "xs") ? el("cf-xstext") : el("cf-gridtext");
+    box.classList.toggle("bad", r.bad);
+    err.classList.toggle("show", r.bad);
+    if (r.bad){ res.classList.remove("show"); return; }
+
+    var f = metric ? 1 : (1/27);
+    var cut = (mode === "xs") ? r.cut : r.cut * f;
+    var fill = (mode === "xs") ? r.fill : r.fill * f;
+    var factor = 1 + sw/100;
+    var cutAdj = cut * factor, fillAdj = fill * factor;
+    var net = cutAdj - fillAdj;
+
+    el("cf-bk").textContent = "考虑松散/压实后，净" + (net >= 0 ? "挖方" : "填方");
+    el("cf-bv").textContent = show(Math.abs(net)) + " " + unit;
+
+    var rows = "";
+    if (mode === "xs") rows += r.rows;
+    else rows += row("计算的方格数", show(r.cells), "共 " + (r.nodes) + " 个格网节点");
+    if (mode === "grid") rows += row("方格网总面积", show(r.area) + " " + areaUnit, "方格数 × 单格面积");
+
+    rows += row("挖方量（天然方）", show(cut) + " " + unit, "在原地面中量测");
+    rows += row("填方量（天然方）", show(fill) + " " + unit, "在原地面中量测");
+    rows += row("采用的松散 / 压缩系数", (sw > 0 ? "+" : "") + sw + " %", "天然方 × " + (Math.round(factor*10000)/10000));
+    rows += row("系数调整后挖方", show(cutAdj) + " " + unit, "需外运的松散体积");
+    rows += row("系数调整后填方", show(fillAdj) + " " + unit, "压实后需要的体积");
+    rows += row("外运 / 借土", show(Math.abs(net)) + " " + unit, net >= 0 ? "挖方有余，需外运" : "填方不足，需借土");
+    if (!metric){
+      rows += row("挖方（立方米）", show(cutAdj*0.764554858) + " m\u00B3", "供参考");
+      rows += row("填方（立方米）", show(fillAdj*0.764554858) + " m\u00B3", "供参考");
+    }
+
+    el("cf-rows").innerHTML = rows;
+    res.classList.add("show");
+  }
+
+  var tabs = document.querySelectorAll(".tab");
+  for (var t = 0; t < tabs.length; t++){
+    tabs[t].addEventListener("click", function(){
+      for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove("active");
+      this.classList.add("active");
+      mode = this.getAttribute("data-tab");
+      el("cf-xs").style.display = (mode === "xs") ? "block" : "none";
+      el("cf-grid").style.display = (mode === "grid") ? "block" : "none";
+      calc();
+    });
+  }
+
+  el("cf-units").addEventListener("change", calc);
+  el("cf-swell").addEventListener("input", calc);
+  el("cf-spacing").addEventListener("input", calc);
+  el("cf-xstext").addEventListener("input", calc);
+  el("cf-gridtext").addEventListener("input", calc);
+
+  calc();
+})();
+
+</script>
+</body>
+</html>

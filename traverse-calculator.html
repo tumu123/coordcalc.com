@@ -1,0 +1,1844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Traverse Calculator — Closure Error, Bowditch &amp; Least Squares</title>
+<meta name="description" content="Compute traverse coordinates from bearings and distances, find closure error and relative precision, then adjust by Bowditch or least squares. Free.">
+<link rel="canonical" href="https://coordcalc.com/traverse-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/traverse-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/traverse-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/traverse-calculator.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#7c3aed">
+<meta property="og:title" content="Traverse Calculator — Closure Error, Bowditch &amp; Least Squares">
+<meta property="og:description" content="Free traverse calculator: bearings and distances to coordinates, sum of latitudes and departures, linear misclosure, relative precision, a Bowditch adjustment and a least squares adjustment with error ellipses.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/traverse-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate a traverse from bearings and distances?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For each leg, multiply the horizontal distance by the cosine of its azimuth to get the latitude and by the sine of the azimuth to get the departure. Add the latitudes and departures cumulatively to the start coordinates to find each station in turn. The sums of latitude and departure for the whole traverse give the misclosure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a good relative precision for a traverse?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It depends entirely on the specification for the job, not on a universal number. A precision of 1:10,000 or better is regarded as good for a total station traverse, and 1:5,000 is commonly acceptable for lower-order work. The tool labels the result so you can see the magnitude, but always compare against the accuracy your project actually requires rather than a rule of thumb."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the Bowditch adjustment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Bowditch adjustment, or compass rule, spreads the closure error over the traverse in proportion to each leg's length. Each leg gets a latitude correction of minus the sum of latitudes times the leg length divided by the total length, and similarly for departures. After correction the traverse closes exactly. It assumes angular and distance errors are of similar importance and spread evenly through the work."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use horizontal or slope distances?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Horizontal. A traverse computed on slope distances will not close, because coordinates are a plane representation of horizontal positions. Reduce every slope distance to horizontal before entering it here, and if your coordinates are grid coordinates rather than ground coordinates, apply the projection scale factor first."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use feet instead of metres?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Choose the unit in the input row and the whole calculation is carried out in that unit; the coordinate differences and the misclosure are reported in the same unit. No conversion is applied internally, so do not mix metres and feet within one traverse."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if my traverse closes perfectly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A perfect closure gives a misclosure of zero, an infinite relative precision, and no corrections at all. That is the norm for a traverse computed from already-adjusted data, and the tool reports it without dividing by zero."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between the compass rule and the transit rule?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The compass rule, or Bowditch, distributes the misclosure in proportion to the length of each leg; the transit rule distributes it in proportion to the size of each latitude and departure. Bowditch suits work where the angular and distance errors are of similar standing, the transit rule work where the angles are much stronger than the distances. Both close the traverse exactly, and neither claims to remove a blunder."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I check a level book at the same time?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Reduce the level book by the height of collimation or the rise and fall method set out above, then apply the arithmetic check: the sum of backsights minus the sum of foresights must equal the last reduced level minus the first. The traverse table on this page is computed independently of that working, so the two sets of figures can be checked side by side."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a least squares adjustment of a traverse?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is the adjustment that finds the station coordinates which come closest to all the observed directions and distances at once, by minimising the sum of the squared residuals with each observation weighted by its own precision. A sharp angle or a short, well measured line is trusted more than a weak one, so the misclosure is distributed according to how good each measurement actually is rather than by a fixed proportion such as the compass rule. The calculation is repeated until the coordinates stop moving, because the observation equations are non-linear."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a least squares adjustment better than Bowditch?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is more correct rather than dramatically different. On a traverse that closes well the two sets of adjusted coordinates usually agree to within a millimetre or two, because both are distributing the same small misclosure. Least squares becomes clearly better when the angles and the distances are of very different quality, when traverses are linked into a network, or when you need the by-products: a standard error for every adjusted coordinate, an error ellipse, and a goodness of fit test that shows whether the field work matched the precision you assumed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does the unit weight standard error tell me?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It compares the scatter the adjustment actually found with the precision you entered in advance. A value near 1 means the observations scattered about the assumed standard deviations as expected; much larger than 1 means the work was weaker than assumed or a blunder is present; well below 1 means the assumed precision was pessimistic or the observations were over-weighted. Multiply the reported coordinate standard errors by it to get the realistic values."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--warn:#b45309;--soft:#eef2f9;
+    --cat:#2563eb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  header.site{background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+    letter-spacing:-.2px;text-decoration:none;}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  .wrap{max-width:820px;margin:0 auto;padding:26px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.3px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:20px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;
+    flex-wrap:wrap;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .row.tight{gap:10px;}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .field.grow{flex:1;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],textarea,select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;min-width:0;width:100%;}
+  textarea{font-size:14px;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    resize:vertical;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.big{font-size:19px;font-weight:600;letter-spacing:.3px;}
+  .w-lg{width:230px;}
+  .w-md{width:132px;}
+  .w-sm{width:92px;}
+  .w-xs{width:74px;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .hint code,.note code,p code,li code{background:var(--soft);padding:2px 6px;border-radius:5px;
+    font-size:13px;color:var(--accent-d);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--cat);
+    border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3b4353;margin:16px 0 0;}
+  .note.warn{border-left-color:var(--warn);background:#fffbeb;}
+  .note b{color:var(--text);}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);white-space:nowrap;}
+  .result-row .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;
+    word-break:break-all;}
+  .result-row.small .v{font-size:15px;font-weight:600;}
+  .result-row.transient .v{color:var(--cat);}
+  .btn{border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-d);}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+  .examples{margin-top:16px;font-size:13px;color:var(--sub);}
+  .examples a{color:var(--accent);cursor:pointer;text-decoration:none;
+    border-bottom:1px dotted var(--accent);margin-right:14px;}
+  .chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--sub);}
+  .chips button{font-family:inherit;font-size:12px;padding:4px 10px;border-radius:14px;border:1px solid var(--line);
+    background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  .chips button:hover{border-color:var(--accent);color:var(--accent);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:14px;
+    font-variant-numeric:tabular-nums;}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:var(--sub);font-weight:700;}
+  th:first-child,td:first-child{text-align:left;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr.tot td{font-weight:700;border-top:1px solid var(--line);}
+  .tbl-scroll{overflow-x:auto;margin-top:6px;}
+  table.tbl-tight th,table.tbl-tight td{padding:7px 8px;font-size:12.5px;}
+  table.tbl-tight th{font-size:11px;}
+  .flag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:11.5px;font-weight:700;
+    background:var(--soft);color:var(--accent-d);}
+  .flag.bad{background:#fdecec;color:#b3261e;}
+  section.card h2:first-child{margin-top:0;}
+  section.card h3:first-child{margin-top:0;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;
+    padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"\2013";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  .formula{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;color:var(--text);
+    margin:12px 0;overflow-x:auto;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);
+    padding-top:18px;}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:#1f2430;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;opacity:0;
+    transition:.25s;pointer-events:none;z-index:60;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+  summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .w-lg,.w-md,.w-sm,.w-xs{width:100%;}
+    .field{flex:1 1 100%;}
+  }
+
+  :root{--cat:#7c3aed;}
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#surveying">Professional surveying</a> › Traverse Calculator (COGO)
+  </nav>
+
+  <h1>Traverse Calculator (COGO)</h1>
+
+  <p class="lead">
+    Enter a traverse as a list of bearings or azimuths with distances and this calculator computes the
+    coordinates of every station, the sum of latitudes and departures, the linear misclosure and the
+    relative precision. Close the traverse with a Bowditch (compass rule) adjustment, or switch to a
+    least squares adjustment and get a standard error and an error ellipse for every adjusted station,
+    plus a goodness of fit figure, alongside the corrected coordinates and the enclosed area.
+  </p>
+
+
+  <div class="card">
+    <div class="row">
+      <div class="field"><label for="n0">Start northing</label><input type="number" id="n0" step="any" autocomplete="off" value="1000" class="big w-md"></div>
+      <div class="field"><label for="e0">Start easting</label><input type="number" id="e0" step="any" autocomplete="off" value="1000" class="big w-md"></div>
+      <div class="field w-md"><label for="unit">Unit</label><select id="unit"><option value="m" selected>Metres</option><option value="ft">Feet</option><option value="">No unit label</option></select></div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field grow"><label for="legs">Traverse legs (one per line)</label><textarea id="legs" rows="7" spellcheck="false" placeholder="1-2, N 67 22 40 E, 130.00&#10;2-3, S 52 07 20 E, 114.02&#10;3-4, S 52 41 40 W, 132.00&#10;4-1, N 46 23 20 W, 145.00">1-2, N 67 22 40 E, 130.00
+2-3, S 52 07 20 E, 114.02
+3-4, S 52 41 40 W, 132.00
+4-1, N 46 23 20 W, 145.00</textarea></div>
+    </div>
+    <p class="hint">
+      Each line is <code>bearing or azimuth, distance</code>, with an optional station label in front:
+      <code>N 67 22 40 E, 130.00</code> &nbsp;&middot;&nbsp; <code>112.5, 138.65</code> &nbsp;&middot;&nbsp;
+      <code>1-2, 112.5, 138.65</code>. Leave the label out if you do not need one. Lines starting with
+      <code>#</code> are ignored.
+    </p>
+
+    <div class="row tight" style="margin-top:4px;">
+      <div class="field"><label for="nClose">Known closing northing (optional)</label><input type="number" id="nClose" step="any" autocomplete="off" value="" class="w-md" placeholder="blank = closed loop"></div>
+      <div class="field"><label for="eClose">Known closing easting (optional)</label><input type="number" id="eClose" step="any" autocomplete="off" value="" class="w-md" placeholder="blank = closed loop"></div>
+      <div class="field w-lg"><label for="adj">Adjustment</label><select id="adj"><option value="bowditch" selected>Bowditch (compass rule)</option><option value="lsl">Least squares adjustment</option><option value="none">No adjustment</option></select></div>
+    </div>
+    <p class="hint">Leave the closing coordinates blank for a closed loop that returns to the start station, or enter the known coordinates of the final station to check a link traverse.</p>
+
+    <div class="row tight" id="lsopts" style="display:none;margin-top:6px;">
+      <div class="field"><label for="sigA">Angle precision (arcsec)</label><input type="number" id="sigA" step="0.1" min="0.1" autocomplete="off" value="5" class="w-sm"></div>
+      <div class="field"><label for="sigD">Distance precision (mm, fixed)</label><input type="number" id="sigD" step="0.1" min="0" autocomplete="off" value="5" class="w-sm"></div>
+      <div class="field"><label for="sigP">Distance precision (ppm)</label><input type="number" id="sigP" step="0.1" min="0" autocomplete="off" value="5" class="w-sm"></div>
+    </div>
+    <p class="hint" id="lshint" style="display:none;">
+      These are the <b>a priori</b> standard deviations of the observations, and they decide how the misclosure is shared out:
+      a direction observed to 5&prime;&prime; and a distance good to 5&nbsp;mm&nbsp;+&nbsp;5&nbsp;ppm are the defaults for an
+      ordinary total station traverse. The least squares adjustment treats every direction as an independent observation of the
+      line&rsquo;s azimuth, so if you measured the internal angles of the traverse and propagated them, the correlation between
+      consecutive azimuths is not modelled here.
+    </p>
+
+    <div class="chips">
+      <span>Examples:</span>
+      <button type="button" data-ex="closed">Four-leg closed loop</button>
+      <button type="button" data-ex="link">Link traverse with known closing point</button>
+    </div>
+
+    <p class="err" id="err"></p>
+    <div class="results" id="results">
+      <div class="result-row"><span class="k">Total length traversed</span><span class="v" id="r-total">&mdash;</span></div>
+      <div class="result-row small"><span class="k">Sum of latitudes (&Sigma;&Delta;N)</span><span class="v" id="r-sumN">&mdash;</span></div>
+      <div class="result-row small"><span class="k">Sum of departures (&Sigma;&Delta;E)</span><span class="v" id="r-sumE">&mdash;</span></div>
+      <div class="result-row"><span class="k">Linear misclosure</span><span class="v" id="r-mis">&mdash;</span></div>
+      <div class="result-row"><span class="k">Relative precision</span><span class="v" id="r-prec">&mdash;</span></div>
+      <div class="result-row small"><span class="k">Closing station, unadjusted</span><span class="v" id="r-close">&mdash;</span></div>
+      <div class="result-row small"><span class="k">Closing station, adjusted</span><span class="v" id="r-closeAdj">&mdash;</span></div>
+      <div class="result-row small"><span class="k">Enclosed area</span><span class="v" id="r-area">&mdash;</span></div>
+      <div id="lsblock" style="display:none;">
+        <div class="result-row small"><span class="k">Redundancy (degrees of freedom)</span><span class="v" id="r-dof">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Unit weight standard error &sigma;&#8320;</span><span class="v" id="r-s0">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Worst coordinate standard error</span><span class="v" id="r-worst">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Largest observation residual</span><span class="v" id="r-wres">&mdash;</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="copy-btn" type="button">Copy all results</button>
+        <button class="btn btn-ghost" id="copy-table" type="button">Copy coordinate table</button>
+      </div>
+    </div>
+    <div class="note" id="note" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <h2>Coordinate table</h2>
+    <p class="hint" id="thint" style="margin-top:0;">Unadjusted and Bowditch-adjusted values for every leg. Distances and coordinate differences are in the unit selected above.</p>
+    <div class="tbl-scroll">
+      <table id="ttable">
+        <thead>
+          <tr>
+            <th>Leg</th><th>Azimuth</th><th>Distance</th>
+            <th>&Delta;N</th><th>&Delta;E</th><th>Corr N</th><th>Corr E</th>
+            <th>Adj northing</th><th>Adj easting</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" id="lscard" style="display:none;">
+    <h2>Least squares adjustment report</h2>
+    <p class="hint" style="margin-top:0;">Station corrections, adjusted coordinates and the precision of each adjusted point. Corrections, residuals and semi-axes are in millimetres so that tenths are readable; coordinates follow the unit selected above.</p>
+
+    <h3>Adjusted stations and their precision</h3>
+    <div class="tbl-scroll">
+      <table id="lstable" class="tbl-tight">
+        <thead>
+          <tr>
+            <th>Station</th><th>Adj northing</th><th>Adj easting</th>
+            <th>&delta;N</th><th>&delta;E</th>
+            <th>&sigma;N</th><th>&sigma;E</th>
+            <th>Semi-major a</th><th>Semi-minor b</th><th>Az. of a</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="hint">&delta;N and &delta;E are the corrections the adjustment applied to the unadjusted coordinates. &sigma;N and &sigma;E are coordinate standard errors; a and b are the semi-axes of the 1&sigma; error ellipse and the last column is the azimuth of the major axis. Multiply the ellipse by 2.45 for the 95&nbsp;per&nbsp;cent region.</p>
+
+    <h3>Observation residuals</h3>
+    <div class="tbl-scroll">
+      <table id="lsobstable" class="tbl-tight">
+        <thead>
+          <tr>
+            <th>Leg</th><th>Azimuth residual</th><th>Distance residual</th>
+            <th>Std. residual, azimuth</th><th>Std. residual, distance</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="hint">Residual is the adjusted value minus the observed value, so a negative distance residual means the adjustment shortened that line. Standard residuals are the residual divided by the a priori standard deviation of that observation; anything well beyond about 2 is worth a second look in the field book.</p>
+
+    <div class="actions">
+      <button class="btn btn-primary" id="ls-dl" type="button">Download CSV</button>
+      <button class="btn btn-ghost" id="ls-copy" type="button">Copy report</button>
+    </div>
+    <div class="note" id="lsnote" style="display:none;"></div>
+    <div class="note warn" id="lswarn" style="display:none;"></div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>A traverse walks from one station to the next, each leg defined by a direction and a horizontal
+      distance. Resolving each leg into a <b>latitude</b> (the north&ndash;south component,
+      distance&nbsp;&times;&nbsp;cos&nbsp;azimuth) and a <b>departure</b> (the east&ndash;west
+      component, distance&nbsp;&times;&nbsp;sin&nbsp;azimuth) turns the traverse into a chain of
+      coordinate differences, and adding those differences cumulatively to the start coordinates
+      gives the coordinates of every station.</p>
+    <p>In a closed traverse the chain should finish exactly where it started. It never does, because
+      every angle and distance carries a small error, and the shortfall is the <b>linear
+      misclosure</b> — the straight-line distance between the computed closing point and the known
+      one. Expressing that misclosure as the ratio total&nbsp;length&nbsp;:&nbsp;misclosure gives the
+      <b>relative precision</b>, which is the usual measure of how good the traverse is. A traverse of
+      400&nbsp;m that misses its closing point by 40&nbsp;mm has a precision of 1:10,000.</p>
+    <p>The <b>Bowditch adjustment</b>, also called the compass rule, distributes the misclosure across
+      the legs in proportion to their length: each leg receives a latitude correction of
+      &minus;&Sigma;&Delta;N&nbsp;&times;&nbsp;length&nbsp;/&nbsp;total length, and a departure
+      correction of &minus;&Sigma;&Delta;E&nbsp;&times;&nbsp;length&nbsp;/&nbsp;total length. After
+      adjustment the traverse closes exactly. Bowditch assumes the angular and distance errors are
+      comparable and spread evenly, which makes it the default for most traverses; where the distance
+      measurement is much more precise than the angular work, a transit rule or a least-squares
+      adjustment is more appropriate.</p>
+    <p>Two cautions. The distances must be <b>horizontal</b> distances reduced to the same surface as
+      the coordinates — slopes must be reduced, and grid distances carry a projection scale factor.
+      And a good precision figure does not prove the traverse is correct: a systematic error such as a
+      misread bearing can produce coordinates that close neatly while being metres from the truth.</p>
+  </section>
+
+  <section class="card">
+    <h2>Compass Rule (Bowditch) Adjustment</h2>
+    <p>The <b>compass rule</b>, better known as the <b>Bowditch adjustment</b>, is the standard way to close
+      a traverse. It assumes the angular error and the distance error matter in proportion to the length of
+      each leg, so the correction a leg receives is proportional to its length: its latitude correction is
+      &minus;&Sigma;&Delta;N&nbsp;&times;&nbsp;leg length&nbsp;&divide;&nbsp;perimeter and its departure
+      correction is &minus;&Sigma;&Delta;E&nbsp;&times;&nbsp;leg length&nbsp;&divide;&nbsp;perimeter. A
+      compass rule calculator, which many references call a Bowditch adjustment calculator, therefore
+      needs only three numbers to begin work — the sum of latitudes, the sum of departures and the
+      perimeter of the traverse.</p>
+    <p><b>Worked example.</b> Take a four-leg loop 521.02&nbsp;m long that closes with
+      &Sigma;&Delta;N&nbsp;=&nbsp;+0.038&nbsp;m and &Sigma;&Delta;E&nbsp;=&nbsp;&minus;0.021&nbsp;m. For the
+      130.00&nbsp;m leg the latitude correction is &minus;0.038&nbsp;&times;&nbsp;130.00&nbsp;&divide;&nbsp;521.02
+      = &minus;0.0095&nbsp;m, and the departure correction is +0.021&nbsp;&times;&nbsp;130.00&nbsp;&divide;&nbsp;521.02
+      = +0.0052&nbsp;m. Applied leg by leg the corrections add up to exactly &minus;&Sigma;&Delta;N and
+      &minus;&Sigma;&Delta;E, so the adjusted traverse closes on its target station to the last decimal —
+      which is why the coordinate table above shows the adjusted values closing exactly.</p>
+    <p>Bowditch is not the only choice. The <b>transit rule</b> spreads the misclosure in proportion to the
+      size of each latitude and departure rather than to the leg length, which suits a traverse whose angles
+      are much stronger than its distances; the Crandall method is a least-squares variant that weights the
+      two kinds of observation separately. Bowditch remains the default because it needs nothing beyond the
+      field distances and is the convention most specifications are written around.</p>
+  </section>
+
+  <section class="card">
+    <h2>Relative Precision and Closure Ratio</h2>
+    <p>Relative precision is the perimeter of the traverse divided by the linear misclosure, written as a
+      ratio 1:N. A loop 500&nbsp;m round that misses its closing point by 50&nbsp;mm has a relative precision
+      of 1:10,000, while the same 50&nbsp;mm on a 100&nbsp;m loop would be only 1:2,000. The closure ratio
+      must therefore always be read together with the perimeter: a fixed 20&nbsp;mm error is excellent on a
+      2&nbsp;km traverse and poor on a 50&nbsp;m one.</p>
+    <p>What counts as acceptable is set by the specification for the job rather than by a universal number,
+      but the figures quoted most often in practice are 1:5,000 for lower-order work, 1:10,000 for a good
+      total station traverse and 1:20,000 or better for precise control. Two habits matter more than the
+      number itself. Compare the traverse precision ratio with the accuracy the project actually requires
+      rather than with a rule of thumb, and remember that a good ratio proves only that the errors cancel —
+      one misread bearing can still give coordinates that close neatly while being metres from the truth.</p>
+  </section>
+
+  <section class="card">
+    <h2>Area of a Closed Traverse</h2>
+    <p>Once a traverse has been adjusted, the area of a closed traverse follows from the corrected
+      coordinates alone, with no need to return to the bearings and distances. The <b>coordinate method</b>,
+      also called the shoelace formula, accumulates the cross products of consecutive station coordinates
+      around the figure and halves the absolute total. The older <b>double meridian distance (DMD)</b> method
+      reaches the same answer by pairing each leg's departure with the meridian distance to the midpoint of
+      that leg, and is still taught because the whole table can be worked by hand without a calculator.</p>
+    <p>Both methods return the plane area enclosed by the adjusted traverse. On a small site held in ground
+      coordinates the result is the true area to better than one part in 10,000; if the coordinates are grid
+      coordinates, the projection scale factor has to be applied before the area is taken, because an area
+      scales by the square of that factor. The enclosed area for the legs you enter is reported with the
+      other results above, in square metres and hectares, or in square feet and acres when the unit is set
+      to feet. For a boundary held as latitude and longitude rather than as a traverse, the land area
+      calculator will <a href="land-area-calculator.html">calculate acres from coordinates</a> in a single
+      step.</p>
+  </section>
+
+  <section class="card">
+    <h2>Leveling Extension: Rise and Fall and Backsight Foresight</h2>
+    <p>A traverse fixes position in plan; levelling fixes it in height, and the arithmetic of a level book is
+      close enough to a traverse to set out beside it. A <b>differential leveling calculator</b> works from
+      the readings taken at each instrument set-up: a <b>backsight</b> on a point of known height, a
+      <b>foresight</b> on the next point whose height is wanted, and intermediate sights on any further
+      points in between. A <b>backsight foresight calculator</b> then reduces the book by one of two classic
+      methods.</p>
+    <p>The <b>height of collimation</b> method adds the backsight to the reduced level of the known point to
+      give the collimation, or height of instrument, then subtracts every foresight and intermediate sight
+      from that figure. The <b>rise and fall method calculator</b> works instead on the difference between
+      successive readings: a backsight larger than the following foresight is a rise, a smaller one is a fall,
+      and the rises and falls are accumulated from the first reduced level. Both methods give identical
+      reduced levels, and both are proved by the same arithmetic check — the sum of backsights minus the sum
+      of foresights must equal the last reduced level minus the first, and in the rise and fall method it must
+      also equal the sum of rises minus the sum of falls.</p>
+    <p>A level run that closes on a bench mark will carry a small misclosure to distribute, and the
+      permissible value is normally written as a multiple of the square root of the distance levelled, for
+      example &plusmn;12&nbsp;mm&nbsp;&radic;km for ordinary engineering work. This page computes traverses
+      rather than level networks, so the formulas above are given for reducing a level book alongside the
+      traverse results. For a single slope rather than a level run, the
+      <a href="slope-calculator.html">slope percentage calculator</a> turns a rise and run into percent,
+      ratio or degrees.</p>
+  </section>
+
+  <section class="card">
+    <h2>Least Squares Adjustment of a Traverse</h2>
+    <p>The compass rule spreads the misclosure out by a fixed recipe: every leg is corrected in proportion to its length,
+      whatever the quality of the individual measurements. A <b>least squares adjustment calculator</b> does something
+      more careful. It asks which set of station coordinates comes closest to <i>all</i> the observed directions and
+      distances at once, weighting each observation by how precise it is. A line turned with a 5&prime;&prime; instrument
+      over 60&nbsp;m carries more weight than a 300&nbsp;m line shot through a heat haze, so the adjustment is free to push
+      the misclosure towards the weaker observation instead of sharing it out evenly.</p>
+
+    <h3>How the adjustment is set up</h3>
+    <p>The unknowns are the corrections to the northing and easting of every station that is not held fixed, so a four-leg
+      loop with one fixed station has six unknowns. Each observed azimuth and each observed horizontal distance gives one
+      <b>observation equation</b> relating a small change in the coordinates to a small change in the measured quantity: a
+      distance has the partial derivatives &plusmn;cos and &plusmn;sin, while an azimuth has &plusmn;&Delta;E&nbsp;/&nbsp;L&sup2;
+      and &plusmn;&Delta;N&nbsp;/&nbsp;L&sup2;. Collecting those into matrices and solving the weighted normal equations
+      gives the corrections, and because the equations are non-linear the whole calculation is repeated with the corrected
+      coordinates until they stop moving &mdash; three or four passes for a normal traverse.</p>
+    <div class="formula">x = (A<sup>T</sup> P A)<sup>&minus;1</sup> A<sup>T</sup> P l</div>
+    <p>In that expression <b>A</b> holds the partial derivatives, <b>P</b> is the weight matrix — one over the variance of
+      each observation — and <b>l</b> is the vector of observed-minus-computed values. This is the variation of coordinates
+      form of a <b>least squares traverse adjustment</b>, and the classic Crandall method is the special case of it where
+      the angular and distance weights are chosen for a simple traverse.</p>
+
+    <h3>Weights and the a priori precision</h3>
+    <p>Everything the adjustment does depends on the weights, which is why three numbers are needed before it starts. The
+      <b>angle precision</b> is the standard deviation you expect from a direction, in arcseconds — 5&prime;&prime; for a
+      routine total station, 2&prime;&prime; or 1&prime;&prime; for a better one. The <b>distance precision</b> is entered
+      as a constant part in millimetres plus a scale part in parts per million, which is how manufacturers state it:
+      5&nbsp;mm&nbsp;+&nbsp;5&nbsp;ppm is a normal electronic distance measurement. Get these roughly right and the
+      adjustment behaves well; get them wildly wrong and a good traverse can be pulled about by an observation that was
+      never as reliable as it was declared to be.</p>
+
+    <h3>What the least squares adjustment adds</h3>
+    <p>Three things appear that the compass rule cannot produce. The <b>unit weight standard error</b> &sigma;&#8320; is a
+      goodness of fit test: it compares the scatter actually found with the precision that was assumed, so a value near 1
+      means the field work matched expectations, while a value well above 1 warns that the instrument was worse than
+      assumed or that a blunder is hiding in the book. The <b>coordinate standard errors</b> and the <b>error ellipse</b>
+      attach a precision to every adjusted station, which is what a specification normally asks for. And the
+      <b>residual list</b> shows how far each individual direction and distance had to move, so an observation that
+      disagrees with all the others is at least visible rather than averaged away.</p>
+    <p>Least squares is not a magic wand. It cannot repair a systematic error — a mis-set prism constant or a wrongly
+      reduced slope distance will be absorbed quietly and leave good-looking statistics behind. It cannot reliably
+      identify a blunder either: with only two redundant observations in a simple closed traverse the residual pattern is
+      smeared across several legs, so a large residual is a prompt to re-observe rather than proof of which leg is wrong.
+      And it cannot create redundancy that the field work never had. A traverse measured as a single chain and closed on
+      itself has exactly two degrees of freedom however many legs it contains, so the standard errors describe the
+      geometry that was chosen, not every mistake that might have been made. On a traverse that closes well the least
+      squares coordinates usually land within a millimetre or two of the Bowditch ones; the reason to prefer the method is
+      the precision figures and the goodness of fit that come with it, not a dramatic change in the answer.</p>
+  </section>
+
+  <section class="card">
+    <h2>When to use this tool</h2>
+    <p>Traverse computation is the backbone of engineering survey, and this tool covers the checks that are performed on almost every job:</p>
+    <ul>
+      <li>Reducing a closed traverse from a field book of bearings and distances to final station coordinates ready for CAD or setting out.</li>
+      <li>Checking the misclosure of a loop before leaving site, so a bad leg can be re-observed the same day rather than a week later.</li>
+      <li>Confirming that a link traverse between two known control points meets the accuracy required by the specification.</li>
+      <li>Producing an adjusted coordinate list and the enclosed area for a boundary or a site plan.</li>
+      <li>Reporting the precision of adjusted coordinates, where a least squares adjustment gives each station a standard error and an error ellipse instead of a single misclosure for the whole traverse.</li>
+      <li>Teaching or checking the arithmetic of a traverse for coursework, where the intermediate sums of latitude and departure matter as much as the final coordinates.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="how-to-calculate-closure-error.html">How to calculate closure error in a traverse<small>Latitudes, departures, misclosure and the compass rule</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related converters and calculators</h2>
+    <div class="links">
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Two coordinates to ground distance and azimuth</small></a>
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Quadrant bearing to whole-circle azimuth</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, acreage and perimeter from coordinates</small></a>
+      <a href="curve-calculator.html">horizontal curve calculator<small>Curve elements for road and rail design</small></a>
+      <a href="utm-coordinate-converter.html">utm to lat long<small>WGS84 lat-long to UTM easting, northing and zone</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance to ground distance for any scale</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+      <details open>
+      <summary>How do I calculate a traverse from bearings and distances?</summary>
+      <p>For each leg, multiply the horizontal distance by the cosine of its azimuth to get the latitude and by the sine of the azimuth to get the departure. Add the latitudes and departures cumulatively to the start coordinates to find each station in turn. The sums of latitude and departure for the whole traverse give the misclosure.</p>
+    </details>
+      <details>
+      <summary>What is a good relative precision for a traverse?</summary>
+      <p>It depends entirely on the specification for the job, not on a universal number. A precision of 1:10,000 or better is regarded as good for a total station traverse, and 1:5,000 is commonly acceptable for lower-order work. The tool labels the result so you can see the magnitude, but always compare against the accuracy your project actually requires rather than a rule of thumb.</p>
+    </details>
+      <details>
+      <summary>What is the Bowditch adjustment?</summary>
+      <p>The Bowditch adjustment, or compass rule, spreads the closure error over the traverse in proportion to each leg's length. Each leg gets a latitude correction of minus the sum of latitudes times the leg length divided by the total length, and similarly for departures. After correction the traverse closes exactly. It assumes angular and distance errors are of similar importance and spread evenly through the work.</p>
+    </details>
+      <details>
+      <summary>Should I use horizontal or slope distances?</summary>
+      <p>Horizontal. A traverse computed on slope distances will not close, because coordinates are a plane representation of horizontal positions. Reduce every slope distance to horizontal before entering it here, and if your coordinates are grid coordinates rather than ground coordinates, apply the projection scale factor first.</p>
+    </details>
+      <details>
+      <summary>Can I use feet instead of metres?</summary>
+      <p>Yes. Choose the unit in the input row and the whole calculation is carried out in that unit; the coordinate differences and the misclosure are reported in the same unit. No conversion is applied internally, so do not mix metres and feet within one traverse.</p>
+    </details>
+      <details>
+      <summary>What happens if my traverse closes perfectly?</summary>
+      <p>A perfect closure gives a misclosure of zero, an infinite relative precision, and no corrections at all. That is the norm for a traverse computed from already-adjusted data, and the tool reports it without dividing by zero.</p>
+    </details>
+      <details>
+      <summary>What is the difference between the compass rule and the transit rule?</summary>
+      <p>The compass rule, or Bowditch, distributes the misclosure in proportion to the length of each leg; the transit rule distributes it in proportion to the size of each latitude and departure. Bowditch suits work where the angular and distance errors are of similar standing, the transit rule work where the angles are much stronger than the distances. Both close the traverse exactly, and neither claims to remove a blunder.</p>
+    </details>
+      <details>
+      <summary>How do I check a level book at the same time?</summary>
+      <p>Reduce the level book by the height of collimation or the rise and fall method set out above, then apply the arithmetic check: the sum of backsights minus the sum of foresights must equal the last reduced level minus the first. The traverse table on this page is computed independently of that working, so the two sets of figures can be checked side by side.</p>
+    </details>
+      <details>
+      <summary>What is a least squares adjustment of a traverse?</summary>
+      <p>It is the adjustment that finds the station coordinates which come closest to all the observed directions and distances at once, by minimising the sum of the squared residuals with each observation weighted by its own precision. A sharp angle or a short, well measured line is trusted more than a weak one, so the misclosure is distributed according to how good each measurement actually is rather than by a fixed proportion such as the compass rule. The calculation is repeated until the coordinates stop moving, because the observation equations are non-linear.</p>
+    </details>
+      <details>
+      <summary>Is a least squares adjustment better than Bowditch?</summary>
+      <p>It is more correct rather than dramatically different. On a traverse that closes well the two sets of adjusted coordinates usually agree to within a millimetre or two, because both are distributing the same small misclosure. Least squares becomes clearly better when the angles and the distances are of very different quality, when traverses are linked into a network, or when you need the by-products: a standard error for every adjusted coordinate, an error ellipse, and a goodness of fit test that shows whether the field work matched the precision you assumed.</p>
+    </details>
+      <details>
+      <summary>What does the unit weight standard error tell me?</summary>
+      <p>It compares the scatter the adjustment actually found with the precision you entered in advance. A value near 1 means the observations scattered about the assumed standard deviations as expected; much larger than 1 means the work was weaker than assumed or a blunder is present; well below 1 means the assumed precision was pessimistic or the observations were over-weighted. Multiply the reported coordinate standard errors by it to get the realistic values.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Verify critical values against your project's
+    coordinate reference system and specification before use in the field.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+/* ---- shared geodesy library (WGS84), verified against published reference values ---- */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+
+/* ---- page logic ---- */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll(lines) {
+    var text = lines.join("\n");
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); showToast("Copied to clipboard"); }
+      catch (e) { showToast("Press Ctrl+C to copy"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Copied to clipboard"); }, fallback);
+    } else { fallback(); }
+  }
+  function readResults(root) {
+    var out = [], nodes = root.querySelectorAll(".result-row");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].querySelector(".k"), v = nodes[i].querySelector(".v");
+      if (k && v && v.textContent !== "\u2014") { out.push(k.textContent + ": " + v.textContent); }
+    }
+    return out;
+  }
+  function num(id) {
+    var s = $(id).value.trim();
+    if (s === "") { return NaN; }
+    var v = Number(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function ang(id, kind) {
+    var s = $(id).value.trim();
+    return s === "" ? NaN : Geo.parseAngle(s, kind || "lat");
+  }
+  function txt(id, v) { $(id).textContent = v; }
+  function setErr(show, msg, id) {
+    var e = $(id || "err");
+    if (!e) { return; }
+    if (msg) { e.textContent = msg; }
+    e.classList.toggle("show", !!show);
+  }
+  function show(v, id) { $(id || "results").classList.toggle("show", v !== false); }
+  function bind(ids, fn) {
+    for (var i = 0; i < ids.length; i++) {
+      $(ids[i]).addEventListener("input", fn);
+      $(ids[i]).addEventListener("change", fn);
+    }
+  }
+  function bindChips(fn) {
+    var c = document.querySelectorAll(".chips button");
+    for (var i = 0; i < c.length; i++) {
+      c[i].addEventListener("click", function () { fn(this); });
+    }
+  }
+
+
+  var EXAMPLES = {
+    closed: "1-2, N 67 22 40 E, 130.00\n2-3, S 52 07 20 E, 114.02\n3-4, S 52 41 40 W, 132.00\n4-1, N 46 23 20 W, 145.00",
+    link: "A-B, N 26 33 40 E, 201.25\nB-C, N 67 37 20 E, 183.85\nC-D, S 50 11 40 E, 156.20\nD-E, S 52 07 40 W, 114.02"
+  };
+
+  function parseDirection(s) {
+    s = String(s).trim().toUpperCase().replace(/\s+/g, " ");
+    if (s === "") { return null; }
+    var m = /^([NS])\s*(.+?)\s*([EW])$/.exec(s);
+    if (m) {
+      var a = Geo.parseAngle(m[2], "lat");
+      if (isNaN(a) || a > 90) { return null; }
+      return Geo.bearingToAzimuth(a, m[1], m[3]);
+    }
+    var az = Geo.parseAngle(s, null);
+    if (isNaN(az) || az < 0 || az > 360) { return null; }
+    return Geo.norm360(az);
+  }
+
+  function parseLegs(text) {
+    var lines = text.split(/\r?\n/), legs = [], bad = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (line === "" || line.charAt(0) === "#") { continue; }
+      var f = line.split(",").map(function (x) { return x.trim(); }).filter(function (x) { return x !== ""; });
+      if (f.length < 2) { bad.push(line); continue; }
+      var d = Number(f[f.length - 1]);
+      var az = parseDirection(f[f.length - 2]);
+      if (!isFinite(d) || d <= 0 || az === null) { bad.push(line); continue; }
+      legs.push({ label: f.length > 2 ? f.slice(0, f.length - 2).join(", ") : "", az: az, d: d });
+    }
+    return { legs: legs, bad: bad };
+  }
+
+  /* ---------- least squares adjustment (variation of coordinates) ---------- */
+
+  function posNum(id, dflt, min) {
+    var v = num(id);
+    return (isFinite(v) && v >= min) ? v : dflt;
+  }
+
+  function wrapPi(a) {
+    while (a <= -Math.PI) { a += 2 * Math.PI; }
+    while (a > Math.PI) { a -= 2 * Math.PI; }
+    return a;
+  }
+
+  function matScale(M) {
+    var v = 0, i, j;
+    for (i = 0; i < M.length; i++) {
+      for (j = 0; j < M[i].length; j++) {
+        if (Math.abs(M[i][j]) > v) { v = Math.abs(M[i][j]); }
+      }
+    }
+    return v;
+  }
+
+  function solveLin(M, rhs) {
+    var n = M.length, i, j, k, t;
+    if (n === 0) { return []; }
+    var scale = matScale(M);
+    if (!(scale > 0)) { return null; }
+    var A = [], row;
+    for (i = 0; i < n; i++) { row = M[i].slice(); row.push(rhs[i]); A.push(row); }
+    for (k = 0; k < n; k++) {
+      var piv = k, best = Math.abs(A[k][k]);
+      for (i = k + 1; i < n; i++) { if (Math.abs(A[i][k]) > best) { best = Math.abs(A[i][k]); piv = i; } }
+      if (best <= scale * 1e-13) { return null; }
+      if (piv !== k) { t = A[k]; A[k] = A[piv]; A[piv] = t; }
+      var pv = A[k][k];
+      for (j = k; j <= n; j++) { A[k][j] /= pv; }
+      for (i = 0; i < n; i++) {
+        if (i === k) { continue; }
+        var f = A[i][k];
+        if (f === 0) { continue; }
+        for (j = k; j <= n; j++) { A[i][j] -= f * A[k][j]; }
+      }
+    }
+    var x = [];
+    for (i = 0; i < n; i++) { x.push(A[i][n]); }
+    return x;
+  }
+
+  function invertLin(M) {
+    var n = M.length, i, j, k, t;
+    var scale = matScale(M);
+    if (!(scale > 0)) { return null; }
+    var A = [], row;
+    for (i = 0; i < n; i++) {
+      row = M[i].slice();
+      for (j = 0; j < n; j++) { row.push(i === j ? 1 : 0); }
+      A.push(row);
+    }
+    for (k = 0; k < n; k++) {
+      var piv = k, best = Math.abs(A[k][k]);
+      for (i = k + 1; i < n; i++) { if (Math.abs(A[i][k]) > best) { best = Math.abs(A[i][k]); piv = i; } }
+      if (best <= scale * 1e-13) { return null; }
+      if (piv !== k) { t = A[k]; A[k] = A[piv]; A[piv] = t; }
+      var pv = A[k][k];
+      for (j = k; j < 2 * n; j++) { A[k][j] /= pv; }
+      for (i = 0; i < n; i++) {
+        if (i === k) { continue; }
+        var f = A[i][k];
+        if (f === 0) { continue; }
+        for (j = k; j < 2 * n; j++) { A[i][j] -= f * A[k][j]; }
+      }
+    }
+    var inv = [];
+    for (i = 0; i < n; i++) { inv.push(A[i].slice(n)); }
+    return inv;
+  }
+
+  function ellipse2(sNN, sNE, sEE) {
+    var tr = sNN + sEE;
+    var disc = Math.sqrt(Math.max(0, (sNN - sEE) * (sNN - sEE) / 4 + sNE * sNE));
+    var l1 = tr / 2 + disc, l2 = Math.max(0, tr / 2 - disc);
+    var vn, ve;
+    if (Math.abs(sNE) > 1e-18) { vn = sNE; ve = l1 - sNN; }
+    else if (sNN >= sEE) { vn = 1; ve = 0; }
+    else { vn = 0; ve = 1; }
+    var nrm = Math.sqrt(vn * vn + ve * ve) || 1;
+    var az = Math.atan2(ve / nrm, vn / nrm) * 180 / Math.PI;
+    az = ((az % 180) + 180) % 180;
+    return { a: Math.sqrt(Math.max(l1, 0)), b: Math.sqrt(l2), az: az };
+  }
+
+  /* station chain from "A-B" style leg labels; null when the labels are absent or broken */
+  function parseChain(legs) {
+    var names = [], i, lb, parts;
+    for (i = 0; i < legs.length; i++) {
+      lb = String(legs[i].label || "").trim();
+      if (lb === "") { return null; }
+      parts = lb.split(/\s*[-\u2013\u2014>]\s*/);
+      if (parts.length !== 2 || parts[0] === "" || parts[1] === "") { return null; }
+      if (i === 0) { names.push(parts[0]); }
+      else if (names[names.length - 1].toUpperCase() !== parts[0].toUpperCase()) { return null; }
+      names.push(parts[1]);
+    }
+    return names;
+  }
+
+  /* returns null for "no adjustment possible" reasons it can explain itself */
+  function lsAdjust(legs, names, n0, e0, closePt, sigA, sigDmm, sigPpm) {
+    var nl = legs.length, nsta = nl + 1, i, j, k, r;
+    if (nl < 2) { return { error: "Enter at least two legs." }; }
+    if (!(sigA > 0)) { return { error: "The angle precision must be greater than zero." }; }
+
+    var loop = String(names[nl]).toUpperCase() === String(names[0]).toUpperCase();
+    var fixed = {}, fkeys = [], unknown = [];
+    fixed[0] = { n: n0, e: e0 };
+    if (loop) { fixed[nl] = { n: n0, e: e0 }; }
+    else if (closePt) { fixed[nl] = { n: closePt.n, e: closePt.e }; }
+    for (i = 1; i <= nl; i++) { if (!fixed[i]) { unknown.push(i); } }
+    for (k in fixed) { if (Object.prototype.hasOwnProperty.call(fixed, k)) { fkeys.push(k); } }
+
+    var u = 2 * unknown.length, m = 2 * nl, dof = m - u;
+    var col = {};
+    for (i = 0; i < unknown.length; i++) { col[unknown[i]] = 2 * i; }
+
+    var N = [], E = [];
+    for (i = 0; i < nsta; i++) { N.push(0); E.push(0); }
+    N[0] = n0; E[0] = e0;
+    for (i = 0; i < nl; i++) {
+      N[i + 1] = N[i] + legs[i].d * Math.cos(Geo.toRad(legs[i].az));
+      E[i + 1] = E[i] + legs[i].d * Math.sin(Geo.toRad(legs[i].az));
+    }
+    function pin() {
+      for (var q = 0; q < fkeys.length; q++) {
+        var ii = Number(fkeys[q]);
+        N[ii] = fixed[fkeys[q]].n; E[ii] = fixed[fkeys[q]].e;
+      }
+    }
+    pin();
+
+    var sAz = sigA * Math.PI / (180 * 3600);
+    var pAz = 1 / (sAz * sAz);
+    var xtot = [], iter = 0, converged = false, x = null;
+    for (i = 0; i < u; i++) { xtot.push(0); }
+
+    function build(solveRows) {
+      var A = [], l = [], P = [], v = [], rr, cc;
+      for (rr = 0; rr < m; rr++) {
+        var zr = [];
+        for (cc = 0; cc < u; cc++) { zr.push(0); }
+        A.push(zr); l.push(0); P.push(0); v.push(0);
+      }
+      for (var g = 0; g < nl; g++) {
+        var a = g, b = g + 1;
+        var dx = E[b] - E[a], dy = N[b] - N[a];
+        var L2 = dx * dx + dy * dy, L = Math.sqrt(L2);
+        var ra = 2 * g, rb = ra + 1;
+        if (L < 1e-9) { return { err: "Leg " + (g + 1) + " has zero length, so its two stations coincide." }; }
+        P[ra] = pAz;
+        var sd = Math.sqrt((sigDmm / 1000) * (sigDmm / 1000)
+          + (sigPpm * 1e-6 * L) * (sigPpm * 1e-6 * L));
+        P[rb] = sd > 0 ? 1 / (sd * sd) : 1e12;
+        if (solveRows) {
+          l[ra] = wrapPi(Geo.toRad(legs[g].az) - Math.atan2(dx, dy));
+          l[rb] = legs[g].d - L;
+        } else {
+          v[ra] = wrapPi(Math.atan2(dx, dy) - Geo.toRad(legs[g].az));
+          v[rb] = L - legs[g].d;
+        }
+        if (col[a] !== undefined) {
+          A[ra][col[a]] += dx / L2; A[ra][col[a] + 1] -= dy / L2;
+          A[rb][col[a]] -= dy / L; A[rb][col[a] + 1] -= dx / L;
+        }
+        if (col[b] !== undefined) {
+          A[ra][col[b]] -= dx / L2; A[ra][col[b] + 1] += dy / L2;
+          A[rb][col[b]] += dy / L; A[rb][col[b] + 1] += dx / L;
+        }
+      }
+      return { A: A, l: l, P: P, v: v };
+    }
+
+    while (iter < 40 && !converged) {
+      iter++;
+      var B = build(true);
+      if (B.err) { return { error: B.err }; }
+      var M = [], rhs = [];
+      for (j = 0; j < u; j++) {
+        var mr = [];
+        for (k = 0; k < u; k++) { mr.push(0); }
+        M.push(mr); rhs.push(0);
+      }
+      for (r = 0; r < m; r++) {
+        var w = B.P[r];
+        if (w === 0) { continue; }
+        var Ar = B.A[r];
+        for (j = 0; j < u; j++) {
+          if (Ar[j] === 0) { continue; }
+          rhs[j] += w * Ar[j] * B.l[r];
+          var Mj = M[j];
+          for (k = 0; k < u; k++) { if (Ar[k] !== 0) { Mj[k] += w * Ar[j] * Ar[k]; } }
+        }
+      }
+      x = solveLin(M, rhs);
+      if (!x) {
+        return { error: "The normal equations came out singular. Check that the legs form one continuous chain and that no two consecutive stations share the same coordinates." };
+      }
+      var big = 0;
+      for (i = 0; i < unknown.length; i++) {
+        var jn = 2 * i, je = jn + 1;
+        N[unknown[i]] += x[jn]; E[unknown[i]] += x[je];
+        xtot[jn] += x[jn]; xtot[je] += x[je];
+        big = Math.max(big, Math.abs(x[jn]), Math.abs(x[je]));
+      }
+      pin();
+      if (big < 1e-10) { converged = true; }
+    }
+
+    /* residuals, covariance and precision at the fitted coordinates */
+    var F = build(false);
+    if (F.err) { return { error: F.err }; }
+    var Mf = [], rhsF = [];
+    for (j = 0; j < u; j++) {
+      var fr = [];
+      for (k = 0; k < u; k++) { fr.push(0); }
+      Mf.push(fr); rhsF.push(0);
+    }
+    for (r = 0; r < m; r++) {
+      var wf = F.P[r];
+      if (wf === 0) { continue; }
+      var Fr = F.A[r];
+      for (j = 0; j < u; j++) {
+        if (Fr[j] === 0) { continue; }
+        var Mfj = Mf[j];
+        for (k = 0; k < u; k++) { if (Fr[k] !== 0) { Mfj[k] += wf * Fr[j] * Fr[k]; } }
+      }
+    }
+    var vtpv = 0;
+    for (r = 0; r < m; r++) { vtpv += F.P[r] * F.v[r] * F.v[r]; }
+    var s0sq = dof > 0 ? vtpv / dof : 1;
+    var Minv = invertLin(Mf);
+    if (!Minv) {
+      return { error: "The covariance matrix could not be inverted. Check the traverse geometry." };
+    }
+    var Cx = [];
+    for (i = 0; i < u; i++) {
+      var crow = [];
+      for (j = 0; j < u; j++) { crow.push(Minv[i][j] * s0sq); }
+      Cx.push(crow);
+    }
+
+    var stations = [];
+    for (i = 0; i < unknown.length; i++) {
+      var jn2 = 2 * i, je2 = jn2 + 1;
+      var sNN = Cx[jn2][jn2], sNE = Cx[jn2][je2], sEE = Cx[je2][je2];
+      var el = ellipse2(sNN, sNE, sEE);
+      stations.push({
+        name: String(names[unknown[i]]),
+        n: N[unknown[i]], e: E[unknown[i]],
+        dn: xtot[jn2], de: xtot[je2],
+        sN: Math.sqrt(Math.max(sNN, 0)), sE: Math.sqrt(Math.max(sEE, 0)),
+        a: el.a, b: el.b, az: el.az
+      });
+    }
+
+    var obsList = [];
+    for (i = 0; i < nl; i++) {
+      var ra2 = 2 * i, rb2 = ra2 + 1;
+      var sdAz = Math.sqrt(1 / F.P[ra2]), sdD = Math.sqrt(1 / F.P[rb2]);
+      obsList.push({
+        leg: i + 1,
+        label: legs[i].label || ("leg " + (i + 1)),
+        vAz: F.v[ra2] * 180 / Math.PI * 3600,
+        vD: F.v[rb2],
+        zAz: F.v[ra2] / sdAz,
+        zD: F.v[rb2] / sdD
+      });
+    }
+
+    var coords = [];
+    for (i = 0; i < nsta; i++) { coords.push({ n: N[i], e: E[i] }); }
+
+    return {
+      iterations: iter, converged: converged, m: m, u: u, dof: dof, vtpv: vtpv,
+      sigma0: dof > 0 ? Math.sqrt(s0sq) : NaN,
+      stations: stations, obs: obsList, coords: coords,
+      names: names, loop: loop, nsta: nsta
+    };
+  }
+
+  function downloadCsv(filename, rows) {
+    var body = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c);
+        return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\r\n");
+    var blob = new Blob(["\ufeff" + body], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+
+  function rating(p) {
+    if (p >= 10000) { return "very good"; }
+    if (p >= 5000) { return "good"; }
+    if (p >= 2000) { return "acceptable for many lower-order jobs"; }
+    return "poor \u2014 recheck the field data";
+  }
+
+  var lastLS = null;
+  var lastUnit = "";
+
+  function render() {
+    var unit = $("unit").value;
+    var mode = $("adj").value;
+    var lsMode = mode === "lsl";
+    $("lsopts").style.display = lsMode ? "" : "none";
+    $("lshint").style.display = lsMode ? "" : "none";
+
+    var parsed = parseLegs($("legs").value);
+    var legs = parsed.legs;
+    var note = $("note");
+    var errMsg = parsed.bad.length
+      ? "These lines could not be read: " + parsed.bad.slice(0, 3).join(" | ")
+        + (parsed.bad.length > 3 ? " (and " + (parsed.bad.length - 3) + " more)" : "")
+        + ". Use 'bearing or azimuth, distance' with an optional label in front."
+      : "";
+
+    if (legs.length < 2) {
+      setErr(!!errMsg, errMsg);
+      show(false);
+      note.style.display = "none";
+      $("lscard").style.display = "none";
+      $("lsblock").style.display = "none";
+      $("ttable").querySelector("tbody").innerHTML = "";
+      lastLS = null;
+      return;
+    }
+
+    var n0 = Number($("n0").value.trim()), e0 = Number($("e0").value.trim());
+    if (!isFinite(n0) || !isFinite(e0)) { n0 = 0; e0 = 0; }
+
+    var total = 0, sumN = 0, sumE = 0, i, l;
+    for (i = 0; i < legs.length; i++) {
+      l = legs[i];
+      l.dN = l.d * Math.cos(Geo.toRad(l.az));
+      l.dE = l.d * Math.sin(Geo.toRad(l.az));
+      sumN += l.dN; sumE += l.dE; total += l.d;
+    }
+
+    var closed = $("nClose").value.trim() === "" && $("eClose").value.trim() === "";
+    var knownN = closed ? n0 : Number($("nClose").value.trim());
+    var knownE = closed ? e0 : Number($("eClose").value.trim());
+    if (!isFinite(knownN)) { knownN = n0 + sumN; }
+    if (!isFinite(knownE)) { knownE = e0 + sumE; }
+
+    var misN = (n0 + sumN) - knownN;
+    var misE = (e0 + sumE) - knownE;
+    var mis = Math.sqrt(misN * misN + misE * misE);
+    var useBowditch = mode === "bowditch" && mis > 1e-12;
+
+    /* ---- least squares branch ---- */
+    var lsRes = null, lsWarn = "";
+    if (lsMode) {
+      var chain = parseChain(legs);
+      var names = chain, q;
+      if (!names) {
+        names = [];
+        for (q = 0; q <= legs.length; q++) { names.push(String(q + 1)); }
+      }
+      var hasClose = $("nClose").value.trim() !== "" && $("eClose").value.trim() !== "";
+      var isLoop = chain
+        ? (String(chain[chain.length - 1]).toUpperCase() === String(chain[0]).toUpperCase())
+        : !hasClose;
+      /* make the loop decision explicit for the engine: alias the last station back
+         onto the first when the legs carry no usable station labels */
+      if (isLoop) { names[names.length - 1] = names[0]; }
+      var closePt = null;
+      if (!isLoop && hasClose) {
+        var cn = Number($("nClose").value.trim()), ce = Number($("eClose").value.trim());
+        if (isFinite(cn) && isFinite(ce)) { closePt = { n: cn, e: ce }; }
+      }
+      lsRes = lsAdjust(legs, names, n0, e0, closePt,
+        posNum("sigA", 5, 0.001), posNum("sigD", 5, 0), posNum("sigP", 5, 0));
+      if (lsRes && lsRes.error) {
+        errMsg = errMsg || lsRes.error;
+        lsRes = null;
+      }
+      if (chain && isLoop && !closed) {
+        lsWarn = "The leg labels close back on the first station, so the traverse was adjusted as a closed loop and the closing coordinates entered above were ignored.";
+      } else if (lsRes && !lsRes.loop && !closePt) {
+        lsWarn = "No closing coordinates were given and the leg labels do not close back on the first station, so the final station was left free. With nothing holding the far end there is nothing to adjust \u2014 enter the known coordinates of the last station to get a real least squares adjustment.";
+      }
+    }
+    setErr(!!errMsg, errMsg);
+
+    var html = "", n = n0, e = e0, areaTwice = 0, prevN = n0, prevE = e0;
+    var accN = n0, accE = e0;
+    for (i = 0; i < legs.length; i++) {
+      l = legs[i];
+      if (lsRes) {
+        l.adjN = lsRes.coords[i + 1].n;
+        l.adjE = lsRes.coords[i + 1].e;
+        l.cN = (l.adjN - lsRes.coords[i].n) - l.dN;
+        l.cE = (l.adjE - lsRes.coords[i].e) - l.dE;
+      } else {
+        l.cN = useBowditch ? -misN * (l.d / total) : 0;
+        l.cE = useBowditch ? -misE * (l.d / total) : 0;
+        accN = accN + l.dN + l.cN;
+        accE = accE + l.dE + l.cE;
+        l.adjN = accN; l.adjE = accE;
+      }
+      n = l.adjN; e = l.adjE;
+      if (i < legs.length - 1) {
+        areaTwice += prevN * e - n * prevE;
+        prevN = n; prevE = e;
+      }
+      html += "<tr><td>" + (l.label || ("leg " + (i + 1))) + "</td>"
+        + "<td>" + Geo.fmt(l.az, 4) + "\u00B0</td>"
+        + "<td>" + Geo.fmt(l.d, 3) + "</td>"
+        + "<td>" + Geo.fmt(l.dN, 3) + "</td>"
+        + "<td>" + Geo.fmt(l.dE, 3) + "</td>"
+        + "<td>" + Geo.fmt(l.cN, 4) + "</td>"
+        + "<td>" + Geo.fmt(l.cE, 4) + "</td>"
+        + "<td>" + Geo.fmt(l.adjN, 3) + "</td>"
+        + "<td>" + Geo.fmt(l.adjE, 3) + "</td></tr>";
+    }
+    html += "<tr class='tot'><td>Sum</td><td>\u2014</td><td>" + Geo.fmt(total, 3) + "</td>"
+      + "<td>" + Geo.fmt(sumN, 3) + "</td><td>" + Geo.fmt(sumE, 3) + "</td>"
+      + "<td>" + Geo.fmt(n - (n0 + sumN), 4) + "</td>"
+      + "<td>" + Geo.fmt(e - (e0 + sumE), 4) + "</td>"
+      + "<td>" + Geo.fmt(n, 3) + "</td><td>" + Geo.fmt(e, 3) + "</td></tr>";
+    $("ttable").querySelector("tbody").innerHTML = html;
+
+    var suffix = unit ? " " + unit : "";
+    txt("r-total", Geo.fmt(total, 3) + suffix + "   (" + legs.length + " legs)");
+    txt("r-sumN", Geo.fmt(sumN, 4) + suffix);
+    txt("r-sumE", Geo.fmt(sumE, 4) + suffix);
+    txt("r-mis", Geo.fmt(mis, 4) + suffix);
+    txt("r-prec", mis > 1e-12 ? "1:" + Geo.fmt(total / mis, 0) : "exact closure");
+    txt("r-close", Geo.fmt(n0 + sumN, 3) + " N, " + Geo.fmt(e0 + sumE, 3) + " E   (target "
+      + Geo.fmt(knownN, 3) + " N, " + Geo.fmt(knownE, 3) + " E)");
+    txt("r-closeAdj", Geo.fmt(n, 3) + " N, " + Geo.fmt(e, 3) + " E");
+    var area = Math.abs(areaTwice) / 2;
+    txt("r-area", legs.length > 2 ? Geo.fmt(area, 2) + " " + (unit === "ft" ? "sq ft" : "m\u00B2")
+      + "   (" + Geo.fmt(area / (unit === "ft" ? 43560 : Geo.UNITS.HA_M2), 5) + " "
+      + (unit === "ft" ? "acres" : "ha") + ")" : "needs at least three legs");
+
+    /* ---- least squares result rows and report ---- */
+    $("lsblock").style.display = lsRes ? "" : "none";
+    $("lscard").style.display = lsRes ? "" : "none";
+    $("thint").textContent = lsRes
+      ? "Unadjusted values, and least squares-adjusted values for every leg. The Corr columns are the corrections the adjustment applied to each leg's coordinate difference. Distances and coordinate differences are in the unit selected above."
+      : (mode === "bowditch"
+        ? "Unadjusted and Bowditch-adjusted values for every leg. Distances and coordinate differences are in the unit selected above."
+        : "Unadjusted values for every leg. Distances and coordinate differences are in the unit selected above.");
+    lastLS = lsRes;
+    lastUnit = unit;
+
+    if (lsRes) {
+      var mm = (unit === "ft") ? 304.8 : 1000;
+      var worst = 0, worstName = "\u2014", wAz = 0, wD = 0, wAzLeg = "", wDLeg = "";
+      for (i = 0; i < lsRes.stations.length; i++) {
+        var st = lsRes.stations[i];
+        if (Math.max(st.sN, st.sE) > worst) { worst = Math.max(st.sN, st.sE); worstName = st.name; }
+      }
+      for (i = 0; i < lsRes.obs.length; i++) {
+        if (Math.abs(lsRes.obs[i].vAz) > Math.abs(wAz)) { wAz = lsRes.obs[i].vAz; wAzLeg = lsRes.obs[i].label; }
+        if (Math.abs(lsRes.obs[i].vD) > Math.abs(wD)) { wD = lsRes.obs[i].vD; wDLeg = lsRes.obs[i].label; }
+      }
+      txt("r-dof", String(lsRes.dof));
+      txt("r-s0", lsRes.dof > 0 ? Geo.fmt(lsRes.sigma0, 3) : "not defined");
+      txt("r-worst", Geo.fmt(worst * mm, 2) + " mm   (" + worstName + ")");
+      txt("r-wres", Geo.fmt(wAz, 2) + "\u2033 (" + wAzLeg + ")   \u00B7   "
+        + Geo.fmt(wD * mm, 2) + " mm (" + wDLeg + ")");
+
+      var h1 = "";
+      for (i = 0; i < lsRes.stations.length; i++) {
+        var s1 = lsRes.stations[i];
+        h1 += "<tr><td>" + s1.name + "</td>"
+          + "<td>" + Geo.fmt(s1.n, 4) + "</td>"
+          + "<td>" + Geo.fmt(s1.e, 4) + "</td>"
+          + "<td>" + Geo.fmt(s1.dn * mm, 3) + "</td>"
+          + "<td>" + Geo.fmt(s1.de * mm, 3) + "</td>"
+          + "<td>" + Geo.fmt(s1.sN * mm, 3) + "</td>"
+          + "<td>" + Geo.fmt(s1.sE * mm, 3) + "</td>"
+          + "<td>" + Geo.fmt(s1.a * mm, 3) + "</td>"
+          + "<td>" + Geo.fmt(s1.b * mm, 3) + "</td>"
+          + "<td>" + Geo.fmt(s1.az, 2) + "\u00B0</td></tr>";
+      }
+      $("lstable").querySelector("tbody").innerHTML = h1;
+
+      var h2 = "";
+      for (i = 0; i < lsRes.obs.length; i++) {
+        var o1 = lsRes.obs[i];
+        h2 += "<tr><td>" + o1.label + "</td>"
+          + "<td>" + Geo.fmt(o1.vAz, 2) + "\u2033</td>"
+          + "<td>" + Geo.fmt(o1.vD * mm, 2) + "</td>"
+          + "<td>" + Geo.fmt(o1.zAz, 2) + "</td>"
+          + "<td>" + Geo.fmt(o1.zD, 2) + "</td></tr>";
+      }
+      $("lsobstable").querySelector("tbody").innerHTML = h2;
+
+      var lsParts = [];
+      lsParts.push("<b>" + lsRes.iterations + " iteration" + (lsRes.iterations === 1 ? "" : "s")
+        + " to converge.</b> " + lsRes.m + " observations against " + lsRes.u
+        + " unknown coordinates leaves " + lsRes.dof + " redundant observation"
+        + (lsRes.dof === 1 ? "" : "s") + ".");
+      if (lsRes.dof > 0) {
+        var s0 = lsRes.sigma0;
+        var verdict = s0 < 0.7
+          ? "The observations scattered less than the assumed precision, so the a priori values entered are probably pessimistic."
+          : (s0 <= 1.3
+            ? "The observations scattered about the precision that was assumed, so the weights look realistic."
+            : (s0 <= 2.0
+              ? "The scatter is a little larger than the assumed precision \u2014 worth a look at the field book."
+              : "The scatter is much larger than the assumed precision, which points either to pessimistic a priori values or to a blunder."));
+        lsParts.push("<b>&sigma;&#8320; = " + Geo.fmt(s0, 3) + ".</b> " + verdict
+          + " The coordinate standard errors above are already scaled by it.");
+      } else {
+        lsParts.push("<b>No redundancy.</b> As entered, the observations exactly determine the coordinates, so there are no residuals and no meaningful &sigma;&#8320;. Give the traverse a known closing station to turn it into a real adjustment.");
+      }
+      $("lsnote").className = "note";
+      $("lsnote").innerHTML = lsParts.join(" ");
+      $("lsnote").style.display = "";
+
+      if (lsWarn) {
+        $("lswarn").innerHTML = "<b>Note.</b> " + lsWarn;
+        $("lswarn").style.display = "";
+      } else {
+        $("lswarn").style.display = "none";
+      }
+    }
+
+    show(true);
+
+    var msg;
+    if (lsRes) {
+      if (lsRes.dof > 0) {
+        msg = "<b>Least squares adjustment applied.</b> The misclosure of " + Geo.fmt(mis, 4) + suffix
+          + " was distributed in proportion to the precision of each direction and distance rather than by leg length."
+          + " &sigma;&#8320; = " + Geo.fmt(lsRes.sigma0, 3)
+          + ". The adjusted coordinates close exactly on the fixed station.";
+      } else {
+        msg = "<b>Least squares solution computed, but nothing was adjusted.</b> At every station the number of observations equals the number of unknowns, so the coordinates are simply carried forward from the field data and there are no residuals to distribute. Enter the known coordinates of the last station, or let the leg labels close back on the first one, to turn this into a real adjustment.";
+      }
+    } else if (mis <= 1e-12) {
+      msg = "<b>Exact closure.</b> There is nothing to adjust \u2014 the traverse closes perfectly on the target station.";
+    } else if (useBowditch) {
+      msg = "<b>Precision 1:" + Geo.fmt(total / mis, 0) + " \u2014 " + rating(total / mis)
+        + ".</b> A Bowditch adjustment has been applied, so the adjusted coordinates close exactly on the target station. Whether this traverse is acceptable depends on the accuracy your specification requires, not on the label alone.";
+    } else {
+      msg = "<b>No adjustment applied.</b> The unadjusted coordinates are shown, and the closing station misses its target by "
+        + Geo.fmt(mis, 4) + suffix + ". Switch the adjustment to Bowditch or least squares to distribute that error across the legs.";
+    }
+    if (!closed && !lsMode) {
+      msg += " The closing coordinates were taken as the given control point, so this is treated as a link traverse.";
+    }
+    note.className = "note";
+    note.innerHTML = msg;
+    note.style.display = "";
+  }
+
+  function lsSummaryRows() {
+    var mm = lastUnit === "ft" ? 304.8 : 1000;
+    var rows = [
+      ["CoordCalc least squares traverse adjustment"],
+      ["Unit", lastUnit || "unitless"],
+      ["Legs", lastLS.nsta - 1],
+      ["Observations", lastLS.m],
+      ["Unknown coordinates", lastLS.u],
+      ["Redundancy", lastLS.dof],
+      ["Unit weight standard error", lastLS.dof > 0 ? lastLS.sigma0.toFixed(4) : "not defined"],
+      ["Layout", lastLS.loop ? "closed loop" : "link / open traverse"],
+      [],
+      ["Station", "Adj northing", "Adj easting", "dN (mm)", "dE (mm)",
+        "sigma N (mm)", "sigma E (mm)", "Semi-major a (mm)", "Semi-minor b (mm)", "Azimuth of a (deg)"]
+    ];
+    for (var i = 0; i < lastLS.stations.length; i++) {
+      var s = lastLS.stations[i];
+      rows.push([s.name, s.n.toFixed(4), s.e.toFixed(4),
+        (s.dn * mm).toFixed(3), (s.de * mm).toFixed(3),
+        (s.sN * mm).toFixed(3), (s.sE * mm).toFixed(3),
+        (s.a * mm).toFixed(3), (s.b * mm).toFixed(3), s.az.toFixed(2)]);
+    }
+    rows.push([]);
+    rows.push(["Leg", "Azimuth residual (arcsec)", "Distance residual (mm)",
+      "Std residual, azimuth", "Std residual, distance"]);
+    for (var j = 0; j < lastLS.obs.length; j++) {
+      var o = lastLS.obs[j];
+      rows.push([o.label, o.vAz.toFixed(2), (o.vD * mm).toFixed(2),
+        o.zAz.toFixed(2), o.zD.toFixed(2)]);
+    }
+    rows.push([]);
+    rows.push(["Residual = adjusted value minus observed value."]);
+    rows.push(["Azimuth residual is in arcseconds; distance residual and the three precision columns are in millimetres."]);
+    rows.push(["Error ellipse semi-axes are at one standard deviation; multiply by 2.45 for a 95 per cent region."]);
+    return rows;
+  }
+
+  bindChips(function (btn) {
+    $("legs").value = EXAMPLES[btn.getAttribute("data-ex")];
+    $("nClose").value = btn.getAttribute("data-ex") === "link" ? "1080" : "";
+    $("eClose").value = btn.getAttribute("data-ex") === "link" ? "1290" : "";
+    render();
+  });
+  bind(["n0", "e0", "legs", "nClose", "eClose", "unit", "adj", "sigA", "sigD", "sigP"], render);
+  $("copy-btn").addEventListener("click", function () { copyAll(readResults($("results"))); });
+  $("copy-table").addEventListener("click", function () {
+    var rows = $("ttable").querySelectorAll("tr"), out = [];
+    for (var i = 0; i < rows.length; i++) {
+      var cells = rows[i].querySelectorAll("th,td"), line = [];
+      for (var j = 0; j < cells.length; j++) { line.push(cells[j].textContent); }
+      out.push(line.join("\t"));
+    }
+    copyAll(out);
+  });
+  $("ls-dl").addEventListener("click", function () {
+    if (!lastLS) { return; }
+    downloadCsv("traverse-least-squares.csv", lsSummaryRows());
+    showToast("CSV downloaded");
+  });
+  $("ls-copy").addEventListener("click", function () {
+    if (!lastLS) { return; }
+    var ids = ["lstable", "lsobstable"], out = [], t, i, j;
+    for (t = 0; t < ids.length; t++) {
+      var rows = $(ids[t]).querySelectorAll("tr");
+      for (i = 0; i < rows.length; i++) {
+        var cells = rows[i].querySelectorAll("th,td"), line = [];
+        for (j = 0; j < cells.length; j++) { line.push(cells[j].textContent); }
+        out.push(line.join("\t"));
+      }
+      out.push("");
+    }
+    out.push("Residual = adjusted value minus observed value. Azimuth residuals in arcseconds, distance and precision columns in millimetres.");
+    copyAll(out);
+  });
+
+  render();
+
+})();
+</script>
+</body>
+</html>

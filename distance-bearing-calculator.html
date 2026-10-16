@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distance &amp; Bearing Calculator — Distance Between Two Coordinates</title>
+<meta name="description" content="Free distance and bearing calculator: geodesic distance between two lat-long points in metres, kilometres, miles and feet, plus initial and back bearing.">
+<link rel="canonical" href="https://coordcalc.com/distance-bearing-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/distance-bearing-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/distance-bearing-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/distance-bearing-calculator.html">
+<meta property="og:title" content="Distance & Bearing Calculator — Distance Between Two Coordinates">
+<meta property="og:description" content="Get the WGS84 geodesic distance, initial bearing, final bearing and back bearing between any two coordinates, instantly and free.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/distance-bearing-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate the distance between two coordinates?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter the latitude and longitude of both points in decimal degrees. The calculator applies the Vincenty inverse formula on the WGS84 ellipsoid, giving the true geodesic distance rather than a flat-plane approximation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between initial bearing and final bearing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The initial bearing is the heading you set off on; the final bearing is the heading you arrive on. They differ because a geodesic constantly changes heading, except when travelling exactly north, south or along the equator."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a back bearing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The back bearing points from the destination back to the start — the initial bearing ± 180°, normalised to 0–360°. Surveyors use it to check traverse closure."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the calculator accurate over long distances?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Vincenty on WGS84 is accurate to roughly 0.5 mm on the ellipsoid. For near-antipodal points where the iteration does not converge, it automatically falls back to the haversine formula and flags the result."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which units does the distance output use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All four at once: metres, kilometres, statute miles and feet, describing the same geodesic distance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I enter coordinates in degrees, minutes and seconds?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "This calculator expects decimal degrees. Convert DMS or DDM values to decimal degrees first with the free DMS converter, then paste the result here."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the distance between two points on a map?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Read the coordinates of each point from the map, then enter them here. The tool returns the true geodesic distance over the WGS84 ellipsoid rather than a flat-map distance. If you only have a measured map distance, convert it with the map scale calculator instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this as a GPS distance calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Paste the latitude and longitude of two GPS fixes — in decimal degrees, in WGS84 — and the tool returns the distance and the bearing between them. No datum shift is needed for positions already recorded in WGS84."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .point{border:1px solid var(--line);border-radius:11px;padding:15px 16px;margin-bottom:12px;background:#fcfdff;}
+  .point .ptitle{font-size:13px;font-weight:700;color:var(--accent-d);margin-bottom:11px;letter-spacing:.2px;}
+  .prow{display:flex;gap:12px;flex-wrap:wrap;}
+  .field{display:flex;flex-direction:column;gap:5px;flex:1;min-width:150px;}
+  .field>label{font-size:12px;font-weight:600;color:var(--sub);}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:16px;padding:9px 11px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:4px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px;}
+  .btn{border:0;border-radius:9px;padding:9px 16px;font-size:13.5px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .results{margin-top:6px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12.5px;font-weight:500;color:var(--sub);}
+  .flag{font-size:12px;color:#b7791f;background:#fdf3e3;border-radius:6px;padding:2px 8px;
+    display:inline-block;margin-top:8px;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+  }
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#0d9488;}
+  @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#distance">Distance, bearing &amp; area</a> › Distance &amp; Bearing
+  </nav>
+
+  <h1>Distance &amp; Bearing Calculator</h1>
+
+  <p class="lead">
+    This distance calculator gives you the distance between two coordinates and the bearing from the
+    first point to the second. Enter two latitude and longitude pairs and it returns the WGS84
+    geodesic distance in metres, kilometres, miles and feet, together with the initial bearing, final
+    bearing and back bearing. Everything runs in your browser — no login, no upload.
+  </p>
+
+  <div class="card">
+    <div class="point">
+      <div class="ptitle">POINT A — START</div>
+      <div class="prow">
+        <div class="field">
+          <label for="lat1">Latitude (°)</label>
+          <input type="number" id="lat1" step="any" placeholder="39.906111">
+        </div>
+        <div class="field">
+          <label for="lon1">Longitude (°)</label>
+          <input type="number" id="lon1" step="any" placeholder="116.397400">
+        </div>
+      </div>
+    </div>
+
+    <div class="point">
+      <div class="ptitle">POINT B — END</div>
+      <div class="prow">
+        <div class="field">
+          <label for="lat2">Latitude (°)</label>
+          <input type="number" id="lat2" step="any" placeholder="31.230400">
+        </div>
+        <div class="field">
+          <label for="lon2">Longitude (°)</label>
+          <input type="number" id="lon2" step="any" placeholder="121.473700">
+        </div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <button class="btn btn-ghost" id="swap">Swap points</button>
+      <button class="btn btn-ghost" id="clear">Clear</button>
+    </div>
+
+    <p class="hint">Coordinates in decimal degrees. Need DMS or degrees-decimal-minutes? Use the <a href="dms-converter.html">decimal degrees to DMS converter</a> first.</p>
+    <p class="err" id="err">Latitude must be between −90 and 90, longitude between −180 and 180.</p>
+
+    <div class="results" id="results">
+      <div class="result-row">
+        <span class="k">Geodesic distance</span>
+        <span class="v" id="r-dist">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">Initial bearing (A → B)</span>
+        <span class="v" id="r-ib">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">Final bearing (at B)</span>
+        <span class="v" id="r-fb">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">Back bearing (B → A)</span>
+        <span class="v" id="r-bb">—</span>
+      </div>
+      <div class="result-row">
+        <span class="k">Δ latitude / Δ longitude</span>
+        <span class="v" id="r-delta">—</span>
+      </div>
+      <span class="flag" id="fallback" style="display:none;">Points are near-antipodal — value shown from the spherical fallback.</span>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>
+      The shortest path between two points on the Earth's surface is a geodesic, not a straight line
+      on a flat map. This tool solves the <strong>Vincenty inverse problem</strong> on the WGS84
+      ellipsoid, the same reference frame used by GPS. Vincenty's method iterates until the
+      difference between successive longitude estimates falls below 10<sup>−12</sup> radians, then
+      returns the geodesic distance to sub-millimetre accuracy on the ellipsoid.
+    </p>
+    <p>
+      The bearing is the forward azimuth of that geodesic at the start point, expressed as a compass
+      angle measured clockwise from true north. Because a geodesic continuously changes heading, the
+      bearing on arrival at point B differs slightly from the bearing on departure from point A —
+      that is why both the initial and the final bearing are reported. The back bearing is simply the
+      reverse direction, useful for checking a closed traverse.
+    </p>
+    <p>
+      If the two points are very close together or nearly antipodal, the iterative solution may not
+      converge. In that case the calculator automatically falls back to the haversine formula on a
+      spherical Earth of mean radius 6&nbsp;371&nbsp;008.8&nbsp;m and displays a note so you know which
+      model produced the number.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Distance Between Two Points on a Map</h2>
+    <p>
+      A map shows two points, but a distance measured with a ruler is not the distance on the ground —
+      the projection has already stretched or compressed the surface. This page gives the true
+      distance between two points on a map by working on the ellipsoid rather than the flat sheet:
+      enter the coordinates of each point and it returns the geodesic, the shortest path over the
+      curved surface. For points a few kilometres apart the difference from a flat-plane calculation
+      is small, but it grows with distance and latitude and stops being negligible for property
+      boundaries or long routes.
+    </p>
+    <p>
+      If all you have is a paper map or a screen with a scale bar, measure the map distance first and
+      convert it with the map scale calculator. Use this page when you hold coordinates rather than a
+      measured line.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Using This as a GPS Distance Calculator</h2>
+    <p>
+      A GPS distance calculator turns two sets of fixes into a distance and a course. Survey and
+      outdoor GNSS receivers — and phone apps — record positions as latitude and longitude in decimal
+      degrees, which is exactly the input this page expects: paste the two coordinate pairs and read
+      the distance and the bearing between them. Because the calculation runs on the WGS84 ellipsoid,
+      the same reference frame the GPS constellation itself uses, no extra datum shift is needed for
+      positions that are already in WGS84.
+    </p>
+    <p>
+      For a single pair of fixes that is enough for a field note, a quick setting-out check or a hike
+      estimate. If you need a whole traverse with closure error and adjustment, use the traverse
+      calculator instead.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Bearing vs Azimuth</h2>
+    <p>
+      The value reported here as a bearing is the forward azimuth of the geodesic: an angle measured
+      clockwise from true north. In everyday use "bearing" and "azimuth" often mean the same number,
+      but in survey practice they diverge — a bearing is a quadrant direction such as N 45° E, while
+      an azimuth is the whole-circle angle, 45° or 315° depending on the quadrant. To switch between
+      the two formats, use the bearing to azimuth converter, which covers all four quadrants and
+      normalises the result to the 0–360° range.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>When to use this calculator</h2>
+    <ul>
+      <li>Checking the ground distance and direction between two survey stations or control points.</li>
+      <li>Verifying a setting-out line: does the computed bearing match the design azimuth?</li>
+      <li>Converting a pair of GPS fixes into a distance and a course for a field note or report.</li>
+      <li>Estimating travel or pipe-run distances between coordinates before a site visit.</li>
+      <li>Teaching great-circle geometry — compare the initial and final bearing to show how a geodesic curves.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="bearing-vs-azimuth.html">Bearing vs azimuth: what's the difference<small>Quadrant bearings, whole-circle azimuths and back bearings</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="dms-converter.html">decimal degrees to dms<small>Convert coordinates to DMS or DDM</small></a>
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Bearing ↔ azimuth conversion</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area and acreage from coordinates</small></a>
+      <a href="traverse-calculator.html">traverse calculator<small>Closure error and misclosure</small></a>
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Lat-long ↔ UTM easting / northing</small></a>
+      <a href="slope-calculator.html">slope percentage calculator<small>Percent slope and angle</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do I calculate the distance between two coordinates?</summary>
+      <p>Enter the latitude and longitude of both points in decimal degrees. The calculator applies the Vincenty inverse formula on the WGS84 ellipsoid, giving the true geodesic distance rather than a flat-plane approximation.</p>
+    </details>
+    <details>
+      <summary>What is the difference between initial bearing and final bearing?</summary>
+      <p>The initial bearing is the heading you set off on; the final bearing is the heading you arrive on. They differ because a geodesic constantly changes heading, except when travelling exactly north, south or along the equator.</p>
+    </details>
+    <details>
+      <summary>What is a back bearing?</summary>
+      <p>The back bearing points from the destination back to the start — the initial bearing ± 180°, normalised to 0–360°. Surveyors use it to check traverse closure.</p>
+    </details>
+    <details>
+      <summary>Is the calculator accurate over long distances?</summary>
+      <p>Yes. Vincenty on WGS84 is accurate to roughly 0.5 mm on the ellipsoid. For near-antipodal points where the iteration does not converge, it automatically falls back to the haversine formula and flags the result.</p>
+    </details>
+    <details>
+      <summary>Which units does the distance output use?</summary>
+      <p>All four at once: metres, kilometres, statute miles and feet, describing the same geodesic distance.</p>
+    </details>
+    <details>
+      <summary>Can I enter coordinates in degrees, minutes and seconds?</summary>
+      <p>This calculator expects decimal degrees. Convert DMS or DDM values to decimal degrees first with the free DMS converter, then paste the result here.</p>
+    </details>
+    <details>
+      <summary>How do I find the distance between two points on a map?</summary>
+      <p>Read the coordinates of each point from the map, then enter them here. The tool returns the true geodesic distance over the WGS84 ellipsoid rather than a flat-map distance. If you only have a measured map distance, convert it with the map scale calculator instead.</p>
+    </details>
+    <details>
+      <summary>Can I use this as a GPS distance calculator?</summary>
+      <p>Yes. Paste the latitude and longitude of two GPS fixes — in decimal degrees, in WGS84 — and the tool returns the distance and the bearing between them. No datum shift is needed for positions already recorded in WGS84.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations use the WGS84 ellipsoid and run locally in your browser. Verify critical
+    coordinates against your project's coordinate reference system before field use.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var ids = ["lat1","lon1","lat2","lon2"];
+  var inputs = ids.map(el);
+  var results = el("results"), err = el("err"), fallback = el("fallback");
+
+  function vincenty(lat1, lon1, lat2, lon2){
+    var a = 6378137.0, f = 1/298.257223563, b = (1-f)*a;
+    var phi1 = lat1*Math.PI/180, phi2 = lat2*Math.PI/180;
+    var L = (lon2-lon1)*Math.PI/180;
+    var U1 = Math.atan((1-f)*Math.tan(phi1));
+    var U2 = Math.atan((1-f)*Math.tan(phi2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lambda = L, lambdaPrev, sinSigma, cosSigma, sigma, sinAlpha, cosSqAlpha, cos2SigmaM, C, i = 0;
+
+    do {
+      var sinLambda = Math.sin(lambda), cosLambda = Math.cos(lambda);
+      var t1 = cU2*sinLambda, t2 = cU1*sU2 - sU1*cU2*cosLambda;
+      sinSigma = Math.sqrt(t1*t1 + t2*t2);
+      if (sinSigma === 0) { return { distance:0, initial:0, final:0, converged:true }; }
+      cosSigma = sU1*sU2 + cU1*cU2*cosLambda;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1*cU2*sinLambda/sinSigma;
+      cosSqAlpha = 1 - sinAlpha*sinAlpha;
+      cos2SigmaM = cosSqAlpha !== 0 ? cosSigma - 2*sU1*sU2/cosSqAlpha : 0;
+      C = f/16*cosSqAlpha*(4 + f*(4 - 3*cosSqAlpha));
+      lambdaPrev = lambda;
+      lambda = L + (1-C)*f*sinAlpha*(sigma + C*sinSigma*(cos2SigmaM + C*cosSigma*(-1 + 2*cos2SigmaM*cos2SigmaM)));
+    } while (Math.abs(lambda - lambdaPrev) > 1e-12 && ++i < 200);
+
+    var converged = i < 200;
+    var sinLambda2 = Math.sin(lambda), cosLambda2 = Math.cos(lambda);
+    var d1 = cU2*sinLambda2, d2 = cU1*sU2 - sU1*cU2*cosLambda2;
+    var f1 = cU1*sinLambda2, f2 = -sU1*cU2 + cU1*sU2*cosLambda2;
+    var initial = (Math.atan2(d1, d2)*180/Math.PI + 360) % 360;
+    var finalB = (Math.atan2(f1, f2)*180/Math.PI + 360) % 360;
+
+    if (!converged) {
+      var hav = haversine(lat1, lon1, lat2, lon2);
+      return { distance: hav, initial: initial, final: finalB, converged: false };
+    }
+
+    var sLam = Math.sin(lambda), cLam = Math.cos(lambda);
+    var sinSigma2 = Math.sqrt((cU2*sLam)*(cU2*sLam) + (cU1*sU2 - sU1*cU2*cLam)*(cU1*sU2 - sU1*cU2*cLam));
+    var cosSigma2 = sU1*sU2 + cU1*cU2*cLam;
+    var sigma2 = Math.atan2(sinSigma2, cosSigma2);
+    var sinAlpha2 = cU1*cU2*sLam/sinSigma2;
+    var cosSqAlpha2 = 1 - sinAlpha2*sinAlpha2;
+    var cos2SigmaM2 = cosSqAlpha2 !== 0 ? cosSigma2 - 2*sU1*sU2/cosSqAlpha2 : 0;
+    var uSq = cosSqAlpha2*(a*a - b*b)/(b*b);
+    var A = 1 + uSq/16384*(4096 + uSq*(-768 + uSq*(320 - 175*uSq)));
+    var B = uSq/1024*(256 + uSq*(-128 + uSq*(74 - 47*uSq)));
+    var deltaSigma = B*sinSigma2*(cos2SigmaM2 + B/4*(cosSigma2*(-1 + 2*cos2SigmaM2*cos2SigmaM2)
+      - B/6*cos2SigmaM2*(-3 + 4*sinSigma2*sinSigma2)*(-3 + 4*cos2SigmaM2*cos2SigmaM2)));
+    var distance = b*A*(sigma2 - deltaSigma);
+
+    return { distance: distance, initial: initial, final: finalB, converged: true };
+  }
+
+  function haversine(lat1, lon1, lat2, lon2){
+    var R = 6371008.8;
+    var p1 = lat1*Math.PI/180, p2 = lat2*Math.PI/180;
+    var dp = (lat2-lat1)*Math.PI/180, dl = (lon2-lon1)*Math.PI/180;
+    var aa = Math.sin(dp/2)*Math.sin(dp/2) + Math.cos(p1)*Math.cos(p2)*Math.sin(dl/2)*Math.sin(dl/2);
+    return R*2*Math.atan2(Math.sqrt(aa), Math.sqrt(1-aa));
+  }
+
+  function toDMS(value){
+    var neg = value < 0, abs = Math.abs(value);
+    var total = Math.round(abs*3600*100)/100;
+    var d = Math.floor(total/3600);
+    var rem = total - d*3600;
+    var m = Math.floor(rem/60);
+    var s = rem - m*60;
+    s = Math.round(s*100)/100;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    function pad(n, l){ n = String(n); while (n.length < l) { n = "0" + n; } return n; }
+    var sec = pad(Math.floor(s), 2) + s.toFixed(2).slice(String(Math.floor(s)).length);
+    return d + "\u00B0 " + pad(m, 2) + "\u2032 " + sec + "\u2033";
+  }
+
+  function compass(bearing){
+    var dirs = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    return dirs[Math.round(bearing/22.5) % 16];
+  }
+
+  function fmt(n, dp){ return n.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp }); }
+
+  function readInputs(){
+    var v = [], ok = true;
+    err.classList.remove("show");
+    inputs.forEach(function(inp){
+      var raw = inp.value.trim();
+      inp.classList.remove("bad");
+      if (raw === "") { ok = false; return; }
+      var n = Number(raw);
+      if (!isFinite(n)) { inp.classList.add("bad"); ok = false; return; }
+      v.push(n);
+    });
+    if (!ok || v.length !== 4) return null;
+    if (Math.abs(v[0]) > 90 || Math.abs(v[2]) > 90) { err.classList.add("show"); return null; }
+    if (Math.abs(v[1]) > 180 || Math.abs(v[3]) > 180) { err.classList.add("show"); return null; }
+    return v;
+  }
+
+  function run(){
+    var v = readInputs();
+    if (!v) {
+      if (inputs.some(function(i){ return i.value.trim() !== ""; })) {
+        results.classList.add("show");
+      } else {
+        results.classList.remove("show");
+        err.classList.remove("show");
+      }
+      return;
+    }
+    err.classList.remove("show");
+
+    var r = vincenty(v[0], v[1], v[2], v[3]);
+    var back = (r.initial + 180) % 360;
+    fallback.style.display = r.converged ? "none" : "inline-block";
+
+    el("r-dist").innerHTML =
+      fmt(r.distance/1000, 3) + " km<small>" + fmt(r.distance, 1) + " m &nbsp;·&nbsp; " +
+      fmt(r.distance/1609.344, 3) + " mi &nbsp;·&nbsp; " + fmt(r.distance/0.3048, 1) + " ft</small>";
+
+    el("r-ib").innerHTML = toDMS(r.initial) + "<small>" +
+      fmt(r.initial, 2) + "\u00B0 true &nbsp;·&nbsp; " + compass(r.initial) + "</small>";
+
+    el("r-fb").innerHTML = toDMS(r.final) + "<small>" +
+      fmt(r.final, 2) + "\u00B0 true &nbsp;·&nbsp; " + compass(r.final) + "</small>";
+
+    el("r-bb").innerHTML = toDMS(back) + "<small>" +
+      fmt(back, 2) + "\u00B0 true &nbsp;·&nbsp; " + compass(back) + "</small>";
+
+    el("r-delta").innerHTML = fmt(v[2]-v[0], 6) + "\u00B0<small>" + fmt(v[3]-v[1], 6) + "\u00B0</small>";
+
+    results.classList.add("show");
+  }
+
+  inputs.forEach(function(i){ i.addEventListener("input", run); });
+
+  el("swap").addEventListener("click", function(){
+    var t1 = el("lat1").value, t2 = el("lon1").value;
+    el("lat1").value = el("lat2").value; el("lon1").value = el("lon2").value;
+    el("lat2").value = t1; el("lon2").value = t2;
+    run();
+  });
+
+  el("clear").addEventListener("click", function(){
+    inputs.forEach(function(i){ i.value = ""; i.classList.remove("bad"); });
+    results.classList.remove("show"); err.classList.remove("show");
+  });
+})();
+</script>
+</body>
+</html>

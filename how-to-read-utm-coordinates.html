@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Read UTM Coordinates (Zone, Band, Easting, Northing)</title>
+<meta name="description" content="A UTM coordinate packs zone, latitude band, easting and northing into one string. How to read each part, what the 500,000 m false easting means, and the traps.">
+<link rel="canonical" href="https://coordcalc.com/how-to-read-utm-coordinates.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-read-utm-coordinates.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-read-utm-coordinates.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-read-utm-coordinates.html">
+<meta property="og:title" content="How to Read UTM Coordinates (Zone, Band, Easting, Northing)">
+<meta property="og:description" content="Zone, band, easting, northing — how to read a UTM coordinate correctly, and the four mistakes that send it to the wrong place.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/how-to-read-utm-coordinates.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "How to Read UTM Coordinates (Zone, Band, Easting, Northing)",
+  "description": "How to read each part of a UTM coordinate: zone number, latitude band letter, easting and northing, and the common misreadings that put a point in the wrong place.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/how-to-read-utm-coordinates.html"},
+  "articleSection": "Coordinates"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › How to read UTM coordinates
+  </nav>
+
+  <h1>How to Read UTM Coordinates (Zone, Band, Easting, Northing)</h1>
+
+  <p class="lead">
+    A UTM coordinate is four facts written as one string. Read any part of it out of order, or drop one
+    of them, and the coordinate stops describing a place — it becomes a set of numbers that could belong
+    anywhere on Earth. This guide takes a single UTM reference apart, explains what each piece means,
+    and covers the misreadings that cause the most trouble in the field and in GIS.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Datum: WGS84 / GRS80</span>
+  </p>
+
+  <h2>What UTM actually is</h2>
+  <p>
+    Universal Transverse Mercator divides the world between 80°&nbsp;S and 84°&nbsp;N into 60 vertical
+    zones, each 6° of longitude wide. Every zone is projected onto its own plane using a transverse
+    cylinder, so within a zone you work in metres on a flat grid rather than in degrees. Zone 1 spans
+    180°&nbsp;W to 174°&nbsp;W and the numbering runs east, so zone 31 covers 0° to 6°&nbsp;E and zone 60
+    ends back at 180°, with the 60° to 180° range handled by the polar systems rather than UTM.
+  </p>
+  <p>
+    Overlaid on the zones is a second division into latitude bands, each 8° of latitude tall, lettered
+    from <code>C</code> at 80°&nbsp;S up to <code>X</code> at 84°&nbsp;N, skipping <code>I</code> and
+    <code>O</code> so they cannot be confused with 1 and 0. That gives 20 bands, and together the zone
+    number and band letter name an area roughly 6°&nbsp;by&nbsp;8° — about 670&nbsp;km wide near the
+    equator and always 8° tall.
+  </p>
+
+  <h2>Taking a coordinate apart</h2>
+  <p>Here is a complete UTM reference, with each part labelled:</p>
+  <div class="formula">17T&nbsp;&nbsp;630084&nbsp;&nbsp;4833438<br>&nbsp;││&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;│<br>&nbsp;││&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;└─ easting (m)&nbsp;&nbsp;└─ northing (m)<br>&nbsp;│└─ latitude band (40°N–48°N)<br>&nbsp;└─ zone number (78°W–72°W)</div>
+
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Part</th><th>Value here</th><th>What it means</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Zone number</td><td>17</td><td>Longitude 78°&nbsp;W to 72°&nbsp;W; central meridian 81°&nbsp;W</td></tr>
+        <tr><td>Band letter</td><td>T</td><td>Latitude 40°&nbsp;N to 48°&nbsp;N</td></tr>
+        <tr><td>Easting</td><td>630084</td><td>130,084 m east of the central meridian</td></tr>
+        <tr><td>Northing</td><td>4833438</td><td>4,833,438 m north of the equator</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Read together, that is 43.642562°&nbsp;N, 79.387143°&nbsp;W in Toronto — a point the zone and band
+    already told us was in eastern Canada, since zone 17 with band T can only be the Great Lakes region.
+  </p>
+
+  <h2>Why the easting starts at 500,000</h2>
+  <p>
+    The easting on a UTM grid is not measured from the zone edge, it is measured from the zone's
+    <b>central meridian</b>, with a false easting of <b>500,000&nbsp;m</b> added so that no coordinate
+    comes out negative. An easting of exactly 500,000 therefore sits precisely on the central
+    meridian, an easting smaller than 500,000 is west of it and a larger one is east of it. The default
+    extent of a zone is about ±334&nbsp;km either side, so a normal easting stays between roughly
+    166,000 and 834,000 — though each zone is extended 100&nbsp;km into its neighbours to give a
+    working overlap, which is why eastings between 100,000 and 200,000 or between 800,000 and 900,000
+    are also valid.
+  </p>
+  <p>
+    A zone-17 coordinate with an easting of 500,000 and a northing of 4,500,000 resolves to
+    40.650857°&nbsp;N, 81.000000°&nbsp;W — exactly on the central meridian, as the arithmetic promises.
+    That is a useful sanity check whenever you suspect an easting has been corrupted.
+  </p>
+
+  <h2>Northing, and the southern hemisphere</h2>
+  <p>
+    In the northern hemisphere the northing is simply the distance north of the equator, from 0 at the
+    equator to about 9,300,000&nbsp;m at 84°&nbsp;N. In the southern hemisphere the same grid would give
+    negative values, so a <b>false northing of 10,000,000&nbsp;m</b> is applied: a southern northing of
+    6,250,948 is 10,000,000 minus 6,250,948, which is 3,749,052&nbsp;m south of the equator —
+    33.8688°&nbsp;S, 151.2093°&nbsp;E, which is Sydney.
+  </p>
+  <p>
+    This is why the band letter is not decoration. Northing alone cannot tell you which hemisphere you
+    are in, because two points 3,749&nbsp;km north and south of the equator share the same northing
+    magnitude. The band letter settles it, and so does the zone's hemisphere convention.
+  </p>
+
+  <h2>Order matters: easting before northing</h2>
+  <p>
+    UTM coordinates are written <b>easting first, northing second</b> — X before Y, exactly like a
+    national grid reference. The mnemonic that sticks is <i>along the corridor, then up the stairs</i>:
+    travel along the easting axis before climbing the northing axis. Many countries and most map series
+    follow this convention, but latitude and longitude are usually written the other way round — latitude
+    first — which is the single most common source of confusion when a list of numbers arrives without
+    labels.
+  </p>
+
+  <div class="note">
+    <p><b>Four ways to misread a UTM coordinate.</b> Swapping easting and northing — the numbers usually
+    differ by an order of magnitude, but not always. Dropping the zone — the same easting and northing
+    exists in all 60 zones, so the point could be on any continent. Assuming a band letter is a zone —
+    <code>T</code> is a band, <code>17</code> is a zone, and they are never interchangeable. And reading
+    a UTM coordinate as if it were latitude and longitude, which produces a number that looks plausible
+    and is meaningless.</p>
+  </div>
+
+  <h2>How many digits, how much precision</h2>
+  <p>
+    The number of digits in an easting or northing tells you the precision it was recorded at, because
+    UTM is metric. Whole metres need six digits of northing and six of easting; a tenth of a metre needs
+    seven; millimetres need eight. A coordinate truncated to five digits is only good to 10 metres, and
+    it should not be compared with one recorded to the millimetre without a note that the two are not
+    the same quality of measurement.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Convert a UTM easting and northing to latitude and longitude</small></a>
+      <a href="mgrs-converter.html">mgrs to lat long<small>Military grid reference to latitude and longitude</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Decimal degrees, DMS and DDM formats</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>US State Plane zones to latitude and longitude</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="convert-easting-northing-to-lat-long.html">How to convert easting and northing to latitude and longitude</a>
+        <small>The step-by-step calculation behind the converter.</small></li>
+      <li><a href="utm-vs-mgrs.html">UTM vs MGRS: what's the difference</a>
+        <small>How the same grid is written with digits instead of metres.</small></li>
+      <li><a href="what-datum-does-gps-use.html">What datum does GPS use?</a>
+        <small>Why the zone and band alone are not enough to fix a position.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

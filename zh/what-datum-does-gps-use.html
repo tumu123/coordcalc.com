@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GPS 用的是哪个基准面？WGS84 详解</title>
+<meta name="description" content="GPS 广播的是 WGS84，但这个简短答案不足以支撑任何实操。基准面不是一个固定的东西，而是椭球加一次实现（realisation），WGS84 随着卫星星座与全球跟踪网改进已被实现多次。旁边还有美国测绘实际使用的 NAD83，以及会随时间移动的 ITRF。本文讲清差别有多大、什么时候可以忽略。">
+<link rel="canonical" href="https://coordcalc.com/zh/what-datum-does-gps-use.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/what-datum-does-gps-use.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/what-datum-does-gps-use.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/what-datum-does-gps-use.html">
+<meta property="og:title" content="GPS 用的是哪个基准面？WGS84 详解">
+<meta property="og:description" content="WGS84、NAD83、ITRF 与各自的椭球：差在哪里，什么时候这差别可以忽略。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/what-datum-does-gps-use.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "GPS 用的是哪个基准面？WGS84 详解",
+  "description": "GPS 用的是哪个基准面？WGS84 详解",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/what-datum-does-gps-use.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../what-datum-does-gps-use.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › GPS 用的是哪个基准面
+  </nav>
+
+<h1>GPS 用的是哪个基准面？WGS84 详解</h1>
+
+  <p class="lead">
+    简短答案是 WGS84，而简短答案不足以支撑任何实操。基准面不是一个固定的东西——
+    它是椭球加一次实现，而随着卫星星座和全球跟踪网不断改进，WGS84 已经被实现过多次。
+    与它并列的还有 NAD83（美国大部分测绘数据实际基于它）和 ITRF（科学框架，而且在移动）。
+    本文讲清这在实践中意味着什么，以及差别小到什么程度就可以忽略。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>基准面基础</span>
+  </p>
+
+  <h2>基准面到底是什么</h2>
+  <p>
+    基准面是对两件事做出的决定。第一是<b>椭球</b>——一个用来近似地球形状的光滑数学曲面，
+    由长半轴和扁率定义。第二是<b>定位与定向</b>：这个椭球相对真实地球放在哪里、怎么转。
+    纬度、经度和椭球高都是相对那个曲面测量的，所以一个不带基准面的坐标，
+    就像一层不带楼面标高的房间高度。
+  </p>
+  <p>
+    在历史上第二部分极其重要。例如 NAD27 是拿堪萨斯州 Meades Ranch 的单一原点去拟合
+    北美大陆的，所以它把美国拟合得非常好，其他地方则完全不贴合。NAD83 改为地心原点，
+    这就是为什么基准面更换时坐标会移动最多约 100&nbsp;m——不是因为谁搬家了，
+    而是因为这些坐标所依据的那个曲面换了。
+  </p>
+
+  <h2>WGS84 及其历次实现</h2>
+  <p>
+    WGS84 是 GPS 星座所广播的基准面。它定义于 1984 年，此后经过多次精化——
+    WGS84(G730)、(G873)、(G1150)、(G1674)、(G1762) 等等——每一次都是一个新的<b>实现</b>，
+    随着跟踪数据改善，把 WGS84 与国际地表参考框架对得更准。椭球始终没变，对齐在不断收紧。
+    最早的实现与现在之间的差别量级是米，而相邻的现代实现之间是厘米。
+  </p>
+  <p>
+    对大多数工作而言这个粒度无关紧要，因为手持接收机本来就达不到米的精度。
+    但对网络 RTK、以及任何量测到两厘米的工作来说就重要了：在那里，
+    实现版本和历元都是坐标身份的一部分。
+  </p>
+
+  <h2>WGS84、NAD83 与 ITRF 并排对比</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>基准面</th><th>椭球</th><th>使用范围</th><th>与 WGS84 的典型偏差</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>WGS84</td><td>WGS84（a = 6,378,137 m，1/f = 298.257223563）</td><td>GPS 广播、全球导航</td><td>参照基准</td></tr>
+        <tr><td>NAD83</td><td>GRS80（a = 6,378,137 m，1/f = 298.257222101）</td><td>美加测绘、州平面坐标、多数国家级数据集</td><td>约 1–2 m，基本固定</td></tr>
+        <tr><td>ITRF</td><td>与 GRS80 兼容</td><td>科学定位、全球参考框架</td><td>厘米级，且随时间变化</td></tr>
+        <tr><td>NAD27</td><td>Clarke 1866</td><td>1980 年代以前的美国旧记录</td><td>最大约 100 m</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    这张表里有两点值得单独拎出来。第一，WGS84 与 GRS80 的长半轴相同，只在扁率的第 11 位
+    有效数字上不同——所以对任何陆地上的用途来说，这两个椭球实际上是完全一样的。
+    第二，NAD83 与 WGS84 尽管椭球几乎重合，却不是同一个框架。它们对齐到不同的实现，
+    已经偏离了大约一米，这就是为什么一个标着 NAD83 的坐标与同一个标着 WGS84 的坐标
+    描述的是相距约一米的两点。
+  </p>
+
+  <h2>历元，以及框架为什么会移动</h2>
+  <p>
+    地球表面并不是静止的。板块以每年几厘米的速率移动——北美外侧的太平洋板块每年移动好几厘米，
+    即便是大陆内部相对稳定的区域也在漂移。因此一个固定在地壳上的基准面，
+    相对一个固定在地心的基准面就会不断累积差异，而且这个差异随时间增大。
+  </p>
+  <p>
+    这就是现代坐标有时会在基准面旁边附带<b>历元</b>的原因，写成 NAD83(2011) 或
+    ITRF2014、epoch 2010.000 这样。一个不带历元的坐标，是某个未言明时刻的位置，
+    而十年下来这个含糊可以有好几厘米。对地界工作而言这远在容差之内；
+    对变形监测而言，它就是信号本身。
+  </p>
+
+  <div class="note">
+    <p><b>无所谓的那一米，与有所谓的那一米。</b>一米的基准面差异，在步道地图上看不出来，
+      在地界测量、管线记录或竣工测量里则不可接受。判断标准不是测量本身有多准，
+      而是这两份数据将来会不会叠在一起或互相比较。在同一幅叠加图里混用 NAD83 与 WGS84，
+      会让要素产生系统性、且极难理清的错位。</p>
+  </div>
+
+  <h2>实践中要怎么做</h2>
+  <ol>
+    <li><b>每个坐标都记下基准面。</b>「43.642562°&nbsp;N, 79.387143°&nbsp;W」是不完整的；
+      「WGS84, 43.642562°&nbsp;N, 79.387143°&nbsp;W」才是完整的。</li>
+    <li><b>让基准面匹配目标。</b>如果成果要进入国家级地籍或测绘数据集，就按那个数据集的基准面交付，
+      在美国通常意味着 NAD83 而不是 WGS84。</li>
+    <li><b>不要靠加一个常数来转换。</b>基准面转换是七参数（或与时间相关）的运算，
+      参数是公开的，不是简单的平移。当两个基准面相差一米时，
+      这个偏移在经纬度上并不是简单相加。</li>
+    <li><b>记住高程是另一个问题。</b>GPS 量的是相对椭球的椭球高。海拔高程需要大地水准面模型，
+      这与基准面转换解决的问题不是同一个。</li>
+  </ol>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>WGS84 经纬度与 UTM 格网互转</small></a>
+      <a href="state-plane-converter.html">州平面坐标换算<small>NAD83 州平面坐标</small></a>
+      <a href="mgrs-converter.html">MGRS 与经纬度互转<small>基于 WGS84 的格网坐标</small></a>
+      <a href="dms-converter.html">度分秒转换器<small>把坐标整理成记录格式</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../geoid-vs-ellipsoid.html">大地水准面与椭球面的区别</a>
+        <small>你的 GPS 报出的高程，为什么不是海拔高程。</small></li>
+      <li><a href="../convert-easting-northing-to-lat-long.html">东坐标北坐标怎么换算成经纬度</a>
+        <small>基准面是在投影计算的哪一步进入的。</small></li>
+      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+        <small>带号、纬度带与米数——坐在基准面之上的那套格网。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

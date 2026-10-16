@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Datum Does GPS Use? (WGS84 Explained)</title>
+<meta name="description" content="GPS broadcasts positions on WGS84 — but WGS84 has been realised several times and sits within a metre of NAD83. What a datum is and why it decides accuracy.">
+<link rel="canonical" href="https://coordcalc.com/what-datum-does-gps-use.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/what-datum-does-gps-use.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/what-datum-does-gps-use.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/what-datum-does-gps-use.html">
+<meta property="og:title" content="What Datum Does GPS Use? (WGS84 Explained)">
+<meta property="og:description" content="WGS84, NAD83 and ITRF: what a datum is, how the three relate, and why the difference decides whether a coordinate is usable.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/what-datum-does-gps-use.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "What Datum Does GPS Use? (WGS84 Explained)",
+  "description": "The datum behind GPS positions, how WGS84 relates to NAD83 and ITRF, and why the answer decides whether a coordinate is usable.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/what-datum-does-gps-use.html"},
+  "articleSection": "Coordinates"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › What datum does GPS use
+  </nav>
+
+  <h1>What Datum Does GPS Use? (WGS84 Explained)</h1>
+
+  <p class="lead">
+    The short answer is WGS84, and the short answer is not enough to do anything with. A datum is not a
+    single fixed thing — it is an ellipsoid plus a realisation, and WGS84 has been realised several times
+    as the satellite constellation and the global tracking network improved. Alongside it sit NAD83,
+    which is what most US mapping is actually on, and ITRF, which is the scientific frame and moves. This
+    guide explains what that means in practice, and when the difference is small enough to ignore.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Datum fundamentals</span>
+  </p>
+
+  <h2>What a datum actually is</h2>
+  <p>
+    A datum is a decision about two things. First, an <b>ellipsoid</b> — a smooth mathematical surface
+    chosen to approximate the shape of the Earth, defined by its semi-major axis and flattening. Second,
+    an <b>orientation and origin</b>: where that ellipsoid sits and how it is turned relative to the real
+    Earth. Latitude, longitude and ellipsoidal height are all measured against that surface, so a
+    coordinate without a datum is like a height without a floor level.
+  </p>
+  <p>
+    Historically the second part mattered enormously. NAD27, for instance, was fitted to the North
+    American continent using a single origin point at Meades Ranch in Kansas, so it fitted the United
+    States beautifully and nowhere else. NAD83 moved to a geocentric origin, which is why coordinates
+    shifted by up to 100&nbsp;m or so when the datum changed — not because anyone had moved, but because
+    the surface the coordinates were measured against had.
+  </p>
+
+  <h2>WGS84 and its realisations</h2>
+  <p>
+    WGS84 is the datum the GPS constellation broadcasts. It was defined in 1984 and has been refined
+    several times since — WGS84(G730), (G873), (G1150), (G1674), (G1762) and onward — each a new
+    <b>realisation</b> that aligns WGS84 more precisely with the international terrestrial frames as
+    tracking data improved. The ellipsoid has stayed the same; the alignment has tightened. Between the
+    earliest realisations and current ones the difference is of the order of a metre, and between
+    consecutive modern realisations it is centimetres.
+  </p>
+  <p>
+    For most work this granularity does not matter, because a hand-held receiver is not accurate to a
+    metre anyway. It matters for network RTK and for anything measured to two centimetres, where the
+    realisation and the epoch are both part of the coordinate's identity.
+  </p>
+
+  <h2>WGS84, NAD83 and ITRF side by side</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Datum</th><th>Ellipsoid</th><th>Where it is used</th><th>Typical offset from WGS84</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>WGS84</td><td>WGS84 (a = 6,378,137 m, 1/f = 298.257223563)</td><td>GPS broadcast, worldwide navigation</td><td>Reference</td></tr>
+        <tr><td>NAD83</td><td>GRS80 (a = 6,378,137 m, 1/f = 298.257222101)</td><td>US and Canadian mapping, State Plane, most national datasets</td><td>About 1–2 m, effectively fixed</td></tr>
+        <tr><td>ITRF</td><td>GRS80-compatible</td><td>Scientific positioning, global reference frames</td><td>Centimetres, changing over time</td></tr>
+        <tr><td>NAD27</td><td>Clarke 1866</td><td>Legacy US records before the 1980s</td><td>Up to about 100 m</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Two things are worth pulling out of that table. The first is that WGS84 and GRS80 have the same
+    semi-major axis and differ only in the flattening, in the eleventh significant figure — so the
+    ellipsoids are effectively identical for any terrestrial purpose. The second is that NAD83 and WGS84
+    are not the same frame even though their ellipsoids nearly coincide. They are aligned to different
+    realisations and have drifted apart by roughly a metre, which is why a coordinate labelled NAD83 and
+    the same coordinate labelled WGS84 describe points about a metre apart.
+  </p>
+
+  <h2>Epoch, and why the frame moves</h2>
+  <p>
+    The Earth's surface is not stationary. Tectonic plates move at rates of centimetres per year — the
+    Pacific plate off North America moves several centimetres a year, and even the stable interior of the
+    continent drifts. A datum that is fixed to the Earth's crust therefore accumulates a difference
+    against a datum fixed to the Earth's centre of mass, and that difference grows with time.
+  </p>
+  <p>
+    This is why modern coordinates sometimes carry an <b>epoch</b> alongside the datum, written as
+    something like NAD83(2011) or ITRF2014, epoch 2010.000. A coordinate without an epoch is a position
+    at an unstated moment, and over a decade the ambiguity can be several centimetres. For boundary work
+    that is well inside tolerance; for deformation monitoring it is the signal.
+  </p>
+
+  <div class="note">
+    <p><b>The metre that does not matter, and the one that does.</b> A metre of datum difference is
+    invisible on a trail map and unacceptable in a boundary survey, a utility record or an as-built. The
+    test is not how accurate the measurement was, it is whether two datasets are going to be overlaid or
+    compared with each other. Mixing NAD83 and WGS84 in one overlay produces features that are offset in
+    a systematic and thoroughly confusing way.</p>
+  </div>
+
+  <h2>What to do in practice</h2>
+  <ol>
+    <li><b>Record the datum with every coordinate.</b> "43.642562°&nbsp;N, 79.387143°&nbsp;W" is
+      incomplete; "WGS84, 43.642562°&nbsp;N, 79.387143°&nbsp;W" is not.</li>
+    <li><b>Match the datum to the target.</b> If the destination is a national cadastral or mapping
+      dataset, deliver in the datum of that dataset, which in the United States usually means NAD83,
+      not WGS84.</li>
+    <li><b>Do not transform by adding a constant.</b> Datum transformations are seven-parameter (or
+      time-dependent) operations with published parameters, not shifts. Where two datums are a metre
+      apart the shift is not simply additive in latitude and longitude.</li>
+    <li><b>Remember that height is a separate question.</b> GPS measures ellipsoidal height relative to
+      the ellipsoid. Height above sea level needs a geoid model, which is a different problem from the
+      one a datum transformation solves.</li>
+  </ol>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>WGS84 latitude and longitude to UTM grid</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>NAD83 State Plane coordinates</small></a>
+      <a href="mgrs-converter.html">mgrs to lat long<small>Grid references on WGS84</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Format a coordinate for a record</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="geoid-vs-ellipsoid.html">Geoid vs ellipsoid</a>
+        <small>Why the height your GPS reports is not the height above sea level.</small></li>
+      <li><a href="convert-easting-northing-to-lat-long.html">Converting easting and northing to latitude and longitude</a>
+        <small>Where the datum enters the projection calculation.</small></li>
+      <li><a href="how-to-read-utm-coordinates.html">How to read UTM coordinates</a>
+        <small>Zone, band and metres — the grid that sits on top of the datum.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

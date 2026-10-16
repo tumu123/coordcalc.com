@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CoordCalc — Free Surveying &amp; Coordinate Calculators Online</title>
+<meta name="description" content="Free online surveying calculators: decimal degrees to DMS, UTM and MGRS conversion, distance and bearing, land area, slope and map scale. No login, in-browser.">
+<link rel="canonical" href="https://coordcalc.com/">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/">
+<meta property="og:title" content="CoordCalc — Free Surveying & Coordinate Calculators Online">
+<meta property="og:description" content="Thirteen free browser-based calculators for coordinates, distance, area, slope, scale and traverse work, including a least squares traverse adjustment. No sign-up required.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<meta name="theme-color" content="#2563eb">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "CoordCalc",
+  "url": "/",
+  "description": "Free online surveying and geospatial calculators for coordinate conversion, distance, bearing, area, slope, map scale and traverse adjustment.",
+  "inLanguage": "en"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is CoordCalc?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "CoordCalc is a collection of free browser-based calculators for surveying, GIS and civil engineering work — coordinate conversion, distance and bearing, land area, slope and elevation, map scale, and professional traverse and curve calculations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are these surveying calculators free to use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every calculator is free, with no account, no login and no usage limit. The calculations run entirely in your browser, so your data is never uploaded."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which coordinate systems are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Geographic latitude and longitude in decimal degrees, DMS and DDM; the UTM / WGS84 projected grid; and the MGRS military grid reference system. Coordinate reference system parameters are stated on each tool page."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use these tools on a phone in the field?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every calculator is responsive and mobile-first. Once a page has loaded, the calculation continues to work without a network connection."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate are the calculations?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "All tools use double-precision arithmetic and state their assumptions on each page. Coordinate conversion uses the WGS84 ellipsoid by default. For critical setting-out work, verify results against your project's declared coordinate reference system."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which coordinate systems and datums are supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Geographic latitude and longitude on WGS84 in decimal degrees, DMS and DDM; the UTM and MGRS grids; and all 134 NAD83 State Plane zones across the 50 states, in metres, US survey feet or international feet. Each tool page states its ellipsoid, datum and rounding."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there a batch or API option for professional use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The free calculators handle single values. Batch processing and API access for traverse and curve calculations are planned for professional users who need to process many coordinates at once."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--line:#e4e8ef;--text:#1a2230;--sub:#5d6779;
+    --accent:#2563eb;--accent-d:#1d4ed8;--accent-soft:#eef4ff;
+    --ok:#0f9d58;--warn:#b7791f;--radius:14px;
+    --cat-c:#2563eb;--cat-cs:#eef4ff;
+    --cat-d:#0d9488;--cat-ds:#e6f7f4;
+    --cat-s:#d97706;--cat-ss:#fdf3e3;
+    --cat-p:#7c3aed;--cat-ps:#f3eefe;
+  }
+  .sec-coord{--cat:var(--cat-c);--cat-soft:var(--cat-cs);}
+  .sec-dist{--cat:var(--cat-d);--cat-soft:var(--cat-ds);}
+  .sec-slope{--cat:var(--cat-s);--cat-soft:var(--cat-ss);}
+  .sec-pro{--cat:var(--cat-p);--cat-soft:var(--cat-ps);}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px;}
+
+  /* ---------- header ---------- */
+  header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);
+    backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);}
+  .navbar{display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;letter-spacing:-.2px;}
+  .brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;}
+  nav.mainnav{display:flex;gap:26px;font-size:14px;color:var(--sub);font-weight:500;}
+  nav.mainnav a:hover{color:var(--accent);}
+  @media(max-width:720px){
+    .navbar{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.mainnav{display:flex;width:100%;gap:18px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+      font-size:13px;padding-bottom:10px;}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{background:
+      radial-gradient(640px 320px at 88% -12%,rgba(37,99,235,.10),transparent 62%),
+      radial-gradient(520px 280px at 6% 112%,rgba(79,156,255,.11),transparent 62%),
+      linear-gradient(180deg,#eef3fd 0%,#f6f8fb 100%);
+    border-bottom:1px solid var(--line);padding:58px 0 52px;}
+  .hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;}
+  .hero h1{font-size:44px;line-height:1.18;margin:0 0 16px;letter-spacing:-.8px;}
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero p.lede{font-size:16.5px;color:#414b5e;margin:0 0 22px;max-width:520px;}
+  .badges{display:flex;gap:20px;flex-wrap:wrap;font-size:13px;color:var(--sub);}
+  .badges span{display:inline-flex;align-items:center;gap:6px;}
+  .badges svg{flex:none;}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 20px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;
+    padding:11px 20px;border-radius:10px;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px -6px rgba(37,99,235,.5);}
+  .btn-primary:hover{background:var(--accent-d);transform:translateY(-1px);}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text);}
+  .btn-ghost:hover{border-color:#c3d3f5;color:var(--accent);}
+
+  /* quick tool */
+  .quick{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;
+    box-shadow:0 10px 30px -12px rgba(31,58,120,.22);}
+  .quick h2{font-size:15px;margin:0 0 4px;}
+  .quick .qt-sub{font-size:12.5px;color:var(--sub);margin:0 0 16px;}
+  .quick .qrow{display:flex;gap:10px;flex-wrap:wrap;}
+  .quick input,.quick select{font-family:inherit;font-size:15px;padding:10px 12px;border:1px solid #cfd6e0;
+    border-radius:9px;background:#fff;color:var(--text);transition:.15s;}
+  .quick input{flex:1;min-width:150px;font-weight:600;font-size:17px;}
+  .quick input:focus,.quick select:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  .qout{margin-top:16px;background:var(--accent-soft);border-radius:10px;padding:13px 15px;
+    font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);
+    word-break:break-all;min-height:50px;display:flex;align-items:center;}
+  .qerr{color:#d9534f;font-size:13px;font-weight:500;}
+  .qchips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;}
+  .qchips .lbl{font-size:12px;color:var(--sub);}
+  .qchips button{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+    padding:4px 10px;border-radius:14px;border:1px solid var(--line);background:#fff;
+    color:var(--sub);cursor:pointer;transition:.15s;}
+  .qchips button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick .more{display:inline-block;margin-top:14px;font-size:13.5px;font-weight:600;color:var(--accent);}
+  .quick .more:hover{text-decoration:underline;}
+
+  /* ---------- sections ---------- */
+  section{padding:46px 0;}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px;}
+  h2.cat{font-size:22px;margin:0;letter-spacing:-.3px;}
+  h2.cat .idx{display:inline-block;color:var(--cat,var(--accent));font-size:14px;font-weight:700;
+    margin-right:10px;vertical-align:2px;}
+  .sec-head p{margin:0;font-size:13.5px;color:var(--sub);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(285px,100%),1fr));gap:16px;}
+  .tool-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;
+    display:flex;flex-direction:column;transition:.18s;position:relative;}
+  .tool-card:hover{transform:translateY(-2px);border-color:#c3d3f5;
+    box-shadow:0 12px 26px -14px rgba(31,58,120,.3);}
+  .tool-card .ico{width:38px;height:38px;border-radius:10px;background:var(--cat-soft,var(--accent-soft));
+    display:flex;align-items:center;justify-content:center;margin-bottom:13px;color:var(--cat,var(--accent));}
+  .tool-card h3{font-size:15.5px;margin:0 0 7px;letter-spacing:-.1px;}
+  .tool-card p{margin:0 0 14px;font-size:13.5px;color:var(--sub);flex:1;}
+  .tool-card .kw{display:inline-block;align-self:flex-start;font-size:11.5px;color:#7c8698;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;background:#f4f6fa;
+    border-radius:6px;padding:3px 9px;}
+  .tool-card .tag{position:absolute;top:18px;right:18px;font-size:11px;font-weight:700;
+    padding:2px 9px;border-radius:20px;letter-spacing:.2px;}
+  .tag.live{background:#e8f7ee;color:var(--ok);}
+  .tag.soon{background:#fdf3e3;color:var(--warn);}
+  .tool-card.coming{border-style:dashed;background:#fdfdfe;}
+  .tool-card.coming:hover{transform:none;border-color:var(--line);box-shadow:none;}
+  .tool-card.coming .ico{background:#f0f2f6;color:#93a0b5;}
+  .tool-card.filler{border-style:dashed;background:transparent;justify-content:center;}
+  .tool-card.filler:hover{transform:none;border-color:var(--line);box-shadow:none;}
+  .tool-card.filler .ico{background:#f0f2f6;color:#93a0b5;}
+  .tool-card.filler h3{color:#5d6779;}
+
+  /* popular links */
+  .popular{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .popular ul{columns:3;column-gap:34px;list-style:none;padding:0;margin:14px 0 0;font-size:13.5px;}
+  .popular li{margin-bottom:0;break-inside:avoid;}
+  .popular a{display:inline-block;margin-bottom:9px;background:#fff;border:1px solid var(--line);
+    border-radius:20px;padding:5px 14px;font-size:13px;color:var(--accent-d);transition:.15s;}
+  .popular a:hover{border-color:#c3d3f5;background:var(--accent-soft);text-decoration:none;}
+  .popular .note{font-size:12.5px;color:var(--sub);margin:4px 0 0;}
+  @media(max-width:820px){.popular ul{columns:1;}}
+
+  /* why */
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+  .why-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+  .why-card h3{font-size:14.5px;margin:0 0 8px;display:flex;align-items:center;gap:8px;}
+  .why-card h3 svg{color:var(--accent);flex:none;background:var(--accent-soft);
+    border-radius:8px;padding:5px;box-sizing:content-box;}
+  .why-card p{margin:0;font-size:13.5px;color:var(--sub);}
+
+  /* faq */
+  details.faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 18px;margin-bottom:10px;}
+  details.faq[open]{border-color:#d5dce7;}
+  details.faq summary{cursor:pointer;padding:15px 0;font-weight:600;font-size:14.5px;list-style:none;
+    position:relative;padding-right:28px;}
+  details.faq summary::-webkit-details-marker{display:none;}
+  details.faq summary::after{content:"+";position:absolute;right:2px;top:13px;font-size:19px;
+    color:var(--sub);font-weight:400;}
+  details.faq[open] summary::after{content:"–";}
+  details.faq p{font-size:14px;color:#3b4353;padding:0 0 8px;margin:0;}
+
+  /* footer */
+  footer.site{background:#101828;color:#c3cbd9;padding:44px 0 30px;font-size:13.5px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:30px;}
+  footer.site h4{color:#fff;font-size:13px;margin:0 0 12px;letter-spacing:.3px;text-transform:uppercase;font-size:11.5px;}
+  footer.site ul{list-style:none;padding:0;margin:0;}
+  footer.site li{margin-bottom:9px;}
+  footer.site a:hover{color:#fff;}
+  .foot-brand .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;
+    margin-bottom:12px;}
+  .foot-brand p{margin:0;color:#8b95a7;font-size:13px;max-width:280px;}
+  .foot-bottom{border-top:1px solid #232c3d;padding-top:20px;display:flex;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;color:#8b95a7;font-size:12.5px;}
+  .foot-legal a{color:#aeb8c9;text-decoration:none;margin:0 2px;}
+  .foot-legal a:hover{color:#fff;text-decoration:underline;}
+
+  section[id]{scroll-margin-top:78px;}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{
+    outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+
+  @media(max-width:900px){
+    .hero-inner{grid-template-columns:1fr;gap:32px;}
+    .hero h1{font-size:30px;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:560px){
+    .foot-grid{grid-template-columns:1fr;}
+    .hero{padding:38px 0 34px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="container navbar">
+    <a class="brand" href="index.html">
+      <span class="logo">C</span>
+      CoordCalc
+    </a>
+    <nav class="mainnav">
+      <a href="#coordinates">Coordinates</a>
+      <a href="#distance">Distance &amp; Area</a>
+      <a href="#slope">Slope &amp; Scale</a>
+      <a href="#surveying">Surveying</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <!-- ================= HERO ================= -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div>
+        <h1>Free <em>surveying</em> &amp; coordinate calculators</h1>
+        <p class="lede">
+          Convert coordinates, measure distance and bearing, work out land area, slope and map
+          scale — fourteen precise tools for surveyors, GIS users and civil engineers. Everything runs
+          in           your browser, with no login and no upload.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#coordinates">Browse the tools</a>
+          <a class="btn btn-ghost" href="#faq">How it works</a>
+        </div>
+        <div class="badges">
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            100% free
+          </span>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            No sign-up
+          </span>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Works offline
+          </span>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Data stays on your device
+          </span>
+        </div>
+      </div>
+
+      <div class="quick">
+        <h2>Quick convert</h2>
+        <p class="qt-sub">Decimal degrees → degrees, minutes and seconds</p>
+        <div class="qrow">
+          <input id="q-in" type="text" inputmode="decimal" placeholder="e.g. 39.906111" value="39.906111" autocomplete="off">
+          <select id="q-type">
+            <option value="lat">Latitude (N/S)</option>
+            <option value="lon">Longitude (E/W)</option>
+          </select>
+        </div>
+        <div class="qchips">
+          <span class="lbl">Try:</span>
+          <button type="button" data-v="116.3912757" data-t="lon">116.3912757</button>
+          <button type="button" data-v="-0.1276" data-t="lon">-0.1276</button>
+          <button type="button" data-v="48.8566" data-t="lat">48.8566</button>
+        </div>
+        <div class="qout" id="q-out">—</div>
+        <a class="more" href="dms-converter.html">decimal degrees to dms converter &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= COORDINATES ================= -->
+  <section id="coordinates" class="sec-coord">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">01</span>Coordinate conversion tools</h2>
+        <p>Switch between the formats your device, plan and software expect.</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="dms-converter.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+          </span>
+          <h3>Decimal Degrees to DMS Converter</h3>
+          <p>Turn a decimal latitude or longitude into degrees, minutes and seconds, with DDM and hemisphere output.</p>
+          <span class="kw">decimal degrees to dms</span>
+        </a>
+
+        <a class="tool-card" href="utm-coordinate-converter.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+          </span>
+          <h3>UTM Coordinate Converter</h3>
+          <p>Convert between WGS84 latitude–longitude and UTM easting, northing and zone — one point at a time, or a whole pasted list with CSV export.</p>
+          <span class="kw">utm to lat long</span>
+        </a>
+
+        <a class="tool-card" href="mgrs-converter.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6"/><circle cx="15" cy="12" r="1.6"/></svg>
+          </span>
+          <h3>MGRS Converter</h3>
+          <p>Convert military grid reference system strings to latitude and longitude, and back.</p>
+          <span class="kw">mgrs to lat long</span>
+        </a>
+
+        <a class="tool-card" href="state-plane-converter.html">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="1.7"/><circle cx="16" cy="18" r="1.7"/></svg>
+          </span>
+          <h3>State Plane Coordinate Converter</h3>
+          <p>Convert NAD83 State Plane easting and northing to latitude and longitude across all 134 zones.</p>
+          <span class="kw">state plane coordinate converter</span>
+        </a>
+
+        <a class="tool-card" href="epsg-code-lookup.html">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          </span>
+          <h3>EPSG Code Lookup</h3>
+          <p>Search 486 coordinate reference systems — UTM zones, State Plane, national grids and vertical datums — with units and parameters.</p>
+          <span class="kw">epsg code lookup</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= DISTANCE & AREA ================= -->
+  <section id="distance" class="sec-dist" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">02</span>Distance, bearing &amp; area</h2>
+        <p>Measure between points and quantify land.</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="distance-bearing-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20L21 4"/><circle cx="3" cy="20" r="1.8"/><circle cx="21" cy="4" r="1.8"/></svg>
+          </span>
+          <h3>Distance &amp; Bearing Calculator</h3>
+          <p>Get the ground distance and azimuth between two coordinates, in metres or feet.</p>
+          <span class="kw">distance between two coordinates</span>
+        </a>
+
+        <a class="tool-card" href="azimuth-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M14.5 9.5L9.5 14.5"/></svg>
+          </span>
+          <h3>Azimuth Calculator</h3>
+          <p>Convert between quadrant bearings and whole-circle azimuths in both directions.</p>
+          <span class="kw">azimuth to bearing converter</span>
+        </a>
+
+        <a class="tool-card" href="land-area-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l8-4 10 5-8 12z"/><path d="M3 7l10 13"/></svg>
+          </span>
+          <h3>Land Area Calculator</h3>
+          <p>Compute the area of a parcel from its corner coordinates, in m², hectares or acres.</p>
+          <span class="kw">acreage calculator by coordinates</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SLOPE & SCALE ================= -->
+  <section id="slope" class="sec-slope">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">03</span>Slope, elevation &amp; map scale</h2>
+        <p>Terrain and drawing calculations.</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="slope-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18L3 6z"/><path d="M3 19L14 8"/></svg>
+          </span>
+          <h3>Slope Calculator</h3>
+          <p>Find slope as a percentage, ratio or angle from rise and run, with degrees conversion.</p>
+          <span class="kw">slope percentage calculator</span>
+        </a>
+
+        <a class="tool-card" href="map-scale-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16L16 4"/><path d="M2 18h6M4 20v-6M16 4h6M18 2v6" opacity=".9"/></svg>
+          </span>
+          <h3>Map Scale Calculator</h3>
+          <p>Convert map distance to ground distance for any scale, such as 1:500 or 1:50 000.</p>
+          <span class="kw">map scale calculator</span>
+        </a>
+
+        <a class="tool-card" href="unit-converter.html">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v18M16 3v18M4 8h4M4 16h4M16 8h4M16 16h4"/></svg>
+          </span>
+          <h3>Surveying Unit Converter</h3>
+          <p>US survey foot to meter, acre to hectare, chain, link and rod to feet, with exact factors.</p>
+          <span class="kw">us survey foot to meter</span>
+        </a>
+
+        <div class="tool-card filler">
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <h3>More terrain tools</h3>
+          <p>Gradient and contour utilities are next in the development queue.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= PROFESSIONAL ================= -->
+  <section id="surveying" class="sec-pro" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">04</span>Professional surveying</h2>
+        <p>For setting-out, traverse and road design.</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="traverse-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19l5-10 4 6 3-5 4 9z"/><circle cx="4" cy="19" r="1.6"/><circle cx="20" cy="19" r="1.6"/></svg>
+          </span>
+          <h3>Traverse Calculator (COGO)</h3>
+          <p>Compute coordinates from bearing and distance, find the closure error and relative precision, then adjust by Bowditch or by least squares.</p>
+          <span class="kw">traverse calculator</span>
+        </a>
+
+        <a class="tool-card" href="curve-calculator.html">
+          <span class="tag live">Available</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h5a6 6 0 016-6h7"/><path d="M3 15v6M18 9v6"/></svg>
+          </span>
+          <h3>Horizontal &amp; Vertical Curve Calculator</h3>
+          <p>Solve curve elements — radius, tangent, length, deflection angle — for road and rail design.</p>
+          <span class="kw">horizontal curve calculator</span>
+        </a>
+
+                <a class="tool-card" href="dxf-coordinate-extractor.html">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9l6-6M9 21V9H3"/></svg>
+          </span>
+          <h3>DXF Coordinate Extractor</h3>
+          <p>Read the points, polylines and closed areas out of an ASCII DXF, with the drawing unit and CSV export.</p>
+          <span class="kw">dxf coordinate extractor</span>
+        </a>
+<a class="tool-card" href="cut-fill-calculator.html">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h7l4-10h7"/><path d="M3 20h18" opacity=".5"/><circle cx="10" cy="17" r="1.6"/></svg>
+          </span>
+          <h3>Cut and Fill Calculator</h3>
+          <p>Earthwork volumes from cross sections or a grid of depths, with swell and shrinkage applied.</p>
+          <span class="kw">cut and fill calculator</span>
+        </a>
+
+        <div class="tool-card filler">
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <h3>Request a calculator</h3>
+          <p>The professional toolkit grows with user requests — traverse sheets and curve tables are planned.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= POPULAR CONVERSIONS ================= -->
+  <section class="popular">
+    <div class="container">
+      <h2 class="cat" style="font-size:18px;">Popular conversions on CoordCalc</h2>
+      <p class="note">Jump straight to the calculation you need.</p>
+      <ul>
+        <li><a href="dms-converter.html">Decimal degrees to DMS converter</a></li>
+        <li><a href="utm-coordinate-converter.html">UTM to latitude longitude</a></li>
+        <li><a href="mgrs-converter.html">MGRS to lat long</a></li>
+        <li><a href="distance-bearing-calculator.html">Distance between two coordinates</a></li>
+        <li><a href="azimuth-calculator.html">Bearing to azimuth converter</a></li>
+        <li><a href="land-area-calculator.html">Land area from coordinates</a></li>
+        <li><a href="slope-calculator.html">Percent slope to degrees</a></li>
+        <li><a href="map-scale-calculator.html">Map scale distance calculator</a></li>
+        <li><a href="traverse-calculator.html">Traverse closure error calculator</a></li>
+        <li><a href="unit-converter.html">US survey foot to meter converter</a></li>
+        <li><a href="state-plane-converter.html">State plane to lat long converter</a></li>
+        <li><a href="cut-fill-calculator.html">Cut and fill volume calculator</a></li>
+        <li><a href="developers.html">Developer guide — URL parameters and embeds</a></li>
+        <li><a href="guides.html">Guides and background reading</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= GUIDES ================= -->
+  <section id="guides" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat">Guides</h2>
+        <p>The background behind the calculators — what to check before you trust a number.</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="how-to-read-utm-coordinates.html">
+          <span class="tag live">Guide</span>
+          <h3>How to read UTM coordinates</h3>
+          <p>Zone, band, easting and northing explained, with the four misreadings that move a point to the wrong continent.</p>
+          <span class="kw">how to read utm coordinates</span>
+        </a>
+        <a class="tool-card" href="survey-foot-vs-international-foot.html">
+          <span class="tag live">Guide</span>
+          <h3>Survey foot vs international foot</h3>
+          <p>Two feet, two definitions, two parts per million — and which one is in the file you were handed.</p>
+          <span class="kw">us survey foot vs international foot</span>
+        </a>
+        <a class="tool-card" href="how-to-calculate-closure-error.html">
+          <span class="tag live">Guide</span>
+          <h3>Closure error in a traverse</h3>
+          <p>Latitudes, departures, linear misclosure, relative precision and the compass rule adjustment.</p>
+          <span class="kw">how to calculate closure error</span>
+        </a>
+        <a class="tool-card" href="guides.html">
+          <span class="tag live">All guides</span>
+          <h3>Browse all twelve guides</h3>
+          <p>Coordinates and projections, direction and area, units and land records.</p>
+          <span class="kw">surveying guides</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= WHY ================= -->
+  <section>
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat">Why use CoordCalc</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6z"/></svg>
+            Data never leaves your device
+          </h3>
+          <p>Every calculation runs locally in the browser. No coordinates are transmitted, stored or logged.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13H11l-1 9L19.5 11H13z"/></svg>
+            Instant, no sign-up
+          </h3>
+          <p>No account, no email, no usage cap. Open a page, get the answer, move on.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg>
+            Stated assumptions
+          </h3>
+          <p>Each tool documents its ellipsoid, units and rounding, so you can judge whether it fits your project.</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M10 18h4"/></svg>
+            Built for the field
+          </h3>
+          <p>Mobile-first layout and large inputs, so the tools stay usable on a phone on site.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= FAQ ================= -->
+  <section id="faq" style="background:#fff;border-top:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat">Frequently asked questions</h2>
+      </div>
+      <details class="faq" open>
+        <summary>What is CoordCalc?</summary>
+        <p>CoordCalc is a collection of free browser-based calculators for surveying, GIS and civil engineering work — coordinate conversion, distance and bearing, land area, slope and elevation, map scale, and professional traverse and curve calculations.</p>
+      </details>
+      <details class="faq">
+        <summary>Are these surveying calculators free to use?</summary>
+        <p>Yes. Every calculator is free, with no account, no login and no usage limit. The calculations run entirely in your browser, so your data is never uploaded.</p>
+      </details>
+      <details class="faq">
+        <summary>Which coordinate systems are supported?</summary>
+        <p>Geographic latitude and longitude in decimal degrees, DMS and DDM; the UTM / WGS84 projected grid; and the MGRS military grid reference system. Coordinate reference system parameters are stated on each tool page.</p>
+      </details>
+      <details class="faq">
+        <summary>Can I use these tools on a phone in the field?</summary>
+        <p>Yes. Every calculator is responsive and mobile-first. Once a page has loaded, the calculation continues to work without a network connection.</p>
+      </details>
+      <details class="faq">
+        <summary>How accurate are the calculations?</summary>
+        <p>All tools use double-precision arithmetic and state their assumptions on each page. Coordinate conversion uses the WGS84 ellipsoid by default. For critical setting-out work, verify results against your project's declared coordinate reference system.</p>
+      </details>
+      <details class="faq">
+        <summary>Which coordinate systems and datums are supported?</summary>
+        <p>Geographic latitude and longitude on WGS84 in decimal degrees, DMS and DDM; the UTM and MGRS grids; and all 134 NAD83 State Plane zones across the 50 states, in metres, US survey feet or international feet. Each tool page states its ellipsoid, datum and rounding.</p>
+      </details>
+      <details class="faq">
+        <summary>Is there a batch or API option for professional use?</summary>
+        <p>The free calculators handle single values. Batch processing and API access for traverse and curve calculations are planned for professional users who need to process many coordinates at once.</p>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="logo">C</span>
+        <p>Free, browser-based surveying and geospatial calculators. No login, no upload, no ads in the way.</p>
+      </div>
+      <div>
+        <h4>Coordinates</h4>
+        <ul>
+          <li><a href="dms-converter.html">decimal degrees to dms</a></li>
+          <li><a href="utm-coordinate-converter.html">utm to lat long</a></li>
+          <li><a href="mgrs-converter.html">mgrs to lat long</a></li>
+          <li><a href="state-plane-converter.html">state plane coordinate converter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Measurement</h4>
+        <ul>
+          <li><a href="distance-bearing-calculator.html">distance between two coordinates</a></li>
+          <li><a href="land-area-calculator.html">calculate acres from coordinates</a></li>
+          <li><a href="slope-calculator.html">slope percentage calculator</a></li>
+          <li><a href="map-scale-calculator.html">map scale calculator</a></li>
+          <li><a href="unit-converter.html">us survey foot to meter</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Surveying</h4>
+        <ul>
+          <li><a href="traverse-calculator.html">traverse calculator</a></li>
+          <li><a href="curve-calculator.html">horizontal curve calculator</a></li>
+          <li><a href="cut-fill-calculator.html">cut and fill calculator</a></li>
+          <li><a href="dxf-coordinate-extractor.html">dxf coordinate extractor</a></li>
+          <li><a href="guides.html">Guides</a></li>
+          <li><a href="developers.html">Developers</a></li>
+          <li><a href="#faq">FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 CoordCalc. All calculations run locally in your browser.</span>
+      <span class="foot-legal"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a> · <a href="zh/index.html" hreflang="zh-CN" lang="zh-CN">中文</a></span>
+      <span>Verify critical coordinates against your project CRS before field use.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+  var input = document.getElementById("q-in");
+  var type = document.getElementById("q-type");
+  var out = document.getElementById("q-out");
+
+  function pad(n, len){ n = String(n); while (n.length < len) { n = "0" + n; } return n; }
+
+  function toDMS(v, isLat){
+    var neg = v < 0, abs = Math.abs(v);
+    var prec = 2, factor = 100;
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = rem - m * 60;
+    s = Math.round(s * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = isLat ? (neg ? "S" : "N") : (neg ? "W" : "E");
+    var secStr = pad(Math.floor(s), 2) + s.toFixed(prec).slice(String(Math.floor(s)).length);
+    return h + " " + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  function run(){
+    var raw = input.value.trim();
+    if (raw === "") { out.textContent = "—"; out.classList.remove("qerr"); return; }
+    var v = Number(raw);
+    if (!isFinite(v) || Math.abs(v) > 180) {
+      out.textContent = "Enter a number between -180 and 180";
+      out.classList.add("qerr");
+      return;
+    }
+    out.classList.remove("qerr");
+    out.textContent = toDMS(v, type.value === "lat");
+  }
+
+  input.addEventListener("input", run);
+  type.addEventListener("change", run);
+
+  var chips = document.querySelectorAll(".qchips button");
+  for (var i = 0; i < chips.length; i++) {
+    chips[i].addEventListener("click", function(){
+      input.value = this.getAttribute("data-v");
+      type.value = this.getAttribute("data-t");
+      run();
+    });
+  }
+
+  run();
+})();
+</script>
+</body>
+</html>

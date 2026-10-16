@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>方位角与象限角的区别 — 角度约定、换算规则与反方位</title>
+<meta name="description" content="方位角是自北顺时针量的一个连续角度，象限角（bearing）则先说明象限、再给出该象限内 0°–90° 的角度。本文讲清两种约定的区别、四个象限的换算规则、正反方位角的关系，以及真北、磁北、格网北带来的影响。">
+<link rel="canonical" href="https://coordcalc.com/zh/bearing-vs-azimuth.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/bearing-vs-azimuth.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/bearing-vs-azimuth.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/bearing-vs-azimuth.html">
+<meta property="og:title" content="方位角与象限角的区别">
+<meta property="og:description" content="一个连续角度，还是象限内角度——换算规则、反方位与三种北向的区别。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/bearing-vs-azimuth.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "方位角与象限角的区别",
+  "description": "方位角与象限角的区别 — 角度约定、换算规则与反方位",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/bearing-vs-azimuth.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../bearing-vs-azimuth.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 方位角与象限角的区别
+  </nav>
+
+<h1>方位角与象限角的区别</h1>
+
+  <p class="lead">
+    两者都描述水平方向，都从北起算，所以在口语里常被混用，然后在计算里惹出麻烦。
+    区别在参考系：方位角是自北顺时针量的一个连续角度，而象限角先声明一个象限，
+    再从北或南中较近的那一个量到东或西。地契、较早的测量成果图和某些辖区用象限角；
+    计算和大多数现代软件用方位角。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>方向约定</span>
+  </p>
+
+  <h2>方位角：一个角度，0° 到 360°</h2>
+  <p>
+    方位角自北顺时针量取，从 0° 经东（90°）、南（180°）、西（270°）再回到北（360°）。
+    没有象限之分，也没有符号约定——东北方向就是 45°，西南偏西就是 247.5°。
+    正因为它是一个连续量，坐标几何用的就是它：<code>ΔE = d·sin A</code>、
+    <code>ΔN = d·cos A</code>，把边长和方位角直接变成坐标增量。
+  </p>
+
+  <h2>象限角：一个象限内的角度</h2>
+  <p>
+    象限角（quadrant bearing，又称化算象限角）先说明象限，再给出该象限内 0° 到 90° 之间的角度。
+    书写时把北或南写在前、东或西写在后，例如 <code>N 45°30′ E</code>——
+    自北向东 45°30′。四种形式是 NE、SE、SW、NW，这个角度永远是与子午线的偏角，
+    绝不是一个绝对角度。
+  </p>
+  <p>
+    这种写法不是随意的。象限角把方向写得一眼可读：看字母就知道一条线是向东还是向西，
+    不必拿数字去和 90°、270° 比较；而在一条条朗读地界描述（metes and bounds）的场合，
+    这一点很重要。
+  </p>
+
+  <h2>换算规则，逐象限</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>象限</th><th>象限角</th><th>方位角</th><th>规则</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>东北</td><td>N θ E</td><td>θ</td><td>方位角 = θ</td></tr>
+        <tr><td>东南</td><td>S θ E</td><td>180° − θ</td><td>方位角 = 180° − θ</td></tr>
+        <tr><td>西南</td><td>S θ W</td><td>180° + θ</td><td>方位角 = 180° + θ</td></tr>
+        <tr><td>西北</td><td>N θ W</td><td>360° − θ</td><td>方位角 = 360° − θ</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    两个方向各举几例：<code>N 45°30′ E</code> 对应方位角 45.5°。
+    <code>S 60° E</code> 对应 180° − 60° = 120°。方位角 225° 落在西南象限，
+    所以象限角是 <code>S 45° W</code>，因为 225° − 180° = 45°。
+    而方位角 330° 是 <code>N 30° W</code>，因为 360° − 330° = 30°。
+  </p>
+  <p>
+    从方位角反推象限角时，先定象限——0–90 为 NE，90–180 为 SE，180–270 为 SW，
+    270–360 为 NW——再用上面规则的逆运算求该象限内的角度。
+    90° 的整数倍是麻烦的特例：象限内角度为 0°，象限角退化成纯粹的基本方向，
+    这就是为什么软件常常不论设置如何都把它们按方位角给出。
+  </p>
+
+  <h2>反方位角与反象限角</h2>
+  <p>
+    一条线的方向取决于你站在哪一端。正方位角与反方位角相差 180°：
+    <code>反 = 正 + 180°</code>（正方位角小于 180° 时），
+    <code>反 = 正 − 180°</code>（大于 180° 时）。象限角的规则更漂亮——字母互换，
+    于是 <code>N 45° E</code> 反过来就是 <code>S 45° W</code>，角度不变。
+  </p>
+  <p>
+    这正是象限角约定体现价值的地方：读一段闭合地块的描述时，每条线的反向就出现在
+    下一条线的字母里，任何没有正确反向的线立刻会以笔误的形式暴露出来。
+    方位角也有同样的校验，但它表现为算术而不是模式匹配。
+  </p>
+
+  <div class="note">
+    <p><b>真北、磁北，还是格网北？</b>不说明是哪一个北，方位角或象限角就没有意义。
+      <b>真北</b>是地理北极；<b>磁北</b>是罗盘针指向的方位，随磁偏角漂移；
+      <b>格网北</b>是投影地图上格网的北轴方向，与真北相差一个子午线收敛角。
+      用罗盘写下的地界给出的是磁象限角，并注明测量当时的磁偏角。
+      现代计算用格网方位角或真方位角。没有磁偏角和子午线收敛角，两者之间无法换算。</p>
+  </div>
+
+  <h2>实际后果</h2>
+  <p>
+    最常出现的三种错误是：在同一次计算中混用两种约定；忘记老地界上的磁象限角
+    不等于现代的方位角；以及把反方位规则用了两遍，使方向悄悄变回原样。
+    这三种错误产生的结果都是「内部自洽、对外错误」。如果坐标闭合得很整齐，
+    但图形相对实地是旋转的，首先要查的就是磁偏角或约定被搞混了。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="azimuth-calculator.html">方位角转换器<small>象限角与 0°–360° 方位角互转</small></a>
+      <a href="distance-bearing-calculator.html">两点距离与方位角<small>距离、正方位角与反方位角</small></a>
+      <a href="traverse-calculator.html">导线平差计算器<small>方位角与边长推坐标，并检查闭合</small></a>
+      <a href="dms-converter.html">度分秒转换器<small>用度分秒表示角度</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../how-to-calculate-closure-error.html">导线闭合差怎么算</a>
+        <small>方位角与边长相加的地方，以及残差的含义。</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">度分秒详解</a>
+        <small>测量记录里的角度怎么写、怎么读。</small></li>
+      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+        <small>格网北、子午线收敛角，以及格网方向为什么不是真方向。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

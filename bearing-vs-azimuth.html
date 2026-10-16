@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bearing vs Azimuth: What's the Difference</title>
+<meta name="description" content="A bearing quotes an angle from north or south within one quadrant; an azimuth runs clockwise from north to 360 degrees. The conversion rule for each quadrant.">
+<link rel="canonical" href="https://coordcalc.com/bearing-vs-azimuth.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/bearing-vs-azimuth.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/bearing-vs-azimuth.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/bearing-vs-azimuth.html">
+<meta property="og:title" content="Bearing vs Azimuth: What's the Difference">
+<meta property="og:description" content="Quadrant bearings and whole-circle azimuths, the four-quadrant conversion rule, back bearings and the magnetic north trap.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/bearing-vs-azimuth.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "Bearing vs Azimuth: What's the Difference",
+  "description": "How quadrant bearings and whole-circle azimuths relate, the conversion rule for each quadrant, and the difference between true and magnetic north.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/bearing-vs-azimuth.html"},
+  "articleSection": "Distance and direction"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Bearing vs azimuth
+  </nav>
+
+  <h1>Bearing vs Azimuth: What's the Difference</h1>
+
+  <p class="lead">
+    Both describe a horizontal direction, and both start from north, which is why they get used
+    interchangeably in conversation and then cause trouble in a calculation. The difference is the
+    reference frame: an azimuth is one continuous angle measured clockwise from north, while a bearing
+    names a quadrant and measures the angle from whichever of north or south is nearer, towards east or
+    west. Deeds, older survey plans and some jurisdictions use bearings; computation and most modern
+    software use azimuths.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Direction conventions</span>
+  </p>
+
+  <h2>Azimuth: one angle, 0° to 360°</h2>
+  <p>
+    An azimuth is measured clockwise from north and runs from 0° through east at 90°, south at 180°, west
+    at 270°, and back to 360° at north. There is no quadrant bookkeeping and no sign convention — the
+    direction north-east is simply 45°, and the direction west-south-west is 247.5°. Because it is a
+    single continuous quantity, an azimuth is what coordinate geometry uses: <code>ΔE = d sin A</code>
+    and <code>ΔN = d cos A</code> turn a distance and an azimuth directly into a change in coordinates.
+  </p>
+
+  <h2>Bearing: an angle inside a named quadrant</h2>
+  <p>
+    A quadrant bearing, sometimes called a reduced bearing, states the quadrant first and gives an angle
+    between 0° and 90° inside it. It is written with the north or south reference first and the east or
+    west direction last, as in <code>N 45°30′ E</code> — 45°30′ east of north. The four possible forms are
+    NE, SE, SW and NW, and the angle is always the deviation from the meridian, never an absolute angle.
+  </p>
+  <p>
+    The style is not arbitrary. A quadrant bearing makes the direction readable at a glance: you can see
+    from the letters whether a line runs easterly or westerly without comparing numbers to 90 and 270,
+    and in a metes-and-bounds description where a dozen lines are read aloud in sequence, that matters.
+  </p>
+
+  <h2>The conversion rule, quadrant by quadrant</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Quadrant</th><th>Bearing</th><th>Azimuth</th><th>Rule</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>North-east</td><td>N θ E</td><td>θ</td><td>Azimuth = θ</td></tr>
+        <tr><td>South-east</td><td>S θ E</td><td>180° − θ</td><td>Azimuth = 180° − θ</td></tr>
+        <tr><td>South-west</td><td>S θ W</td><td>180° + θ</td><td>Azimuth = 180° + θ</td></tr>
+        <tr><td>North-west</td><td>N θ W</td><td>360° − θ</td><td>Azimuth = 360° − θ</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Worked both ways: a bearing of <code>N 45°30′ E</code> is azimuth 45.5°. A bearing of
+    <code>S 60° E</code> is 180° − 60° = 120°. An azimuth of 225° falls in the south-west quadrant, so the
+    bearing is <code>S 45° W</code>, because 225° − 180° = 45°. And an azimuth of 330° is
+    <code>N 30° W</code>, because 360° − 330° = 30°.
+  </p>
+  <p>
+    Going from azimuth to bearing, the quadrant is decided first — NE for 0–90, SE for 90–180, SW for
+    180–270, NW for 270–360 — and then the angle inside that quadrant is computed by the inverse of the
+    rule above. Exact multiples of 90° are the awkward case, since the angle inside the quadrant is 0°
+    and the bearing degenerates to a pure cardinal direction, which is why software often reports them
+    as azimuths regardless of the setting.
+  </p>
+
+  <h2>Back bearings and back azimuths</h2>
+  <p>
+    The direction of a line depends on which end you stand at. The forward azimuth and the back azimuth
+    differ by 180°: <code>back = forward + 180°</code> if the forward azimuth is below 180°, and
+    <code>back = forward − 180°</code> if it is above. For bearings the rule is neater — the letters
+    swap, so <code>N 45° E</code> reverses to <code>S 45° W</code> and the angle stays the same.
+  </p>
+  <p>
+    This is one place where the bearing convention earns its keep: reading a description of a closed
+    parcel, the reverse of each line appears in the next line's letters, and any line that does not
+    reverse correctly is immediately visible as a transcription error. The same check exists for
+    azimuths, but as arithmetic rather than as pattern-matching.
+  </p>
+
+  <div class="note">
+    <p><b>True north, magnetic north or grid north?</b> A bearing or azimuth is meaningless without
+    knowing which north it refers to. <b>True north</b> is the geographic pole, <b>magnetic north</b> is
+    where a compass needle points and it drifts with the magnetic declination, and <b>grid north</b> is
+    the direction of the grid's north axis on a projected map, which differs from true north by the grid
+    convergence. Deeds written with a compass give magnetic bearings with the declination stated at the
+    time of survey. Modern computation uses grid or true azimuths. Converting between them without the
+    declination and convergence is not possible.</p>
+  </div>
+
+  <h2>Practical consequences</h2>
+  <p>
+    The three errors that come up most often are mixing conventions within one calculation, forgetting
+    that a magnetic bearing from an old deed does not equal a modern azimuth, and applying a back-bearing
+    rule twice so that the direction silently reverts. All three produce results that are internally
+    consistent and externally wrong. If a coordinate closes neatly but the shape is rotated relative to
+    the ground, declination or a swapped convention is the first thing to check.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Quadrant bearing to whole-circle azimuth and back</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Distance, initial bearing and back bearing</small></a>
+      <a href="traverse-calculator.html">traverse calculator<small>Bearing and distance to coordinates, with closure</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Angles in degrees, minutes and seconds</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-closure-error.html">How to calculate closure error in a traverse</a>
+        <small>Where bearings and distances are added up, and what the residuals mean.</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">Degrees, minutes and seconds explained</a>
+        <small>How angles are written in survey records, and how to read them.</small></li>
+      <li><a href="how-to-read-utm-coordinates.html">How to read UTM coordinates</a>
+        <small>Grid north, convergence and why a grid direction is not a true direction.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

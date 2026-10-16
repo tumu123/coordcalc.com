@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTM vs MGRS: What's the Difference</title>
+<meta name="description" content="UTM and MGRS share one grid: UTM gives metres from the zone origin, MGRS packs the same position into letters and digits that state the precision.">
+<link rel="canonical" href="https://coordcalc.com/utm-vs-mgrs.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/utm-vs-mgrs.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/utm-vs-mgrs.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/utm-vs-mgrs.html">
+<meta property="og:title" content="UTM vs MGRS: What's the Difference">
+<meta property="og:description" content="One grid, two notations. How UTM metres relate to MGRS grid references, and what the number of digits tells you.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/utm-vs-mgrs.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "UTM vs MGRS: What's the Difference",
+  "description": "How UTM coordinates and MGRS grid references relate, what the digits mean, and how to convert between the two notations.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/utm-vs-mgrs.html"},
+  "articleSection": "Coordinates"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › UTM vs MGRS
+  </nav>
+
+  <h1>UTM vs MGRS: What's the Difference</h1>
+
+  <p class="lead">
+    UTM and MGRS are not competing systems and they are not alternatives to latitude and longitude in
+    the same way as each other. They are the same grid, written twice: UTM states a position in metres
+    from the zone's origin, while MGRS states the same position in letters and digits whose length
+    silently declares how precise the position is. Understanding that relationship removes most of the
+    confusion between them.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Shared grid</span>
+  </p>
+
+  <h2>The shared foundation</h2>
+  <p>
+    Both systems stand on the Universal Transverse Mercator grid. The 60 zones, each 6° of longitude
+    wide, and the 20 latitude bands from 80°&nbsp;S to 84°&nbsp;N, are common to both. A UTM coordinate
+    and the MGRS reference for the same point will always carry the same zone number and the same band
+    letter, because those describe the grid square, not the position within it.
+  </p>
+
+  <h2>Where they part company</h2>
+  <p>
+    <b>UTM</b> then gives two numbers in metres: the easting, measured from the zone's central meridian
+    with a false easting of 500,000&nbsp;m, and the northing, measured from the equator with a false
+    northing of 10,000,000&nbsp;m south of it. The numbers are continuous, and any number of decimal
+    places can be added.
+  </p>
+  <p>
+    <b>MGRS</b> takes the same zone and band, then subdivides the 100&nbsp;km square that contains the
+    point by giving it a two-letter identifier — the 100&nbsp;km square designation — and then quotes
+    easting and northing <i>within that square</i> as digits, with the metres stripped to a chosen number
+    of significant figures.
+  </p>
+  <div class="formula">UTM&nbsp;&nbsp;&nbsp;17T 630084 4833438&nbsp;&nbsp;&nbsp;full metres<br>
+MGRS&nbsp;&nbsp;17T PJ 3008 3343&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10 m precision<br>
+MGRS&nbsp;&nbsp;17T PJ 30084 33438&nbsp;&nbsp;&nbsp;&nbsp;1 m precision<br>
+MGRS&nbsp;&nbsp;17T PJ 308 334&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100 m precision</div>
+
+  <h2>The digit count is the precision</h2>
+  <p>
+    This is the property of MGRS that surprises people most, and it is deliberate. Because the digits are
+    a truncated fraction of the 100&nbsp;km square rather than an absolute distance, the number of digits
+    has to state the precision — otherwise two identical strings could describe different-sized areas.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Digits per axis</th><th>Precision</th><th>Example</th><th>Use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>10 km</td><td>17T PJ 3 3</td><td>Regional reporting</td></tr>
+        <tr><td>2</td><td>1 km</td><td>17T PJ 30 33</td><td>Area search, rough planning</td></tr>
+        <tr><td>3</td><td>100 m</td><td>17T PJ 300 334</td><td>Field navigation at map scale</td></tr>
+        <tr><td>4</td><td>10 m</td><td>17T PJ 3008 3343</td><td>Position reporting, most common</td></tr>
+        <tr><td>5</td><td>1 m</td><td>17T PJ 30084 33438</td><td>Survey-grade reporting</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The precision is not a suffix or a flag, it is implied by how many digits were written. That makes
+    MGRS compact and self-describing in the field, where a radio message should be as short as it can be
+    without ambiguity — and it makes MGRS risky in a database, where a value stored with the wrong number
+    of digits silently means something else.
+  </p>
+
+  <h2>Converting between them</h2>
+  <p>
+    Conversion is mechanical once the 100&nbsp;km square is known. The two letters identify which
+    100&nbsp;km square of the zone the point is in; its lower-left corner has a known easting and
+    northing; and the MGRS digits are then the offsets from that corner, scaled by the precision.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Step</th><th>UTM → MGRS</th><th>MGRS → UTM</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>Confirm zone and band</td><td>Confirm zone and band from the string</td></tr>
+        <tr><td>2</td><td>Divide easting by 100,000 to find the square column</td><td>Decode the two letters to a column and row</td></tr>
+        <tr><td>3</td><td>Divide northing by 100,000, allowing for the band offset</td><td>Compute the square's easting and northing base</td></tr>
+        <tr><td>4</td><td>Truncate the remainder to the chosen precision</td><td>Add the digits, padded to full metres</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The band offset in step 3 is the part that catches people out, because MGRS northing letters cycle
+    every 2,000&nbsp;km and the starting letters change from one band to the next. Doing this by hand
+    across a band boundary is where mistakes happen; a converter that already holds the full lookup is the
+    safer route.
+  </p>
+
+  <div class="note">
+    <p><b>The two-way test.</b> Any point converted from UTM to MGRS and back should return the original
+    coordinate, truncated to the MGRS precision. If it does not, the 100&nbsp;km square was decoded with
+    the wrong band offset. Run that test on a point near a band boundary before trusting either value in
+    a report.</p>
+  </div>
+
+  <h2>Which one should you use?</h2>
+  <p>
+    Use <b>UTM</b> when precision is the point: survey plans, GIS layers, coordinate geometry
+    calculations, anything that has to reconcile with another metric measurement. Use <b>MGRS</b> when
+    brevity and a shared reading of precision matter more than arithmetic: radio reports, field
+    navigation, joint operations with organisations that already use it. Storing both, with the datum
+    stated, costs a few bytes and removes an entire class of argument later.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="mgrs-converter.html">mgrs to lat long<small>Grid references to latitude and longitude, and back</small></a>
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Metres-based UTM conversion</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Format latitude and longitude for a report</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area from a list of coordinates</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-read-utm-coordinates.html">How to read UTM coordinates</a>
+        <small>What each part of a UTM reference means.</small></li>
+      <li><a href="convert-easting-northing-to-lat-long.html">Converting easting and northing to latitude and longitude</a>
+        <small>The inverse projection calculation, step by step.</small></li>
+      <li><a href="degrees-minutes-seconds-explained.html">Degrees, minutes and seconds explained</a>
+        <small>The other way of writing a position, and when it is the right one.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

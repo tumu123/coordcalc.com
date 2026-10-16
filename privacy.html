@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Privacy Policy — What CoordCalc Collects and What It Never Does</title>
+<meta name="description" content="CoordCalc's privacy policy in plain language: calculations run in your browser, no coordinate is uploaded, analytics is opt-in and cookieless.">
+<link rel="canonical" href="https://coordcalc.com/privacy.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/privacy.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/privacy.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/privacy.html">
+<meta property="og:title" content="Privacy Policy — What CoordCalc Collects and What It Never Does">
+<meta property="og:description" content="Every calculation runs in your browser. Nothing you type is uploaded. Analytics is opt-in and cookieless.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/privacy.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  "inLanguage": "en",
+  "name": "CoordCalc privacy policy",
+  "description": "What the CoordCalc calculators collect, what they never collect, and how the opt-in analytics works.",
+  "url": "https://coordcalc.com/privacy.html",
+  "isPartOf": {"@type": "WebSite", "name": "CoordCalc", "url": "https://coordcalc.com/"}
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › Privacy policy
+  </nav>
+
+  <h1>Privacy policy</h1>
+
+  <p class="meta">
+    <span>Last updated 9 October 2026</span>
+    <span>Applies to every page on this site</span>
+  </p>
+
+  <p class="lead">
+    This site is a set of calculators, and the shortest honest summary of its privacy position is
+    this: <b>the calculators run on your device, and the numbers you put into them stay on your
+    device.</b> There is no account, no form, no upload and no server-side calculation. This page
+    explains the small number of exceptions — a web server log, an opt-in analytics script and one
+    localStorage key — in the same plain language the rest of the site uses.
+  </p>
+
+  <div class="card">
+    <h2>The short version</h2>
+    <ul>
+      <li><b>Coordinates, values and pasted lists never leave your browser.</b> Every conversion,
+          adjustment, area and volume is computed by JavaScript running on your machine. There is no
+          API call behind the calculator and no server that sees your input.</li>
+      <li><b>No advertising, no ad networks, no cross-site tracking.</b> No third-party advertising
+          or social script loads on any page.</li>
+      <li><b>Analytics is opt-in and cookieless.</b> A single analytics script may load, and only
+          after you press <b>Accept analytics</b>. It records page views and which tool was used. It
+          sets no cookie and builds no profile that follows you.</li>
+      <li><b>One localStorage key.</b> The only thing written to your browser is
+          <code>coordcalc-consent</code>, which remembers the choice you made in the banner. You can
+          delete it at any time.</li>
+      <li><b>The web server keeps ordinary logs.</b> Any web server does: your IP address, the page
+          requested, the time, and your browser's user agent. Those logs are for operating and
+          securing the site, not for profiling.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>What never leaves your browser</h2>
+    <p>
+      Everything you type into a calculator is processed by the page you have already loaded. The
+      transverse Mercator series, the Vincenty distance routine, the least-squares traverse
+      adjustment, the shoelace area sum and the DXF file parser are all JavaScript inside the
+      document. When you convert <code>43.642567, -79.387139</code> to a UTM grid reference, or read
+      the vertices out of a CAD file, the data is read from a local file input or a textarea and
+      written back into the same page.
+    </p>
+    <p>
+      There is no point in the flow at which your input is serialised and sent anywhere. You can
+      confirm this yourself: open your browser's developer tools, watch the network tab, and use any
+      calculator. After the page and its stylesheet and scripts have loaded, using the tools produces
+      no requests at all. The calculators also work offline once the page is open, which is only
+      possible because nothing round-trips to a server.
+    </p>
+    <p>
+      Files are the same. The <a href="dxf-coordinate-extractor.html">DXF coordinate extractor</a>
+      reads the file you pick with the browser's own <code>FileReader</code> interface, entirely in
+      memory. The file is not uploaded, queued or stored, and closing the tab discards it.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>What the web server sees</h2>
+    <p>
+      To deliver this page at all, a web server has to answer your request. That produces a log
+      entry, as it does on every site: the requested URL, the date and time, your IP address, the
+      page you came from if your browser sends one, and your browser's user-agent string. This is
+      standard, unavoidable and not something this site adds.
+    </p>
+    <p>
+      Those logs are used to keep the site working — error rates, broken links, abusive traffic —
+      and are not combined with anything you do inside a calculator, because the site never receives
+      what you do inside a calculator. Logs are retained for a bounded period and then deleted.
+    </p>
+  </div>
+
+  <div class="card" id="analytics">
+    <h2>Analytics, and the consent banner</h2>
+    <p>
+      The site uses a privacy-respecting analytics script to learn which calculators are used and
+      which are ignored, so that effort goes where it is useful. The script is
+      <b>cookieless</b>: it does not set a cookie, does not read an existing one, does not
+      fingerprint your device, and does not follow you to any other site. It records the page name,
+      the event (a page view, that a calculator was used, that an outbound link was clicked) and
+      coarse properties such as the referrer.
+    </p>
+    <p>
+      It loads <b>only if you accept</b>. The banner at the bottom of the page offers two choices:
+    </p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Choice</th><th>What happens</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Accept analytics</b></td>
+            <td>The analytics script loads on this and later visits. Page views and tool-use events
+                are counted. Nothing you type into a calculator is included — the event says that a
+                tool was used, not what you converted.</td>
+          </tr>
+          <tr>
+            <td><b>Essential only</b></td>
+            <td>The analytics script never loads, on this and later visits. The site works
+                identically; you simply tell us nothing.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">
+      Until you choose, no analytics request is made at all — the gate is closed before the script
+      has a chance to load, not after. If you choose <b>Essential only</b> it stays closed. If you
+      choose <b>Accept analytics</b> and change your mind later, use the button below: the choice is
+      reversed immediately and the script will not load on your next visit.
+    </p>
+  </div>
+
+  <div class="card" id="cookies">
+    <h2>Cookies and localStorage</h2>
+    <p>
+      This site sets <b>no cookies</b>. The one thing it stores is a single entry in your browser's
+      localStorage, which is a per-site storage area that is never sent to a server with a request
+      the way a cookie is:
+    </p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Key</th><th>Value</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>coordcalc-consent</code></td>
+            <td><code>granted</code> or <code>essential</code></td>
+            <td>Remembers your answer to the consent banner so it does not ask again on every page.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">
+      That is the complete list. There is no session identifier, no preference store and no
+      third-party storage of any kind. Clearing your browser's site data for this domain removes the
+      key, and the banner will simply ask again the next time you visit.
+    </p>
+    <p>
+      <button class="btn" id="cookie-settings" type="button">Cookie settings</button>
+      <span style="display:block;font-size:13px;color:var(--sub);margin-top:8px;">
+        Reopens the banner so you can change your choice. Your current answer:
+        <code id="consent-now">…</code>
+      </span>
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Embedded calculators</h2>
+    <p>
+      The calculators can be embedded in another site with <code>embed=1</code>, as described in the
+      <a href="developers.html">developer guide</a>. An embedded calculator is more private again,
+      not less: the banner is not shown inside a frame, and the analytics script never loads there,
+      because the consent decision belongs to the site that hosts the embed. An embedded tool makes
+      no request of any kind after it loads, sets no storage, and reads nothing from the page around
+      it.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Data we do not have</h2>
+    <p>
+      Because there is no account, no newsletter and no comment form, this site holds no name, no
+      email address, no postal address and no phone number for anyone. There is no user list to
+      leak, sell or hand over, and no way to link a calculation to a person. If a regulator or a
+      purchaser asked for the personal data of this site's visitors, the honest answer would be that
+      none is held.
+    </p>
+    <p>
+      The site does not sell data, does not rent it, and does not share it with advertising
+      networks, data brokers or social platforms. There is nothing to share.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Your choices and rights</h2>
+    <p>
+      You can do everything on this site with analytics refused, which is the position most privacy
+      regulators would prefer anyway. Beyond that:
+    </p>
+    <ul>
+      <li><b>Change your consent</b> at any time with the button above.</li>
+      <li><b>Delete the stored choice</b> by clearing site data for this domain in your browser.</li>
+      <li><b>Block the script entirely</b> with any content blocker; every calculator works
+          perfectly without it.</li>
+      <li><b>Ask a question</b> about any of this through the contact address below, and you will
+          get an answer from a person rather than a form letter.</li>
+    </ul>
+    <p>
+      Where privacy law gives you rights of access, correction or erasure, those rights are trivially
+      satisfied here: the only record that could concern you is an anonymous log line or an anonymous
+      analytics event, and there is no identifier in either that could be traced back to you.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Changes to this policy</h2>
+    <p>
+      If the site ever adds something that collects more than this page describes — an account
+      system, a newsletter, a different analytics provider — this page will be rewritten first and
+      the date at the top will change. Material changes will be announced on the site itself rather
+      than buried here.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Contact</h2>
+    <p>
+      Questions about this policy, about the calculators, or about a result that does not look
+      right: see the <a href="about.html">about page</a> for how to get in touch.
+    </p>
+  </div>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+    <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var btn = document.getElementById("cookie-settings");
+  var now = document.getElementById("consent-now");
+  function paint() {
+    var v = "not chosen yet";
+    if (window.geoConsent) {
+      var s = window.geoConsent.status();
+      v = s === "unset" ? "not chosen yet" : s;
+    }
+    now.textContent = v;
+  }
+  if (btn) {
+    btn.addEventListener("click", function () {
+      if (window.geoConsent) {
+        window.geoConsent.open();
+        paint();
+      }
+    });
+  }
+  paint();
+})();
+</script>
+</body>
+</html>

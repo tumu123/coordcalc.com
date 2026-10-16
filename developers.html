@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Developer Guide — URL Parameters, Embeds and the JS API</title>
+<meta name="description" content="Drive the CoordCalc calculators from code: a query-string API to prefill every tool, a chrome-free iframe embed mode, and the window.Geo JavaScript library.">
+<link rel="canonical" href="https://coordcalc.com/developers.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/developers.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/developers.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/developers.html">
+<meta property="og:title" content="Developer Guide — URL Parameters, Embeds and the JS API">
+<meta property="og:description" content="Query-string parameters, an embeddable iframe mode and the window.Geo geodesy library behind the CoordCalc surveying calculators.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/developers.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "inLanguage": "en",
+  "headline": "Developer guide: URL parameters, iframe embedding and the JavaScript API",
+  "description": "How to prefill the CoordCalc surveying calculators from a query string, embed them in an iframe, and call the underlying window.Geo geodesy library directly.",
+  "url": "https://coordcalc.com/developers.html",
+  "about": ["Uniform Transverse Mercator", "MGRS", "coordinate conversion", "surveying calculator API"],
+  "isPartOf": {"@type": "WebSite", "name": "CoordCalc", "url": "https://coordcalc.com/"}
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "Can I prefill a calculator from a link?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Every tool reads its state from the query string. ?lat=43.642567&lon=-79.387139 opens the UTM converter already converted; ?value=100&from=usft&to=m opens the unit converter on a survey-foot conversion. Missing or unrecognised parameters are ignored and the tool falls back to its defaults."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is there an API key or a rate limit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Neither. The pages are static and every calculation runs in the visitor's browser, so there is nothing to authorise and nothing to meter. No coordinate is ever sent to a server."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I embed a calculator in my own page?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Add embed=1 and load the URL in an iframe. That hides the header, breadcrumb, article and footer and leaves the calculator at roughly 520 px tall for the single-coordinate tools. Everything still works inside the frame, including tab switching and CSV export."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is window.Geo?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The shared geodesy library inlined into the tool pages, on the WGS84 ellipsoid. It exposes utmForward, utmInverse, mgrsForward, mgrsInverse, vincentyInverse, polygonArea, parseAngle and the rest, plus unit constants. It is dependency-free ES5 and also exports through module.exports for Node."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is the UTM conversion?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Against PROJ, the easting agrees to better than 0.1 mm and the northing to better than 0.9 mm across test points from the equator to 78° N, and a forward-then-inverse round trip closes to a few nanometres. The inverse is solved by Newton iteration, not a truncated reverse series."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is an MGRS round trip out by about a metre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because a five-digit reference names a 1 m square rather than a point, and the inverse returns its south-west corner. Expect up to about 1.4 m of offset. Use six digits and the square is 0.1 m across."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<style>
+  .dgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0 4px;}
+  .dgrid .full{grid-column:1 / -1;}
+  .dgrid label{display:block;font-size:12.5px;font-weight:600;color:var(--sub);margin-bottom:5px;}
+  .dgrid input,.dgrid select{width:100%;font:inherit;font-size:14px;padding:9px 11px;
+    border:1px solid #cfd6e0;border-radius:9px;background:#fff;color:var(--text);}
+  .dgrid textarea{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    font-size:12.5px;line-height:1.6;padding:10px;border:1px solid #cfd6e0;border-radius:9px;resize:vertical;}
+  .dgrid input:focus,.dgrid select:focus,.dgrid textarea:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  .drow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:14px 0 10px;}
+  .drow .chk{display:flex;gap:7px;align-items:center;font-size:13.5px;color:var(--sub);}
+  .urlbox{background:#0f172a;color:#e2e8f5;border-radius:10px;padding:13px 15px;font-size:12.6px;
+    line-height:1.65;word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;margin:0;}
+  .urlbox .p{color:#7dd3fc;}
+  .urlbox .v{color:#fcd34d;}
+  .frame{width:100%;height:560px;border:1px solid #cfd6e0;border-radius:12px;background:#fff;display:block;}
+  a.btn{text-decoration:none;display:inline-block;}
+  .sig{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.6px;
+    color:var(--accent-d);word-break:break-word;}
+  .ret{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.3px;color:var(--sub);}
+  table.lookup td{padding:10px 11px;vertical-align:top;}
+  table.lookup td:first-child{white-space:nowrap;}
+  .out{background:#f8fafc;border:1px solid var(--line);border-radius:10px;padding:13px 15px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.6px;
+    line-height:1.7;color:#334155;margin:12px 0;overflow-x:auto;white-space:pre-wrap;}
+  .out b{color:var(--text);}
+  @media(max-width:640px){
+    .dgrid{grid-template-columns:1fr;}
+    .frame{height:620px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › Developer guide
+  </nav>
+
+  <h1>Developer guide: URLs, embeds and the JavaScript API</h1>
+
+  <p class="lead">
+    Every CoordCalc calculator can be driven from outside the page. There are three routes in, and
+    they are independent: a <b>query string</b> that prefills any tool, an <b>embed mode</b> that
+    turns a tool into a chrome-free panel for an iframe, and <b><code>window.Geo</code></b>, the
+    geodesy library that sits behind the calculators and is available to call directly. No API key,
+    no account and no rate limit — the arithmetic happens in the visitor's browser.
+  </p>
+
+  <div class="card">
+    <h2>Three ways in</h2>
+    <table class="lookup">
+      <thead><tr><th>Route</th><th>Use it when</th><th>Start here</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><b>Query string</b></td>
+          <td>You have a coordinate, a value or a whole list and you want the calculator to open
+              with it already filled in — from a spreadsheet, a CMS field, an emailed link or an
+              <code>&lt;a href&gt;</code>.</td>
+          <td><a href="#params">Parameter reference</a></td>
+        </tr>
+        <tr>
+          <td><b>iframe embed</b></td>
+          <td>The calculator belongs inside your own page or intranet but you would rather not
+              rebuild it. Add <code>embed=1</code> and the header, article and footer drop away.</td>
+          <td><a href="#embed">Embedding</a></td>
+        </tr>
+        <tr>
+          <td><b><code>window.Geo</code></b></td>
+          <td>You want the numbers, not the interface — batch-processing a coordinate file, a
+              build step, or your own UI on top of the same engine.</td>
+          <td><a href="#jsapi">JavaScript API</a></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card" id="params">
+    <h2>Query-string API</h2>
+    <p>
+      Parameters are read once, when the page loads. Anything the tool does not recognise is
+      ignored, so a stray parameter in a URL never breaks the calculator — it simply has no effect
+      and the tool keeps its normal defaults. Values must be URL-encoded, and <code>+</code> is
+      decoded as a space, so a pasted coordinate list travels safely.
+    </p>
+    <p>
+      Once you start interacting with a tool, it rewrites its own address with
+      <code>history.replaceState</code>, so a refresh, a bookmark or a copied address bar entry
+      reproduces exactly what is on screen. The page never reloads to do this, and there is no
+      history entry to click back through. In embed mode the tool leaves the URL alone entirely.
+    </p>
+
+    <h3>Coordinate tools</h3>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Parameter</th><th>Meaning</th><th>Accepted</th></tr></thead>
+        <tbody>
+          <tr><td><code>lat</code></td><td>Latitude for the forward tab</td><td>Decimal degrees or DMS: <code>43.642567</code>, <code>N 43 38 33.2</code></td></tr>
+          <tr><td><code>lon</code></td><td>Longitude for the forward tab</td><td><code>-79.387139</code>, <code>79°23′13.7″W</code>. Aliases: <code>lng</code>, <code>long</code>, <code>longitude</code></td></tr>
+          <tr><td><code>e</code></td><td>Easting, metres, for the inverse tab</td><td>Any number. Aliases: <code>easting</code>, <code>x</code></td></tr>
+          <tr><td><code>n</code></td><td>Northing, metres, for the inverse tab</td><td>Any number. Aliases: <code>northing</code>, <code>y</code></td></tr>
+          <tr><td><code>zone</code></td><td>UTM zone</td><td><code>17</code> or <code>17N</code> — a trailing <code>N</code> or <code>S</code> also sets the hemisphere</td></tr>
+          <tr><td><code>hemi</code></td><td>Hemisphere, when the zone carries no letter</td><td><code>N</code> or <code>S</code></td></tr>
+          <tr><td><code>mode</code></td><td>Forces a tab instead of inferring one</td><td><code>fwd</code>, <code>inv</code>, <code>batch</code></td></tr>
+          <tr><td><code>text</code></td><td>A pasted coordinate list for the batch tab</td><td>URL-encoded, newlines as <code>%0A</code>. Aliases: <code>coords</code>, <code>csv</code></td></tr>
+          <tr><td><code>dir</code></td><td>Batch conversion direction</td><td><code>fwd</code>, <code>inv</code>, <code>mgrs</code></td></tr>
+          <tr><td><code>digits</code></td><td>MGRS precision</td><td><code>0</code> (100 km) to <code>5</code> (1 m), default <code>5</code></td></tr>
+          <tr><td><code>mgrs</code></td><td>Hide the MGRS column in batch output</td><td><code>0</code></td></tr>
+          <tr><td><code>dms</code></td><td>Add a degrees-minutes-seconds column in batch output</td><td><code>1</code></td></tr>
+          <tr><td><code>embed</code></td><td>Chrome-free layout</td><td><code>1</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ret" style="margin-top:12px;">
+      If <code>mode</code> is absent the tab is chosen from the parameters you did send: a
+      latitude and longitude pair selects the forward tab, an easting and northing pair selects the
+      inverse tab, and a <code>text</code> value selects batch.
+    </p>
+    <p>Four links that are already complete — open them and the answer is on screen:</p>
+    <ul class="readon">
+      <li><a href="utm-coordinate-converter.html?lat=43.642567&amp;lon=-79.387139">utm-coordinate-converter.html?lat=43.642567&amp;lon=-79.387139</a>
+        <small>Forward: zone 17T, easting 630,084.301 m, northing 4,833,438.586 m.</small></li>
+      <li><a href="utm-coordinate-converter.html?e=630084.301&amp;n=4833438.586&amp;zone=17N">utm-coordinate-converter.html?e=630084.301&amp;n=4833438.586&amp;zone=17N</a>
+        <small>Inverse: back to 43.642567° N, 79.387139° W.</small></li>
+      <li><a href="utm-coordinate-converter.html?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=P1%2C%20630084.301%2C%204833438.586">utm-coordinate-converter.html?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=…</a>
+        <small>Batch: one grid coordinate in, one latitude and longitude out.</small></li>
+      <li><a href="unit-converter.html?value=100&amp;from=usft&amp;to=m">unit-converter.html?value=100&amp;from=usft&amp;to=m</a>
+        <small>Units: 100 US survey feet = 30.48006096 m.</small></li>
+    </ul>
+
+    <h3>Unit converter</h3>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Parameter</th><th>Meaning</th><th>Accepted</th></tr></thead>
+        <tbody>
+          <tr><td><code>mode</code></td><td>Which family of units</td><td><code>len</code>, <code>area</code>, <code>ang</code> — or <code>length</code> and <code>angle</code></td></tr>
+          <tr><td><code>value</code></td><td>The quantity to convert</td><td>Any number. Alias: <code>v</code></td></tr>
+          <tr><td><code>from</code></td><td>Source unit key</td><td>See the keys below</td></tr>
+          <tr><td><code>to</code></td><td>Target unit key</td><td>See the keys below</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:14px;">
+      <b>Length keys:</b> <code>m</code> <code>ft</code> <code>usft</code> <code>in</code>
+      <code>cm</code> <code>km</code> <code>yd</code> <code>ch</code> <code>lk</code>
+      <code>rd</code> <code>fur</code> <code>fath</code> <code>mi</code> <code>nmi</code>
+      <code>lea</code> <code>vara</code>.<br>
+      <b>Area keys:</b> <code>m2</code> <code>ft2</code> <code>acre</code> <code>ha</code>
+      <code>usacre</code> <code>km2</code> <code>mi2</code> <code>yd2</code> <code>are</code>
+      <code>rood</code> <code>sqch</code> <code>sqrd</code> <code>section</code>
+      <code>township</code>.<br>
+      <b>Angle keys:</b> <code>deg</code> <code>dms</code> <code>rad</code> <code>grad</code>
+      <code>milN</code> <code>milA</code> <code>turn</code> <code>amin</code> <code>asec</code>.
+    </p>
+    <p>
+      You do not have to send <code>mode</code>. If it is missing, the converter looks up the
+      <code>from</code> key and switches to whichever family contains it, which is why
+      <code>?value=1&amp;from=acre&amp;to=ha</code> lands on the area tab with no further help. An
+      unknown unit key is ignored and the default for that family is used instead.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Building a link — live</h2>
+    <p>
+      Change the fields and the URL below updates immediately. Press <b>Preview</b> to load that
+      exact URL into the frame underneath, which is the same thing an iframe on your own page would
+      show.
+    </p>
+    <div class="dgrid">
+      <div class="full">
+        <label for="d-tool">Tool</label>
+        <select id="d-tool">
+          <option value="utm-fwd">utm-coordinate-converter.html — latitude / longitude → UTM</option>
+          <option value="utm-inv">utm-coordinate-converter.html — UTM → latitude / longitude</option>
+          <option value="utm-batch">utm-coordinate-converter.html — batch CSV</option>
+          <option value="unit-len">unit-converter.html — length</option>
+          <option value="unit-area">unit-converter.html — area</option>
+        </select>
+      </div>
+    </div>
+    <div class="dgrid" id="d-fields"></div>
+    <div class="drow">
+      <label class="chk"><input type="checkbox" id="d-embed"> Add <code>embed=1</code></label>
+      <button class="btn" id="d-preview" type="button">Preview</button>
+      <a class="btn" id="d-open" href="utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139" target="_blank" rel="noopener">Open in a new tab</a>
+    </div>
+    <p class="urlbox" id="d-url"></p>
+  </div>
+
+  <div class="card" id="embed">
+    <h2>Embedding a calculator in your own page</h2>
+    <p>
+      Add <code>embed=1</code> and the page hides everything except the calculator: no site header,
+      no breadcrumb, no headline, no article, no footer. What is left is the tool card itself, at
+      its natural height, ready to sit in a frame.
+    </p>
+<pre class="code">&lt;iframe
+  src="https://coordcalc.com/utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
+  title="UTM to latitude and longitude converter"
+  width="100%" height="560" style="border:1px solid #cfd6e0;border-radius:12px"
+  loading="lazy"&gt;&lt;/iframe&gt;</pre>
+    <p>
+      Three details worth keeping. Give the frame a <code>title</code>, because screen readers
+      announce it and an untitled frame is an accessibility dead end. Use <code>loading="lazy"</code>
+      so a tool lower down a long page does not cost anything until it is scrolled into view. And
+      size the frame for the tallest tab, not the one you linked to, so switching tabs inside the
+      frame does not produce a scrollbar.
+    </p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Embedded tool</th><th>Suggested height</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>utm-coordinate-converter.html</td><td>560 px</td><td>Batch tab is the tallest state; add a further 120 px if you link straight to it</td></tr>
+          <tr><td>unit-converter.html</td><td>620 px</td><td>Result list is long; the angle tab is the tallest</td></tr>
+          <tr><td>dms-converter.html</td><td>560 px</td><td>Single coordinate pair</td></tr>
+          <tr><td>mgrs-converter.html</td><td>560 px</td><td>Single grid reference</td></tr>
+          <tr><td>state-plane-converter.html</td><td>640 px</td><td>Zone picker plus result rows</td></tr>
+          <tr><td>land-area-calculator.html</td><td>720 px</td><td>Coordinate input table grows with the number of points</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      An embedded tool is the same document as the standalone page, so it keeps every behaviour:
+      tabs switch, results recalculate as you type, <b>Copy link</b> builds a URL, and the batch tab
+      still exports CSV. It also stays quiet — an embedded calculation writes no cookies, sends no
+      request, and never touches the parent frame. Please leave one visible link back to the tool on
+      the page that hosts the embed; an orphaned frame with no attribution is the one usage we ask
+      you to avoid.
+    </p>
+    <p style="font-size:13.5px;color:var(--sub);">Live example — the frame below is
+      <code>utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>:</p>
+    <iframe class="frame"
+      src="utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
+      title="UTM to latitude and longitude converter, embedded"
+      loading="lazy"></iframe>
+  </div>
+
+  <div class="card" id="jsapi">
+    <h2>The JavaScript API — <code>window.Geo</code></h2>
+    <p>
+      The calculators all run on one shared library, inlined into each tool page and published as
+      the global <code>Geo</code>. Open any tool, drop into the browser console, and it is there:
+    </p>
+<pre class="code">&gt; Geo.utmForward(43.642567, -79.387139)
+{ zone: 17, north: true, band: "T", centralMeridian: -81,
+  easting: 630084.3008341495, northing: 4833438.585674161,
+  convergence: 1.1133056360734274, scaleFactor: 0.9998080873147939 }</pre>
+    <p>
+      It is plain ES5 with no dependencies and no DOM access, so the same file works under Node:
+      the library ends with <code>module.exports = Geo</code>, which means a build script or a test
+      harness can pull it straight out of the page and <code>require</code> it.
+    </p>
+
+    <h3>Functions</h3>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Call</th><th>Returns</th></tr></thead>
+        <tbody>
+          <tr><td class="sig">Geo.utmForward(lat, lon)</td><td class="ret">{ zone, north, band, centralMeridian, easting, northing, convergence, scaleFactor }</td></tr>
+          <tr><td class="sig">Geo.utmInverse(easting, northing, zone, north)</td><td class="ret">{ lat, lon, iterations }</td></tr>
+          <tr><td class="sig">Geo.utmZone(lon)</td><td class="ret">Zone number 1–60 from longitude alone</td></tr>
+          <tr><td class="sig">Geo.utmZoneAt(lat, lon)</td><td class="ret">Zone number including the Norway and Svalbard exceptions</td></tr>
+          <tr><td class="sig">Geo.centralMeridian(zone)</td><td class="ret">Longitude of the zone's central meridian, degrees</td></tr>
+          <tr><td class="sig">Geo.utmBand(lat)</td><td class="ret">Latitude band letter <code>C</code>–<code>X</code>, or <code>""</code> outside 80°S–84°N</td></tr>
+          <tr><td class="sig">Geo.mgrsForward(lat, lon, digits)</td><td class="ret">{ mgrs, square, zone, band, digits, easting, northing } or <code>null</code> outside the UTM bands</td></tr>
+          <tr><td class="sig">Geo.mgrsInverse("17TPJ3008433438")</td><td class="ret">{ lat, lon, zone, band, easting, northing } or <code>null</code> if the string is not a valid reference</td></tr>
+          <tr><td class="sig">Geo.vincentyInverse(lat1, lon1, lat2, lon2)</td><td class="ret">{ distance, initialBearing, finalBearing, converged } — metres and degrees</td></tr>
+          <tr><td class="sig">Geo.haversineDistance(lat1, lon1, lat2, lon2)</td><td class="ret">Spherical distance in metres, for near-antipodal pairs where Vincenty stalls</td></tr>
+          <tr><td class="sig">Geo.polygonArea([[lat, lon], …])</td><td class="ret">{ area, perimeter, centroid, orientation, span, geodesicPerimeter, box } or <code>null</code> for fewer than three points</td></tr>
+          <tr><td class="sig">Geo.localPlane(coords, lat0, lon0)</td><td class="ret">[{ x, y }, …] — the polygon in a tangent plane centred on <code>lat0, lon0</code></td></tr>
+          <tr><td class="sig">Geo.parseAngle(text, "lat" | "lon")</td><td class="ret">Signed decimal degrees, or <code>NaN</code></td></tr>
+          <tr><td class="sig">Geo.formatDMS(value, dp, "lat" | "lon")</td><td class="ret">Formatted string such as <code>N 43° 38′ 33.200″</code></td></tr>
+          <tr><td class="sig">Geo.bearingToAzimuth(angle, "N", "W")</td><td class="ret">Whole-circle azimuth in degrees</td></tr>
+          <tr><td class="sig">Geo.azimuthToBearing(135)</td><td class="ret">{ quadrant, angle, ns, ew, text } — <code>text</code> is <code>"S 45.0000° E"</code></td></tr>
+          <tr><td class="sig">Geo.compassPoint(112.5)</td><td class="ret"><code>"ESE"</code> — one of the sixteen points</td></tr>
+          <tr><td class="sig">Geo.isNorthBand(band)</td><td class="ret"><code>true</code> from band N upwards</td></tr>
+          <tr><td class="sig">Geo.fmt(value, dp)</td><td class="ret">Thousands-separated string, or <code>"—"</code> for a non-finite value</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Worked examples</h3>
+    <p>
+      Every value below was produced by the library itself; run the same lines on any tool page and
+      you will get the same numbers.
+    </p>
+<pre class="code">// Toronto's CN Tower: latitude / longitude -> UTM
+var u = Geo.utmForward(43.642567, -79.387139);
+Geo.fmt(u.easting, 3);      // "630,084.301"
+Geo.fmt(u.northing, 3);     // "4,833,438.586"
+u.zone + u.band;            // "17T"
+Geo.fmt(u.scaleFactor, 7);  // "0.9998081"
+
+// and back again
+var g = Geo.utmInverse(630084.301, 4833438.586, 17, true);
+Geo.fmt(g.lat, 8);          // "43.64256700"
+Geo.fmt(g.lon, 8);          // "-79.38713900"
+
+// MGRS
+Geo.mgrsForward(43.642567, -79.387139, 5).mgrs;   // "17TPJ3008433438"
+Geo.mgrsInverse("17TPJ3008433438");               // { lat, lon, zone: 17, band: "T", … }
+
+// ellipsoidal distance and bearing, Toronto to Beijing
+var d = Geo.vincentyInverse(43.642567, -79.387139, 39.906111, 116.3974);
+Geo.fmt(d.distance, 1);      // "10,616,473.2"  metres
+Geo.fmt(d.initialBearing, 4);// "347.9204"      degrees
+d.converged;                 // true
+
+// ground area and perimeter of a parcel, from its corners
+var parcel = [[43.641000, -79.388000], [43.641000, -79.385517],
+              [43.642356, -79.385517], [43.642356, -79.388000]];
+var a = Geo.polygonArea(parcel);
+Geo.fmt(a.area, 1);          // "30,184.0"      square metres
+Geo.fmt(a.perimeter, 2);     // "702.01"        metres
+a.orientation;               // "counter-clockwise"</pre>
+    <p>
+      <code>polygonArea</code> is the one that needs a word of explanation. It projects the ring
+      onto a tangent plane centred on the polygon's own centroid — that is what
+      <code>localPlane</code> returns — so the area is a ground area, not a Web Mercator area, and
+      it stays correct at any latitude. The corner ordering does not matter: the shoelace sum is
+      taken in absolute value, and <code>orientation</code> simply reports which way round you went.
+      The <code>perimeter</code> is summed from Vincenty distances along each edge, so it is an
+      ellipsoidal length; <code>geodesicPerimeter</code> tells you whether Vincenty converged on
+      every edge.
+    </p>
+
+    <h3>Constants</h3>
+    <p>
+      <code>Geo.UNITS</code> carries the factors the tools are built on, so a caller never has to
+      restate them: <code>M_PER_FT</code> 0.3048, <code>M_PER_MI</code> 1609.344,
+      <code>M_PER_NM</code> 1852, <code>HA_M2</code> 10000, <code>ACRE_M2</code> 4046.8564224 and
+      <code>SQFT_PER_M2</code> 10.763910416709722. The ellipsoid parameters are on
+      <code>Geo.A</code> (6378137 m) and <code>Geo.F</code> (1 / 298.257223563), for WGS84.
+    </p>
+
+    <h3>Accuracy, and one caveat</h3>
+    <p>
+      The transverse Mercator series is the published one, and the inverse is solved by Newton
+      iteration rather than by a truncated reverse series. Measured against PROJ — the reference
+      implementation behind pyproj and QGIS — the easting agrees to better than <b>0.1 mm</b> and the
+      northing to better than <b>0.9 mm</b> over test points spread from the equator to 78° N and
+      from 0° to 180° longitude. A forward-then-inverse round trip closes to a few nanometres, which
+      is to say the limit of double precision.
+    </p>
+    <p>
+      The caveat is MGRS. A five-digit reference such as <code>17TPJ3008433438</code> does not name a
+      point, it names a 1 m square, and <code>mgrsInverse</code> returns that square's south-west
+      corner. Convert to MGRS and back and you should expect to land up to about 1.4 m from where you
+      started — that is the format, not an error. Ask for six digits instead and the square is
+      0.1 m across.
+    </p>
+
+    <h3>Reference values</h3>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Latitude, longitude</th><th>Zone</th><th>Easting (m)</th><th>Northing (m)</th><th>MGRS</th></tr></thead>
+        <tbody>
+          <tr><td>43.642567, −79.387139</td><td>17N</td><td>630,084.301</td><td>4,833,438.586</td><td>17TPJ3008433438</td></tr>
+          <tr><td>51.4779, −0.0015</td><td>30N</td><td>708,213.495</td><td>5,707,235.661</td><td>30UYC0821307235</td></tr>
+          <tr><td>−33.856944, 151.215278</td><td>56S</td><td>334,898.811</td><td>6,252,272.748</td><td>56HLH3489852272</td></tr>
+          <tr><td>39.906111, 116.3974</td><td>50N</td><td>448,491.696</td><td>4,417,510.315</td><td>50SMK4849117510</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="ret" style="margin-top:12px;">
+      Southern-hemisphere northings include the 10,000,000 m false northing, exactly as printed on a
+      survey plan.
+    </p>
+  </div>
+
+  <div class="card">
+    <h2>Notes, limits and terms</h2>
+    <ul>
+      <li><b>No key, no quota.</b> There is nothing to register and nothing to meter. The pages are
+          static files and every calculation runs in the browser, so a tool that is slow is a slow
+          device, not a throttled account.</li>
+      <li><b>Nothing is uploaded.</b> No coordinate, value or pasted list leaves the page. The only
+          requests are for the document itself, one stylesheet and one small script.</li>
+      <li><b>Horizontal only.</b> The library works in two dimensions on the WGS84 ellipsoid. It
+          takes no account of a local datum shift, a geoid model, or a state plane zone; for those,
+          use the <a href="state-plane-converter.html">state plane converter</a> and check the
+          projection your file actually carries against the
+          <a href="epsg-code-lookup.html">EPSG code lookup</a>.</li>
+      <li><b>Reference, not a substitute for a standard.</b> Results are for checking and planning.
+          Confirm anything that governs construction, a boundary or a procurement against the
+          specification that applies to the job.</li>
+      <li><b>Attribution.</b> Embedding is welcome; keep one visible link back to the tool. Do not
+          present the calculators as your own, and do not rehost a modified copy under a name that
+          suggests it computes something it does not.</li>
+      <li><b>Versioning.</b> The library is inlined per page rather than served from a shared file,
+          so a page you have copied keeps working when the tools here are updated. The cost is that
+          a fix does not reach a copy automatically — re-copy it if you depend on it.</li>
+    </ul>
+  </div>
+
+  <div class="card">
+    <h2>Related calculators</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Latitude / longitude ↔ UTM grid, with batch CSV</small></a>
+      <a href="unit-converter.html">us survey foot to meter<small>Survey foot, chain, acre, vara and 30 more units</small></a>
+      <a href="mgrs-converter.html">mgrs to lat long<small>Military grid references in both directions</small></a>
+      <a href="state-plane-converter.html">state plane converter<small>SPCS zones, feet and metres</small></a>
+      <a href="epsg-code-lookup.html">epsg code lookup<small>Coordinate reference system codes explained</small></a>
+      <a href="dxf-coordinate-extractor.html">dxf coordinate extractor<small>Pull vertices and areas out of a CAD file</small></a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>Can I prefill a calculator from a link?</summary>
+      <p>Yes. Every tool reads its state from the query string. <code>?lat=43.642567&amp;lon=-79.387139</code> opens the UTM converter already converted; <code>?value=100&amp;from=usft&amp;to=m</code> opens the unit converter on a survey-foot conversion. Missing or unrecognised parameters are ignored and the tool falls back to its defaults.</p>
+    </details>
+    <details>
+      <summary>Is there an API key or a rate limit?</summary>
+      <p>Neither. The pages are static and every calculation runs in the visitor's browser, so there is nothing to authorise and nothing to meter. No coordinate is ever sent to a server.</p>
+    </details>
+    <details>
+      <summary>How do I embed a calculator in my own page?</summary>
+      <p>Add <code>embed=1</code> and load the URL in an iframe. That hides the header, breadcrumb, article and footer and leaves the calculator at roughly 520 px tall for the single-coordinate tools. Everything still works inside the frame, including tab switching and CSV export.</p>
+    </details>
+    <details>
+      <summary>What is <code>window.Geo</code>?</summary>
+      <p>The shared geodesy library inlined into the tool pages, on the WGS84 ellipsoid. It exposes <code>utmForward</code>, <code>utmInverse</code>, <code>mgrsForward</code>, <code>mgrsInverse</code>, <code>vincentyInverse</code>, <code>polygonArea</code>, <code>parseAngle</code> and the rest, plus unit constants. It is dependency-free ES5 and also exports through <code>module.exports</code> for Node.</p>
+    </details>
+    <details>
+      <summary>How accurate is the UTM conversion?</summary>
+      <p>Against PROJ, the easting agrees to better than 0.1 mm and the northing to better than 0.9 mm across test points from the equator to 78° N, and a forward-then-inverse round trip closes to a few nanometres. The inverse is solved by Newton iteration, not a truncated reverse series.</p>
+    </details>
+    <details>
+      <summary>Why is an MGRS round trip out by about a metre?</summary>
+      <p>Because a five-digit reference names a 1 m square rather than a point, and the inverse returns its south-west corner. Expect up to about 1.4 m of offset. Use six digits and the square is 0.1 m across.</p>
+    </details>
+  </div>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing design standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+  var $ = function (id) { return document.getElementById(id); };
+
+  var LEN = ["m", "ft", "usft", "in", "cm", "km", "yd", "ch", "lk", "rd", "fur", "fath", "mi", "nmi", "lea", "vara"];
+  var AREA = ["m2", "ft2", "acre", "ha", "usacre", "km2", "mi2", "yd2", "are", "rood", "sqch", "sqrd", "section", "township"];
+
+  var TOOLS = {
+    "utm-fwd": {
+      page: "utm-coordinate-converter.html",
+      fields: [
+        { k: "lat", label: "Latitude", v: "43.642567" },
+        { k: "lon", label: "Longitude", v: "-79.387139" }
+      ]
+    },
+    "utm-inv": {
+      page: "utm-coordinate-converter.html",
+      fields: [
+        { k: "e", label: "Easting (m)", v: "630084.301" },
+        { k: "n", label: "Northing (m)", v: "4833438.586" },
+        { k: "zone", label: "Zone", v: "17" },
+        { k: "hemi", label: "Hemisphere", v: "N", sel: ["N", "S"] }
+      ]
+    },
+    "utm-batch": {
+      page: "utm-coordinate-converter.html",
+      fields: [
+        { k: "dir", label: "Direction", v: "fwd", sel: ["fwd", "inv", "mgrs"] },
+        { k: "text", label: "Records — one per line", v: "CN Tower, 43.642567, -79.387139\nBeijing, 39.906111, 116.397400", area: true }
+      ]
+    },
+    "unit-len": {
+      page: "unit-converter.html",
+      fields: [
+        { k: "value", label: "Value", v: "100" },
+        { k: "from", label: "From", v: "usft", sel: LEN },
+        { k: "to", label: "To", v: "m", sel: LEN }
+      ]
+    },
+    "unit-area": {
+      page: "unit-converter.html",
+      fields: [
+        { k: "value", label: "Value", v: "1" },
+        { k: "from", label: "From", v: "acre", sel: AREA },
+        { k: "to", label: "To", v: "ha", sel: AREA }
+      ]
+    }
+  };
+
+  var current = null;
+
+  function buildFields() {
+    var spec = TOOLS[$("d-tool").value];
+    current = spec;
+    var html = "";
+    for (var i = 0; i < spec.fields.length; i++) {
+      var f = spec.fields[i];
+      var id = "df-" + f.k;
+      var cls = (f.area || f.sel) ? "full" : "";
+      html += '<div class="' + cls + '"><label for="' + id + '">' + f.label + "</label>";
+      if (f.sel) {
+        html += '<select id="' + id + '" data-k="' + f.k + '">';
+        for (var s = 0; s < f.sel.length; s++) {
+          html += '<option value="' + f.sel[s] + '"' + (f.sel[s] === f.v ? " selected" : "") + ">" + f.sel[s] + "</option>";
+        }
+        html += "</select>";
+      } else if (f.area) {
+        html += '<textarea id="' + id + '" data-k="' + f.k + '" rows="3" spellcheck="false">' + f.v + "</textarea>";
+      } else {
+        html += '<input id="' + id + '" data-k="' + f.k + '" type="text" autocomplete="off" spellcheck="false" value="' + f.v + '">';
+      }
+      html += "</div>";
+    }
+    $("d-fields").innerHTML = html;
+    var nodes = $("d-fields").querySelectorAll("input,select,textarea");
+    for (var n = 0; n < nodes.length; n++) {
+      nodes[n].addEventListener("input", paint);
+      nodes[n].addEventListener("change", paint);
+    }
+    paint();
+  }
+
+  function makeUrl() {
+    var parts = [], nodes = $("d-fields").querySelectorAll("[data-k]");
+    for (var i = 0; i < nodes.length; i++) {
+      var v = String(nodes[i].value).trim();
+      if (v === "") { continue; }
+      parts.push(encodeURIComponent(nodes[i].getAttribute("data-k")) + "=" + encodeURIComponent(v));
+    }
+    if ($("d-embed").checked) { parts.push("embed=1"); }
+    return current.page + "?" + parts.join("&");
+  }
+
+  function paint() {
+    var url = makeUrl();
+    var i = url.indexOf("?");
+    /* every value is encodeURIComponent'd, so '&' is the only character needing an escape here */
+    $("d-url").innerHTML = '<span class="p">' + url.slice(0, i + 1) + "</span>"
+      + '<span class="v">' + url.slice(i + 1).replace(/&/g, "&amp;") + "</span>";
+    $("d-open").setAttribute("href", url);
+  }
+
+  $("d-tool").addEventListener("change", buildFields);
+  $("d-embed").addEventListener("change", paint);
+  $("d-preview").addEventListener("click", function () {
+    var frame = document.querySelector(".frame");
+    if (frame) { frame.src = makeUrl(); }
+  });
+
+  buildFields();
+})();
+</script>
+</body>
+</html>

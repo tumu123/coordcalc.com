@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>坡度计算器 — 百分比坡度、坡度角与坡比互转</title>
+<meta name="description" content="免费的坡度计算器：由高差与平距算百分比坡度、坡度角、1:n 坡比与屋面坡度（x:12），也可在坡度角与百分数之间双向换算，同时给出沿坡面的斜距，浏览器本地运行。">
+<link rel="canonical" href="https://coordcalc.com/zh/slope-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/slope-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/slope-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/slope-calculator.html">
+<meta property="og:title" content="坡度计算器 — 百分比坡度、坡度角与坡比互转">
+<meta property="og:description" content="免费的坡度计算器：由高差与平距算百分比坡度、坡度角、1:n 坡比与屋面坡度（x:12），也可在坡度角与百分数之间双向换算，同时给出沿坡面的斜距，浏览器本地运行。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/slope-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "坡度百分比怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "百分比坡度 = 高差 ÷ 平距 × 100。高差 1 米、平距 12 米就是 8.33%。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "百分比坡度怎么换算成角度？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "角度 = arctan(百分比 ÷ 100)。所以 100% 即 arctan(1) = 45°。反过来，百分比 = tan(角度) × 100。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "1:12 的坡是什么意思？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "每 12 份平距升高 1 份——即 8.33% 或 4.76°。这是坡道和排水常用的坡比写法，与 1:12 的屋面坡度等值。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "屋面坡度是什么，怎么写？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "屋面坡度是按 12 份平距量出的高差，写作 x:12。4:12 的屋面每 12 份水平平距升高 4 份。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "斜坡长度怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "斜坡长度 = √(高差² + 平距²)，由勾股定理而来——即沿坡面的斜线距离。订购屋面板、管道或围栏时用的就是它。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "多大的坡算陡坡？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一般参考：小于 2% 近乎平坦，2–5% 平缓，5–10% 中等，10–20% 陡，超过 20% 很陡。具体限值随用途而变，请以适用规范为准。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "怎么使用这个坡度计算器？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在同一单位下输入高差和水平平距。计算器把高差除以平距再乘 100 得到百分比，同时给出角度、1:n 坡比和 x:12 屋面坡度。注意平距要按水平方向量，不要用沿坡面的斜距。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "无障碍坡道的坡度要求是多少？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "ADA 标准把轮椅坡道纵坡限制在 1:12 以内——即 8.33% 或 4.76°。不陡于 1:20（5%）时一般按步行通道而非坡道对待。规范会定期修订，请核对现行版本。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "rise over run 是什么？和高差坡度什么关系？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "rise over run 就是高差除以平距：高差 1、平距 4 写成坡比 1:4；乘 100 得到坡度百分比 25%，同一坡度也等于 14.04°，屋面坡度为 3:12。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:18px;font-weight:600;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  select{font-size:15px;font-weight:500;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:27px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:23px;}
+  }
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../slope-calculator.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › 坡度计算器
+  </nav>
+
+<h1>坡度计算器</h1>
+
+  <p class="lead">
+    由高差与平距一次算出百分比坡度、坡度角、1:n 坡比和屋面坡度（x:12），
+    并支持坡度角与百分数双向换算，同时给出沿坡面的斜距——屋面坡度、无障碍坡道或排水找坡
+    都在这一页核完，免费、无需登录、数据不上传。
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-rr" role="tab" aria-selected="true">高差 / 平距</button>
+      <button class="tab" id="tab-ap" role="tab" aria-selected="false">角度与百分比</button>
+    </div>
+
+    <!-- Rise / Run -->
+    <div id="panel-rr">
+      <div class="row">
+        <div class="field">
+          <label for="rise">高差（竖直）</label>
+          <input type="number" id="rise" step="any" placeholder="1">
+        </div>
+        <div class="field">
+          <label for="run">平距（水平）</label>
+          <input type="number" id="run" step="any" placeholder="12">
+        </div>
+        <div class="field" style="flex:0 0 130px;">
+          <label for="unit">单位</label>
+          <select id="unit">
+            <option value="m">米</option>
+            <option value="ft">英尺</option>
+          </select>
+        </div>
+      </div>
+      <p class="hint">高差与平距必须用同一单位。表面水平时高差填 0。</p>
+      <p class="err" id="err-rr">平距必须大于 0，且两个值都不能是负数。</p>
+
+      <div class="results" id="res-rr">
+        <div class="big">
+          <span class="bk">百分比坡度</span>
+          <span class="bv" id="rr-pct">—</span>
+        </div>
+        <div class="result-row"><span class="k">坡度角</span><span class="v" id="rr-deg">—</span></div>
+        <div class="result-row"><span class="k">坡比（1 : n）</span><span class="v" id="rr-ratio">—</span></div>
+        <div class="result-row"><span class="k">屋面坡度（x : 12）</span><span class="v" id="rr-pitch">—</span></div>
+        <div class="result-row"><span class="k">斜坡长度（斜距）</span><span class="v" id="rr-len">—</span></div>
+        <div class="result-row"><span class="k">地形评价</span><span class="v" id="rr-class">—</span></div>
+      </div>
+    </div>
+
+    <!-- Angle & Percent -->
+    <div id="panel-ap" style="display:none;">
+      <div class="row">
+        <div class="field">
+          <label for="in-deg">坡度角（°）</label>
+          <input type="number" id="in-deg" step="any" placeholder="5">
+        </div>
+        <div class="field">
+          <label for="in-pct">坡度（%）</label>
+          <input type="number" id="in-pct" step="any" placeholder="8.75">
+        </div>
+      </div>
+      <p class="hint">在任意一栏输入，另一栏会自动更新。角度须在 −89 到 89 之间。</p>
+      <p class="err" id="err-ap">角度必须在 −89° 到 89° 之间。</p>
+
+      <div class="results" id="res-ap">
+        <div class="big">
+          <span class="bk">坡比</span>
+          <span class="bv" id="ap-ratio">—</span>
+        </div>
+        <div class="result-row"><span class="k">高差 : 平距</span><span class="v" id="ap-in">—</span></div>
+        <div class="result-row"><span class="k">屋面坡度（x : 12）</span><span class="v" id="ap-pitch">—</span></div>
+        <div class="result-row"><span class="k">地形评价</span><span class="v" id="ap-class">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <p>坡度描述一个表面在给定水平距离上升起多少。已知<b>高差</b>（竖直方向的变化量）和
+      <b>平距</b>（水平距离），同一个坡度的三种常用表达靠简单的三角关系互相换算：</p>
+    <ul>
+      <li><strong>百分比坡度</strong> = 高差 ÷ 平距 × 100，即以百分数写出的高差平距比。
+        高差 1、平距 12 就是 8.33%。</li>
+      <li><strong>坡度角</strong> = arctan(高差 ÷ 平距)，再乘 180 ÷ π 把弧度换回角度。</li>
+      <li><strong>坡比</strong> = 1 : n，其中 n = 平距 ÷ 高差。同样的 1 比 12 例子写成 1 : 12。</li>
+    </ul>
+    <p><strong>屋面坡度</strong>（roof pitch）是按固定平距 12 量出的高差，写作 x:12，
+      来自英制建筑的习惯。它其实就是把百分比坡度按平距 12 重新算一遍：1:12 的坡与 1:12 的
+      屋面坡度完全是一回事。</p>
+    <p><strong>斜坡长度</strong>是沿倾斜表面量得的斜线距离，由勾股定理等于
+      <code>√(高差² + 平距²)</code>。注意百分比坡度和斜坡长度的分母不同：百分比坡度按
+      <b>水平平距</b>计算，而不是沿坡面的距离——这是土方计量里最常见的错误来源。</p>
+    <p>坡度角与百分数之间的换算互为逆运算：<code>percent = tan(angle) × 100</code>、
+      <code>angle = arctan(percent ÷ 100)</code>。所以 45° 的坡是 100%，而 5% 的坡只有约
+      2.86°——角度越大，两种单位的数值差距拉得越开。</p>
+  </section>
+
+  <section class="card">
+    <h2>高差比平距：百分比坡度公式</h2>
+    <p>「高差比平距」（rise over run）是坡度最原始的定义：竖直变化量除以水平距离，得到小数形式的
+      坡度，再乘 100 就是百分比坡度。高差 1、平距 12 得 0.0833，即 8.33%。用坡度计算器的好处是
+      一次输入同时得到百分比、角度、1:n 坡比和 x:12 屋面坡度，不用反复换算。</p>
+    <p>一个提醒：平距永远按<b>水平方向</b>量。如果误把沿坡面的斜距当平距代入，百分比的结果会
+      偏小，坡越陡误差越大。排水找坡和土方计量里最常见的错误就是这一条。</p>
+  </section>
+
+  <section class="card">
+    <h2>屋面坡度（x:12）</h2>
+    <p>屋面坡度用屋面行业的单位表示：按固定平距 12 量出的高差，写作 x:12。4:12 的屋面每 12 份
+      水平平距升高 4 份，等于 18.43° 或 33.3% 的坡度。住宅屋面常见 4:12 到 9:12；低于 4:12
+      按低坡屋面处理，防水要做得更细，沥青瓦一般以 2:12 为实用下限。</p>
+    <p>因为屋面坡度、角度和百分比描述的是同一个角，计算器把三种形式一起给出，
+      方便对照图纸、材料数据表或规范里出现的任意一种写法。</p>
+  </section>
+
+  <section class="card">
+    <h2>无障碍坡道与 1:12 限值</h2>
+    <p>在无障碍坡道上，坡度百分比不是便利值而是强制性限值。美国 ADA 标准规定轮椅坡道的纵坡
+      不得超过 1:12——每 12 份平距升高 1 份，即 8.33% 或 4.76°。输入总高差和可用平距，
+      结果超过 8.33% 就说明坡道需要更长的平距、设置休息平台或做折返。
+      国内《无障碍设计规范》GB 55019 对各类坡道的限值与之接近，同样可以拿 1:12 这条线做快速校核。</p>
+    <p>同样的 1:12 参考也适用于路缘坡道和无障碍通路；坡度不陡于 1:20（5%）时一般按人行坡道
+      之外的步行通道对待。规范条文和例外条款会定期修订，使用前请核对现行版本的原文。</p>
+  </section>
+
+  <section class="card">
+    <h2>开挖与基坑边坡</h2>
+    <p>在开挖作业里，坡度是安全控制指标。开挖边坡验算的就是给定土质下放坡是否稳定：
+      硬塑黏土或岩石可以做到 1:1（45°、100%），松散砂土、砾石或扰动过的回填土通常要放缓到
+      1.5:1（约 34°、67%）或更缓。深度超过 1.5 米（5 英尺）的沟槽，多数规程要求设置放坡、
+      支撑或槽钢支护等保护措施。</p>
+    <p>输入深度和水平放坡距离得到工作坡度后，再对照相应的开挖规范核验——允许的放坡系数
+      取决于土的类别、含水率以及基坑敞开的时间。</p>
+  </section>
+
+  <section class="card">
+    <h2>常用坡度对照表</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>坡比</th><th>百分比</th><th>角度</th><th>屋面坡度</th><th>典型用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 : 48</td><td>2.08%</td><td>1.19°</td><td>0.25 : 12</td><td>大口径管道的最小排水坡度</td></tr>
+        <tr><td>1 : 12</td><td>8.33%</td><td>4.76°</td><td>1 : 12</td><td>无障碍坡道、常见屋面最小坡度</td></tr>
+        <tr><td>1 : 8</td><td>12.50%</td><td>7.13°</td><td>1.5 : 12</td><td>较陡排水、短坡道</td></tr>
+        <tr><td>1 : 6</td><td>16.67%</td><td>9.46°</td><td>2 : 12</td><td>标准屋面瓦的最小屋面坡度</td></tr>
+        <tr><td>1 : 5</td><td>20.00%</td><td>11.31°</td><td>2.4 : 12</td><td>土质边坡的缓坡开挖</td></tr>
+        <tr><td>1 : 4</td><td>25.00%</td><td>14.04°</td><td>3 : 12</td><td>低坡屋面</td></tr>
+        <tr><td>1 : 3</td><td>33.33%</td><td>18.43°</td><td>4 : 12</td><td>常见住宅屋面坡度</td></tr>
+        <tr><td>1 : 2</td><td>50.00%</td><td>26.57°</td><td>6 : 12</td><td>挡土墙与路堤边坡</td></tr>
+        <tr><td>1 : 1</td><td>100.00%</td><td>45.00°</td><td>12 : 12</td><td>岩质边坡、陡屋面</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">表值为便于查阅的四舍五入结果。施工或采购前，请以项目采用的设计标准原文为准。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <div class="links">
+      <a href="../how-to-calculate-slope-percentage.html" hreflang="en">坡度百分比怎么算（英文）<small>高差比平距，以及平距误用斜距的常见错误</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="dms-converter.html">度分秒转换器<small>十进制度与度分秒、度分互转</small></a>
+      <a href="../map-scale-calculator.html" hreflang="en">比例尺计算器（英文）<small>图上距离与实地距离互算</small></a>
+      <a href="distance-bearing-calculator.html">两点距离与方位角<small>两个坐标算地面距离和方位角</small></a>
+      <a href="land-area-calculator.html">地块面积计算<small>由坐标算面积、亩数和周长</small></a>
+      <a href="utm-coordinate-converter.html">UTM 坐标转经纬度<small>WGS84 经纬度与 UTM 网格互转</small></a>
+      <a href="../curve-calculator.html" hreflang="en">圆曲线测设计算（英文）<small>平曲线与竖曲线要素</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>坡度百分比怎么算？</summary>
+      <p>百分比坡度 = 高差 ÷ 平距 × 100。高差 1 米、平距 12 米就是 8.33%。</p>
+    </details>
+    <details>
+      <summary>百分比坡度怎么换算成角度？</summary>
+      <p>角度 = arctan(百分比 ÷ 100)。所以 100% 即 arctan(1) = 45°。反过来，百分比 = tan(角度) × 100。</p>
+    </details>
+    <details>
+      <summary>1:12 的坡是什么意思？</summary>
+      <p>每 12 份平距升高 1 份——即 8.33% 或 4.76°。这是坡道和排水常用的坡比写法，与 1:12 的屋面坡度等值。</p>
+    </details>
+    <details>
+      <summary>屋面坡度是什么，怎么写？</summary>
+      <p>屋面坡度是按 12 份平距量出的高差，写作 x:12。4:12 的屋面每 12 份水平平距升高 4 份。</p>
+    </details>
+    <details>
+      <summary>斜坡长度怎么算？</summary>
+      <p>斜坡长度 = √(高差² + 平距²)，由勾股定理而来——即沿坡面的斜线距离。订购屋面板、管道或围栏时用的就是它。</p>
+    </details>
+    <details>
+      <summary>多大的坡算陡坡？</summary>
+      <p>一般参考：小于 2% 近乎平坦，2–5% 平缓，5–10% 中等，10–20% 陡，超过 20% 很陡。具体限值随用途而变，请以适用规范为准。</p>
+    </details>
+    <details>
+      <summary>怎么使用这个坡度计算器？</summary>
+      <p>在同一单位下输入高差和水平平距。计算器把高差除以平距再乘 100 得到百分比，同时给出角度、1:n 坡比和 x:12 屋面坡度。注意平距要按水平方向量，不要用沿坡面的斜距。</p>
+    </details>
+    <details>
+      <summary>无障碍坡道的坡度要求是多少？</summary>
+      <p>ADA 标准把轮椅坡道纵坡限制在 1:12 以内——即 8.33% 或 4.76°。不陡于 1:20（5%）时一般按步行通道而非坡道对待。规范会定期修订，请核对现行版本。</p>
+    </details>
+    <details>
+      <summary>rise over run 是什么？和高差坡度什么关系？</summary>
+      <p>rise over run 就是高差除以平距：高差 1、平距 4 写成坡比 1:4；乘 100 得到坡度百分比 25%，同一坡度也等于 14.04°，屋面坡度为 3:12。</p>
+    </details>
+  </section>
+
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var RAD = Math.PI/180;
+
+  /* ---------- tabs ---------- */
+  var tabRR = el("tab-rr"), tabAP = el("tab-ap");
+  var panelRR = el("panel-rr"), panelAP = el("panel-ap");
+  var mode = "rr";
+
+  function switchMode(next){
+    mode = next;
+    if (next === "rr") {
+      tabRR.classList.add("active"); tabAP.classList.remove("active");
+      tabRR.setAttribute("aria-selected","true"); tabAP.setAttribute("aria-selected","false");
+      panelRR.style.display = ""; panelAP.style.display = "none";
+      runRR();
+    } else {
+      tabAP.classList.add("active"); tabRR.classList.remove("active");
+      tabAP.setAttribute("aria-selected","true"); tabRR.setAttribute("aria-selected","false");
+      panelAP.style.display = ""; panelRR.style.display = "none";
+      runAP("deg");
+    }
+  }
+  tabRR.addEventListener("click", function(){ switchMode("rr"); });
+  tabAP.addEventListener("click", function(){ switchMode("ap"); });
+
+  /* ---------- helpers ---------- */
+  function fmt(n, dp){
+    if (!isFinite(n)) return "—";
+    return n.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function ratioText(pct){
+    if (pct <= 0) return "水平";
+    var n = 100/pct;
+    var s = n.toFixed(n < 10 ? 2 : 1).replace(/\.?0+$/, "");
+    return "1 : " + s;
+  }
+  function riseRunText(pct){
+    var r = pct/100;
+    if (r === 0) return "0 : 1";
+    var s = r.toFixed(r < 1 ? 4 : 2).replace(/\.?0+$/, "");
+    return s + " : 1";
+  }
+  function pitchText(pct){
+    if (pct <= 0) return "0 : 12";
+    var x = pct*12/100;
+    return fmt(x, 2).replace(/\.?0+$/,"") + " : 12";
+  }
+  function classify(pct){
+    var a = Math.abs(pct);
+    if (a < 2) return "近乎平坦";
+    if (a < 5) return "平缓";
+    if (a < 10) return "中等";
+    if (a < 20) return "陡";
+    return "很陡";
+  }
+
+  /* ---------- rise / run ---------- */
+  var riseI = el("rise"), runI = el("run"), unitI = el("unit");
+  var resRR = el("res-rr"), errRR = el("err-rr");
+
+  function runRR(){
+    var rs = riseI.value.trim(), rn = runI.value.trim();
+    riseI.classList.remove("bad"); runI.classList.remove("bad");
+    if (rs === "" && rn === "") { resRR.classList.remove("show"); errRR.classList.remove("show"); return; }
+
+    var rise = rs === "" ? 0 : Number(rs);
+    var run  = rn === "" ? NaN : Number(rn);
+
+    if (!isFinite(rise) || !isFinite(run) || rise < 0 || run <= 0) {
+      errRR.classList.add("show"); resRR.classList.remove("show");
+      if (rs !== "" && (!isFinite(rise) || rise < 0)) riseI.classList.add("bad");
+      if (rn !== "" && (!isFinite(run) || run <= 0)) runI.classList.add("bad");
+      return;
+    }
+    errRR.classList.remove("show");
+
+    var pct = rise/run*100;
+    var deg = Math.atan(rise/run)/RAD;
+    var len = Math.sqrt(rise*rise + run*run);
+
+    el("rr-pct").textContent = fmt(pct, 2) + " %";
+    el("rr-deg").innerHTML = fmt(deg, 3) + "\u00B0<small>" + fmt(rise/run, 4).replace(/\.?0+$/,"") + " 高差 : 1 平距</small>";
+    el("rr-ratio").textContent = ratioText(pct);
+    el("rr-pitch").textContent = pitchText(pct);
+    el("rr-len").innerHTML = fmt(len, 3) + " " + unitI.value + "<small>沿坡面的斜距</small>";
+    el("rr-class").innerHTML = classify(pct) + "<small>" + fmt(Math.abs(pct), 2) + " %</small>";
+
+    resRR.classList.add("show");
+  }
+
+  riseI.addEventListener("input", runRR);
+  runI.addEventListener("input", runRR);
+  unitI.addEventListener("change", runRR);
+
+  /* ---------- angle & percent ---------- */
+  var degI = el("in-deg"), pctI = el("in-pct");
+  var resAP = el("res-ap"), errAP = el("err-ap");
+
+  function paintAP(deg, pct){
+    var a = Math.abs(pct);
+    el("ap-ratio").textContent = pct === 0 ? "水平" : ratioText(a);
+    el("ap-in").textContent = riseRunText(pct);
+    el("ap-pitch").textContent = pitchText(a);
+    el("ap-class").innerHTML = classify(a) + "<small>" + fmt(a, 2) + " %</small>";
+    resAP.classList.add("show");
+  }
+
+  function runAP(source){
+    var degStr = degI.value.trim(), pctStr = pctI.value.trim();
+    degI.classList.remove("bad"); pctI.classList.remove("bad");
+    errAP.classList.remove("show");
+
+    if (source === "deg") {
+      if (degStr === "") { pctI.value = ""; resAP.classList.remove("show"); return; }
+      var d = Number(degStr);
+      if (!isFinite(d) || d <= -89 || d >= 89) {
+        degI.classList.add("bad"); errAP.classList.add("show"); resAP.classList.remove("show"); return;
+      }
+      var p = Math.tan(d*RAD)*100;
+      pctI.value = Math.round(p*10000)/10000;
+      paintAP(d, p);
+    } else {
+      if (pctStr === "") { degI.value = ""; resAP.classList.remove("show"); return; }
+      var pc = Number(pctStr);
+      if (!isFinite(pc)) {
+        pctI.classList.add("bad"); errAP.classList.add("show"); resAP.classList.remove("show"); return;
+      }
+      var dg = Math.atan(pc/100)/RAD;
+      degI.value = Math.round(dg*10000)/10000;
+      paintAP(dg, pc);
+    }
+  }
+
+  degI.addEventListener("input", function(){ runAP("deg"); });
+  pctI.addEventListener("input", function(){ runAP("pct"); });
+
+  /* ---------- init ---------- */
+  switchMode("rr");
+})();
+</script>
+</body>
+</html>

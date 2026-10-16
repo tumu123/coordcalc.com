@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Calculate Acreage from Coordinates</title>
+<meta name="description" content="Acreage from coordinates comes from the shoelace formula on a projected plane. The method with a worked example, the conversion to acres, and errors to avoid.">
+<link rel="canonical" href="https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-acreage-from-coordinates.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html">
+<meta property="og:title" content="How to Calculate Acreage from Coordinates">
+<meta property="og:description" content="The shoelace method for area from coordinates, worked through to acres and hectares, plus the projection question nobody mentions.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "How to Calculate Acreage from Coordinates",
+  "description": "Using the shoelace formula on projected coordinates to compute parcel area, converted to square feet, acres and hectares.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/how-to-calculate-acreage-from-coordinates.html"},
+  "articleSection": "Area and measurement"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Acreage from coordinates
+  </nav>
+
+  <h1>How to Calculate Acreage from Coordinates</h1>
+
+  <p class="lead">
+    The arithmetic behind acreage from coordinates is short — one loop over the boundary vertices, called
+    the shoelace formula — but the arithmetic is not where the difficulty lives. The difficulty is that
+    the formula assumes the coordinates sit on a flat plane, and latitude and longitude do not. This
+    guide covers both: the method, worked through with real numbers, and the assumptions that decide
+    whether the result is accurate to a tenth of a percent or wrong by several.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Shoelace formula</span>
+  </p>
+
+  <h2>The shoelace formula</h2>
+  <p>
+    List the boundary vertices in order — clockwise or anticlockwise, but never mixed — and repeat the
+    first vertex at the end to close the ring. Then sum the cross products:
+  </p>
+  <div class="formula">A = ½ × |Σ (xᵢ · yᵢ₊₁ − xᵢ₊₁ · yᵢ)|</div>
+  <p>
+    The absolute value is there because the sign of the sum tells you the winding direction, clockwise or
+    anticlockwise, not the size of the area. If your vertices are in the wrong order the formula still
+    returns a number, and that number is meaningless — the boundary crosses itself. Checking that the
+    polygon is traced as a simple closed ring is part of the job, not a formality.
+  </p>
+
+  <h2>Worked example</h2>
+  <p>
+    Take a four-sided parcel with projected coordinates in metres, listed anticlockwise:
+    <code>(0, 0)</code>, <code>(100, 0)</code>, <code>(120, 80)</code>, <code>(10, 90)</code>.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Vertex pair</th><th>xᵢ · yᵢ₊₁</th><th>xᵢ₊₁ · yᵢ</th><th>Difference</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>(0,0) → (100,0)</td><td>0 × 0 = 0</td><td>100 × 0 = 0</td><td>0</td></tr>
+        <tr><td>(100,0) → (120,80)</td><td>100 × 80 = 8,000</td><td>120 × 0 = 0</td><td>8,000</td></tr>
+        <tr><td>(120,80) → (10,90)</td><td>120 × 90 = 10,800</td><td>10 × 80 = 800</td><td>10,000</td></tr>
+        <tr><td>(10,90) → (0,0)</td><td>10 × 0 = 0</td><td>0 × 90 = 0</td><td>0</td></tr>
+        <tr><td colspan="3"><b>Sum of differences</b></td><td><b>18,000</b></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Area = ½ × 18,000 = <b>9,000 m²</b>. That is 0.9 hectares, or <b>2.2239 acres</b>, since one acre is
+    4,046.8564224 m². In imperial units, 9,000 m² is 96,875.2 ft², and divided by 43,560 that gives the
+    same 2.2239 acres.
+  </p>
+
+  <h2>The projection question</h2>
+  <p>
+    Grid area and ground area are not the same thing, and the gap between them comes from the projection.
+    A projected coordinate is a position on a developable surface that has been flattened, which means
+    the plane is either slightly stretched or slightly compressed relative to the ground. The ratio is the
+    <b>scale factor</b>, and area scales with its square.
+  </p>
+  <div class="formula">ground area ≈ grid area ÷ (scale factor)²</div>
+  <p>
+    For a UTM coordinate the scale factor is 0.9996 on the central meridian and rises towards the zone
+    edge, so the plane is compressed in the middle and grid area runs about 0.08% smaller than ground
+    area at the centre, crossing over to slightly larger further out. On a one-acre lot that is a few
+    square feet. On a 640-acre section it is most of an acre — small in percentage terms and large in the
+    currency of a property transaction.
+  </p>
+  <p>
+    The larger problem is what happens if you feed latitude and longitude into the formula directly.
+    Degrees are not a linear distance: a degree of longitude is about 111.32&nbsp;km at the equator and
+    about 78.85&nbsp;km at 45° of latitude. Applying the shoelace formula to raw degrees produces a
+    number with units of square degrees, and converting that to area with a single constant factor is
+    only approximately right over a small area at a known latitude. For anything bigger than a lot, or
+    anything that will be compared with a deed, project first.
+  </p>
+
+  <div class="note">
+    <p><b>A useful sanity check.</b> A one-acre square is 208.71&nbsp;ft on a side, or about 63.6&nbsp;m.
+    A section is one square mile — 640 acres, 2.59&nbsp;km². If a computed acreage implies a shape that
+    does not match the parcel you can see, the fault is almost always vertex order or a projection
+    mismatch, not the shoelace formula.</p>
+  </div>
+
+  <h2>Getting the vertex order right</h2>
+  <p>
+    Coordinate lists arrive in whatever order the source produced. Some start at the point of beginning
+    and run clockwise as deeds usually do; some are sorted by nothing at all. Two diagnostics will catch
+    most problems before the area is reported. First, plot the shape — a self-intersecting polygon is
+    obvious on a plot and invisible in the numbers. Second, compare the perimeter computed from the
+    coordinate list with the sum of the stated boundary lengths; if they differ, a vertex is missing or
+    duplicated.
+  </p>
+  <p>
+    It is also worth recording the units and the projection with the result. An area quoted as
+    "2.22 acres" without saying whether the coordinates were in State Plane metres, UTM metres or survey
+    feet is only three digits of context away from being unusable.
+  </p>
+
+  <h2>Converting the result</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>From</th><th>To</th><th>Multiply by</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Square metres</td><td>Acres</td><td>0.000247105381</td></tr>
+        <tr><td>Square metres</td><td>Hectares</td><td>0.0001</td></tr>
+        <tr><td>Square feet</td><td>Acres</td><td>0.0000229568411</td></tr>
+        <tr><td>Acres</td><td>Hectares</td><td>0.40468564224</td></tr>
+        <tr><td>Hectares</td><td>Acres</td><td>2.4710538147</td></tr>
+        <tr><td>Square miles</td><td>Acres</td><td>640</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, acreage and perimeter from a vertex list</small></a>
+      <a href="unit-converter.html">us survey foot to meter<small>Acres, hectares, square feet and square metres</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>Get the projected coordinates to compute with</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Check boundary lengths between successive vertices</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="section-township-range.html">Sections, townships and ranges explained</a>
+        <small>Why 640 acres is a meaningful unit, and how the public land survey system tiles.</small></li>
+      <li><a href="survey-foot-vs-international-foot.html">Survey foot vs international foot</a>
+        <small>Which foot the boundary was measured in, and what it does to the area.</small></li>
+      <li><a href="how-to-calculate-closure-error.html">How to calculate closure error in a traverse</a>
+        <small>Confirming the boundary before you compute its area.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

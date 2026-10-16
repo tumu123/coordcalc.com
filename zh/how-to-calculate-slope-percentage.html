@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>坡度百分比怎么算 — 公式、角度换算与屋顶坡度</title>
+<meta name="description" content="坡度百分比回答一个问题：水平走一百个单位，地面升高多少？本文给出坡度公式、百分比与角度、比值、屋顶坡度的互换（含常用对照表），说明为什么水平距离必须取投影值，以及怎么从等高线图上读出坡度。">
+<link rel="canonical" href="https://coordcalc.com/zh/how-to-calculate-slope-percentage.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-slope-percentage.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-slope-percentage.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-slope-percentage.html">
+<meta property="og:title" content="坡度百分比怎么算 — 公式与角度换算">
+<meta property="og:description" content="高差比水平距离，百分比、角度、比值、屋顶坡度四者互换，附常用对照表。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/how-to-calculate-slope-percentage.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "坡度百分比怎么算",
+  "description": "坡度百分比怎么算 — 公式、角度换算与屋顶坡度",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-calculate-slope-percentage.html"},
+  "articleSection": "坡度与比例尺"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../how-to-calculate-slope-percentage.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 坡度百分比怎么算
+  </nav>
+
+<h1>坡度百分比怎么算</h1>
+
+  <p class="lead">
+    坡度百分比只回答一个问题：水平走一百个单位，地面升高多少？排水、道路、坡道和土方
+    都用它来规定，而最常见的那一个错误也藏在它里面——把水平距离量成了沿斜面的距离。
+    本文给出公式、正反两个方向各算一遍，并展示同一个坡度用百分比、角度、比值和屋顶坡度
+    分别是什么样子。
+  </p>
+
+  <p class="meta">
+    <span>坡度与比例尺</span><span>更新于 2026年10月9日</span><span>高差比水平距离</span>
+  </p>
+
+  <h2>公式</h2>
+  <div class="formula">坡度 % = (高差 ÷ 水平距离) × 100</div>
+  <p>
+    <b>高差</b>是两点之间的竖直变化，<b>水平距离</b>是两点之间的水平距离，相除之前两者必须
+    换算成同一单位——单位会约掉，这就是坡度百分比没有量纲的原因。水平距离 12 升高 1 是
+    <code>1 ÷ 12 × 100 = 8.33%</code>。水平距离 100 升高 6 是 6%。
+    水平距离 20 英尺升高 2.5 英尺是 <code>2.5 ÷ 20 × 100 = 12.5%</code>。
+  </p>
+
+  <h2>百分比、角度与比值是同一个坡度</h2>
+  <p>
+    坡度百分比就是坡角的正切，用百分数表示。所以两者互换就是一次正切与一次反正切：
+  </p>
+  <div class="formula">百分比 = tan(角度) × 100<br>角度&nbsp;&nbsp;&nbsp;= arctan(百分比 ÷ 100)</div>
+  <p>
+    100% 的坡不是垂直，而是 45°——这个事实值得记住，因为 100% 听起来像悬崖，
+    其实是一面陡但能走人的山坡。6% 的纵坡（公路上那种标志）是
+    <code>arctan(0.06) = 3.43°</code>。1:12 的坡道是 8.33%，即
+    <code>arctan(0.08333) = 4.76°</code>。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>比值（1 : n）</th><th>百分比</th><th>角度</th><th>屋顶坡度（x : 12）</th><th>典型用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 : 48</td><td>2.08%</td><td>1.19°</td><td>0.25 : 12</td><td>大管径排水管的最小坡度</td></tr>
+        <tr><td>1 : 20</td><td>5.00%</td><td>2.86°</td><td>0.6 : 12</td><td>按步道而非坡道处理</td></tr>
+        <tr><td>1 : 12</td><td>8.33%</td><td>4.76°</td><td>1 : 12</td><td>无障碍坡道的坡度上限</td></tr>
+        <tr><td>1 : 6</td><td>16.67%</td><td>9.46°</td><td>2 : 12</td><td>普通瓦材的最小屋面坡度</td></tr>
+        <tr><td>1 : 4</td><td>25.00%</td><td>14.04°</td><td>3 : 12</td><td>缓坡屋面、路堤边坡</td></tr>
+        <tr><td>1 : 2</td><td>50.00%</td><td>26.57°</td><td>6 : 12</td><td>住宅常见屋面坡度</td></tr>
+        <tr><td>1 : 1</td><td>100.00%</td><td>45.00°</td><td>12 : 12</td><td>岩石开挖边坡、陡屋面</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>水平距离必须取水平值——这就是那个错误</h2>
+  <p>
+    坡度定义在一条线的水平投影上，不是定义在线本身。如果你沿斜面量了一段距离并把它当作
+    水平距离，算出的百分比会偏小，坡越陡偏差越大。在 1:1 的坡上，斜面长度比水平距离长 41%，
+    所以用斜面长度量出的「100%」，真实坡度其实更接近 71%。
+  </p>
+  <p>
+    三者的关系就是熟悉的直角三角形：<code>斜长 = √(高差² + 水平距离²)</code>。
+    如果你量到的其实是斜长，先反求水平距离——<code>水平距离 = √(斜长² − 高差²)</code>——再相除。
+    坡缓时两者几乎相等，误差很小；当业主问的是坡道或屋面时，这个误差就大到不能忽略了。
+  </p>
+
+  <h2>从地图上读坡度</h2>
+  <p>
+    在等高线图上，坡度百分比来自等高距和水平间距：
+    <code>坡度 % = (等高距 ÷ 间距) × 100</code>。等高距 10&nbsp;m、等高线间距 100&nbsp;m 时，
+    地面坡度是 10%。间距减半到 50&nbsp;m，坡度翻倍到 20%。由于等高线间距是垂直等高线量的，
+    同一条规则给出的就是该点最陡的方向——这也解释了由 DEM 生成的坡度图为什么长成那个样子。
+  </p>
+  <p>
+    有两点要注意。等高线图天然存在「阶梯化」：10&nbsp;m 的等高距只能按这个步长分辨坡度，
+    所以从一对等高线读出的坡度是那一段的平均值，不是当地的即时值。
+    另外在公开出版的地图上，水平距离只有在你考虑了图面比例尺和投影变形之后才是真实的——
+    用小比例尺地图加直尺量距离，会把两种误差叠在一起。
+  </p>
+
+  <h2>这个数字用在哪里</h2>
+  <p>
+    排水坡度按最小百分比规定，以保证水持续流动：地面沟渠常用 1% 到 2%，
+    管道系统常常更平。无障碍坡道在 ADA 标准里上限是 1:12，并要求间隔设置休息平台，
+    1:20 或更缓的坡度按步道而非坡道处理。屋顶坡度以每 12 个单位水平距离计，
+    所以 4:12 的屋面是 33.3% 的坡度。土方边坡通常用比值表示——2:1 的边坡是 50%——
+    土质挖方边坡常限制在 1:1 到 1:2 之间，岩石则能站得更陡。
+  </p>
+
+  <div class="note">
+    <p><b>先核对坡向，再核对数值。</b>坡度正确但方向反了的排水管线是一种常见且昂贵的错误，
+      而且它能通过所有算术校验。确认哪一端是低端，并且要在图纸上确认，而不是在计算里确认。</p>
+  </div>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="slope-calculator.html">坡度计算器<small>高差与水平距离换算百分比、角度、比值与屋顶坡度</small></a>
+      <a href="cut-fill-calculator.html">土方计算器<small>按断面或方格网计算土方量</small></a>
+      <a href="map-scale-calculator.html">比例尺计算器<small>图上距离换算实地距离</small></a>
+      <a href="distance-bearing-calculator.html">两点距离与方位角<small>两点之间的水平距离</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../how-to-calculate-closure-error.html">导线闭合差怎么算</a>
+        <small>判断一组观测数据到底能不能用的那道校验。</small></li>
+      <li><a href="../how-to-calculate-acreage-from-coordinates.html">用坐标计算面积</a>
+        <small>平面投影面积——坡度百分比正是以它为基准度量的。</small></li>
+      <li><a href="../geoid-vs-ellipsoid.html">大地水准面与椭球面的区别</a>
+        <small>你的数据里的高程，为什么未必是海拔高程。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

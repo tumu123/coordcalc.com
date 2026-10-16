@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTM 与 MGRS 的区别 — 同一个格网，两种写法</title>
+<meta name="description" content="UTM 和 MGRS 不是两套竞争的坐标系统，而是同一个格网的两种写法：UTM 用距带原点的米数表示位置，MGRS 用字母加数字表示同一位置，而数字的位数本身就说明了精度。本文讲清两者的关系、位数与精度的对应、互算步骤，以及 100 km 方格与带偏移量带来的常见错误。">
+<link rel="canonical" href="https://coordcalc.com/zh/utm-vs-mgrs.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/utm-vs-mgrs.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/utm-vs-mgrs.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/utm-vs-mgrs.html">
+<meta property="og:title" content="UTM 与 MGRS 的区别">
+<meta property="og:description" content="同一格网两种写法：米数与字母数字、位数即精度、互算步骤与带偏移陷阱。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/utm-vs-mgrs.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "UTM 与 MGRS 的区别",
+  "description": "UTM 与 MGRS 的区别 — 同一个格网，两种写法",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/utm-vs-mgrs.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../utm-vs-mgrs.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › UTM 与 MGRS 的区别
+  </nav>
+
+<h1>UTM 与 MGRS 的区别</h1>
+
+  <p class="lead">
+    UTM 和 MGRS 不是相互竞争的两套系统，它们彼此之间也不是像经纬度那样的替代关系。
+    它们是同一个格网写的两遍：UTM 用距带原点的米数说明位置，MGRS 用字母加数字说明同一位置，
+    而字符串的长度本身就默默声明了位置有多精确。理解这层关系，两者之间的大部分混淆就消失了。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>共用格网</span>
+  </p>
+
+  <h2>共同的基础</h2>
+  <p>
+    两者都建立在通用横轴墨卡托（UTM）格网之上。60 个带，每带宽 6° 经度；20 条纬度带，
+    从 80°S 到 84°N——这些对两者是共用的。同一个点的 UTM 坐标和 MGRS 参考值，
+    永远带着相同的带号和相同的纬度带字母，因为这些描述的是格网方格，而不是方格内的位置。
+  </p>
+
+  <h2>从哪里开始分道扬镳</h2>
+  <p>
+    <b>UTM</b> 随后给出两个以米为单位的数字：东坐标，自该带中央子午线量起，中央子午线取
+    500,000&nbsp;m 的东偏；北坐标，自赤道量起，南半球再加 10,000,000&nbsp;m 的北偏。
+    这两个数字是连续的，可以任意增加小数位。
+  </p>
+  <p>
+    <b>MGRS</b> 沿用同一个带和纬度带，然后把包含该点的 100&nbsp;km 方格用两个字母标识出来
+    ——即 100&nbsp;km 方格代号——再给出<em>该方格内</em>的东、北坐标数字，
+    把米数截取到选定的有效位数。
+  </p>
+  <div class="formula">UTM&nbsp;&nbsp;&nbsp;17T 630084 4833438&nbsp;&nbsp;&nbsp;完整米数<br>
+MGRS&nbsp;&nbsp;17T PJ 3008 3343&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;10 m 精度<br>
+MGRS&nbsp;&nbsp;17T PJ 30084 33438&nbsp;&nbsp;&nbsp;&nbsp;1 m 精度<br>
+MGRS&nbsp;&nbsp;17T PJ 308 334&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;100 m 精度</div>
+
+  <h2>位数就是精度</h2>
+  <p>
+    这是 MGRS 最让人意外的性质，而它是刻意设计的。因为这些数字是 100&nbsp;km 方格的截断小数，
+    而不是绝对距离，所以必须由位数来说明精度——否则两个完全相同的字符串就可能描述
+    大小不同的范围。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>每轴位数</th><th>精度</th><th>示例</th><th>用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>10 km</td><td>17T PJ 3 3</td><td>区域级报告</td></tr>
+        <tr><td>2</td><td>1 km</td><td>17T PJ 30 33</td><td>区域搜索、粗略规划</td></tr>
+        <tr><td>3</td><td>100 m</td><td>17T PJ 300 334</td><td>图面比例尺下的野外导航</td></tr>
+        <tr><td>4</td><td>10 m</td><td>17T PJ 3008 3343</td><td>位置报告，最常用</td></tr>
+        <tr><td>5</td><td>1 m</td><td>17T PJ 30084 33438</td><td>测量级报告</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    精度不是后缀也不是标志位，而是由写了多少位数字隐含表示的。这让 MGRS 在野外既紧凑又自描述——
+    无线电通话里的坐标应当尽可能地短，同时不能有歧义——但也让 MGRS 在数据库里很危险：
+    位数存错的一位数字，含义就悄悄变成了另一个值。
+  </p>
+
+  <h2>两者之间的换算</h2>
+  <p>
+    只要知道了 100&nbsp;km 方格，换算就是机械操作。两个字母标出该点位于本带的哪一个
+    100&nbsp;km 方格，方格的左下角有已知的东坐标和北坐标，MGRS 的数字就是相对这个角点的
+    偏移量，按精度缩放。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>步骤</th><th>UTM → MGRS</th><th>MGRS → UTM</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1</td><td>确认带号与纬度带</td><td>从字符串确认带号与纬度带</td></tr>
+        <tr><td>2</td><td>东坐标除以 100,000，求出方格列号</td><td>把两个字母解码为列与行</td></tr>
+        <tr><td>3</td><td>北坐标除以 100,000，注意带偏移量</td><td>算出该方格的东、北坐标基准值</td></tr>
+        <tr><td>4</td><td>把余数截取到选定精度</td><td>补上数字并填满到完整米数</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    第 3 步里的带偏移量最容易让人栽跟头，因为 MGRS 的北向字母每 2,000&nbsp;km 循环一次，
+    而起始字母又逐带变化。跨带边界手工做这一步正是出错的地方；
+    用一个已经内置完整查找表的转换工具更稳妥。
+  </p>
+
+  <div class="note">
+    <p><b>双向检验。</b>任何点从 UTM 转成 MGRS 再转回来，都应当还原出原坐标
+      （截断到该 MGRS 精度）。如果不能还原，说明 100&nbsp;km 方格用了错误的带偏移量解码。
+      在把任何一个值写进报告之前，先拿一个靠近带边界的点做这个检验。</p>
+  </div>
+
+  <h2>该用哪一个？</h2>
+  <p>
+    当精度就是重点时用 <b>UTM</b>：测量成果图、GIS 图层、坐标几何计算，
+    以及任何需要与另一套米制测量相互印证的工作。当简练和对精度的共识比算术更重要时用
+    <b>MGRS</b>：无线电报告、野外导航、与已经在使用它的机构联合行动。
+    两者都存、并把基准面写清楚，只花几个字节，却能省掉日后一整类争论。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="mgrs-converter.html">MGRS 与经纬度互转<small>格网坐标 ↔ 经纬度，双向</small></a>
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>以米为单位的 UTM 换算</small></a>
+      <a href="dms-converter.html">度分秒转换器<small>把经纬度整理成报告格式</small></a>
+      <a href="land-area-calculator.html">坐标算面积（亩/公顷）<small>由一串坐标求面积</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+        <small>UTM 记录里每一个部分各是什么意思。</small></li>
+      <li><a href="../convert-easting-northing-to-lat-long.html">东坐标北坐标怎么换算成经纬度</a>
+        <small>投影反算，一步步来。</small></li>
+      <li><a href="../degrees-minutes-seconds-explained.html">度分秒详解</a>
+        <small>位置的另一种写法，以及什么时候该用它。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,1038 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EPSG Code Lookup — Coordinate Reference System Codes Explorer</title>
+<meta name="description" content="Searchable EPSG code lookup for 486 coordinate reference systems: WGS 84, Web Mercator, every UTM zone, State Plane and national grids, with units and areas.">
+<link rel="canonical" href="https://coordcalc.com/epsg-code-lookup.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/epsg-code-lookup.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/epsg-code-lookup.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/epsg-code-lookup.html">
+<meta property="og:title" content="EPSG Code Lookup — Coordinate Reference System Codes Explorer">
+<meta property="og:description" content="Look up any EPSG code: 486 coordinate reference systems with units, area of use and projection parameters, taken from the EPSG Geodetic Parameter Dataset.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/epsg-code-lookup.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is an EPSG code?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "An EPSG code is a short number that names one entry in the EPSG Geodetic Parameter Dataset — the registry of coordinate reference systems, datums, ellipsoids, units and transformations maintained by the IOGP. It is written authority:code, so EPSG:4326 is latitude and longitude on WGS 84 and EPSG:32617 is WGS 84 / UTM zone 17N."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between EPSG 4326 and 3857?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "4326 is geographic: degrees of latitude and longitude on WGS 84, the format used by GPS, GeoJSON and KML. 3857 is projected: metres of easting and northing, used by web map tiles. They are not interchangeable, and 3857 is a spherical Mercator, so its northings differ from a true ellipsoidal Mercator by about 21 km at 30° latitude and about 37 km at 60°."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which EPSG code should I use for UTM?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On WGS 84, northern-hemisphere zones are 32601 to 32660 and southern-hemisphere zones 32701 to 32760, so UTM zone 17N is 32617 and zone 17S is 32717. On NAD83 in North America use 26901 to 26923, and on ETRS89 in Europe use 25828 to 25838."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the EPSG code for a State Plane zone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Search the state name here rather than guessing the number. NAD83 State Plane zones are split by unit: the 26900s and 32000s blocks are in metres, while the 2200s block holds the foot-based versions, mostly in US survey feet. Kentucky is 2205 North and 26980 South in metres; California zone 3 is 26943 in metres and 2227 in US survey feet. Watch the neighbouring block too, because 26901 to 26923 are NAD83 UTM zones and not State Plane zones at all."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the same area have several EPSG codes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because a code identifies a complete coordinate reference system, not a place. The same position can be described on WGS 84, NAD83 or NAD27, in metres or in US survey feet, in a local zone or in a UTM zone, and each combination is a separate registry entry with its own code."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are EPSG codes the same as Esri WKIDs?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Often, but not always. Many Esri spatial references quote the same number as EPSG, and others use Esri-only identifiers: Esri:102100 and Esri:102113 both describe what EPSG calls 3857, and several State Plane zones carry Esri codes in the 102000s. Check which authority a file or service is quoting before treating the two as equal."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does EPSG:32617 mean when written that way?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The text before the colon is the authority that maintains the definition and the number after it is the code within that authority. EPSG:32617, urn:ogc:def:crs:EPSG::32617 and the WKT or PROJ string exported by your GIS are three ways of naming the same system."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does this EPSG data come from?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The codes, names, units, areas of use and projection parameters are read from the EPSG Geodetic Parameter Dataset through the PROJ library, so nothing is typed in by hand and a deprecated entry is not presented as current. What you see is a reference subset chosen for surveying and mapping work, not the whole registry."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> &rsaquo; <a href="index.html#coordinates">Coordinate conversion</a> &rsaquo; EPSG code lookup
+  </nav>
+
+  <h1>EPSG Code Lookup</h1>
+
+  <p class="lead">
+    Every coordinate reference system has a number. This page lets you search those numbers — the
+    486 codes you are most likely to meet in a survey file, a GIS layer, a GNSS export or a web
+    service — and see what each one actually defines: the datum, the projection, the unit, the area
+    it is valid over, and the parameters underneath it. The data is read straight from the EPSG
+    Geodetic Parameter Dataset.
+  </p>
+
+  <p class="meta">
+    <span>486 codes</span><span>Source: EPSG Geodetic Parameter Dataset</span><span>Updated 9 October 2026</span>
+  </p>
+
+  <section class="card">
+    <h2>Search the registry</h2>
+    <div class="toolbar">
+      <input type="search" id="q" placeholder="4326, UTM zone 17N, Kentucky, Pseudo-Mercator, NAVD88&hellip;" autocomplete="off" spellcheck="false">
+      <div class="seg" id="seg" role="group" aria-label="Filter by type">
+        <button type="button" class="on" data-g="">All 486</button>
+        <button type="button" data-g="g">Geographic</button>
+        <button type="button" data-g="u">UTM</button>
+        <button type="button" data-g="s">State Plane</button>
+        <button type="button" data-g="p">Other projected</button>
+        <button type="button" data-g="v">Vertical &amp; compound</button>
+      </div>
+    </div>
+    <p class="count" id="count">Showing 486 of 486 codes.</p>
+    <div class="scroll">
+      <table class="data">
+        <thead>
+          <tr><th>EPSG</th><th>Name</th><th>Type</th><th>Unit</th><th>Area of use</th><th></th></tr>
+        </thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px;">
+      Click any row to see its projection method and parameters. Search matches the code, the name and
+      the area of use, so <code>Ohio</code>, <code>32617</code> and <code>UK</code> all work.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>What an EPSG code actually identifies</h2>
+    <p>An EPSG code is a short number that names one entry in the <b>EPSG Geodetic Parameter
+      Dataset</b> — the registry of coordinate reference systems, datums, ellipsoids, units and
+      transformations maintained by the IOGP. The registry grew out of the European Petroleum
+      Survey Group, which is where the four letters come from, and it is now the common language
+      that GIS software, GNSS receivers, web services and survey instruments use to say which
+      coordinates they mean.</p>
+    <p>A code is written as <code>authority:code</code>, so <code>EPSG:4326</code> is latitude and
+      longitude on WGS 84 and <code>EPSG:32617</code> is WGS 84 / UTM zone 17N. Because a code
+      identifies a complete system rather than a place, the same field on the ground can honestly be
+      described by several different codes at once: the position is the same, the numbers attached
+      to it are not.</p>
+    <p>The important consequence is that a coordinate pair is meaningless until you know its code.
+      The pair <code>630084.301, 4833438.586</code> is a perfectly good position in UTM zone 17N, and
+      a position in the middle of the Atlantic if you read it as anything else.</p>
+  </section>
+
+  <section class="card">
+    <h2>The four kinds of code</h2>
+    <p>Almost everything you will meet falls into one of four groups, and the group tells you what
+      the numbers look like before you open the file.</p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Kind</th><th>What the coordinates are</th><th>Examples</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>Geographic 2D</b></td>
+            <td>Latitude and longitude, in degrees, on a stated datum. No projection involved.</td>
+            <td><code>4326</code> WGS 84 &middot; <code>4269</code> NAD83 &middot; <code>4277</code> OSGB36</td>
+          </tr>
+          <tr>
+            <td><b>Projected</b></td>
+            <td>Easting and northing on a flat plane, in metres or feet, valid only inside the area the projection was designed for.</td>
+            <td><code>32617</code> UTM 17N &middot; <code>27700</code> British National Grid &middot; <code>2205</code> Kentucky North</td>
+          </tr>
+          <tr>
+            <td><b>Geographic 3D</b></td>
+            <td>Latitude, longitude and ellipsoidal height — the raw output of a GNSS receiver.</td>
+            <td><code>4979</code> WGS 84 (3D)</td>
+          </tr>
+          <tr>
+            <td><b>Vertical</b></td>
+            <td>A height only, measured from a named vertical datum rather than from the ellipsoid.</td>
+            <td><code>5703</code> NAVD88 height &middot; <code>5773</code> EGM96 height</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>A <b>compound</b> code bolts a horizontal and a vertical system together — a State Plane zone
+      with NAVD88 heights, for instance — which is what a set of survey observations usually is.
+      The relationship between the ellipsoidal height in a 3D code and the elevation in a vertical
+      code is the geoid, which is covered in
+      <a href="geoid-vs-ellipsoid.html">geoid vs ellipsoid</a>.</p>
+  </section>
+
+  <section class="card">
+    <h2>The codes you will meet most often</h2>
+    <p>If you only ever memorise a dozen numbers, these are the dozen.</p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Code</th><th>Name</th><th>Where it turns up</th></tr></thead>
+        <tbody>
+          <tr><td><code>4326</code></td><td>WGS 84</td><td>GPS output, GeoJSON, KML, GPX, nearly every web API</td></tr>
+          <tr><td><code>3857</code></td><td>WGS 84 / Pseudo-Mercator</td><td>Web map tiles — Google, OpenStreetMap, most basemaps</td></tr>
+          <tr><td><code>4979</code></td><td>WGS 84 (3D)</td><td>GNSS positions with ellipsoidal height</td></tr>
+          <tr><td><code>4269</code></td><td>NAD83</td><td>United States national mapping, census, USGS products</td></tr>
+          <tr><td><code>4267</code></td><td>NAD27</td><td>Legacy US maps and deeds before about 1990</td></tr>
+          <tr><td><code>4258</code></td><td>ETRS89</td><td>European reference frame, EU mapping</td></tr>
+          <tr><td><code>4490</code></td><td>CGCS2000</td><td>China, including the national geodetic framework</td></tr>
+          <tr><td><code>4283</code> / <code>7844</code></td><td>GDA94 / GDA2020</td><td>Australia, old and current</td></tr>
+          <tr><td><code>27700</code></td><td>OSGB36 / British National Grid</td><td>United Kingdom — all Ordnance Survey mapping</td></tr>
+          <tr><td><code>2154</code></td><td>RGF93 v1 / Lambert-93</td><td>France, the national grid on modern maps</td></tr>
+          <tr><td><code>326xx</code></td><td>WGS 84 / UTM zone xxN</td><td>Global UTM north, 32601 to 32660</td></tr>
+          <tr><td><code>327xx</code></td><td>WGS 84 / UTM zone xxS</td><td>Global UTM south, 32701 to 32760</td></tr>
+          <tr><td><code>269xx</code></td><td>NAD83 / UTM zone xxN</td><td>North American UTM on NAD83, 26901 to 26923</td></tr>
+          <tr><td><code>26900s</code>, <code>32000s</code></td><td>NAD83 / State Plane, metres</td><td>United States state plane zones on NAD83</td></tr>
+          <tr><td><code>2200s</code></td><td>NAD83 / State Plane, feet</td><td>The foot-based versions of the same zones, mostly US survey feet</td></tr>
+          <tr><td><code>5703</code></td><td>NAVD88 height</td><td>United States elevations</td></tr>
+          <tr><td><code>5773</code> / <code>3855</code></td><td>EGM96 / EGM2008 height</td><td>Global gravity-based heights</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>For any UTM zone the arithmetic is regular, which is why the block is worth remembering: the
+      code for zone <i>n</i> north is <code>32600 + n</code> and for zone <i>n</i> south it is
+      <code>32700 + n</code>. The corresponding zone is worked out from the longitude, as explained
+      in <a href="how-to-read-utm-coordinates.html">how to read UTM coordinates</a>.</p>
+  </section>
+
+  <section class="card">
+    <h2>4326 or 3857? The pair that catches everyone</h2>
+    <p>These two codes cover most of the world's data and they are constantly confused, because both
+      carry the words <i>WGS 84</i>. They are not the same kind of thing at all. <code>4326</code>
+      is geographic — degrees of latitude and longitude. <code>3857</code> is projected — metres of
+      easting and northing, with the equator and the prime meridian at the origin.</p>
+    <p>There is a second trap inside 3857. A true Mercator projection carries the ellipsoid onto the
+      plane, but Pseudo-Mercator replaces the ellipsoid with a sphere of radius 6,378,137 m. That
+      makes the arithmetic simpler and the tiles square, and it also means the northings are
+      systematically different from a genuine ellipsoidal Mercator such as <code>3395</code>.</p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Latitude</th><th>Northing, EPSG:3857</th><th>Northing, EPSG:3395</th><th>Difference</th></tr></thead>
+        <tbody>
+          <tr><td>15&deg;N</td><td>1,689,200.1 m</td><td>1,678,147.5 m</td><td>11.1 km</td></tr>
+          <tr><td>30&deg;N</td><td>3,503,549.8 m</td><td>3,482,189.1 m</td><td>21.4 km</td></tr>
+          <tr><td>45&deg;N</td><td>5,621,521.5 m</td><td>5,591,295.9 m</td><td>30.2 km</td></tr>
+          <tr><td>60&deg;N</td><td>8,399,737.9 m</td><td>8,362,698.5 m</td><td>37.0 km</td></tr>
+          <tr><td>84&deg;N</td><td>18,807,214.1 m</td><td>18,764,656.2 m</td><td>42.6 km</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>So the two are about 21 km apart in northing at 30&deg; of latitude and 37 km apart at
+      60&deg;. Neither is wrong — they answer different questions. But if a file says 3857 and was
+      actually computed on the ellipsoid, or the other way round, a kilometre-scale disagreement
+      appears that no amount of re-checking the survey will explain.</p>
+    <p>Pseudo-Mercator also inflates distance and area away from the equator: a scale factor of
+      about 1.15 at 30&deg;, 1.41 at 45&deg; and 2.0 at 60&deg;. Never measure area or distance on a
+      Web Mercator layer. Use a projected zone such as a
+      <a href="state-plane-converter.html">State Plane</a> or UTM zone instead, or convert to
+      latitude and longitude and work on the ellipsoid.</p>
+  </section>
+
+  <section class="card">
+    <h2>Codes that look alike but are not</h2>
+    <p>Most coordinate mix-ups are not typos. They are two codes that differ by a plausible-looking
+      amount.</p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>These</th><th>Differ by</th><th>Why it matters</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>4326</code> vs <code>4269</code></td>
+            <td>About 1&ndash;2 m in North America</td>
+            <td>WGS 84 and NAD83 are not the same datum. Fine for mapping, not for a boundary.</td>
+          </tr>
+          <tr>
+            <td><code>3857</code> vs <code>3395</code></td>
+            <td>21 km at 30&deg;, 37 km at 60&deg;</td>
+            <td>Spherical versus ellipsoidal Mercator. Both are metres, so nothing looks obviously wrong.</td>
+          </tr>
+          <tr>
+            <td><code>32610</code> vs <code>26910</code></td>
+            <td>About 1&ndash;2 m</td>
+            <td>The same UTM zone 10N maths on two different datums — WGS 84 and NAD83.</td>
+          </tr>
+          <tr>
+            <td><code>26910</code> vs <code>26929</code></td>
+            <td>Hundreds of kilometres</td>
+            <td>The trap of the 26900 block: 26901&ndash;26923 are NAD83 UTM zones, 26929 upward are NAD83 State Plane zones. Same family, different tool.</td>
+          </tr>
+          <tr>
+            <td><code>4326</code> vs <code>4267</code></td>
+            <td>10&ndash;100 m in the United States</td>
+            <td>NAD27 is a legacy datum. Anything older than the 1980s is probably on it.</td>
+          </tr>
+          <tr>
+            <td><code>26943</code> vs <code>2227</code></td>
+            <td>A factor of 3.28 &mdash; not 2 ppm</td>
+            <td>Both are NAD83 / California zone 3. One is in metres, the other in US survey feet. Reading either as the other is the largest error on this page.</td>
+          </tr>
+          <tr>
+            <td><code>2227</code> vs <code>2222</code></td>
+            <td>2 parts per million, not 3.28&times;</td>
+            <td>US survey feet and international feet are only 2 ppm apart, so a foot-based zone read in the wrong foot is a boundary-scale error, not a gross one. See <a href="survey-foot-vs-international-foot.html">survey foot vs international foot</a>.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="note">
+      <p><b>The unit is part of the code, and the blocks reflect that.</b> On NAD83 the State Plane
+        zones are split by unit: the 26900s and 32000s blocks are in metres, and the 2200s block holds
+        the foot-based versions — 53 in US survey feet and 15 in international feet in the table
+        above. A metre zone read as feet scales every coordinate by 3.28, which is obvious the moment
+        you see it and invisible until you do. Two foot-based zones read as each other is subtler
+        still: 2 parts per million looks like nothing until it reaches a boundary.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>How to find the code for an area you have never worked in</h2>
+    <ol>
+      <li><b>Ask what the coordinates are for.</b> A national mapping agency will have a national
+        grid; a state or province will often have its own zone; a project tied to a global data set
+        will be in UTM. The purpose narrows the list faster than any search.</li>
+      <li><b>Look for the datum in the metadata.</b> WGS 84, NAD83, ETRS89, GDA2020, CGCS2000 and
+        NAD27 each lead to a different family of codes, and the difference is usually stated
+        somewhere in the file header, the service capabilities document or the drawing title block.</li>
+      <li><b>Check the unit.</b> Metres and feet split every family in two. If a northing is around
+        5,000,000 in metres it is a UTM-type coordinate; if it is around 16,000,000 it is probably
+        feet, or a national grid with its own origin.</li>
+      <li><b>Read the order of magnitude of the easting.</b> About 500,000 means a UTM-type zone
+        centred on a meridian. A six-figure easting in the 100,000s with a small northing means a
+        local grid with its own false origin.</li>
+      <li><b>Search the area name here.</b> Type the state, country or zone name into the box above
+        and the candidates appear with their units and areas of use, which is usually enough to
+        identify the one that matches the extent of your data.</li>
+      <li><b>Confirm with a known point.</b> Convert one coordinate you can verify independently —
+        a survey mark, a monument, a well-known landmark — and check that it lands where it should.
+        One confirmed point is worth more than any amount of reading.</li>
+    </ol>
+  </section>
+
+  <section class="card">
+    <h2>EPSG codes and Esri WKIDs</h2>
+    <p>Esri software uses its own well-known identifiers alongside the EPSG ones. Many are identical
+      — Esri also calls the British National Grid 27700 — but a substantial number are not, and the
+      two registers do not always describe the same thing under the same number.</p>
+    <ul>
+      <li><b>Web Mercator.</b> Esri:102100 and its predecessor Esri:102113 both describe what EPSG
+        calls 3857. A service quoting 102100 is quoting the same projection under a different
+        authority.</li>
+      <li><b>North American State Plane.</b> Esri assigns codes in the 102000s to State Plane zones
+        whose EPSG equivalents sit in the 2200s and 26900s, so <code>102603</code> and
+        <code>2205</code> can describe the same Kentucky zone in different registers.</li>
+      <li><b>Deprecated entries.</b> Both registers retire codes. A code that still works in one
+        package may already be flagged as deprecated in the registry, which is why it is worth
+        checking a definition rather than trusting a number that has always been in the file.</li>
+    </ul>
+    <p>When two systems disagree, the safest course is to send the full definition — the WKT or the
+      PROJ string — rather than a number, because a number means nothing without its authority.</p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="what-datum-does-gps-use.html">What datum does GPS use?<small>WGS 84, NAD83 and ITRF compared</small></a>
+      <a href="how-to-read-utm-coordinates.html">How to read UTM coordinates<small>Zone, band, easting and northing explained</small></a>
+      <a href="utm-vs-mgrs.html">UTM vs MGRS: what's the difference<small>The same grid written in metres or in digits</small></a>
+      <a href="geoid-vs-ellipsoid.html">Geoid vs ellipsoid<small>Why the height in a 3D code is not the elevation</small></a>
+      <a href="survey-foot-vs-international-foot.html">Survey foot vs international foot<small>Two feet, two codes, two parts per million</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators and converters</h2>
+    <div class="links">
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Latitude and longitude, UTM grid and batch conversion</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>All 134 NAD83 State Plane zones, both directions</small></a>
+      <a href="mgrs-converter.html">mgrs to lat long<small>Military grid reference to latitude and longitude</small></a>
+      <a href="dms-converter.html">decimal degrees to dms<small>Decimal degrees to DMS, DDM and back</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, acreage and perimeter from coordinates</small></a>
+      <a href="guides.html">All guides<small>Twelve plain-English guides to the background</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>What is an EPSG code?</summary>
+      <p>An EPSG code is a short number that names one entry in the EPSG Geodetic Parameter Dataset — the registry of coordinate reference systems, datums, ellipsoids, units and transformations maintained by the IOGP. It is written <code>authority:code</code>, so <code>EPSG:4326</code> is latitude and longitude on WGS 84 and <code>EPSG:32617</code> is WGS 84 / UTM zone 17N.</p>
+    </details>
+    <details>
+      <summary>What is the difference between EPSG 4326 and 3857?</summary>
+      <p>4326 is geographic: degrees of latitude and longitude on WGS 84, the format used by GPS, GeoJSON and KML. 3857 is projected: metres of easting and northing, used by web map tiles. They are not interchangeable, and 3857 is a spherical Mercator, so its northings differ from a true ellipsoidal Mercator by about 21 km at 30&deg; latitude and about 37 km at 60&deg;.</p>
+    </details>
+    <details>
+      <summary>Which EPSG code should I use for UTM?</summary>
+      <p>On WGS 84, northern-hemisphere zones are 32601 to 32660 and southern-hemisphere zones 32701 to 32760, so UTM zone 17N is <code>32617</code> and zone 17S is <code>32717</code>. On NAD83 in North America use 26901 to 26923, and on ETRS89 in Europe use 25828 to 25838.</p>
+    </details>
+    <details>
+      <summary>How do I find the EPSG code for a State Plane zone?</summary>
+      <p>Search the state name here rather than guessing the number. NAD83 State Plane zones are split by unit: the 26900s and 32000s blocks are in metres, while the 2200s block holds the foot-based versions, mostly in US survey feet. Kentucky is <code>2205</code> North and <code>26980</code> South in metres; California zone 3 is <code>26943</code> in metres and <code>2227</code> in US survey feet. Watch the neighbouring block too, because 26901 to 26923 are NAD83 UTM zones and not State Plane zones at all.</p>
+    </details>
+    <details>
+      <summary>Why does the same area have several EPSG codes?</summary>
+      <p>Because a code identifies a complete coordinate reference system, not a place. The same position can be described on WGS 84, NAD83 or NAD27, in metres or in US survey feet, in a local zone or in a UTM zone, and each combination is a separate registry entry with its own code.</p>
+    </details>
+    <details>
+      <summary>Are EPSG codes the same as Esri WKIDs?</summary>
+      <p>Often, but not always. Many Esri spatial references quote the same number as EPSG, and others use Esri-only identifiers: Esri:102100 and Esri:102113 both describe what EPSG calls 3857, and several State Plane zones carry Esri codes in the 102000s. Check which authority a file or service is quoting before treating the two as equal.</p>
+    </details>
+    <details>
+      <summary>What does EPSG:32617 mean when written that way?</summary>
+      <p>The text before the colon is the authority that maintains the definition and the number after it is the code within that authority. <code>EPSG:32617</code>, <code>urn:ogc:def:crs:EPSG::32617</code> and the WKT or PROJ string exported by your GIS are three ways of naming the same system.</p>
+    </details>
+    <details>
+      <summary>Where does this EPSG data come from?</summary>
+      <p>The codes, names, units, areas of use and projection parameters are read from the EPSG Geodetic Parameter Dataset through the PROJ library, so nothing is typed in by hand and a deprecated entry is not presented as current. What you see is a reference subset chosen for surveying and mapping work, not the whole registry.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard and your project's coordinate reference system before field use.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+/* EPSG table extracted from the EPSG Geodetic Parameter Dataset via PROJ.
+   Row: [code, name, group, unit, area of use, projection method, parameters]
+   group: g geographic · u UTM · s State Plane · p other projected · v vertical */
+var EPSG=[
+[2039,"Israel 1993 / Israeli TM Grid","p","metre","Israel - onshore; Palestine onshore","Transverse Mercator","lat o 31.73439361  lon o 35.20451694  k 1.0000067  FE 219529.584  FN 626907.39"],
+[2056,"CH1903+ / LV95","p","metre","Liechtenstein; Switzerland","Hotine oblique Mercator","lat c 46.95240556  lon c 7.43958333  az 90  k 1  FE 2600000  FN 1200000"],
+[2154,"RGF93 v1 / Lambert-93","p","metre","France - onshore and offshore …","Lambert conformal conic (2SP)","latF 46.5  sp1 49  sp2 44  lonF 3  FE 700000  FN 6600000"],
+[2180,"ETRF2000-PL / CS92","p","metre","Poland - onshore and offshore","Transverse Mercator","lat o 0  lon o 19  k 0.9993  FE 500000  FN -5300000"],
+[2193,"NZGD2000 / New Zealand Transverse Mercator 2000","p","metre","New Zealand - North Island, South Island, Stewart Island - onshore","Transverse Mercator","lat o 0  lon o 173  k 0.9996  FE 1600000  FN 10000000"],
+[2200,"ATS77 / New Brunswick Stereographic (ATS77)","p","metre","Canada - New Brunswick","Oblique stereographic","lat o 46.5  lon o -66.5  k 0.999912  FE 300000  FN 800000"],
+[2201,"REGVEN / UTM zone 18N","u","metre","Venezuela - west of 72°W","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 0"],
+[2202,"REGVEN / UTM zone 19N","u","metre","Venezuela - between 72°W and 66°W, onshore and offshore","Transverse Mercator","lat o 0  lon o -69  k 0.9996  FE 500000  FN 0"],
+[2203,"REGVEN / UTM zone 20N","u","metre","Venezuela - east of 66°W, onshore and offshore","Transverse Mercator","lat o 0  lon o -63  k 0.9996  FE 500000  FN 0"],
+[2204,"NAD27 / Tennessee","p","US survey foot","USA - Tennessee …","Lambert conformal conic (2SP)","latF 34.66666667  sp1 35.25  sp2 36.41666667  lonF -86  FE 2000000  FN 100000"],
+[2205,"NAD83 / Kentucky North","s","metre","USA - Kentucky …","Lambert conformal conic (2SP)","latF 37.5  sp1 37.96666667  sp2 38.96666667  lonF -84.25  FE 500000  FN 0"],
+[2206,"ED50 / 3-degree Gauss-Kruger zone 9","p","metre","Türkiye (Turkey) - west of 28°30'E, onshore","Transverse Mercator","lat o 0  lon o 27  k 1  FE 9500000  FN 0"],
+[2207,"ED50 / 3-degree Gauss-Kruger zone 10","p","metre","Türkiye (Turkey) - between 28°30'E and 31°30'E, onshore","Transverse Mercator","lat o 0  lon o 30  k 1  FE 10500000  FN 0"],
+[2208,"ED50 / 3-degree Gauss-Kruger zone 11","p","metre","Türkiye (Turkey) - between 31°30'E and 34°30'E, onshore","Transverse Mercator","lat o 0  lon o 33  k 1  FE 11500000  FN 0"],
+[2209,"ED50 / 3-degree Gauss-Kruger zone 12","p","metre","Türkiye (Turkey) - between 34°30'E and 37°30'E, onshore","Transverse Mercator","lat o 0  lon o 36  k 1  FE 12500000  FN 0"],
+[2210,"ED50 / 3-degree Gauss-Kruger zone 13","p","metre","Türkiye (Turkey) - between 37°30'E and 40°30'E, onshore","Transverse Mercator","lat o 0  lon o 39  k 1  FE 13500000  FN 0"],
+[2211,"ED50 / 3-degree Gauss-Kruger zone 14","p","metre","Türkiye (Turkey) - between 40°30'E and 43°30'E, onshore","Transverse Mercator","lat o 0  lon o 42  k 1  FE 14500000  FN 0"],
+[2212,"ED50 / 3-degree Gauss-Kruger zone 15","p","metre","Türkiye (Turkey) - east of 43°30'E","Transverse Mercator","lat o 0  lon o 45  k 1  FE 15500000  FN 0"],
+[2213,"ETRS89 / TM 30 NE","p","metre","Romania - offshore","Transverse Mercator","lat o 0  lon o 30  k 0.9996  FE 500000  FN 0"],
+[2214,"Douala 1948 / AOF west","p","metre","Cameroon - coastal area","Transverse Mercator","lat o 0  lon o 10.5  k 0.999  FE 1000000  FN 1000000"],
+[2215,"Manoca 1962 / UTM zone 32N","u","metre","Cameroon - coastal area","Transverse Mercator","lat o 0  lon o 9  k 0.9996  FE 500000  FN 0"],
+[2216,"Qoornoq 1927 / UTM zone 22N","u","metre","Greenland - southwest coast between 54°W and 48°W","Transverse Mercator","lat o 0  lon o -51  k 0.9996  FE 500000  FN 0"],
+[2217,"Qoornoq 1927 / UTM zone 23N","u","metre","Greenland - southwest coast east of 48°W","Transverse Mercator","lat o 0  lon o -45  k 0.9996  FE 500000  FN 0"],
+[2218,"Scoresbysund 1952 / Greenland zone 5 east","p","metre","Greenland - east coast onshore - between 69°N and 72°N","Lambert Conic Conformal (West Orientated)","lat o 70.5  lon o -24  k 1  FE 0  FN 0"],
+[2219,"ATS77 / UTM zone 19N","u","metre","Canada - New Brunswick and Nova Scotia - west of 66°W","Transverse Mercator","lat o 0  lon o -69  k 0.9996  FE 500000  FN 0"],
+[2220,"ATS77 / UTM zone 20N","u","metre","Canada - New Brunswick and Nova Scotia east of 66°W …","Transverse Mercator","lat o 0  lon o -63  k 0.9996  FE 500000  FN 0"],
+[2221,"Scoresbysund 1952 / Greenland zone 6 east","p","metre","Greenland - east coast onshore - between 68°N and 69°N","Lambert Conic Conformal (West Orientated)","lat o 67.5  lon o -32  k 1  FE 0  FN 0"],
+[2222,"NAD83 / Arizona East (ft)","s","foot","USA - Arizona …","Transverse Mercator","lat o 31  lon o -110.16666667  k 0.9999  FE 700000  FN 0"],
+[2223,"NAD83 / Arizona Central (ft)","s","foot","USA - Arizona …","Transverse Mercator","lat o 31  lon o -111.91666667  k 0.9999  FE 700000  FN 0"],
+[2224,"NAD83 / Arizona West (ft)","s","foot","USA - Arizona - counties of La Paz; Mohave; Yuma","Transverse Mercator","lat o 31  lon o -113.75  k 0.99993333  FE 700000  FN 0"],
+[2225,"NAD83 / California zone 1 (ftUS)","s","US survey foot","USA - California …","Lambert conformal conic (2SP)","latF 39.33333333  sp1 41.66666667  sp2 40  lonF -122  FE 6561666.667  FN 1640416.667"],
+[2226,"NAD83 / California zone 2 (ftUS)","s","US survey foot","USA - California …","Lambert conformal conic (2SP)","latF 37.66666667  sp1 39.83333333  sp2 38.33333333  lonF -122  FE 6561666.667  FN 1640416.667"],
+[2227,"NAD83 / California zone 3 (ftUS)","s","US survey foot","USA - California …","Lambert conformal conic (2SP)","latF 36.5  sp1 38.43333333  sp2 37.06666667  lonF -120.5  FE 6561666.667  FN 1640416.667"],
+[2228,"NAD83 / California zone 4 (ftUS)","s","US survey foot","USA - California …","Lambert conformal conic (2SP)","latF 35.33333333  sp1 37.25  sp2 36  lonF -119  FE 6561666.667  FN 1640416.667"],
+[2229,"NAD83 / California zone 5 (ftUS)","s","US survey foot","USA - California …","Lambert conformal conic (2SP)","latF 33.5  sp1 35.46666667  sp2 34.03333333  lonF -118  FE 6561666.667  FN 1640416.667"],
+[2230,"NAD83 / California zone 6 (ftUS)","s","US survey foot","USA - California - counties Imperial; Orange; Riverside; San Diego","Lambert conformal conic (2SP)","latF 32.16666667  sp1 33.88333333  sp2 32.78333333  lonF -116.25  FE 6561666.667  FN 1640416.667"],
+[2231,"NAD83 / Colorado North (ftUS)","s","US survey foot","USA - Colorado …","Lambert conformal conic (2SP)","latF 39.33333333  sp1 40.78333333  sp2 39.71666667  lonF -105.5  FE 3000000  FN 1000000"],
+[2232,"NAD83 / Colorado Central (ftUS)","s","US survey foot","USA - Colorado …","Lambert conformal conic (2SP)","latF 37.83333333  sp1 39.75  sp2 38.45  lonF -105.5  FE 3000000  FN 1000000"],
+[2233,"NAD83 / Colorado South (ftUS)","s","US survey foot","USA - Colorado …","Lambert conformal conic (2SP)","latF 36.66666667  sp1 38.43333333  sp2 37.23333333  lonF -105.5  FE 3000000  FN 1000000"],
+[2234,"NAD83 / Connecticut (ftUS)","s","US survey foot","USA - Connecticut …","Lambert conformal conic (2SP)","latF 40.83333333  sp1 41.86666667  sp2 41.2  lonF -72.75  FE 1000000  FN 500000"],
+[2235,"NAD83 / Delaware (ftUS)","s","US survey foot","USA - Delaware - counties of Kent; New Castle; Sussex","Transverse Mercator","lat o 38  lon o -75.41666667  k 0.999995  FE 656166.667  FN 0"],
+[2236,"NAD83 / Florida East (ftUS)","s","US survey foot","USA - Florida …","Transverse Mercator","lat o 24.33333333  lon o -81  k 0.99994118  FE 656166.667  FN 0"],
+[2237,"NAD83 / Florida West (ftUS)","s","US survey foot","USA - Florida …","Transverse Mercator","lat o 24.33333333  lon o -82  k 0.99994118  FE 656166.667  FN 0"],
+[2238,"NAD83 / Florida North (ftUS)","s","US survey foot","USA - Florida …","Lambert conformal conic (2SP)","latF 29  sp1 30.75  sp2 29.58333333  lonF -84.5  FE 1968500  FN 0"],
+[2239,"NAD83 / Georgia East (ftUS)","s","US survey foot","USA - Georgia …","Transverse Mercator","lat o 30  lon o -82.16666667  k 0.9999  FE 656166.667  FN 0"],
+[2240,"NAD83 / Georgia West (ftUS)","s","US survey foot","USA - Georgia …","Transverse Mercator","lat o 30  lon o -84.16666667  k 0.9999  FE 2296583.333  FN 0"],
+[2241,"NAD83 / Idaho East (ftUS)","s","US survey foot","USA - Idaho …","Transverse Mercator","lat o 41.66666667  lon o -112.16666667  k 0.99994737  FE 656166.667  FN 0"],
+[2242,"NAD83 / Idaho Central (ftUS)","s","US survey foot","USA - Idaho …","Transverse Mercator","lat o 41.66666667  lon o -114  k 0.99994737  FE 1640416.667  FN 0"],
+[2243,"NAD83 / Idaho West (ftUS)","s","US survey foot","USA - Idaho …","Transverse Mercator","lat o 41.66666667  lon o -115.75  k 0.99993333  FE 2624666.667  FN 0"],
+[2244,"NAD83 / Indiana East (ftUS)","s","US survey foot","USA - Indiana …","Transverse Mercator","lat o 37.5  lon o -85.66666667  k 0.99996667  FE 328083.333  FN 818125"],
+[2245,"NAD83 / Indiana West (ftUS)","s","US survey foot","USA - Indiana …","Transverse Mercator","lat o 37.5  lon o -87.08333333  k 0.99996667  FE 2952750  FN 818125"],
+[2246,"NAD83 / Kentucky North (ftUS)","s","US survey foot","USA - Kentucky …","Lambert conformal conic (2SP)","latF 37.5  sp1 37.96666667  sp2 38.96666667  lonF -84.25  FE 1640416.667  FN 0"],
+[2247,"NAD83 / Kentucky South (ftUS)","s","US survey foot","USA - Kentucky …","Lambert conformal conic (2SP)","latF 36.33333333  sp1 37.93333333  sp2 36.73333333  lonF -85.75  FE 1640416.667  FN 1640416.667"],
+[2248,"NAD83 / Maryland (ftUS)","s","US survey foot","USA - Maryland …","Lambert conformal conic (2SP)","latF 37.66666667  sp1 39.45  sp2 38.3  lonF -77  FE 1312333.333  FN 0"],
+[2249,"NAD83 / Massachusetts Mainland (ftUS)","s","US survey foot","USA - Massachusetts onshore …","Lambert conformal conic (2SP)","latF 41  sp1 42.68333333  sp2 41.71666667  lonF -71.5  FE 656166.667  FN 2460625"],
+[2250,"NAD83 / Massachusetts Island (ftUS)","s","US survey foot","USA - Massachusetts offshore - counties of Dukes; Nantucket","Lambert conformal conic (2SP)","latF 41  sp1 41.48333333  sp2 41.28333333  lonF -70.5  FE 1640416.667  FN 0"],
+[2251,"NAD83 / Michigan North (ft)","s","foot","USA - Michigan north of approximately 45°45'N …","Lambert conformal conic (2SP)","latF 44.78333333  sp1 47.08333333  sp2 45.48333333  lonF -87  FE 26246719.16  FN 0"],
+[2252,"NAD83 / Michigan Central (ft)","s","foot","USA - Michigan …","Lambert conformal conic (2SP)","latF 43.31666667  sp1 45.7  sp2 44.18333333  lonF -84.36666667  FE 19685039.37  FN 0"],
+[2253,"NAD83 / Michigan South (ft)","s","foot","USA - Michigan …","Lambert conformal conic (2SP)","latF 41.5  sp1 43.66666667  sp2 42.1  lonF -84.36666667  FE 13123359.58  FN 0"],
+[2254,"NAD83 / Mississippi East (ftUS)","s","US survey foot","USA - Mississippi …","Transverse Mercator","lat o 29.5  lon o -88.83333333  k 0.99995  FE 984250  FN 0"],
+[2255,"NAD83 / Mississippi West (ftUS)","s","US survey foot","USA - Mississippi …","Transverse Mercator","lat o 29.5  lon o -90.33333333  k 0.99995  FE 2296583.333  FN 0"],
+[2256,"NAD83 / Montana (ft)","s","foot","USA - Montana …","Lambert conformal conic (2SP)","latF 44.25  sp1 49  sp2 45  lonF -109.5  FE 1968503.937  FN 0"],
+[2257,"NAD83 / New Mexico East (ftUS)","s","US survey foot","USA - New Mexico …","Transverse Mercator","lat o 31  lon o -104.33333333  k 0.99990909  FE 541337.5  FN 0"],
+[2258,"NAD83 / New Mexico Central (ftUS)","s","US survey foot","USA - New Mexico …","Transverse Mercator","lat o 31  lon o -106.25  k 0.9999  FE 1640416.667  FN 0"],
+[2259,"NAD83 / New Mexico West (ftUS)","s","US survey foot","USA - New Mexico …","Transverse Mercator","lat o 31  lon o -107.83333333  k 0.99991667  FE 2723091.667  FN 0"],
+[2260,"NAD83 / New York East (ftUS)","s","US survey foot","USA - New York mainland …","Transverse Mercator","lat o 38.83333333  lon o -74.5  k 0.9999  FE 492125  FN 0"],
+[2261,"NAD83 / New York Central (ftUS)","s","US survey foot","USA - New York …","Transverse Mercator","lat o 40  lon o -76.58333333  k 0.9999375  FE 820208.333  FN 0"],
+[2262,"NAD83 / New York West (ftUS)","s","US survey foot","USA - New York …","Transverse Mercator","lat o 40  lon o -78.58333333  k 0.9999375  FE 1148291.667  FN 0"],
+[2263,"NAD83 / New York Long Island (ftUS)","s","US survey foot","USA - New York …","Lambert conformal conic (2SP)","latF 40.16666667  sp1 41.03333333  sp2 40.66666667  lonF -74  FE 984250  FN 0"],
+[2264,"NAD83 / North Carolina (ftUS)","s","US survey foot","USA - North Carolina …","Lambert conformal conic (2SP)","latF 33.75  sp1 36.16666667  sp2 34.33333333  lonF -79  FE 2000000  FN 0"],
+[2265,"NAD83 / North Dakota North (ft)","s","foot","USA - North Dakota …","Lambert conformal conic (2SP)","latF 47  sp1 48.73333333  sp2 47.43333333  lonF -100.5  FE 1968503.937  FN 0"],
+[2266,"NAD83 / North Dakota South (ft)","s","foot","USA - North Dakota …","Lambert conformal conic (2SP)","latF 45.66666667  sp1 47.48333333  sp2 46.18333333  lonF -100.5  FE 1968503.937  FN 0"],
+[2267,"NAD83 / Oklahoma North (ftUS)","s","US survey foot","USA - Oklahoma …","Lambert conformal conic (2SP)","latF 35  sp1 36.76666667  sp2 35.56666667  lonF -98  FE 1968500  FN 0"],
+[2268,"NAD83 / Oklahoma South (ftUS)","s","US survey foot","USA - Oklahoma …","Lambert conformal conic (2SP)","latF 33.33333333  sp1 35.23333333  sp2 33.93333333  lonF -98  FE 1968500  FN 0"],
+[2269,"NAD83 / Oregon North (ft)","s","foot","USA - Oregon …","Lambert conformal conic (2SP)","latF 43.66666667  sp1 46  sp2 44.33333333  lonF -120.5  FE 8202099.738  FN 0"],
+[2270,"NAD83 / Oregon South (ft)","s","foot","USA - Oregon …","Lambert conformal conic (2SP)","latF 41.66666667  sp1 44  sp2 42.33333333  lonF -120.5  FE 4921259.843  FN 0"],
+[2271,"NAD83 / Pennsylvania North (ftUS)","s","US survey foot","USA - Pennsylvania …","Lambert conformal conic (2SP)","latF 40.16666667  sp1 41.95  sp2 40.88333333  lonF -77.75  FE 1968500  FN 0"],
+[2272,"NAD83 / Pennsylvania South (ftUS)","s","US survey foot","USA - Pennsylvania …","Lambert conformal conic (2SP)","latF 39.33333333  sp1 40.96666667  sp2 39.93333333  lonF -77.75  FE 1968500  FN 0"],
+[2273,"NAD83 / South Carolina (ft)","s","foot","USA - South Carolina …","Lambert conformal conic (2SP)","latF 31.83333333  sp1 34.83333333  sp2 32.5  lonF -81  FE 2000000  FN 0"],
+[2274,"NAD83 / Tennessee (ftUS)","s","US survey foot","USA - Tennessee …","Lambert conformal conic (2SP)","latF 34.33333333  sp1 36.41666667  sp2 35.25  lonF -86  FE 1968500  FN 0"],
+[2275,"NAD83 / Texas North (ftUS)","s","US survey foot","USA - Texas …","Lambert conformal conic (2SP)","latF 34  sp1 36.18333333  sp2 34.65  lonF -101.5  FE 656166.667  FN 3280833.333"],
+[2276,"NAD83 / Texas North Central (ftUS)","s","US survey foot","USA - Texas …","Lambert conformal conic (2SP)","latF 31.66666667  sp1 33.96666667  sp2 32.13333333  lonF -98.5  FE 1968500  FN 6561666.667"],
+[2277,"NAD83 / Texas Central (ftUS)","s","US survey foot","USA - Texas …","Lambert conformal conic (2SP)","latF 29.66666667  sp1 31.88333333  sp2 30.11666667  lonF -100.33333333  FE 2296583.333  FN 9842500"],
+[2278,"NAD83 / Texas South Central (ftUS)","s","US survey foot","USA - Texas …","Lambert conformal conic (2SP)","latF 27.83333333  sp1 30.28333333  sp2 28.38333333  lonF -99  FE 1968500  FN 13123333.333"],
+[2279,"NAD83 / Texas South (ftUS)","s","US survey foot","USA - Texas …","Lambert conformal conic (2SP)","latF 25.66666667  sp1 27.83333333  sp2 26.16666667  lonF -98.5  FE 984250  FN 16404166.667"],
+[2280,"NAD83 / Utah North (ft)","s","foot","USA - Utah - counties of Box Elder; Cache; Daggett; Davis; Morgan; Rich; Summit …","Lambert conformal conic (2SP)","latF 40.33333333  sp1 41.78333333  sp2 40.71666667  lonF -111.5  FE 1640419.948  FN 3280839.895"],
+[2281,"NAD83 / Utah Central (ft)","s","foot","USA - Utah - counties of Carbon; Duchesne; Emery; Grand; Juab; Millard; Salt Lake; Sanpete …","Lambert conformal conic (2SP)","latF 38.33333333  sp1 40.65  sp2 39.01666667  lonF -111.5  FE 1640419.948  FN 6561679.79"],
+[2282,"NAD83 / Utah South (ft)","s","foot","USA - Utah - counties of Beaver; Garfield; Iron; Kane; Piute; San Juan; Washington …","Lambert conformal conic (2SP)","latF 36.66666667  sp1 38.35  sp2 37.21666667  lonF -111.5  FE 1640419.948  FN 9842519.685"],
+[2283,"NAD83 / Virginia North (ftUS)","s","US survey foot","USA - Virginia …","Lambert conformal conic (2SP)","latF 37.66666667  sp1 39.2  sp2 38.03333333  lonF -78.5  FE 11482916.667  FN 6561666.667"],
+[2284,"NAD83 / Virginia South (ftUS)","s","US survey foot","USA - Virginia …","Lambert conformal conic (2SP)","latF 36.33333333  sp1 37.96666667  sp2 36.76666667  lonF -78.5  FE 11482916.667  FN 3280833.333"],
+[2285,"NAD83 / Washington North (ftUS)","s","US survey foot","USA - Washington …","Lambert conformal conic (2SP)","latF 47  sp1 48.73333333  sp2 47.5  lonF -120.83333333  FE 1640416.667  FN 0"],
+[2286,"NAD83 / Washington South (ftUS)","s","US survey foot","USA - Washington …","Lambert conformal conic (2SP)","latF 45.33333333  sp1 47.33333333  sp2 45.83333333  lonF -120.5  FE 1640416.667  FN 0"],
+[2287,"NAD83 / Wisconsin North (ftUS)","s","US survey foot","USA - Wisconsin …","Lambert conformal conic (2SP)","latF 45.16666667  sp1 46.76666667  sp2 45.56666667  lonF -90  FE 1968500  FN 0"],
+[2288,"NAD83 / Wisconsin Central (ftUS)","s","US survey foot","USA - Wisconsin …","Lambert conformal conic (2SP)","latF 43.83333333  sp1 45.5  sp2 44.25  lonF -90  FE 1968500  FN 0"],
+[2289,"NAD83 / Wisconsin South (ftUS)","s","US survey foot","USA - Wisconsin …","Lambert conformal conic (2SP)","latF 42  sp1 44.06666667  sp2 42.73333333  lonF -90  FE 1968500  FN 0"],
+[2290,"ATS77 / Prince Edward Isl. Stereographic (ATS77)","p","metre","Canada - Prince Edward Island","Oblique stereographic","lat o 47.25  lon o -63  k 0.999912  FE 700000  FN 400000"],
+[2291,"NAD83(CSRS98) / Prince Edward Isl. Stereographic (NAD83)","s","metre","Canada - Prince Edward Island","Oblique stereographic","lat o 47.25  lon o -63  k 0.999912  FE 400000  FN 800000"],
+[2292,"NAD83(CSRS98) / Prince Edward Isl. Stereographic (NAD83)","s","metre","Canada - Prince Edward Island","Oblique stereographic","lat o 47.25  lon o -63  k 0.999912  FE 400000  FN 800000"],
+[2294,"ATS77 / MTM Nova Scotia zone 4","p","metre","Canada - Nova Scotia - east of 63°W","Transverse Mercator","lat o 0  lon o -61.5  k 0.9999  FE 4500000  FN 0"],
+[2295,"ATS77 / MTM Nova Scotia zone 5","p","metre","Canada - Nova Scotia - west of 63°W","Transverse Mercator","lat o 0  lon o -64.5  k 0.9999  FE 5500000  FN 0"],
+[2296,"Ammassalik 1958 / Greenland zone 7 east","p","metre","Greenland - Ammassalik area onshore","Lambert Conic Conformal (West Orientated)","lat o 64.5  lon o -40  k 1  FE 0  FN 0"],
+[2297,"Qornoq 1927 / Greenland zone 1 east","p","metre","Greenland - onshore north of 81°N","Lambert Conic Conformal (West Orientated)","lat o 82.5  lon o -40  k 1  FE 0  FN 0"],
+[2298,"Qornoq 1927 / Greenland zone 2 east","p","metre","Greenland - east of 44°W and between 78°N and 81°N, onshore","Lambert Conic Conformal (West Orientated)","lat o 79.5  lon o -24  k 1  FE 0  FN 0"],
+[2299,"Qoornoq 1927 / Greenland zone 2 west","p","metre","Greenland - west coast onshore - between 78°N and 79°N","Lambert Conic Conformal (West Orientated)","lat o 79.5  lon o -64  k 1  FE 0  FN 0"],
+[2991,"NAD83 / Oregon LCC (m)","s","metre","USA - Oregon","Lambert conformal conic (2SP)","latF 41.75  sp1 43  sp2 45.5  lonF -120.5  FE 400000  FN 0"],
+[3006,"SWEREF99 TM","p","metre","Sweden - onshore and offshore","Transverse Mercator","lat o 0  lon o 15  k 0.9996  FE 500000  FN 0"],
+[3034,"ETRS89-extended / LCC Europe","p","metre","Europe - European Union (EU) countries and candidates …","Lambert conformal conic (2SP)","latF 52  sp1 35  sp2 65  lonF 10  FE 4000000  FN 2800000"],
+[3035,"ETRS89-extended / LAEA Europe","p","metre","Europe - European Union (EU) countries and candidates …","Lambert azimuthal equal area","lat o 52  lon o 10  FE 4321000  FN 3210000"],
+[3067,"EUREF-FIN / TM35FIN(E,N)","p","metre","Finland - onshore and offshore","Transverse Mercator","lat o 0  lon o 27  k 0.9996  FE 500000  FN 0"],
+[3070,"NAD83 / Wisconsin Transverse Mercator","s","metre","USA - Wisconsin","Transverse Mercator","lat o 0  lon o -90  k 0.9996  FE 520000  FN -4480000"],
+[3072,"NAD83 / Maine CS2000 East","s","metre","USA - Maine east of approximately 68°25'W …","Transverse Mercator","lat o 43.83333333  lon o -67.875  k 0.99998  FE 700000  FN 0"],
+[3074,"NAD83 / Maine CS2000 West","s","metre","USA - Maine west of approximately 69°40'W …","Transverse Mercator","lat o 42.83333333  lon o -70.375  k 0.99998  FE 300000  FN 0"],
+[3081,"NAD83 / Texas State Mapping System","s","metre","USA - Texas","Lambert conformal conic (2SP)","latF 31.16666667  sp1 27.41666667  sp2 34.91666667  lonF -100  FE 1000000  FN 1000000"],
+[3082,"NAD83 / Texas Centric Lambert Conformal","s","metre","USA - Texas","Lambert conformal conic (2SP)","latF 18  sp1 27.5  sp2 35  lonF -100  FE 1500000  FN 5000000"],
+[3088,"NAD83 / Kentucky Single Zone","s","metre","USA - Kentucky","Lambert conformal conic (2SP)","latF 36.33333333  sp1 37.08333333  sp2 38.66666667  lonF -85.75  FE 1500000  FN 1000000"],
+[3395,"WGS 84 / World Mercator","p","metre","World between 80°S and 84°N","Mercator (variant A)","lat o 0  lon o 0  k 1  FE 0  FN 0"],
+[3463,"NAD83 / Maine CS2000 Central","s","metre","USA - Maine between approximately 69°40'W and 68°25'W …","Transverse Mercator","lat o 43.5  lon o -69.125  k 0.99998  FE 500000  FN 0"],
+[3763,"ETRS89 / Portugal TM06","p","metre","Portugal - mainland - onshore","Transverse Mercator","lat o 39.66825833  lon o -8.13310833  k 1  FE 0  FN 0"],
+[3785,"Popular Visualisation CRS / Mercator","p","metre","World between 85.06°S and 85.06°N","Mercator (1SP) (Spherical)","lat o 0  lon o 0  k 1  FE 0  FN 0"],
+[3814,"NAD83 / Mississippi TM","s","metre","USA - Mississippi","Transverse Mercator","lat o 32.5  lon o -89.75  k 0.9998335  FE 500000  FN 1300000"],
+[3832,"WGS 84 / PDC Mercator","p","metre","Pacific Ocean - American Samoa, Antarctica, Australia, Brunei Darussalam, Cambodia, Canada …","Mercator (variant A)","lat o 0  lon o 150  k 1  FE 0  FN 0"],
+[3855,"EGM2008 height","v","metre","World","",""],
+[3857,"WGS 84 / Pseudo-Mercator","p","metre","World between 85.06°S and 85.06°N","Pseudo-Mercator","lat o 0  lon o 0  FE 0  FN 0"],
+[3968,"NAD83 / Virginia Lambert","s","metre","USA - Virginia","Lambert conformal conic (2SP)","latF 36  sp1 37  sp2 39.5  lonF -79.5  FE 0  FN 0"],
+[4141,"Israel 1993","g","degree","Israel - onshore; Palestine onshore","",""],
+[4167,"NZGD2000","g","degree","New Zealand - onshore and offshore …","",""],
+[4171,"RGF93 v1","g","degree","France - onshore and offshore …","",""],
+[4173,"IRENET95","g","degree","Ireland - onshore. United Kingdom (UK) - Northern Ireland (Ulster) …","",""],
+[4203,"AGD84","g","degree","Australia - Queensland, South Australia, Western Australia …","",""],
+[4230,"ED50","g","degree","Europe - west: Andorra; Cyprus; Denmark - onshore and offshore; Faroe Islands - onshore …","",""],
+[4258,"ETRS89","g","degree","Europe - onshore and offshore: Albania; Andorra; Austria; Belgium; Bosnia and Herzegovina …","",""],
+[4267,"NAD27","g","degree","North and central America: Antigua and Barbuda - onshore …","",""],
+[4269,"NAD83","g","degree","North America - onshore and offshore: Canada - Alberta; British Columbia; Manitoba …","",""],
+[4277,"OSGB36","g","degree","United Kingdom (UK) - offshore to boundary of UKCS within 49°45'N to 61°N and 9°W to 2°E …","",""],
+[4283,"GDA94","g","degree","Australia including Lord Howe Island, Macquarie Island, Ashmore and Cartier Islands …","",""],
+[4314,"DHDN","g","degree","Germany - states of former West Germany onshore - Baden-Wurtemberg, Bayern, Bremen, Hamburg …","",""],
+[4326,"WGS 84","g","degree","World","",""],
+[4490,"China Geodetic Coordinate System 2000","g","degree","China - onshore and offshore","",""],
+[4617,"NAD83(CSRS)","g","degree","Canada - onshore and offshore - Alberta; British Columbia; Manitoba; New Brunswick …","",""],
+[4674,"SIRGAS 2000","g","degree","Latin America - Central America and South America …","",""],
+[4979,"WGS 84","g","degree","World","",""],
+[5514,"S-JTSK / Krovak East North","p","metre","Czechia; Slovakia","Krovak (North Orientated)","lat c 49.5  sp 78.5  colat 30.28813975  lon o 24.83333333  FE 0  FN 0"],
+[5701,"ODN height","v","metre","United Kingdom (UK) - Great Britain onshore - England and Wales - mainland …","",""],
+[5703,"NAVD88 height","v","metre","Mexico - onshore …","",""],
+[5714,"MSL height","v","metre","World","",""],
+[5773,"EGM96 height","v","metre","World","",""],
+[6360,"NAVD88 height (ftUS)","v","US survey foot","USA - CONUS and Alaska - onshore - Alabama; Alaska mainland; Arizona; Arkansas; California …","",""],
+[6922,"NAD83 / Kansas LCC","s","metre","USA - Kansas","Lambert conformal conic (2SP)","latF 36  sp1 39.5  sp2 37.5  lonF -98.25  FE 400000  FN 0"],
+[7844,"GDA2020","g","degree","Australia including Lord Howe Island, Macquarie Island, Ashmore and Cartier Islands …","",""],
+[7852,"GDA2020 / MGA zone 52","p","metre","Australia - onshore and offshore between 126°E and 132°E","Transverse Mercator","lat o 0  lon o 129  k 0.9996  FE 500000  FN 10000000"],
+[7853,"GDA2020 / MGA zone 53","p","metre","Australia - onshore and offshore between 132°E and 138°E","Transverse Mercator","lat o 0  lon o 135  k 0.9996  FE 500000  FN 10000000"],
+[7854,"GDA2020 / MGA zone 54","p","metre","Australia - onshore and offshore between 138°E and 144°E","Transverse Mercator","lat o 0  lon o 141  k 0.9996  FE 500000  FN 10000000"],
+[7855,"GDA2020 / MGA zone 55","p","metre","Australia - onshore and offshore between 144°E and 150°E","Transverse Mercator","lat o 0  lon o 147  k 0.9996  FE 500000  FN 10000000"],
+[7856,"GDA2020 / MGA zone 56","p","metre","Australia - onshore and offshore between 150°E and 156°E","Transverse Mercator","lat o 0  lon o 153  k 0.9996  FE 500000  FN 10000000"],
+[7857,"GDA2020 / MGA zone 57","p","metre","Australia including Lord Howe Island and Macquarie Island …","Transverse Mercator","lat o 0  lon o 159  k 0.9996  FE 500000  FN 10000000"],
+[7858,"GDA2020 / MGA zone 58","p","metre","Australia - offshore east of 162°E …","Transverse Mercator","lat o 0  lon o 165  k 0.9996  FE 500000  FN 10000000"],
+[7859,"GDA2020 / MGA zone 59","p","metre","Norfolk Island - offshore east of 168°E","Transverse Mercator","lat o 0  lon o 171  k 0.9996  FE 500000  FN 10000000"],
+[8826,"NAD83 / Idaho Transverse Mercator","s","metre","USA - Idaho","Transverse Mercator","lat o 42  lon o -114  k 0.9996  FE 2500000  FN 1200000"],
+[9707,"WGS 84 + EGM96 height","v","degree","World","",""],
+[21781,"CH1903 / LV03","p","metre","Liechtenstein; Switzerland","Hotine oblique Mercator","lat c 46.95240556  lon c 7.43958333  az 90  k 1  FE 600000  FN 200000"],
+[22181,"POSGAR 94 / Argentina 1","p","metre","Argentina - west of 70°30'W","Transverse Mercator","lat o -90  lon o -72  k 1  FE 1500000  FN 0"],
+[22185,"POSGAR 94 / Argentina 5","p","metre","Argentina - between 61°30'W and 58°30'W onshore","Transverse Mercator","lat o -90  lon o -60  k 1  FE 5500000  FN 0"],
+[22187,"POSGAR 94 / Argentina 7","p","metre","Argentina - east of 55°30'W, onshore","Transverse Mercator","lat o -90  lon o -54  k 1  FE 7500000  FN 0"],
+[22191,"Campo Inchauspe / Argentina 1","p","metre","Argentina - west of 70°30'W","Transverse Mercator","lat o -90  lon o -72  k 1  FE 1500000  FN 0"],
+[22195,"Campo Inchauspe / Argentina 5","p","metre","Argentina - between 61°30'W and 58°30'W onshore","Transverse Mercator","lat o -90  lon o -60  k 1  FE 5500000  FN 0"],
+[22196,"Campo Inchauspe / Argentina 6","p","metre","Argentina - between 58°30'W and 55°30'W, onshore","Transverse Mercator","lat o -90  lon o -57  k 1  FE 6500000  FN 0"],
+[22197,"Campo Inchauspe / Argentina 7","p","metre","Argentina - east of 55°30'W, onshore","Transverse Mercator","lat o -90  lon o -54  k 1  FE 7500000  FN 0"],
+[23028,"ED50 / UTM zone 28N","u","metre","Europe - between 18°W and 12°W - Ireland offshore","Transverse Mercator","lat o 0  lon o -15  k 0.9996  FE 500000  FN 0"],
+[23029,"ED50 / UTM zone 29N","u","metre","Europe - between 12°W and 6°W - Faroe Islands - onshore; Spain - mainland onshore …","Transverse Mercator","lat o 0  lon o -9  k 0.9996  FE 500000  FN 0"],
+[23030,"ED50 / UTM zone 30N","u","metre","Europe - between 6°W and 0°W - Channel Islands (Jersey, Guernsey); France offshore; Gibraltar …","Transverse Mercator","lat o 0  lon o -3  k 0.9996  FE 500000  FN 0"],
+[23031,"ED50 / UTM zone 31N","u","metre","Europe - between 0°E and 6°E - Andorra; Denmark (North Sea); France - offshore …","Transverse Mercator","lat o 0  lon o 3  k 0.9996  FE 500000  FN 0"],
+[23032,"ED50 / UTM zone 32N","u","metre","Europe - between 6°E and 12°E - Denmark - onshore and offshore; France - offshore …","Transverse Mercator","lat o 0  lon o 9  k 0.9996  FE 500000  FN 0"],
+[23033,"ED50 / UTM zone 33N","u","metre","Europe - between 12°E and 18°E onshore and offshore - Denmark (including Bornholm) …","Transverse Mercator","lat o 0  lon o 15  k 0.9996  FE 500000  FN 0"],
+[23034,"ED50 / UTM zone 34N","u","metre","Europe - between 18°E and 24°E - Greece - offshore; Italy - onshore and offshore …","Transverse Mercator","lat o 0  lon o 21  k 0.9996  FE 500000  FN 0"],
+[23700,"HD72 / EOV","p","metre","Hungary","Hotine oblique Mercator","lat c 47.14439372  lon c 19.04857178  az 90  k 0.99993  FE 650000  FN 200000"],
+[25828,"ETRS89 / UTM zone 28N","u","metre","Europe between 18°W and 12°W: Faroe Islands - offshore; Ireland - offshore …","Transverse Mercator","lat o 0  lon o -15  k 0.9996  FE 500000  FN 0"],
+[25829,"ETRS89 / UTM zone 29N","u","metre","Europe between 12°W and 6°W: Faroe Islands - offshore; Ireland - offshore …","Transverse Mercator","lat o 0  lon o -9  k 0.9996  FE 500000  FN 0"],
+[25830,"ETRS89 / UTM zone 30N","u","metre","Europe between 6°W and 0°W: Faroe Islands offshore; Ireland - offshore; Jan Mayen - offshore …","Transverse Mercator","lat o 0  lon o -3  k 0.9996  FE 500000  FN 0"],
+[25831,"ETRS89 / UTM zone 31N","u","metre","Europe between 0°E and 6°E: Andorra; Denmark - offshore; Germany - offshore …","Transverse Mercator","lat o 0  lon o 3  k 0.9996  FE 500000  FN 0"],
+[25832,"ETRS89 / UTM zone 32N","u","metre","Europe between 6°E and 12°E: Austria; Denmark - onshore and offshore …","Transverse Mercator","lat o 0  lon o 9  k 0.9996  FE 500000  FN 0"],
+[25833,"ETRS89 / UTM zone 33N","u","metre","Europe between 12°E and 18°E: Austria; Croatia; Denmark - offshore and offshore …","Transverse Mercator","lat o 0  lon o 15  k 0.9996  FE 500000  FN 0"],
+[25834,"ETRS89 / UTM zone 34N","u","metre","Europe between 18°E and 24°E: Bulgaria; Croatia; Italy - onshore and offshore …","Transverse Mercator","lat o 0  lon o 21  k 0.9996  FE 500000  FN 0"],
+[25835,"ETRS89 / UTM zone 35N","u","metre","Europe between 24°E and 30°E: Bulgaria - onshore and offshore …","Transverse Mercator","lat o 0  lon o 27  k 0.9996  FE 500000  FN 0"],
+[25836,"ETRS89 / UTM zone 36N","u","metre","Europe between 30°E and 36°E: Bulgaria - offshore …","Transverse Mercator","lat o 0  lon o 33  k 0.9996  FE 500000  FN 0"],
+[26701,"NAD27 / UTM zone 1N","u","metre","USA - between 180°W and 174°W …","Transverse Mercator","lat o 0  lon o -177  k 0.9996  FE 500000  FN 0"],
+[26703,"NAD27 / UTM zone 3N","u","metre","USA - between 168°W and 162°W …","Transverse Mercator","lat o 0  lon o -165  k 0.9996  FE 500000  FN 0"],
+[26704,"NAD27 / UTM zone 4N","u","metre","USA - between 162°W and 156°W …","Transverse Mercator","lat o 0  lon o -159  k 0.9996  FE 500000  FN 0"],
+[26705,"NAD27 / UTM zone 5N","u","metre","USA - between 156°W and 150°W …","Transverse Mercator","lat o 0  lon o -153  k 0.9996  FE 500000  FN 0"],
+[26706,"NAD27 / UTM zone 6N","u","metre","USA - between 150°W and 144°W …","Transverse Mercator","lat o 0  lon o -147  k 0.9996  FE 500000  FN 0"],
+[26707,"NAD27 / UTM zone 7N","u","metre","North America - between 144°W and 138°W. Canada - British Columbia …","Transverse Mercator","lat o 0  lon o -141  k 0.9996  FE 500000  FN 0"],
+[26708,"NAD27 / UTM zone 8N","u","metre","North America - between 138°W and 132°W - onshore …","Transverse Mercator","lat o 0  lon o -135  k 0.9996  FE 500000  FN 0"],
+[26709,"NAD27 / UTM zone 9N","u","metre","North America - between 132°W and 126°W - onshore …","Transverse Mercator","lat o 0  lon o -129  k 0.9996  FE 500000  FN 0"],
+[26710,"NAD27 / UTM zone 10N","u","metre","North America - between 126°W and 120°W - onshore …","Transverse Mercator","lat o 0  lon o -123  k 0.9996  FE 500000  FN 0"],
+[26711,"NAD27 / UTM zone 11N","u","metre","North America - between 120°W and 114°W - onshore …","Transverse Mercator","lat o 0  lon o -117  k 0.9996  FE 500000  FN 0"],
+[26712,"NAD27 / UTM zone 12N","u","metre","North America - between 114°W and 108°W …","Transverse Mercator","lat o 0  lon o -111  k 0.9996  FE 500000  FN 0"],
+[26713,"NAD27 / UTM zone 13N","u","metre","North America - between 108°W and 102°W …","Transverse Mercator","lat o 0  lon o -105  k 0.9996  FE 500000  FN 0"],
+[26714,"NAD27 / UTM zone 14N","u","metre","North America - between 102°W and 96°W. Canada - Manitoba; Nunavut …","Transverse Mercator","lat o 0  lon o -99  k 0.9996  FE 500000  FN 0"],
+[26715,"NAD27 / UTM zone 15N","u","metre","North America - between 96°W and 90°W. Canada - Manitoba; Nunavut …","Transverse Mercator","lat o 0  lon o -93  k 0.9996  FE 500000  FN 0"],
+[26716,"NAD27 / UTM zone 16N","u","metre","North America - between 90°W and 84°W. Belize. Canada - Manitoba; Nunavut …","Transverse Mercator","lat o 0  lon o -87  k 0.9996  FE 500000  FN 0"],
+[26717,"NAD27 / UTM zone 17N","u","metre","North America - between 84°W and 78°W. Bahamas. Canada - Nunavut; Ontario …","Transverse Mercator","lat o 0  lon o -81  k 0.9996  FE 500000  FN 0"],
+[26718,"NAD27 / UTM zone 18N","u","metre","North America - between 78°W and 72°W. Bahamas. Canada - Nunavut; Ontario …","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 0"],
+[26719,"NAD27 / UTM zone 19N","u","metre","North America - between 72°W and 66°W …","Transverse Mercator","lat o 0  lon o -69  k 0.9996  FE 500000  FN 0"],
+[26720,"NAD27 / UTM zone 20N","u","metre","North America - between 66°W and 60°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -63  k 0.9996  FE 500000  FN 0"],
+[26901,"NAD83 / UTM zone 1N","u","metre","USA - between 180°W and 174°W …","Transverse Mercator","lat o 0  lon o -177  k 0.9996  FE 500000  FN 0"],
+[26902,"NAD83 / UTM zone 2N","u","metre","USA - between 174°W and 168°W …","Transverse Mercator","lat o 0  lon o -171  k 0.9996  FE 500000  FN 0"],
+[26903,"NAD83 / UTM zone 3N","u","metre","USA - between 168°W and 162°W …","Transverse Mercator","lat o 0  lon o -165  k 0.9996  FE 500000  FN 0"],
+[26904,"NAD83 / UTM zone 4N","u","metre","USA - between 162°W and 156°W onshore and offshore - Alaska, Hawaii","Transverse Mercator","lat o 0  lon o -159  k 0.9996  FE 500000  FN 0"],
+[26905,"NAD83 / UTM zone 5N","u","metre","USA - between 156°W and 150°W onshore and offshore - Alaska, Hawaii","Transverse Mercator","lat o 0  lon o -153  k 0.9996  FE 500000  FN 0"],
+[26906,"NAD83 / UTM zone 6N","u","metre","USA - between 150°W and 144°W …","Transverse Mercator","lat o 0  lon o -147  k 0.9996  FE 500000  FN 0"],
+[26907,"NAD83 / UTM zone 7N","u","metre","North America - between 144°W and 138°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -141  k 0.9996  FE 500000  FN 0"],
+[26908,"NAD83 / UTM zone 8N","u","metre","North America - between 138°W and 132°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -135  k 0.9996  FE 500000  FN 0"],
+[26909,"NAD83 / UTM zone 9N","u","metre","North America - between 132°W and 126°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -129  k 0.9996  FE 500000  FN 0"],
+[26910,"NAD83 / UTM zone 10N","u","metre","North America - between 126°W and 120°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -123  k 0.9996  FE 500000  FN 0"],
+[26911,"NAD83 / UTM zone 11N","u","metre","North America - between 120°W and 114°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -117  k 0.9996  FE 500000  FN 0"],
+[26912,"NAD83 / UTM zone 12N","u","metre","North America - between 114°W and 108°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -111  k 0.9996  FE 500000  FN 0"],
+[26913,"NAD83 / UTM zone 13N","u","metre","North America - between 108°W and 102°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -105  k 0.9996  FE 500000  FN 0"],
+[26914,"NAD83 / UTM zone 14N","u","metre","North America - between 102°W and 96°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -99  k 0.9996  FE 500000  FN 0"],
+[26915,"NAD83 / UTM zone 15N","u","metre","North America - between 96°W and 90°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -93  k 0.9996  FE 500000  FN 0"],
+[26916,"NAD83 / UTM zone 16N","u","metre","North America - between 90°W and 84°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -87  k 0.9996  FE 500000  FN 0"],
+[26917,"NAD83 / UTM zone 17N","u","metre","North America - between 84°W and 78°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -81  k 0.9996  FE 500000  FN 0"],
+[26918,"NAD83 / UTM zone 18N","u","metre","North America - between 78°W and 72°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 0"],
+[26919,"NAD83 / UTM zone 19N","u","metre","North America - between 72°W and 66°W - onshore and offshore …","Transverse Mercator","lat o 0  lon o -69  k 0.9996  FE 500000  FN 0"],
+[26920,"NAD83 / UTM zone 20N","u","metre","North America - between 66°W and 60°W …","Transverse Mercator","lat o 0  lon o -63  k 0.9996  FE 500000  FN 0"],
+[26921,"NAD83 / UTM zone 21N","u","metre","Canada between 60°W and 54°W - Newfoundland and Labrador; Nunavut …","Transverse Mercator","lat o 0  lon o -57  k 0.9996  FE 500000  FN 0"],
+[26922,"NAD83 / UTM zone 22N","u","metre","Canada between 54°W and 48°W onshore and offshore …","Transverse Mercator","lat o 0  lon o -51  k 0.9996  FE 500000  FN 0"],
+[26923,"NAD83 / UTM zone 23N","u","metre","Canada offshore Atlantic - 48°W to 42°W","Transverse Mercator","lat o 0  lon o -45  k 0.9996  FE 500000  FN 0"],
+[26929,"NAD83 / Alabama East","s","metre","USA - Alabama east of approximately 86°37'W …","Transverse Mercator","lat o 30.5  lon o -85.83333333  k 0.99996  FE 200000  FN 0"],
+[26930,"NAD83 / Alabama West","s","metre","USA - Alabama west of approximately 86°37'W …","Transverse Mercator","lat o 30  lon o -87.5  k 0.99993333  FE 600000  FN 0"],
+[26932,"NAD83 / Alaska zone 2","s","metre","USA - Alaska - between 144°W and 141°W, onshore","Transverse Mercator","lat o 54  lon o -142  k 0.9999  FE 500000  FN 0"],
+[26933,"NAD83 / Alaska zone 3","s","metre","USA - Alaska - between 148°W and 144°W","Transverse Mercator","lat o 54  lon o -146  k 0.9999  FE 500000  FN 0"],
+[26934,"NAD83 / Alaska zone 4","s","metre","USA - Alaska - between 152°W and 148°W, onshore","Transverse Mercator","lat o 54  lon o -150  k 0.9999  FE 500000  FN 0"],
+[26935,"NAD83 / Alaska zone 5","s","metre","USA - Alaska - between 156°W and 152°W","Transverse Mercator","lat o 54  lon o -154  k 0.9999  FE 500000  FN 0"],
+[26936,"NAD83 / Alaska zone 6","s","metre","USA - Alaska - between 160°W and 156°W, onshore","Transverse Mercator","lat o 54  lon o -158  k 0.9999  FE 500000  FN 0"],
+[26937,"NAD83 / Alaska zone 7","s","metre","USA - Alaska - between 164°W and 160°W, onshore","Transverse Mercator","lat o 54  lon o -162  k 0.9999  FE 500000  FN 0"],
+[26938,"NAD83 / Alaska zone 8","s","metre","USA - Alaska onshore north of 54°30'N and between 168°W and 164°W","Transverse Mercator","lat o 54  lon o -166  k 0.9999  FE 500000  FN 0"],
+[26939,"NAD83 / Alaska zone 9","s","metre","USA - Alaska onshore north of 54°30'N and west of 168°W","Transverse Mercator","lat o 54  lon o -170  k 0.9999  FE 500000  FN 0"],
+[26940,"NAD83 / Alaska zone 10","s","metre","USA - Alaska - Aleutian Islands onshore","Lambert conformal conic (2SP)","latF 51  sp1 53.83333333  sp2 51.83333333  lonF -176  FE 1000000  FN 0"],
+[26941,"NAD83 / California zone 1","s","metre","USA - California …","Lambert conformal conic (2SP)","latF 39.33333333  sp1 41.66666667  sp2 40  lonF -122  FE 2000000  FN 500000"],
+[26942,"NAD83 / California zone 2","s","metre","USA - California …","Lambert conformal conic (2SP)","latF 37.66666667  sp1 39.83333333  sp2 38.33333333  lonF -122  FE 2000000  FN 500000"],
+[26943,"NAD83 / California zone 3","s","metre","USA - California …","Lambert conformal conic (2SP)","latF 36.5  sp1 38.43333333  sp2 37.06666667  lonF -120.5  FE 2000000  FN 500000"],
+[26944,"NAD83 / California zone 4","s","metre","USA - California …","Lambert conformal conic (2SP)","latF 35.33333333  sp1 37.25  sp2 36  lonF -119  FE 2000000  FN 500000"],
+[26945,"NAD83 / California zone 5","s","metre","USA - California …","Lambert conformal conic (2SP)","latF 33.5  sp1 35.46666667  sp2 34.03333333  lonF -118  FE 2000000  FN 500000"],
+[26946,"NAD83 / California zone 6","s","metre","USA - California - counties Imperial; Orange; Riverside; San Diego","Lambert conformal conic (2SP)","latF 32.16666667  sp1 33.88333333  sp2 32.78333333  lonF -116.25  FE 2000000  FN 500000"],
+[26948,"NAD83 / Arizona East","s","metre","USA - Arizona …","Transverse Mercator","lat o 31  lon o -110.16666667  k 0.9999  FE 213360  FN 0"],
+[26949,"NAD83 / Arizona Central","s","metre","USA - Arizona …","Transverse Mercator","lat o 31  lon o -111.91666667  k 0.9999  FE 213360  FN 0"],
+[26950,"NAD83 / Arizona West","s","metre","USA - Arizona - counties of La Paz; Mohave; Yuma","Transverse Mercator","lat o 31  lon o -113.75  k 0.99993333  FE 213360  FN 0"],
+[26951,"NAD83 / Arkansas North","s","metre","USA - Arkansas …","Lambert conformal conic (2SP)","latF 34.33333333  sp1 36.23333333  sp2 34.93333333  lonF -92  FE 400000  FN 0"],
+[26952,"NAD83 / Arkansas South","s","metre","USA - Arkansas …","Lambert conformal conic (2SP)","latF 32.66666667  sp1 34.76666667  sp2 33.3  lonF -92  FE 400000  FN 400000"],
+[26953,"NAD83 / Colorado North","s","metre","USA - Colorado …","Lambert conformal conic (2SP)","latF 39.33333333  sp1 40.78333333  sp2 39.71666667  lonF -105.5  FE 914401.8289  FN 304800.6096"],
+[26954,"NAD83 / Colorado Central","s","metre","USA - Colorado …","Lambert conformal conic (2SP)","latF 37.83333333  sp1 39.75  sp2 38.45  lonF -105.5  FE 914401.8289  FN 304800.6096"],
+[26955,"NAD83 / Colorado South","s","metre","USA - Colorado …","Lambert conformal conic (2SP)","latF 36.66666667  sp1 38.43333333  sp2 37.23333333  lonF -105.5  FE 914401.8289  FN 304800.6096"],
+[26956,"NAD83 / Connecticut","s","metre","USA - Connecticut …","Lambert conformal conic (2SP)","latF 40.83333333  sp1 41.86666667  sp2 41.2  lonF -72.75  FE 304800.6096  FN 152400.3048"],
+[26957,"NAD83 / Delaware","s","metre","USA - Delaware - counties of Kent; New Castle; Sussex","Transverse Mercator","lat o 38  lon o -75.41666667  k 0.999995  FE 200000  FN 0"],
+[26958,"NAD83 / Florida East","s","metre","USA - Florida …","Transverse Mercator","lat o 24.33333333  lon o -81  k 0.99994118  FE 200000  FN 0"],
+[26959,"NAD83 / Florida West","s","metre","USA - Florida …","Transverse Mercator","lat o 24.33333333  lon o -82  k 0.99994118  FE 200000  FN 0"],
+[26960,"NAD83 / Florida North","s","metre","USA - Florida …","Lambert conformal conic (2SP)","latF 29  sp1 30.75  sp2 29.58333333  lonF -84.5  FE 600000  FN 0"],
+[26961,"NAD83 / Hawaii zone 1","s","metre","USA - Hawaii - island of Hawaii - onshore","Transverse Mercator","lat o 18.83333333  lon o -155.5  k 0.99996667  FE 500000  FN 0"],
+[26962,"NAD83 / Hawaii zone 2","s","metre","USA - Hawaii - Maui; Kahoolawe; Lanai; Molokai - onshore","Transverse Mercator","lat o 20.33333333  lon o -156.66666667  k 0.99996667  FE 500000  FN 0"],
+[26963,"NAD83 / Hawaii zone 3","s","metre","USA - Hawaii - Oahu - onshore","Transverse Mercator","lat o 21.16666667  lon o -158  k 0.99999  FE 500000  FN 0"],
+[26964,"NAD83 / Hawaii zone 4","s","metre","USA - Hawaii - Kauai - onshore","Transverse Mercator","lat o 21.83333333  lon o -159.5  k 0.99999  FE 500000  FN 0"],
+[26965,"NAD83 / Hawaii zone 5","s","metre","USA - Hawaii - Niihau - onshore","Transverse Mercator","lat o 21.66666667  lon o -160.16666667  k 1  FE 500000  FN 0"],
+[26966,"NAD83 / Georgia East","s","metre","USA - Georgia …","Transverse Mercator","lat o 30  lon o -82.16666667  k 0.9999  FE 200000  FN 0"],
+[26967,"NAD83 / Georgia West","s","metre","USA - Georgia …","Transverse Mercator","lat o 30  lon o -84.16666667  k 0.9999  FE 700000  FN 0"],
+[26968,"NAD83 / Idaho East","s","metre","USA - Idaho …","Transverse Mercator","lat o 41.66666667  lon o -112.16666667  k 0.99994737  FE 200000  FN 0"],
+[26969,"NAD83 / Idaho Central","s","metre","USA - Idaho …","Transverse Mercator","lat o 41.66666667  lon o -114  k 0.99994737  FE 500000  FN 0"],
+[26970,"NAD83 / Idaho West","s","metre","USA - Idaho …","Transverse Mercator","lat o 41.66666667  lon o -115.75  k 0.99993333  FE 800000  FN 0"],
+[26971,"NAD83 / Illinois East","s","metre","USA - Illinois …","Transverse Mercator","lat o 36.66666667  lon o -88.33333333  k 0.999975  FE 300000  FN 0"],
+[26972,"NAD83 / Illinois West","s","metre","USA - Illinois …","Transverse Mercator","lat o 36.66666667  lon o -90.16666667  k 0.99994118  FE 700000  FN 0"],
+[26973,"NAD83 / Indiana East","s","metre","USA - Indiana …","Transverse Mercator","lat o 37.5  lon o -85.66666667  k 0.99996667  FE 100000  FN 250000"],
+[26974,"NAD83 / Indiana West","s","metre","USA - Indiana …","Transverse Mercator","lat o 37.5  lon o -87.08333333  k 0.99996667  FE 900000  FN 250000"],
+[26975,"NAD83 / Iowa North","s","metre","USA - Iowa - counties of Allamakee; Benton; Black Hawk; Boone; Bremer; Buchanan; Buena Vista …","Lambert conformal conic (2SP)","latF 41.5  sp1 43.26666667  sp2 42.06666667  lonF -93.5  FE 1500000  FN 1000000"],
+[26976,"NAD83 / Iowa South","s","metre","USA - Iowa - counties of Adair; Adams; Appanoose; Audubon; Cass; Cedar; Clarke; Clinton …","Lambert conformal conic (2SP)","latF 40  sp1 41.78333333  sp2 40.61666667  lonF -93.5  FE 500000  FN 0"],
+[26977,"NAD83 / Kansas North","s","metre","USA - Kansas …","Lambert conformal conic (2SP)","latF 38.33333333  sp1 39.78333333  sp2 38.71666667  lonF -98  FE 400000  FN 0"],
+[26978,"NAD83 / Kansas South","s","metre","USA - Kansas …","Lambert conformal conic (2SP)","latF 36.66666667  sp1 38.56666667  sp2 37.26666667  lonF -98.5  FE 400000  FN 400000"],
+[26980,"NAD83 / Kentucky South","s","metre","USA - Kentucky …","Lambert conformal conic (2SP)","latF 36.33333333  sp1 37.93333333  sp2 36.73333333  lonF -85.75  FE 500000  FN 500000"],
+[26981,"NAD83 / Louisiana North","s","metre","USA - Louisiana …","Lambert conformal conic (2SP)","latF 30.5  sp1 32.66666667  sp2 31.16666667  lonF -92.5  FE 1000000  FN 0"],
+[26982,"NAD83 / Louisiana South","s","metre","USA - Louisiana …","Lambert conformal conic (2SP)","latF 28.5  sp1 30.7  sp2 29.3  lonF -91.33333333  FE 1000000  FN 0"],
+[26983,"NAD83 / Maine East","s","metre","USA - Maine …","Transverse Mercator","lat o 43.66666667  lon o -68.5  k 0.9999  FE 300000  FN 0"],
+[26984,"NAD83 / Maine West","s","metre","USA - Maine …","Transverse Mercator","lat o 42.83333333  lon o -70.16666667  k 0.99996667  FE 900000  FN 0"],
+[26985,"NAD83 / Maryland","s","metre","USA - Maryland …","Lambert conformal conic (2SP)","latF 37.66666667  sp1 39.45  sp2 38.3  lonF -77  FE 400000  FN 0"],
+[26986,"NAD83 / Massachusetts Mainland","s","metre","USA - Massachusetts onshore …","Lambert conformal conic (2SP)","latF 41  sp1 42.68333333  sp2 41.71666667  lonF -71.5  FE 200000  FN 750000"],
+[26987,"NAD83 / Massachusetts Island","s","metre","USA - Massachusetts offshore - counties of Dukes; Nantucket","Lambert conformal conic (2SP)","latF 41  sp1 41.48333333  sp2 41.28333333  lonF -70.5  FE 500000  FN 0"],
+[26988,"NAD83 / Michigan North","s","metre","USA - Michigan north of approximately 45°45'N …","Lambert conformal conic (2SP)","latF 44.78333333  sp1 47.08333333  sp2 45.48333333  lonF -87  FE 8000000  FN 0"],
+[26989,"NAD83 / Michigan Central","s","metre","USA - Michigan …","Lambert conformal conic (2SP)","latF 43.31666667  sp1 45.7  sp2 44.18333333  lonF -84.36666667  FE 6000000  FN 0"],
+[26990,"NAD83 / Michigan South","s","metre","USA - Michigan …","Lambert conformal conic (2SP)","latF 41.5  sp1 43.66666667  sp2 42.1  lonF -84.36666667  FE 4000000  FN 0"],
+[26991,"NAD83 / Minnesota North","s","metre","USA - Minnesota …","Lambert conformal conic (2SP)","latF 46.5  sp1 48.63333333  sp2 47.03333333  lonF -93.1  FE 800000  FN 100000"],
+[26992,"NAD83 / Minnesota Central","s","metre","USA - Minnesota …","Lambert conformal conic (2SP)","latF 45  sp1 47.05  sp2 45.61666667  lonF -94.25  FE 800000  FN 100000"],
+[26993,"NAD83 / Minnesota South","s","metre","USA - Minnesota …","Lambert conformal conic (2SP)","latF 43  sp1 45.21666667  sp2 43.78333333  lonF -94  FE 800000  FN 100000"],
+[26994,"NAD83 / Mississippi East","s","metre","USA - Mississippi …","Transverse Mercator","lat o 29.5  lon o -88.83333333  k 0.99995  FE 300000  FN 0"],
+[26995,"NAD83 / Mississippi West","s","metre","USA - Mississippi …","Transverse Mercator","lat o 29.5  lon o -90.33333333  k 0.99995  FE 700000  FN 0"],
+[26996,"NAD83 / Missouri East","s","metre","USA - Missouri …","Transverse Mercator","lat o 35.83333333  lon o -90.5  k 0.99993333  FE 250000  FN 0"],
+[26997,"NAD83 / Missouri Central","s","metre","USA - Missouri …","Transverse Mercator","lat o 35.83333333  lon o -92.5  k 0.99993333  FE 500000  FN 0"],
+[26998,"NAD83 / Missouri West","s","metre","USA - Missouri …","Transverse Mercator","lat o 36.16666667  lon o -94.5  k 0.99994118  FE 850000  FN 0"],
+[27700,"OSGB36 / British National Grid","p","metre","United Kingdom (UK) - offshore to boundary of UKCS within 49°45'N to 61°N and 9°W to 2°E …","Transverse Mercator","lat o 49  lon o -2  k 0.99960127  FE 400000  FN -100000"],
+[28348,"GDA94 / MGA zone 48","p","metre","Australia - offshore west of 108°E …","Transverse Mercator","lat o 0  lon o 105  k 0.9996  FE 500000  FN 10000000"],
+[28349,"GDA94 / MGA zone 49","p","metre","Australia - onshore and offshore west of 114°E …","Transverse Mercator","lat o 0  lon o 111  k 0.9996  FE 500000  FN 10000000"],
+[28350,"GDA94 / MGA zone 50","p","metre","Australia - onshore and offshore between 114°E and 120°E","Transverse Mercator","lat o 0  lon o 117  k 0.9996  FE 500000  FN 10000000"],
+[28351,"GDA94 / MGA zone 51","p","metre","Australia - onshore and offshore between 120°E and 126°E","Transverse Mercator","lat o 0  lon o 123  k 0.9996  FE 500000  FN 10000000"],
+[28352,"GDA94 / MGA zone 52","p","metre","Australia - onshore and offshore between 126°E and 132°E","Transverse Mercator","lat o 0  lon o 129  k 0.9996  FE 500000  FN 10000000"],
+[28353,"GDA94 / MGA zone 53","p","metre","Australia - onshore and offshore between 132°E and 138°E","Transverse Mercator","lat o 0  lon o 135  k 0.9996  FE 500000  FN 10000000"],
+[28354,"GDA94 / MGA zone 54","p","metre","Australia - onshore and offshore between 138°E and 144°E","Transverse Mercator","lat o 0  lon o 141  k 0.9996  FE 500000  FN 10000000"],
+[28355,"GDA94 / MGA zone 55","p","metre","Australia - onshore and offshore between 144°E and 150°E","Transverse Mercator","lat o 0  lon o 147  k 0.9996  FE 500000  FN 10000000"],
+[28356,"GDA94 / MGA zone 56","p","metre","Australia - onshore and offshore between 150°E and 156°E","Transverse Mercator","lat o 0  lon o 153  k 0.9996  FE 500000  FN 10000000"],
+[28992,"Amersfoort / RD New","p","metre","Netherlands - onshore, including Waddenzee …","Oblique stereographic","lat o 52.15616056  lon o 5.38763889  k 0.9999079  FE 155000  FN 463000"],
+[31370,"BD72 / Belgian Lambert 72","p","metre","Belgium - onshore","Lambert conformal conic (2SP)","latF 90  sp1 51.16666723  sp2 49.8333339  lonF 4.36748667  FE 150000.013  FN 5400088.438"],
+[31972,"SIRGAS 2000 / UTM zone 18N","u","metre","Latin America - Central America and South America - between 78°W and 72°W, northern hemisphere …","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 0"],
+[31975,"SIRGAS 2000 / UTM zone 21N","u","metre","South America between 60°W and 54°W, north of approximately 2°N …","Transverse Mercator","lat o 0  lon o -57  k 0.9996  FE 500000  FN 0"],
+[31978,"SIRGAS 2000 / UTM zone 18S","u","metre","Brazil west of 72°W …","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 10000000"],
+[31981,"SIRGAS 2000 / UTM zone 21S","u","metre","Brazil - between 60°W and 54°W, northern and southern hemispheres …","Transverse Mercator","lat o 0  lon o -57  k 0.9996  FE 500000  FN 10000000"],
+[31983,"SIRGAS 2000 / UTM zone 23S","u","metre","Brazil - between 48°W and 42°W, northern and southern hemispheres …","Transverse Mercator","lat o 0  lon o -45  k 0.9996  FE 500000  FN 10000000"],
+[31984,"SIRGAS 2000 / UTM zone 24S","u","metre","Brazil - between 42°W and 36°W, northern and southern hemispheres …","Transverse Mercator","lat o 0  lon o -39  k 0.9996  FE 500000  FN 10000000"],
+[31985,"SIRGAS 2000 / UTM zone 25S","u","metre","Brazil - between 36°W and 30°W, northern and southern hemispheres …","Transverse Mercator","lat o 0  lon o -33  k 0.9996  FE 500000  FN 10000000"],
+[32100,"NAD83 / Montana","s","metre","USA - Montana …","Lambert conformal conic (2SP)","latF 44.25  sp1 49  sp2 45  lonF -109.5  FE 600000  FN 0"],
+[32104,"NAD83 / Nebraska","s","metre","USA - Nebraska …","Lambert conformal conic (2SP)","latF 39.83333333  sp1 43  sp2 40  lonF -100  FE 500000  FN 0"],
+[32107,"NAD83 / Nevada East","s","metre","USA - Nevada - counties of Clark; Elko; Eureka; Lincoln; White Pine","Transverse Mercator","lat o 34.75  lon o -115.58333333  k 0.9999  FE 200000  FN 8000000"],
+[32108,"NAD83 / Nevada Central","s","metre","USA - Nevada - counties of Lander; Nye","Transverse Mercator","lat o 34.75  lon o -116.66666667  k 0.9999  FE 500000  FN 6000000"],
+[32109,"NAD83 / Nevada West","s","metre","USA - Nevada …","Transverse Mercator","lat o 34.75  lon o -118.58333333  k 0.9999  FE 800000  FN 4000000"],
+[32110,"NAD83 / New Hampshire","s","metre","USA - New Hampshire …","Transverse Mercator","lat o 42.5  lon o -71.66666667  k 0.99996667  FE 300000  FN 0"],
+[32111,"NAD83 / New Jersey","s","metre","USA - New Jersey …","Transverse Mercator","lat o 38.83333333  lon o -74.5  k 0.9999  FE 150000  FN 0"],
+[32112,"NAD83 / New Mexico East","s","metre","USA - New Mexico …","Transverse Mercator","lat o 31  lon o -104.33333333  k 0.99990909  FE 165000  FN 0"],
+[32113,"NAD83 / New Mexico Central","s","metre","USA - New Mexico …","Transverse Mercator","lat o 31  lon o -106.25  k 0.9999  FE 500000  FN 0"],
+[32114,"NAD83 / New Mexico West","s","metre","USA - New Mexico …","Transverse Mercator","lat o 31  lon o -107.83333333  k 0.99991667  FE 830000  FN 0"],
+[32115,"NAD83 / New York East","s","metre","USA - New York mainland …","Transverse Mercator","lat o 38.83333333  lon o -74.5  k 0.9999  FE 150000  FN 0"],
+[32116,"NAD83 / New York Central","s","metre","USA - New York …","Transverse Mercator","lat o 40  lon o -76.58333333  k 0.9999375  FE 250000  FN 0"],
+[32117,"NAD83 / New York West","s","metre","USA - New York …","Transverse Mercator","lat o 40  lon o -78.58333333  k 0.9999375  FE 350000  FN 0"],
+[32118,"NAD83 / New York Long Island","s","metre","USA - New York …","Lambert conformal conic (2SP)","latF 40.16666667  sp1 41.03333333  sp2 40.66666667  lonF -74  FE 300000  FN 0"],
+[32119,"NAD83 / North Carolina","s","metre","USA - North Carolina …","Lambert conformal conic (2SP)","latF 33.75  sp1 36.16666667  sp2 34.33333333  lonF -79  FE 609601.22  FN 0"],
+[32120,"NAD83 / North Dakota North","s","metre","USA - North Dakota …","Lambert conformal conic (2SP)","latF 47  sp1 48.73333333  sp2 47.43333333  lonF -100.5  FE 600000  FN 0"],
+[32121,"NAD83 / North Dakota South","s","metre","USA - North Dakota …","Lambert conformal conic (2SP)","latF 45.66666667  sp1 47.48333333  sp2 46.18333333  lonF -100.5  FE 600000  FN 0"],
+[32122,"NAD83 / Ohio North","s","metre","USA - Ohio - counties of Allen;Ashland; Ashtabula; Auglaize; Carroll; Columbiana; Coshocton …","Lambert conformal conic (2SP)","latF 39.66666667  sp1 41.7  sp2 40.43333333  lonF -82.5  FE 600000  FN 0"],
+[32123,"NAD83 / Ohio South","s","metre","USA - Ohio - counties of Adams; Athens; Belmont; Brown; Butler; Champaign; Clark; Clermont …","Lambert conformal conic (2SP)","latF 38  sp1 40.03333333  sp2 38.73333333  lonF -82.5  FE 600000  FN 0"],
+[32124,"NAD83 / Oklahoma North","s","metre","USA - Oklahoma …","Lambert conformal conic (2SP)","latF 35  sp1 36.76666667  sp2 35.56666667  lonF -98  FE 600000  FN 0"],
+[32125,"NAD83 / Oklahoma South","s","metre","USA - Oklahoma …","Lambert conformal conic (2SP)","latF 33.33333333  sp1 35.23333333  sp2 33.93333333  lonF -98  FE 600000  FN 0"],
+[32126,"NAD83 / Oregon North","s","metre","USA - Oregon …","Lambert conformal conic (2SP)","latF 43.66666667  sp1 46  sp2 44.33333333  lonF -120.5  FE 2500000  FN 0"],
+[32127,"NAD83 / Oregon South","s","metre","USA - Oregon …","Lambert conformal conic (2SP)","latF 41.66666667  sp1 44  sp2 42.33333333  lonF -120.5  FE 1500000  FN 0"],
+[32128,"NAD83 / Pennsylvania North","s","metre","USA - Pennsylvania …","Lambert conformal conic (2SP)","latF 40.16666667  sp1 41.95  sp2 40.88333333  lonF -77.75  FE 600000  FN 0"],
+[32129,"NAD83 / Pennsylvania South","s","metre","USA - Pennsylvania …","Lambert conformal conic (2SP)","latF 39.33333333  sp1 40.96666667  sp2 39.93333333  lonF -77.75  FE 600000  FN 0"],
+[32130,"NAD83 / Rhode Island","s","metre","USA - Rhode Island …","Transverse Mercator","lat o 41.08333333  lon o -71.5  k 0.99999375  FE 100000  FN 0"],
+[32133,"NAD83 / South Carolina","s","metre","USA - South Carolina …","Lambert conformal conic (2SP)","latF 31.83333333  sp1 34.83333333  sp2 32.5  lonF -81  FE 609600  FN 0"],
+[32134,"NAD83 / South Dakota North","s","metre","USA - South Dakota …","Lambert conformal conic (2SP)","latF 43.83333333  sp1 45.68333333  sp2 44.41666667  lonF -100  FE 600000  FN 0"],
+[32135,"NAD83 / South Dakota South","s","metre","USA - South Dakota …","Lambert conformal conic (2SP)","latF 42.33333333  sp1 44.4  sp2 42.83333333  lonF -100.33333333  FE 600000  FN 0"],
+[32136,"NAD83 / Tennessee","s","metre","USA - Tennessee …","Lambert conformal conic (2SP)","latF 34.33333333  sp1 36.41666667  sp2 35.25  lonF -86  FE 600000  FN 0"],
+[32137,"NAD83 / Texas North","s","metre","USA - Texas …","Lambert conformal conic (2SP)","latF 34  sp1 36.18333333  sp2 34.65  lonF -101.5  FE 200000  FN 1000000"],
+[32138,"NAD83 / Texas North Central","s","metre","USA - Texas …","Lambert conformal conic (2SP)","latF 31.66666667  sp1 33.96666667  sp2 32.13333333  lonF -98.5  FE 600000  FN 2000000"],
+[32139,"NAD83 / Texas Central","s","metre","USA - Texas …","Lambert conformal conic (2SP)","latF 29.66666667  sp1 31.88333333  sp2 30.11666667  lonF -100.33333333  FE 700000  FN 3000000"],
+[32140,"NAD83 / Texas South Central","s","metre","USA - Texas …","Lambert conformal conic (2SP)","latF 27.83333333  sp1 30.28333333  sp2 28.38333333  lonF -99  FE 600000  FN 4000000"],
+[32141,"NAD83 / Texas South","s","metre","USA - Texas …","Lambert conformal conic (2SP)","latF 25.66666667  sp1 27.83333333  sp2 26.16666667  lonF -98.5  FE 300000  FN 5000000"],
+[32142,"NAD83 / Utah North","s","metre","USA - Utah - counties of Box Elder; Cache; Daggett; Davis; Morgan; Rich; Summit …","Lambert conformal conic (2SP)","latF 40.33333333  sp1 41.78333333  sp2 40.71666667  lonF -111.5  FE 500000  FN 1000000"],
+[32143,"NAD83 / Utah Central","s","metre","USA - Utah - counties of Carbon; Duchesne; Emery; Grand; Juab; Millard; Salt Lake; Sanpete …","Lambert conformal conic (2SP)","latF 38.33333333  sp1 40.65  sp2 39.01666667  lonF -111.5  FE 500000  FN 2000000"],
+[32144,"NAD83 / Utah South","s","metre","USA - Utah - counties of Beaver; Garfield; Iron; Kane; Piute; San Juan; Washington …","Lambert conformal conic (2SP)","latF 36.66666667  sp1 38.35  sp2 37.21666667  lonF -111.5  FE 500000  FN 3000000"],
+[32145,"NAD83 / Vermont","s","metre","USA - Vermont …","Transverse Mercator","lat o 42.5  lon o -72.5  k 0.99996429  FE 500000  FN 0"],
+[32146,"NAD83 / Virginia North","s","metre","USA - Virginia …","Lambert conformal conic (2SP)","latF 37.66666667  sp1 39.2  sp2 38.03333333  lonF -78.5  FE 3500000  FN 2000000"],
+[32147,"NAD83 / Virginia South","s","metre","USA - Virginia …","Lambert conformal conic (2SP)","latF 36.33333333  sp1 37.96666667  sp2 36.76666667  lonF -78.5  FE 3500000  FN 1000000"],
+[32148,"NAD83 / Washington North","s","metre","USA - Washington …","Lambert conformal conic (2SP)","latF 47  sp1 48.73333333  sp2 47.5  lonF -120.83333333  FE 500000  FN 0"],
+[32149,"NAD83 / Washington South","s","metre","USA - Washington …","Lambert conformal conic (2SP)","latF 45.33333333  sp1 47.33333333  sp2 45.83333333  lonF -120.5  FE 500000  FN 0"],
+[32150,"NAD83 / West Virginia North","s","metre","USA - West Virginia …","Lambert conformal conic (2SP)","latF 38.5  sp1 40.25  sp2 39  lonF -79.5  FE 600000  FN 0"],
+[32151,"NAD83 / West Virginia South","s","metre","USA - West Virginia …","Lambert conformal conic (2SP)","latF 37  sp1 38.88333333  sp2 37.48333333  lonF -81  FE 600000  FN 0"],
+[32152,"NAD83 / Wisconsin North","s","metre","USA - Wisconsin …","Lambert conformal conic (2SP)","latF 45.16666667  sp1 46.76666667  sp2 45.56666667  lonF -90  FE 600000  FN 0"],
+[32153,"NAD83 / Wisconsin Central","s","metre","USA - Wisconsin …","Lambert conformal conic (2SP)","latF 43.83333333  sp1 45.5  sp2 44.25  lonF -90  FE 600000  FN 0"],
+[32154,"NAD83 / Wisconsin South","s","metre","USA - Wisconsin …","Lambert conformal conic (2SP)","latF 42  sp1 44.06666667  sp2 42.73333333  lonF -90  FE 600000  FN 0"],
+[32155,"NAD83 / Wyoming East","s","metre","USA - Wyoming …","Transverse Mercator","lat o 40.5  lon o -105.16666667  k 0.9999375  FE 200000  FN 0"],
+[32156,"NAD83 / Wyoming East Central","s","metre","USA - Wyoming …","Transverse Mercator","lat o 40.5  lon o -107.33333333  k 0.9999375  FE 400000  FN 100000"],
+[32157,"NAD83 / Wyoming West Central","s","metre","USA - Wyoming - counties of Fremont; Hot Springs; Park; Sweetwater","Transverse Mercator","lat o 40.5  lon o -108.75  k 0.9999375  FE 600000  FN 0"],
+[32158,"NAD83 / Wyoming West","s","metre","USA - Wyoming - counties of Lincoln; Sublette; Teton; Uinta","Transverse Mercator","lat o 40.5  lon o -110.08333333  k 0.9999375  FE 800000  FN 100000"],
+[32159,"NAD83 / Wyoming Lambert","s","metre","USA - Wyoming","Lambert conformal conic (2SP)","latF 41  sp1 41  sp2 45  lonF -107.5  FE 500000  FN 200000"],
+[32199,"NAD83 / Louisiana Offshore","s","metre","USA - central Gulf of Mexico outer continental shelf (GoM OCS) planning area …","Lambert conformal conic (2SP)","latF 25.5  sp1 27.83333333  sp2 26.16666667  lonF -91.33333333  FE 1000000  FN 0"],
+[32601,"WGS 84 / UTM zone 1N","u","metre","Between 180°W and 174°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -177  k 0.9996  FE 500000  FN 0"],
+[32602,"WGS 84 / UTM zone 2N","u","metre","Between 174°W and 168°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -171  k 0.9996  FE 500000  FN 0"],
+[32603,"WGS 84 / UTM zone 3N","u","metre","Between 168°W and 162°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -165  k 0.9996  FE 500000  FN 0"],
+[32604,"WGS 84 / UTM zone 4N","u","metre","Between 162°W and 156°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -159  k 0.9996  FE 500000  FN 0"],
+[32605,"WGS 84 / UTM zone 5N","u","metre","Between 156°W and 150°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -153  k 0.9996  FE 500000  FN 0"],
+[32606,"WGS 84 / UTM zone 6N","u","metre","Between 150°W and 144°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -147  k 0.9996  FE 500000  FN 0"],
+[32607,"WGS 84 / UTM zone 7N","u","metre","Between 144°W and 138°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -141  k 0.9996  FE 500000  FN 0"],
+[32608,"WGS 84 / UTM zone 8N","u","metre","Between 138°W and 132°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -135  k 0.9996  FE 500000  FN 0"],
+[32609,"WGS 84 / UTM zone 9N","u","metre","Between 132°W and 126°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -129  k 0.9996  FE 500000  FN 0"],
+[32610,"WGS 84 / UTM zone 10N","u","metre","Between 126°W and 120°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -123  k 0.9996  FE 500000  FN 0"],
+[32611,"WGS 84 / UTM zone 11N","u","metre","Between 120°W and 114°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -117  k 0.9996  FE 500000  FN 0"],
+[32612,"WGS 84 / UTM zone 12N","u","metre","Between 114°W and 108°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -111  k 0.9996  FE 500000  FN 0"],
+[32613,"WGS 84 / UTM zone 13N","u","metre","Between 108°W and 102°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -105  k 0.9996  FE 500000  FN 0"],
+[32614,"WGS 84 / UTM zone 14N","u","metre","Between 102°W and 96°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -99  k 0.9996  FE 500000  FN 0"],
+[32615,"WGS 84 / UTM zone 15N","u","metre","Between 96°W and 90°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -93  k 0.9996  FE 500000  FN 0"],
+[32616,"WGS 84 / UTM zone 16N","u","metre","Between 90°W and 84°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -87  k 0.9996  FE 500000  FN 0"],
+[32617,"WGS 84 / UTM zone 17N","u","metre","Between 84°W and 78°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -81  k 0.9996  FE 500000  FN 0"],
+[32618,"WGS 84 / UTM zone 18N","u","metre","Between 78°W and 72°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 0"],
+[32619,"WGS 84 / UTM zone 19N","u","metre","Between 72°W and 66°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -69  k 0.9996  FE 500000  FN 0"],
+[32620,"WGS 84 / UTM zone 20N","u","metre","Between 66°W and 60°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -63  k 0.9996  FE 500000  FN 0"],
+[32621,"WGS 84 / UTM zone 21N","u","metre","Between 60°W and 54°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -57  k 0.9996  FE 500000  FN 0"],
+[32622,"WGS 84 / UTM zone 22N","u","metre","Between 54°W and 48°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -51  k 0.9996  FE 500000  FN 0"],
+[32623,"WGS 84 / UTM zone 23N","u","metre","Between 48°W and 42°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -45  k 0.9996  FE 500000  FN 0"],
+[32624,"WGS 84 / UTM zone 24N","u","metre","Between 42°W and 36°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -39  k 0.9996  FE 500000  FN 0"],
+[32625,"WGS 84 / UTM zone 25N","u","metre","Between 36°W and 30°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -33  k 0.9996  FE 500000  FN 0"],
+[32626,"WGS 84 / UTM zone 26N","u","metre","Between 30°W and 24°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -27  k 0.9996  FE 500000  FN 0"],
+[32627,"WGS 84 / UTM zone 27N","u","metre","Between 24°W and 18°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -21  k 0.9996  FE 500000  FN 0"],
+[32628,"WGS 84 / UTM zone 28N","u","metre","Between 18°W and 12°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -15  k 0.9996  FE 500000  FN 0"],
+[32629,"WGS 84 / UTM zone 29N","u","metre","Between 12°W and 6°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -9  k 0.9996  FE 500000  FN 0"],
+[32630,"WGS 84 / UTM zone 30N","u","metre","Between 6°W and 0°W, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o -3  k 0.9996  FE 500000  FN 0"],
+[32631,"WGS 84 / UTM zone 31N","u","metre","Between 0°E and 6°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 3  k 0.9996  FE 500000  FN 0"],
+[32632,"WGS 84 / UTM zone 32N","u","metre","Between 6°E and 12°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 9  k 0.9996  FE 500000  FN 0"],
+[32633,"WGS 84 / UTM zone 33N","u","metre","Between 12°E and 18°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 15  k 0.9996  FE 500000  FN 0"],
+[32634,"WGS 84 / UTM zone 34N","u","metre","Between 18°E and 24°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 21  k 0.9996  FE 500000  FN 0"],
+[32635,"WGS 84 / UTM zone 35N","u","metre","Between 24°E and 30°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 27  k 0.9996  FE 500000  FN 0"],
+[32636,"WGS 84 / UTM zone 36N","u","metre","Between 30°E and 36°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 33  k 0.9996  FE 500000  FN 0"],
+[32637,"WGS 84 / UTM zone 37N","u","metre","Between 36°E and 42°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 39  k 0.9996  FE 500000  FN 0"],
+[32638,"WGS 84 / UTM zone 38N","u","metre","Between 42°E and 48°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 45  k 0.9996  FE 500000  FN 0"],
+[32639,"WGS 84 / UTM zone 39N","u","metre","Between 48°E and 54°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 51  k 0.9996  FE 500000  FN 0"],
+[32640,"WGS 84 / UTM zone 40N","u","metre","Between 54°E and 60°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 57  k 0.9996  FE 500000  FN 0"],
+[32641,"WGS 84 / UTM zone 41N","u","metre","Between 60°E and 66°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 63  k 0.9996  FE 500000  FN 0"],
+[32642,"WGS 84 / UTM zone 42N","u","metre","Between 66°E and 72°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 69  k 0.9996  FE 500000  FN 0"],
+[32643,"WGS 84 / UTM zone 43N","u","metre","Between 72°E and 78°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 75  k 0.9996  FE 500000  FN 0"],
+[32644,"WGS 84 / UTM zone 44N","u","metre","Between 78°E and 84°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 81  k 0.9996  FE 500000  FN 0"],
+[32645,"WGS 84 / UTM zone 45N","u","metre","Between 84°E and 90°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 87  k 0.9996  FE 500000  FN 0"],
+[32646,"WGS 84 / UTM zone 46N","u","metre","Between 90°E and 96°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 93  k 0.9996  FE 500000  FN 0"],
+[32647,"WGS 84 / UTM zone 47N","u","metre","Between 96°E and 102°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 99  k 0.9996  FE 500000  FN 0"],
+[32648,"WGS 84 / UTM zone 48N","u","metre","Between 102°E and 108°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 105  k 0.9996  FE 500000  FN 0"],
+[32649,"WGS 84 / UTM zone 49N","u","metre","Between 108°E and 114°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 111  k 0.9996  FE 500000  FN 0"],
+[32650,"WGS 84 / UTM zone 50N","u","metre","Between 114°E and 120°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 117  k 0.9996  FE 500000  FN 0"],
+[32651,"WGS 84 / UTM zone 51N","u","metre","Between 120°E and 126°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 123  k 0.9996  FE 500000  FN 0"],
+[32652,"WGS 84 / UTM zone 52N","u","metre","Between 126°E and 132°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 129  k 0.9996  FE 500000  FN 0"],
+[32653,"WGS 84 / UTM zone 53N","u","metre","Between 132°E and 138°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 135  k 0.9996  FE 500000  FN 0"],
+[32654,"WGS 84 / UTM zone 54N","u","metre","Between 138°E and 144°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 141  k 0.9996  FE 500000  FN 0"],
+[32655,"WGS 84 / UTM zone 55N","u","metre","Between 144°E and 150°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 147  k 0.9996  FE 500000  FN 0"],
+[32656,"WGS 84 / UTM zone 56N","u","metre","Between 150°E and 156°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 153  k 0.9996  FE 500000  FN 0"],
+[32657,"WGS 84 / UTM zone 57N","u","metre","Between 156°E and 162°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 159  k 0.9996  FE 500000  FN 0"],
+[32658,"WGS 84 / UTM zone 58N","u","metre","Between 162°E and 168°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 165  k 0.9996  FE 500000  FN 0"],
+[32659,"WGS 84 / UTM zone 59N","u","metre","Between 168°E and 174°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 171  k 0.9996  FE 500000  FN 0"],
+[32660,"WGS 84 / UTM zone 60N","u","metre","Between 174°E and 180°E, northern hemisphere between equator and 84°N …","Transverse Mercator","lat o 0  lon o 177  k 0.9996  FE 500000  FN 0"],
+[32701,"WGS 84 / UTM zone 1S","u","metre","Between 180°W and 174°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -177  k 0.9996  FE 500000  FN 10000000"],
+[32702,"WGS 84 / UTM zone 2S","u","metre","Between 174°W and 168°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -171  k 0.9996  FE 500000  FN 10000000"],
+[32703,"WGS 84 / UTM zone 3S","u","metre","Between 168°W and 162°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -165  k 0.9996  FE 500000  FN 10000000"],
+[32704,"WGS 84 / UTM zone 4S","u","metre","Between 162°W and 156°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -159  k 0.9996  FE 500000  FN 10000000"],
+[32705,"WGS 84 / UTM zone 5S","u","metre","Between 156°W and 150°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -153  k 0.9996  FE 500000  FN 10000000"],
+[32706,"WGS 84 / UTM zone 6S","u","metre","Between 150°W and 144°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -147  k 0.9996  FE 500000  FN 10000000"],
+[32707,"WGS 84 / UTM zone 7S","u","metre","Between 144°W and 138°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -141  k 0.9996  FE 500000  FN 10000000"],
+[32708,"WGS 84 / UTM zone 8S","u","metre","Between 138°W and 132°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -135  k 0.9996  FE 500000  FN 10000000"],
+[32709,"WGS 84 / UTM zone 9S","u","metre","Between 132°W and 126°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -129  k 0.9996  FE 500000  FN 10000000"],
+[32710,"WGS 84 / UTM zone 10S","u","metre","Between 126°W and 120°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -123  k 0.9996  FE 500000  FN 10000000"],
+[32711,"WGS 84 / UTM zone 11S","u","metre","Between 120°W and 114°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -117  k 0.9996  FE 500000  FN 10000000"],
+[32712,"WGS 84 / UTM zone 12S","u","metre","Between 114°W and 108°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -111  k 0.9996  FE 500000  FN 10000000"],
+[32713,"WGS 84 / UTM zone 13S","u","metre","Between 108°W and 102°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -105  k 0.9996  FE 500000  FN 10000000"],
+[32714,"WGS 84 / UTM zone 14S","u","metre","Between 102°W and 96°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -99  k 0.9996  FE 500000  FN 10000000"],
+[32715,"WGS 84 / UTM zone 15S","u","metre","Between 96°W and 90°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -93  k 0.9996  FE 500000  FN 10000000"],
+[32716,"WGS 84 / UTM zone 16S","u","metre","Between 90°W and 84°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -87  k 0.9996  FE 500000  FN 10000000"],
+[32717,"WGS 84 / UTM zone 17S","u","metre","Between 84°W and 78°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -81  k 0.9996  FE 500000  FN 10000000"],
+[32718,"WGS 84 / UTM zone 18S","u","metre","Between 78°W and 72°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -75  k 0.9996  FE 500000  FN 10000000"],
+[32719,"WGS 84 / UTM zone 19S","u","metre","Between 72°W and 66°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -69  k 0.9996  FE 500000  FN 10000000"],
+[32720,"WGS 84 / UTM zone 20S","u","metre","Between 66°W and 60°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -63  k 0.9996  FE 500000  FN 10000000"],
+[32721,"WGS 84 / UTM zone 21S","u","metre","Between 60°W and 54°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -57  k 0.9996  FE 500000  FN 10000000"],
+[32722,"WGS 84 / UTM zone 22S","u","metre","Between 54°W and 48°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -51  k 0.9996  FE 500000  FN 10000000"],
+[32723,"WGS 84 / UTM zone 23S","u","metre","Between 48°W and 42°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -45  k 0.9996  FE 500000  FN 10000000"],
+[32724,"WGS 84 / UTM zone 24S","u","metre","Between 42°W and 36°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -39  k 0.9996  FE 500000  FN 10000000"],
+[32725,"WGS 84 / UTM zone 25S","u","metre","Between 36°W and 30°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -33  k 0.9996  FE 500000  FN 10000000"],
+[32726,"WGS 84 / UTM zone 26S","u","metre","Between 30°W and 24°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -27  k 0.9996  FE 500000  FN 10000000"],
+[32727,"WGS 84 / UTM zone 27S","u","metre","Between 24°W and 18°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -21  k 0.9996  FE 500000  FN 10000000"],
+[32728,"WGS 84 / UTM zone 28S","u","metre","Between 18°W and 12°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -15  k 0.9996  FE 500000  FN 10000000"],
+[32729,"WGS 84 / UTM zone 29S","u","metre","Between 12°W and 6°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -9  k 0.9996  FE 500000  FN 10000000"],
+[32730,"WGS 84 / UTM zone 30S","u","metre","Between 6°W and 0°W, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o -3  k 0.9996  FE 500000  FN 10000000"],
+[32731,"WGS 84 / UTM zone 31S","u","metre","Between 0°E and 6°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 3  k 0.9996  FE 500000  FN 10000000"],
+[32732,"WGS 84 / UTM zone 32S","u","metre","Between 6°E and 12°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 9  k 0.9996  FE 500000  FN 10000000"],
+[32733,"WGS 84 / UTM zone 33S","u","metre","Between 12°E and 18°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 15  k 0.9996  FE 500000  FN 10000000"],
+[32734,"WGS 84 / UTM zone 34S","u","metre","Between 18°E and 24°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 21  k 0.9996  FE 500000  FN 10000000"],
+[32735,"WGS 84 / UTM zone 35S","u","metre","Between 24°E and 30°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 27  k 0.9996  FE 500000  FN 10000000"],
+[32736,"WGS 84 / UTM zone 36S","u","metre","Between 30°E and 36°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 33  k 0.9996  FE 500000  FN 10000000"],
+[32737,"WGS 84 / UTM zone 37S","u","metre","Between 36°E and 42°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 39  k 0.9996  FE 500000  FN 10000000"],
+[32738,"WGS 84 / UTM zone 38S","u","metre","Between 42°E and 48°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 45  k 0.9996  FE 500000  FN 10000000"],
+[32739,"WGS 84 / UTM zone 39S","u","metre","Between 48°E and 54°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 51  k 0.9996  FE 500000  FN 10000000"],
+[32740,"WGS 84 / UTM zone 40S","u","metre","Between 54°E and 60°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 57  k 0.9996  FE 500000  FN 10000000"],
+[32741,"WGS 84 / UTM zone 41S","u","metre","Between 60°E and 66°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 63  k 0.9996  FE 500000  FN 10000000"],
+[32742,"WGS 84 / UTM zone 42S","u","metre","Between 66°E and 72°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 69  k 0.9996  FE 500000  FN 10000000"],
+[32743,"WGS 84 / UTM zone 43S","u","metre","Between 72°E and 78°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 75  k 0.9996  FE 500000  FN 10000000"],
+[32744,"WGS 84 / UTM zone 44S","u","metre","Between 78°E and 84°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 81  k 0.9996  FE 500000  FN 10000000"],
+[32745,"WGS 84 / UTM zone 45S","u","metre","Between 84°E and 90°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 87  k 0.9996  FE 500000  FN 10000000"],
+[32746,"WGS 84 / UTM zone 46S","u","metre","Between 90°E and 96°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 93  k 0.9996  FE 500000  FN 10000000"],
+[32747,"WGS 84 / UTM zone 47S","u","metre","Between 96°E and 102°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 99  k 0.9996  FE 500000  FN 10000000"],
+[32748,"WGS 84 / UTM zone 48S","u","metre","Between 102°E and 108°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 105  k 0.9996  FE 500000  FN 10000000"],
+[32749,"WGS 84 / UTM zone 49S","u","metre","Between 108°E and 114°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 111  k 0.9996  FE 500000  FN 10000000"],
+[32750,"WGS 84 / UTM zone 50S","u","metre","Between 114°E and 120°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 117  k 0.9996  FE 500000  FN 10000000"],
+[32751,"WGS 84 / UTM zone 51S","u","metre","Between 120°E and 126°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 123  k 0.9996  FE 500000  FN 10000000"],
+[32752,"WGS 84 / UTM zone 52S","u","metre","Between 126°E and 132°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 129  k 0.9996  FE 500000  FN 10000000"],
+[32753,"WGS 84 / UTM zone 53S","u","metre","Between 132°E and 138°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 135  k 0.9996  FE 500000  FN 10000000"],
+[32754,"WGS 84 / UTM zone 54S","u","metre","Between 138°E and 144°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 141  k 0.9996  FE 500000  FN 10000000"],
+[32755,"WGS 84 / UTM zone 55S","u","metre","Between 144°E and 150°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 147  k 0.9996  FE 500000  FN 10000000"],
+[32756,"WGS 84 / UTM zone 56S","u","metre","Between 150°E and 156°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 153  k 0.9996  FE 500000  FN 10000000"],
+[32757,"WGS 84 / UTM zone 57S","u","metre","Between 156°E and 162°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 159  k 0.9996  FE 500000  FN 10000000"],
+[32758,"WGS 84 / UTM zone 58S","u","metre","Between 162°E and 168°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 165  k 0.9996  FE 500000  FN 10000000"],
+[32759,"WGS 84 / UTM zone 59S","u","metre","Between 168°E and 174°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 171  k 0.9996  FE 500000  FN 10000000"],
+[32760,"WGS 84 / UTM zone 60S","u","metre","Between 174°E and 180°E, southern hemisphere between 80°S and equator …","Transverse Mercator","lat o 0  lon o 177  k 0.9996  FE 500000  FN 10000000"]
+];
+
+
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var LABEL = { g: "Geographic 2D", u: "Projected (UTM)", s: "Projected (State Plane)",
+    p: "Projected", v: "Vertical / compound" };
+  var tb = $("tb");
+  var filter = "", group = "";
+
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+
+  /* build the table once; filtering only toggles rows, so typing stays instant */
+  var html = [];
+  for (var i = 0; i < EPSG.length; i++) {
+    var r = EPSG[i];
+    var detail = r[5]
+      ? "<b>" + esc(r[5]) + "</b>" + (r[6] ? "<br>" + esc(r[6]) : "")
+      : "No projection parameters — this is a geographic or vertical system, so the coordinates are not on a plane.";
+    html.push('<tr class="row" data-g="' + r[2] + '" data-c="' + r[0] + '" '
+      + 'data-s="' + esc((r[0] + " " + r[1] + " " + r[4]).toLowerCase()) + '">'
+      + '<td class="ec">' + r[0] + "</td>"
+      + '<td class="nm">' + esc(r[1]) + "</td>"
+      + '<td>' + (LABEL[r[2]] || r[2]) + "</td>"
+      + "<td>" + esc(r[3]) + "</td>"
+      + '<td class="area">' + esc(r[4]) + "</td>"
+      + '<td><button type="button" class="rowbtn" aria-label="Show parameters">&#43;</button></td>'
+      + "</tr>");
+    html.push('<tr class="detail" data-for="' + r[0] + '"><td colspan="6">' + detail + "</td></tr>");
+  }
+  tb.innerHTML = html.join("");
+
+  var rows = tb.querySelectorAll("tr.row");
+  var details = {};
+  var dlist = tb.querySelectorAll("tr.detail");
+  for (i = 0; i < dlist.length; i++) { details[dlist[i].getAttribute("data-for")] = dlist[i]; }
+
+  function apply() {
+    var shown = 0;
+    for (var k = 0; k < rows.length; k++) {
+      var row = rows[k];
+      var okG = group === "" || row.getAttribute("data-g") === group;
+      var okQ = filter === "" || row.getAttribute("data-s").indexOf(filter) >= 0;
+      var on = okG && okQ;
+      row.style.display = on ? "" : "none";
+      var d = details[row.getAttribute("data-c")];
+      if (d) { d.style.display = on && d.classList.contains("open") ? "" : "none"; }
+      if (on) { shown++; }
+    }
+    $("count").textContent = shown === EPSG.length
+      ? "Showing all " + EPSG.length + " codes."
+      : "Showing " + shown + " of " + EPSG.length + " codes." + (shown ? "" : " Try a shorter search term.");
+  }
+
+  function open(row) {
+    var code = row.getAttribute("data-c");
+    var d = details[code];
+    if (!d) { return; }
+    var isOpen = d.classList.toggle("open");
+    d.style.display = isOpen ? "" : "none";
+    var btn = row.querySelector(".rowbtn");
+    if (btn) { btn.innerHTML = isOpen ? "&#8722;" : "&#43;"; }
+  }
+
+  tb.addEventListener("click", function (e) {
+    var tr = e.target;
+    while (tr && tr !== tb && !(tr.className && String(tr.className).indexOf("row") >= 0
+      && tr.getAttribute("data-c"))) {
+      tr = tr.parentNode;
+    }
+    if (tr && tr !== tb) { open(tr); }
+  });
+
+  $("q").addEventListener("input", function () {
+    filter = this.value.trim().toLowerCase();
+    apply();
+  });
+
+  var seg = $("seg");
+  seg.addEventListener("click", function (e) {
+    var b = e.target;
+    if (b.tagName !== "BUTTON") { return; }
+    group = b.getAttribute("data-g");
+    var kids = seg.getElementsByTagName("button");
+    for (var k = 0; k < kids.length; k++) { kids[k].classList.toggle("on", kids[k] === b); }
+    apply();
+  });
+
+  apply();
+})();
+</script>
+
+</body>
+</html>

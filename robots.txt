@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /assets/track.js
+Disallow: /assets/consent.js
+
+Sitemap: https://coordcalc.com/sitemap.xml

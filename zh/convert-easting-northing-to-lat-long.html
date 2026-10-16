@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>东坐标北坐标怎么换算成经纬度 — 投影反算与常见错误</title>
+<meta name="description" content="东坐标和北坐标是投影平面上的米数，换成经纬度需要做投影反算，而且必须先知道带号、南北半球与椭球基准（大地基准面）。本文讲清反算所需的三个前提、四步计算方法、完整算例（17T 630084 4833438 → 43.642562°N, 79.387143°W），以及最容易把点位算偏几百公里的错误。">
+<link rel="canonical" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<meta property="og:title" content="东坐标北坐标怎么换算成经纬度">
+<meta property="og:description" content="反算所需的带号、半球与基准面，四步算法，完整算例，以及最常见的那几种错。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "东坐标北坐标怎么换算成经纬度",
+  "description": "东坐标北坐标怎么换算成经纬度 — 投影反算与常见错误",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html"},
+  "articleSection": "坐标与投影"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="index.html#tools">计算器</a>
+      <a href="guides.html">教程</a>
+      <a href="../convert-easting-northing-to-lat-long.html" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 东坐标北坐标换算成经纬度
+  </nav>
+
+<h1>东坐标北坐标怎么换算成经纬度</h1>
+
+  <p class="lead">
+    人们以为这个换算像温度换算一样，是一个公式。它不是。东坐标和北坐标是投影平面上
+    以米为单位的平面坐标，要回到经纬度，就必须把当初产生它们的那个投影反算回去——
+    而这一步在动任何算术之前，先得知道带号、南北半球和基准面。本文讲清必须具备哪些信息、
+    这个计算实际在做什么，以及那些会把点位甩出几百公里的错误。
+  </p>
+
+  <p class="meta">
+    <span>坐标与投影</span><span>更新于 2026年10月9日</span><span>投影反算</span>
+  </p>
+
+  <h2>动手之前必须先有三个信息</h2>
+  <ol>
+    <li><b>带号。</b>同一组东坐标和北坐标在 60 个 UTM 带里都存在，在每一个州平面坐标带里也都存在。
+      没有带号就没有唯一答案可算——答案是六十个。</li>
+    <li><b>南北半球，或纬度带字母。</b>北半球的北坐标自赤道起算，南半球则从 80°S 处的
+      10,000,000&nbsp;m 起算，所以必须先知道符号约定。</li>
+    <li><b>基准面。</b>WGS84 与 NAD83 在实际使用中几乎一致；NAD27 不一致，最大可差约
+      100&nbsp;m。选错基准面，得到的会是一个「自信地错着」的结果。</li>
+  </ol>
+  <p>
+    如果一组坐标到手时只有两个数字，老实的说法是：它还不是一个坐标。
+    这句话值得说出来，因为一半以上的换算失败并不是算错了，而是缺了元数据。
+  </p>
+
+  <h2>这个计算究竟做了什么</h2>
+  <p>
+    每一种投影平面都由一小组定义参数构建。就 UTM 而言：中央子午线（自 177°W 起每带 6°）、
+    中央子午线上的长度比恰为 <code>0.9996</code>、东偏 <code>500,000&nbsp;m</code>、
+    北偏在北半球为 <code>0</code>、南半球为 <code>10,000,000&nbsp;m</code>，
+    以及 GRS80 或 WGS84 椭球。换算分四步：
+  </p>
+  <div class="formula">1. ΔE = 东坐标 − 500,000&nbsp;&nbsp;&nbsp;（距中央子午线的东向距离，已含长度比）<br>
+2. M&nbsp; = (北坐标 − 北偏) ÷ 0.9996&nbsp;&nbsp;&nbsp;（自赤道起的子午线弧长）<br>
+3. φ₁&nbsp;= 底点纬度，由 M 按级数反算<br>
+4. 由 φ₁、ΔE 与椭球偏心率求 φ、λ</div>
+  <p>
+    第 3 步没有解析解，这就是整个计算要用级数展开或迭代、而不能用一个式子写完的原因。
+    实用软件（包括本站的换算工具）所用的级数，与官方参考实现相比误差远小于一毫米，
+    所以精度从来不是限制因素。
+  </p>
+
+  <h2>完整算例</h2>
+  <p>
+    取 UTM 参考值 <code>17T 630084 4833438</code>。第 17 带的中央子午线是 81°W，
+    带字母 T 表明位于北半球。
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>步骤</th><th>数值</th><th>含义</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>东坐标 − 东偏</td><td>630,084 − 500,000 = 130,084 m</td><td>该点位于 81°W 以东 130 km</td></tr>
+        <tr><td>北坐标 ÷ 0.9996</td><td>4,833,438 ÷ 0.9996 ≈ 4,835,372 m</td><td>自赤道起的子午线弧长</td></tr>
+        <tr><td>反算底点纬度</td><td>≈ 43.633°&nbsp;N</td><td>该点在中央子午线上的纬度</td></tr>
+        <tr><td>解出经纬度</td><td><b>43.642562°&nbsp;N, 79.387143°&nbsp;W</b></td><td>最终结果，WGS84</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    任何结果都值得做两项校核。第一，经度必须落在该带的 6° 区间内：79.387°W 妥妥地落在
+    78°W 到 72°W 之间，与带号相符。第二，纬度必须落在纬度带内：43.64°N 位于 T 带的
+    40°N 到 48°N 之间。两项只要有一项不成立，错的是带号或半球，不是算术。
+  </p>
+
+  <h2>坐标写反了，以及怎么发现</h2>
+  <p>
+    先写北坐标是最经典的错误，而且很容易犯，因为习惯上经纬度就是反过来写的。
+    一组成分颠倒的 UTM 坐标通常会解出一个远超出其纬度带范围的纬度：北坐标 4,833,438
+    被当成东坐标读，就意味着该点在中央子午线以东 4,333&nbsp;km，远远超出任何一带的范围。
+  </p>
+  <p>
+    一条实用规则：UTM 的东坐标几乎总是六位数，大致在 100,000 到 900,000 之间；
+    北坐标是六位或七位。如果东坐标位置上出现了超过 1,000,000 的值，
+    或者赤道以北的北坐标位置上出现了小于 1,000,000 的值，这一对数值多半写反了。
+  </p>
+
+  <div class="note">
+    <p><b>不要用自制的电子表格公式来换算。</b>横轴墨卡托反算级数有好几项，
+      而且南半球各带的符号约定还不同。少写一项的表格公式在中央子午线附近看起来完全正确，
+      到带边缘就会偏差几十米——这是最糟的一类错误，因为它在中间地带能通过所有测试，
+      只在你真正干活的地方失效。</p>
+  </div>
+
+  <h2>州平面坐标与其他投影</h2>
+  <p>
+    同样四步适用于任何投影平面，包括美国的州平面坐标。变的是参数组。一个州平面带由
+    两条标准纬线（兰勃特等角圆锥投影，用于东西向延伸的带）或一条带自身长度比的中央子午线
+    （横轴墨卡托投影，用于南北向延伸的带）定义，再加上假定原点、东偏与北偏。
+    州平面记录还多一处麻烦：坐标单位可能是米、美国测量英尺或国际英尺，
+    选错会让答案偏移约百万分之二——在停车场无所谓，在一条地界线上就很显著。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>东坐标、北坐标与带号 ↔ 经纬度</small></a>
+      <a href="state-plane-converter.html">州平面坐标换算<small>NAD83 州平面坐标与经纬度互转</small></a>
+      <a href="mgrs-converter.html">MGRS 与经纬度互转<small>军用格网坐标串 ↔ 经纬度</small></a>
+      <a href="dms-converter.html">度分秒转换器<small>把结果换算成度分秒格式</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+        <small>从一条记录出发，逐个部分讲清楚。</small></li>
+      <li><a href="../what-datum-does-gps-use.html">GPS 用的是哪个基准面？</a>
+        <small>为什么基准面决定你的答案是不是真的对。</small></li>
+      <li><a href="../utm-vs-mgrs.html">UTM 与 MGRS 的区别</a>
+        <small>同一个格网，用米写还是用数字写。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

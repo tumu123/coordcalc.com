@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Survey Foot vs International Foot: Which One Is in Your File?</title>
+<meta name="description" content="The US survey foot is 1200/3937 m, the international foot exactly 0.3048 m — two parts per million, 3.2 mm per mile. How to tell which one a record used.">
+<link rel="canonical" href="https://coordcalc.com/survey-foot-vs-international-foot.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/survey-foot-vs-international-foot.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/survey-foot-vs-international-foot.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/survey-foot-vs-international-foot.html">
+<meta property="og:title" content="Survey Foot vs International Foot: Which One Is in Your File?">
+<meta property="og:description" content="Two feet, two definitions, two parts per million — and the 2023 change that did not retire the survey foot from old records.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/survey-foot-vs-international-foot.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "Survey Foot vs International Foot: Which One Is in Your File?",
+  "description": "The exact definitions of the US survey foot and the international foot, why the difference matters, and how to identify which one a survey record used.",
+  "datePublished": "2026-10-09",
+  "dateModified": "2026-10-09",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/survey-foot-vs-international-foot.html"},
+  "articleSection": "Units and measurement"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="guides.html">Guides</a> › Survey foot vs international foot
+  </nav>
+
+  <h1>Survey Foot vs International Foot: Which One Is in Your File?</h1>
+
+  <p class="lead">
+    The United States spent more than a century with two feet in circulation. The international foot is
+    exactly 0.3048 metres; the US survey foot is 1200 divided by 3937 metres, longer by about two parts
+    per million. That is a difference of 0.6 mm over a thousand feet — trivial until it lands on a long
+    boundary, a State Plane coordinate or a chain of title. This guide gives the exact numbers, explains
+    what the 2023 deprecation actually changed, and sets out how to decide which foot a record used.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 9 October 2026</span><span>Exact factors</span>
+  </p>
+
+  <h2>The two definitions</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Unit</th><th>Exact definition</th><th>In metres</th><th>Note</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>International foot</td><td>0.3048 m</td><td>0.3048</td><td>Exact by definition; now the standard US foot</td></tr>
+        <tr><td>US survey foot</td><td>1200 / 3937 m</td><td>0.304800609601219…</td><td>Longer by 2 parts per million</td></tr>
+        <tr><td>Metre in international feet</td><td>1 / 0.3048</td><td>3.2808398950 ft</td><td></td></tr>
+        <tr><td>Metre in survey feet</td><td>3937 / 1200</td><td>3.2808333333 ft</td><td>The inverse of the survey foot</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The survey foot came from the older definition of the metre as a physical bar, which made the
+    inch-to-metre relationship an awkward fraction. When the metre was redefined in 1960 the awkwardness
+    was resolved for science and industry by fixing the international foot at exactly 0.3048 m — but
+    cadastral and geodetic records already existed in the old foot, and redefining them would have moved
+    boundaries on paper. So both were kept, and the difference was named.
+  </p>
+
+  <h2>Why two parts per million is not a rounding error</h2>
+  <p>
+    Two parts per million is the kind of number people round away without thinking, so it is worth seeing
+    it accumulate in the units surveyors actually use.
+  </p>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Length</th><th>Difference between the two feet</th><th>Practical reading</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 foot</td><td>0.0000006 ft (0.0000002 m)</td><td>Below any measurement</td></tr>
+        <tr><td>100 feet</td><td>0.00006 ft (0.02 mm)</td><td>Below any measurement</td></tr>
+        <tr><td>1,000 feet</td><td>0.0006 ft (0.2 mm)</td><td>Still below field precision</td></tr>
+        <tr><td>1 mile (5,280 ft)</td><td>0.0106 ft (3.2 mm)</td><td>Now visible on a good day</td></tr>
+        <tr><td>1 UTM zone width (~668 km)</td><td>4.0 ft (1.2 m)</td><td>Materially wrong</td></tr>
+        <tr><td>A 100-mile boundary</td><td>1.06 ft (0.32 m)</td><td>A boundary dispute</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    The pattern is the point: the error is invisible over a lot line and unavoidable over a county line.
+    That is exactly the profile of a mistake that survives proofreading.
+  </p>
+
+  <h2>What changed on 1 January 2023</h2>
+  <p>
+    After a consultation that ran for several years, the US survey foot was formally deprecated for new
+    work effective 1 January 2023, and the international foot became the standard foot in the United
+    States. In practical terms this means that new federal and state work, and new National Geodetic
+    Survey products, are defined in metres or international feet rather than survey feet.
+  </p>
+  <p>
+    What did not happen is any change to the records. A plat recorded in 1974 still describes the ground
+    in survey feet; a State Plane coordinate published by a state agency in 1995 is still a survey-foot
+    coordinate; a right-of-way plan from 2005 still bears survey-foot dimensions. The deprecation governs
+    new work. It does not convert the archive, and it does not make the old numbers any less real. Anyone
+    working with historic coordinates today — which, in cadastral practice, is most of the work — still
+    needs the conversion.
+  </p>
+
+  <div class="note">
+    <p><b>Area is worse than length.</b> A squared quantity carries the difference twice. The US survey
+    acre — 43,560 survey feet squared — is 4,046.8726 m², against the international acre at
+    4,046.8564 m². Across a section, 640 acres, that gap is over 10 m² and it is not recoverable from the
+    stated acreage alone.</p>
+  </div>
+
+  <h2>How to tell which foot a record used</h2>
+  <ol>
+    <li><b>Look for the stated unit.</b> Modern plans say "US survey feet", "ftUS" or "international
+      feet". Older plans often say only "feet", which is the ambiguous case.</li>
+    <li><b>Check the EPSG code.</b> Where a coordinate system is defined by code, the code settles it.
+      A State Plane zone has separate codes for metres, US survey feet and international feet, and they
+      are not interchangeable.</li>
+    <li><b>Use the date as a weak signal.</b> A record predating 2023 that states feet, with no further
+      qualification, is most likely in survey feet. A record from after 2023 that states feet is most
+      likely in international feet. Treat this as a hint, never as proof.</li>
+    <li><b>Test against a known length.</b> If the record includes a distance between two points that can
+      also be computed independently — a section line, a road width, a monument tie — convert both ways
+      and see which one reproduces the stated figure.</li>
+    <li><b>Record the assumption.</b> If the source is genuinely ambiguous, state the foot you used and
+      the conversion factor in your own record. The next person to open the file will need it.</li>
+  </ol>
+
+  <h2>The factors to carry</h2>
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Conversion</th><th>Factor</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>US survey feet → metres</td><td>× 1200 ÷ 3937 = 0.304800609601219</td></tr>
+        <tr><td>Metres → US survey feet</td><td>× 3937 ÷ 1200 = 3.280833333333</td></tr>
+        <tr><td>International feet → metres</td><td>× 0.3048</td></tr>
+        <tr><td>Metres → international feet</td><td>× 3.280839895013</td></tr>
+        <tr><td>US survey feet → international feet</td><td>× 1.000002</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    That last factor is the one worth remembering, because it is close enough to 1 that it looks like
+    nothing and far enough from 1 that it eventually matters. Multiply any survey-foot length by
+    1.000002 to get international feet.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="unit-converter.html">us survey foot to meter<small>Survey feet, international feet, chains, links and acres</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>State Plane zones in metres, ftUS or international feet</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, in whatever foot the coordinates were measured</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Independent distance check between two points</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-acreage-from-coordinates.html">How to calculate acreage from coordinates</a>
+        <small>Where the survey acre and the international acre diverge.</small></li>
+      <li><a href="what-datum-does-gps-use.html">What datum does GPS use?</a>
+        <small>The other half of a coordinate's identity, alongside its unit.</small></li>
+      <li><a href="section-township-range.html">Sections, townships and ranges explained</a>
+        <small>Land measured in chains, and why 66 feet is not an arbitrary number.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

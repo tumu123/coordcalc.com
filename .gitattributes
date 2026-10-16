@@ -1,0 +1,11 @@
+# Keep text files in the repository as LF, regardless of the OS that checks them out.
+* text=auto eol=lf
+
+# Binaries — never normalise line endings or attempt diffs.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.ico binary
+*.woff binary
+*.woff2 binary

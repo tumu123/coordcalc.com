@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>US Survey Foot to Meter Converter — Acre, Chain, Link and Rod</title>
+<meta name="description" content="Free surveying unit converter: US survey foot to metre, acre to hectare, chain, link, rod, miles and vara — exact conversion factors, in your browser.">
+<link rel="canonical" href="https://coordcalc.com/unit-converter.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/unit-converter.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/unit-converter.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/unit-converter.html">
+<meta property="og:title" content="US Survey Foot to Meter Converter — Acre, Chain, Link and Rod">
+<meta property="og:description" content="Exact factors for the US survey foot, acre, hectare, chain, link, rod, fathom and nautical mile — converted as you type, free and in-browser.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/unit-converter.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you convert a US survey foot to meter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the survey feet by 1200 and divide by 3937 — that is 0.304800609601219 metres per survey foot. So 100 US survey feet is 30.480061 m, and 1,000 US survey feet is 304.800610 m."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do you convert meter to US survey foot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the metres by 3937 and divide by 1200, or divide by 0.304800609601219. One metre is 3.2808333333 US survey feet, against 3.2808398950 international feet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is a US survey foot different from an international foot?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The international foot is exactly 0.3048 m; the US survey foot is 1200/3937 m = 0.304800609601219 m, longer by about two parts per million. Over one mile that is roughly 3.2 mm."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the US survey foot still in use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It was deprecated for new work on 1 January 2023, and the international foot is now the standard US foot. Legacy records still use it — older State Plane coordinates, recorded plats, right-of-way and cadastral documents — so the conversion is still needed in daily practice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many feet are in a chain, a link and a rod?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A Gunter's chain is 66 ft, a link is 0.66 ft and a rod (pole or perch) is 16.5 ft. There are 100 links and 4 rods in a chain, and 80 chains in a statute mile."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many acres are in a hectare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One hectare is 2.4710538 acres. One acre is 0.40468564 ha, 4,046.8564224 m² or 43,560 ft². A US survey acre — 43,560 survey feet squared — is slightly larger, at 4,046.8726 m²."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many square feet are in an acre?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Exactly 43,560. To go from square feet to acres, divide by 43,560: 100,000 ft² is 2.296 acres. An acre is about 208.71 ft square, or a strip one chain (66 ft) wide and ten chains long."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a statute mile and a nautical mile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A statute mile is 5,280 ft, or 1,609.344 m. A nautical mile is exactly 1,852 m, about 15 percent longer, and equals one minute of latitude. Marine and air navigation use the nautical mile; land measurement uses the statute mile."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many feet is a vara?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Texas vara is 33⅓ inches — 2.7778 ft or 0.846667 m. The California vara is 33 inches, or 2.75 ft. Because the vara varied by jurisdiction, always use the factor that belongs to the grant or record you are working from."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:18px;font-weight:600;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  select{font-size:15px;font-weight:500;}
+  button.ghost{font-family:inherit;font-size:13.5px;font-weight:600;padding:10px 14px;border-radius:9px;
+    border:1px solid #cfd6e0;background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  button.ghost:hover{border-color:var(--accent);color:var(--accent-d);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:27px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:18px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  /* shared site header */
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:#d97706;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:23px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* embed view: headerless, chrome-free, sized for an iframe (add ?embed=1) */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .tabs{margin-bottom:14px;}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--accent);
+    border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3b4353;margin:18px 0 0;}
+  .note b{color:var(--text);}
+  .note a{color:var(--accent-d);}
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#slope">Slope, elevation &amp; map scale</a> › US Survey Foot to Meter Converter
+  </nav>
+
+  <h1>US Survey Foot to Meter Converter</h1>
+
+  <p class="lead">
+    This US survey foot to meter converter handles the units that land records and survey plans are
+    actually written in — the survey foot, the international foot, the chain, the link, the rod, the
+    acre, the hectare and the vara. Pick a unit, type a value, and see the same quantity in every unit
+    of that kind, or jump straight to the equivalent measurements. Every factor is exact as defined,
+    and everything runs in your browser with no login and no upload.
+  </p>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="len" type="button">Length</button>
+      <button class="tab" data-tab="area" type="button">Area</button>
+      <button class="tab" data-tab="ang" type="button">Angle</button>
+    </div>
+
+    <div class="row">
+      <div class="field" style="flex:0 0 150px;">
+        <label for="u-val">Value</label>
+        <input id="u-val" type="number" step="any" value="1" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="u-from">From</label>
+        <select id="u-from"></select>
+      </div>
+      <div class="field">
+        <label for="u-to">To</label>
+        <select id="u-to"></select>
+      </div>
+      <button class="ghost" id="u-swap" type="button" style="flex:0 0 auto;">Swap</button>
+      <button class="ghost" id="u-link" type="button" style="flex:0 0 auto;">Copy link</button>
+    </div>
+
+    <p class="hint">
+      Exact factors: the US survey foot is <code>1200 / 3937</code> m and the international foot is
+      exactly <code>0.3048</code> m. Area conversions use the international foot for <code>ft²</code>
+      and the survey foot for the US survey acre.
+    </p>
+    <p class="err" id="u-err">Enter a number to convert.</p>
+
+    <div class="results" id="u-results">
+      <div class="big">
+        <span class="bk" id="u-bk">Result</span>
+        <span class="bv" id="u-bv">—</span>
+      </div>
+      <div id="u-rows"></div>
+    </div>
+    <p class="hint" id="u-linkmsg" style="display:none;"></p>
+  </div>
+
+  <div class="note embed-hide">
+    <b>Linkable and embeddable.</b> A conversion is reproducible from its URL —
+    <code>?value=100&amp;from=usft&amp;to=m</code>, <code>?mode=area&amp;value=1&amp;from=acre&amp;to=ha</code>
+    or <code>?mode=ang&amp;value=1&amp;from=deg&amp;to=rad</code>. Add <code>&amp;embed=1</code> for a
+    chrome-free panel sized for an iframe. <b>Copy link</b> builds the URL for what is on screen; the
+    parameter list and the JavaScript API are on the <a href="developers.html">developer page</a>.
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>
+      Length units are converted by scaling to a base unit of metres. A chain, for example, is defined
+      as 66 feet, so it is stored as <code>66 &times; 0.3048 = 20.1168 m</code>, and a value in chains is
+      multiplied by that figure and then divided by the factor of the target unit. Area units are
+      defined directly in square metres: the acre is <code>43,560 ft² = 4046.8564224 m²</code>, the
+      hectare is exactly <code>10,000 m²</code>, and the square mile is <code>2,589,988.110336 m²</code>.
+      Because area is a squared quantity, the difference between the two feet is roughly twice as large
+      in area as in length — about four parts per million.
+    </p>
+    <p>
+      Angle units are converted through degrees: <code>1 radian = 57.295779513°</code>, <code>1 grad or
+      gon = 0.9°</code>, a NATO mil is <code>0.05625°</code> and the older artillery mil is
+      <code>0.06°</code>. When you convert an angle, the tool also prints it in degrees, minutes and
+      seconds so you can copy it straight onto a plan.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>US Survey Foot vs International Foot</h2>
+    <p>
+      The United States has had two feet. The <b>international foot</b> is defined as exactly
+      <code>0.3048</code> metres, and the <b>US survey foot</b> is defined as
+      <code>1200 / 3937</code> metres, which works out at <code>0.304800609601219</code> metres. The
+      survey foot is therefore longer by 0.0000006096 m — about <b>two parts per million</b>.
+    </p>
+    <p>
+      Two parts per million sounds harmless until it lands on a long line. Over 1,000 feet the gap is
+      0.002 feet, or about 0.6 mm. Over a statute mile it is 0.0106 feet, or about 3.2 mm. Across a
+      state plane or a long parcel boundary the discrepancy becomes a real survey question rather than
+      a rounding detail, which is why the two feet were kept separate for as long as they were.
+    </p>
+    <p>
+      The separation ended on <b>1 January 2023</b>: the US survey foot was formally deprecated for new
+      work, and the international foot is now the standard foot in the United States. In practice the
+      survey foot has not disappeared — older State Plane coordinates, recorded plats, right-of-way
+      documents and some state transportation plans are still written in survey feet, so a surveyor
+      reading a 1990s record of survey today still needs the survey foot conversion. The rule to
+      remember is simple: <b>a foot in a legacy survey document is usually a survey foot, and a foot in
+      a current drawing is an international foot</b>. When a document does not say which one it used,
+      treat that as a real risk and check the stated datum and units note.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Converting US Survey Feet to Meters — Worked Examples</h2>
+    <p>
+      To convert a US survey foot to meter, multiply by <code>1200 / 3937</code>, or
+      <code>0.304800609601219</code>. So <b>100 US survey feet = 30.48006096 m</b> and
+      <b>10,000 US survey feet = 3,048.0609601 m</b> — about 61 mm longer than the same figure read as
+      international feet.
+    </p>
+    <p>
+      To go the other way and convert meter to US survey foot, multiply by <code>3937 / 1200</code>, or
+      divide by <code>0.304800609601219</code>. One metre is <b>3.2808333333 US survey feet</b>. The same
+      metre is <b>3.2808398950 international feet</b>, so a 1,000 m baseline is 3,280.8333 survey feet but
+      3,280.8399 international feet — 0.0066 ft, roughly 2 mm, of difference that either matches the
+      record or does not.
+    </p>
+    <h3>A quick sanity check</h3>
+    <p>
+      If a conversion looks wrong, test it against a number you already know. A US survey mile is 5,280
+      survey feet, or exactly <code>1,609.3472187 m</code>. A statute mile in international feet is
+      <code>1,609.344 m</code>. If your converted mile does not land on one of those two figures, you
+      have mixed the two feet somewhere in the chain of calculation.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Surveyor's Length Units: chain to feet, link to feet, rod to feet</h2>
+    <p>
+      Before electronic distance measurement, land was measured with a <b>Gunter's chain</b> 66 feet
+      long, made of 100 links, with tallies every ten links. Those units are still embedded in the land
+      system: a <b>chain to feet</b> conversion is 66 ft, a <b>link to feet</b> conversion is 0.66 ft,
+      and a <b>rod, pole or perch to feet</b> conversion is 16.5 ft.
+    </p>
+    <p>
+      The numbers are not arbitrary. 66 feet divides cleanly into 4 rods of 16.5 feet, and 80 chains
+      make exactly one statute mile, which is why the public land survey system laid out sections as
+      80-chain squares. Area followed from the same geometry: one square chain is 4,356 ft², exactly
+      one tenth of an acre, and one acre is 10 square chains or 160 square rods. When you read an old
+      metes-and-bounds description, the distances are as likely to be in chains and links as in feet,
+      and converting them into feet or metres is the first step before anything can be plotted.
+    </p>
+    <p>
+      The surveyor's chain also gave us the acre itself: one acre is a rectangle one chain wide and ten
+      chains long — 66 ft by 660 ft — which is why an acre is 43,560 ft² and why a furlong (660 ft) and
+      an acre are historically the same measurement in different directions.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Land Area: acre to hectare, hectare to acre, square feet to acres</h2>
+    <p>
+      For <b>acre to hectare</b>, multiply by <code>0.40468564224</code>: one acre is 0.4047 hectares.
+      For <b>hectare to acre</b>, multiply by <code>2.4710538147</code>: one hectare is 2.4711 acres.
+      The hectare is exactly 10,000 m², so a <b>square meter to acre</b> conversion is simply
+      <code>m² / 4046.8564224</code>.
+    </p>
+    <p>
+      For <b>square feet to acres</b>, divide by 43,560. That single number is worth memorising, because
+      it turns a footprint or a plat into acreage in one step: 100,000 ft² is 2.296 acres, and 20,000 ft²
+      is 0.459 acres. Going the other way, one acre is 43,560 ft², which is a square 208.71 feet on a
+      side, or a rectangle one chain by ten chains.
+    </p>
+    <p>
+      Two cautions matter here. First, the <b>US survey acre</b> — 43,560 <i>survey</i> feet squared —
+      is 4,046.8726 m², slightly larger than the international acre of 4,046.8564 m². Historic deeds
+      that state acreage derived from survey feet carry that slightly larger acre. Second, acreage read
+      off a coordinate list is a projected area: over a large or steep parcel it differs from surface
+      area, and it should be reported with the projection and units it was computed in.
+    </p>
+    <p>
+      Larger cadastral units follow the same ladder: 4 roods make an acre (a rood is 10,890 ft²), 640
+      acres make a section, and 36 sections make a township of 36 square miles — 23,040 acres.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Statute Mile vs Nautical Mile</h2>
+    <p>
+      A <b>statute mile</b> is 5,280 feet, or exactly 1,609.344 metres. A <b>nautical mile</b> is exactly
+      1,852 metres, about 6,076.115 international feet, which makes it roughly <b>1.1508 times</b> a
+      statute mile, or about 15 percent longer.
+    </p>
+    <p>
+      The reason is that the nautical mile is tied to the Earth rather than to a survey: one nautical
+      mile is one minute of latitude, so 60 nautical miles equal one degree of latitude, and a degree of
+      latitude is the same distance everywhere on the globe. A statute mile is a historical land
+      measure with no geodetic meaning. That is why marine and aviation charts, and every speed in
+      knots, use the nautical mile, while road distance, land parcels and everything in a survey plan
+      use the statute mile. Converting between the two is a scale factor, not a projection problem —
+      but the units of the speed matter just as much: one knot is one nautical mile per hour, about
+      1.852 km/h.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>The Texas Vara and Other Legacy Units</h2>
+    <p>
+      Spanish and Mexican land grants in Texas, California and the wider Southwest were measured in
+      <b>varas</b>, and those measurements are still part of the chain of title. The Texas vara is
+      <code>33 1/3</code> inches, so a <b>vara to feet</b> conversion is 2.7778 feet, or 0.846667 metres.
+      The California vara is 33 inches, or 2.75 feet. A league, in land-grant usage, is 5,000 varas, and
+      a labor is 1,000,000 square varas.
+    </p>
+    <p>
+      The general rule with legacy units is never to convert blind. The vara varied by jurisdiction and
+      by period, the Spanish foot and the Paris foot appear in early colonial documents, and a
+      conversion done with the wrong local standard can shift a boundary by tens of metres. Where a
+      legacy unit governs a boundary, the conversion factor belongs in the surveyor's record, with the
+      authority it came from.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Common survey unit conversions at a glance</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Conversion</th><th>Exact value</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 US survey foot to meter</td><td>0.304800609601219 m</td><td>Exactly 1200 / 3937</td></tr>
+        <tr><td>1 meter to US survey foot</td><td>3.2808333333 ftUS</td><td>Exactly 3937 / 1200</td></tr>
+        <tr><td>1 international foot</td><td>0.3048 m</td><td>Exact; now the US standard foot</td></tr>
+        <tr><td>1 chain</td><td>66 ft = 20.1168 m</td><td>100 links; 10 chains make a furlong</td></tr>
+        <tr><td>1 link</td><td>0.66 ft = 0.201168 m</td><td>One hundredth of a chain</td></tr>
+        <tr><td>1 rod (pole, perch)</td><td>16.5 ft = 5.0292 m</td><td>4 rods to a chain</td></tr>
+        <tr><td>1 furlong</td><td>660 ft = 201.168 m</td><td>10 chains; one eighth of a mile</td></tr>
+        <tr><td>1 fathom</td><td>6 ft = 1.8288 m</td><td>Depth and, historically, mining</td></tr>
+        <tr><td>1 statute mile</td><td>5,280 ft = 1,609.344 m</td><td>Land distance</td></tr>
+        <tr><td>1 nautical mile</td><td>1,852 m</td><td>One minute of latitude</td></tr>
+        <tr><td>1 acre</td><td>43,560 ft² = 4,046.8564224 m²</td><td>0.40468564 ha; 10 square chains</td></tr>
+        <tr><td>1 hectare</td><td>10,000 m² = 2.4710538 acres</td><td>100 m by 100 m</td></tr>
+        <tr><td>1 rood</td><td>10,890 ft² = 1,011.7141056 m²</td><td>One quarter of an acre</td></tr>
+        <tr><td>1 section</td><td>640 acres = 1 mi²</td><td>Public land survey system</td></tr>
+        <tr><td>1 vara (Texas)</td><td>33⅓ in = 0.846667 m</td><td>Spanish and Mexican grants</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      Conversion factors marked exact are exact by definition. Values shown to ten significant figures
+      are rounded for display only — the calculator uses full double precision.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="survey-foot-vs-international-foot.html">Survey foot vs international foot: which one is in your file?</a>
+        <small>Why two parts per million still moves a boundary, and how the 2023 change affects old records.</small></li>
+      <li><a href="how-to-calculate-acreage-from-coordinates.html">How to calculate acreage from coordinates</a>
+        <small>Turning a coordinate list into square feet, acres and hectares.</small></li>
+      <li><a href="section-township-range.html">Sections, townships and ranges explained</a>
+        <small>How 640-acre sections and 36-section townships tile the public land survey system.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area and acreage from coordinates</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance ↔ ground distance</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Geodesic distance and bearing</small></a>
+      <a href="slope-calculator.html">slope percentage calculator<small>Percent slope, degrees and ratio</small></a>
+      <a href="utm-coordinate-converter.html">utm to lat long<small>Lat-long ↔ UTM grid</small></a>
+      <a href="traverse-calculator.html">traverse calculator<small>Closure error and adjustment</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do you convert a US survey foot to meter?</summary>
+      <p>Multiply the survey feet by 1200 and divide by 3937 — that is <code>0.304800609601219</code> metres per survey foot. So 100 US survey feet is 30.480061 m, and 1,000 US survey feet is 304.800610 m.</p>
+    </details>
+    <details>
+      <summary>How do you convert meter to US survey foot?</summary>
+      <p>Multiply the metres by 3937 and divide by 1200, or divide by 0.304800609601219. One metre is 3.2808333333 US survey feet, against 3.2808398950 international feet.</p>
+    </details>
+    <details>
+      <summary>Is a US survey foot different from an international foot?</summary>
+      <p>Yes. The international foot is exactly 0.3048 m; the US survey foot is 1200/3937 m = 0.304800609601219 m, longer by about two parts per million. Over one mile that is roughly 3.2 mm.</p>
+    </details>
+    <details>
+      <summary>Is the US survey foot still in use?</summary>
+      <p>It was deprecated for new work on 1 January 2023, and the international foot is now the standard US foot. Legacy records still use it — older State Plane coordinates, recorded plats, right-of-way and cadastral documents — so the conversion is still needed in daily practice.</p>
+    </details>
+    <details>
+      <summary>How many feet are in a chain, a link and a rod?</summary>
+      <p>A Gunter's chain is 66 ft, a link is 0.66 ft and a rod (pole or perch) is 16.5 ft. There are 100 links and 4 rods in a chain, and 80 chains in a statute mile.</p>
+    </details>
+    <details>
+      <summary>How many acres are in a hectare?</summary>
+      <p>One hectare is 2.4710538 acres. One acre is 0.40468564 ha, 4,046.8564224 m² or 43,560 ft². A US survey acre — 43,560 survey feet squared — is slightly larger, at 4,046.8726 m².</p>
+    </details>
+    <details>
+      <summary>How many square feet are in an acre?</summary>
+      <p>Exactly 43,560. To go from square feet to acres, divide by 43,560: 100,000 ft² is 2.296 acres. An acre is about 208.71 ft square, or a strip one chain (66 ft) wide and ten chains long.</p>
+    </details>
+    <details>
+      <summary>What is the difference between a statute mile and a nautical mile?</summary>
+      <p>A statute mile is 5,280 ft, or 1,609.344 m. A nautical mile is exactly 1,852 m, about 15 percent longer, and equals one minute of latitude. Marine and air navigation use the nautical mile; land measurement uses the statute mile.</p>
+    </details>
+    <details>
+      <summary>How many feet is a vara?</summary>
+      <p>The Texas vara is 33⅓ inches — 2.7778 ft or 0.846667 m. The California vara is 33 inches, or 2.75 ft. Because the vara varied by jurisdiction, always use the factor that belongs to the grant or record you are working from.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing design standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+
+  var USFT = 1200 / 3937;         /* exact metres per US survey foot */
+  var INFT = 0.3048;              /* exact metres per international foot */
+  var ACRE = 43560 * INFT * INFT; /* exact m^2 */
+  var USACRE = 43560 * USFT * USFT;
+
+  var SETS = {
+    len: {
+      label: "Length",
+      order: ["m","ft","usft","in","cm","km","yd","ch","lk","rd","fur","fath","mi","nmi","lea","vara"],
+      units: {
+        m:    {n:"Meter (m)",                 f:1},
+        ft:   {n:"International foot (ft)",   f:INFT},
+        usft: {n:"US survey foot (ftUS)",     f:USFT},
+        in:   {n:"Inch (in)",                 f:0.0254},
+        cm:   {n:"Centimeter (cm)",           f:0.01},
+        km:   {n:"Kilometer (km)",            f:1000},
+        yd:   {n:"Yard (yd)",                 f:0.9144},
+        ch:   {n:"Gunter's chain (ch)",       f:20.1168},
+        lk:   {n:"Link (lk)",                 f:0.201168},
+        rd:   {n:"Rod / pole / perch (rd)",   f:5.0292},
+        fur:  {n:"Furlong",                   f:201.168},
+        fath: {n:"Fathom",                    f:1.8288},
+        mi:   {n:"Statute mile (mi)",         f:1609.344},
+        nmi:  {n:"Nautical mile (NM)",        f:1852},
+        lea:  {n:"League (statute)",          f:4828.032},
+        vara: {n:"Vara (Texas, 33 1/3 in)",   f:(100/3)*0.0254}
+      }
+    },
+    area: {
+      label: "Area",
+      order: ["m2","ft2","acre","ha","usacre","km2","mi2","yd2","are","rood","sqch","sqrd","section","township"],
+      units: {
+        m2:       {n:"Square meter (m\u00B2)",            f:1},
+        ft2:      {n:"Square foot (ft\u00B2)",            f:INFT*INFT},
+        acre:     {n:"Acre (international)",              f:ACRE},
+        ha:       {n:"Hectare (ha)",                      f:10000},
+        usacre:   {n:"Acre (US survey)",                  f:USACRE},
+        km2:      {n:"Square kilometer (km\u00B2)",       f:1e6},
+        mi2:      {n:"Square mile (mi\u00B2)",            f:1609.344*1609.344},
+        yd2:      {n:"Square yard (yd\u00B2)",            f:0.9144*0.9144},
+        are:      {n:"Are (100 m\u00B2)",                 f:100},
+        rood:     {n:"Rood (\u00BC acre)",                f:ACRE/4},
+        sqch:     {n:"Square chain",                      f:20.1168*20.1168},
+        sqrd:     {n:"Square rod",                        f:5.0292*5.0292},
+        section:  {n:"Section (640 acres)",               f:640*ACRE},
+        township: {n:"Township (36 mi\u00B2)",            f:36*1609.344*1609.344}
+      }
+    },
+    ang: {
+      label: "Angle",
+      order: ["deg","dms","rad","grad","milN","milA","turn","amin","asec"],
+      special: "deg",
+      units: {
+        deg:  {n:"Degree (\u00B0)",                 f:1},
+        dms:  {n:"Degrees minutes seconds",         f:1, fmt:"dms"},
+        rad:  {n:"Radian (rad)",                    f:180/Math.PI},
+        grad: {n:"Grad / gon",                      f:0.9},
+        milN: {n:"Mil (NATO, 6400 per turn)",       f:360/6400},
+        milA: {n:"Mil (artillery, 6000 per turn)",  f:360/6000},
+        turn: {n:"Turn (full circle)",              f:360},
+        amin: {n:"Minute of arc (\u2032)",          f:1/60},
+        asec: {n:"Second of arc (\u2033)",          f:1/3600}
+      }
+    }
+  };
+
+  var mode = "len";
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 12});
+
+  function fmtDMS(deg){
+    var sign = deg < 0 ? "-" : "";
+    var a = Math.abs(deg);
+    var d = Math.floor(a);
+    var m = Math.floor((a - d) * 60);
+    var s = ((a - d) * 60 - m) * 60;
+    if (s >= 59.99999) { s = 0; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    return sign + d + "\u00B0 " + m + "\u2032 " + (Math.round(s*100)/100) + "\u2033";
+  }
+
+  function show(v){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-6 || a >= 1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+
+  function buildSelects(){
+    var set = SETS[mode];
+    var keepFrom = el("u-from").value, keepTo = el("u-to").value;
+    var html = "";
+    for (var i = 0; i < set.order.length; i++){
+      var k = set.order[i];
+      html += '<option value="' + k + '">' + set.units[k].n + "</option>";
+    }
+    el("u-from").innerHTML = html;
+    el("u-to").innerHTML = html;
+    if (set.units[keepFrom]) el("u-from").value = keepFrom;
+    if (set.units[keepTo]) el("u-to").value = keepTo;
+    if (!set.units[keepFrom]) el("u-from").value = set.special || set.order[0];
+    if (!set.units[keepTo]){
+      if (mode === "len") el("u-to").value = "usft";
+      else if (mode === "area") el("u-to").value = "acre";
+      else el("u-to").value = "rad";
+    }
+    if (el("u-from").value === el("u-to").value) el("u-to").value = set.order[set.order.length-1];
+    if (el("u-from").value === el("u-to").value) el("u-to").value = set.order[0];
+  }
+
+  function calc(){
+    var set = SETS[mode];
+    var raw = el("u-val").value;
+    var v = parseFloat(raw);
+    var err = el("u-err"), res = el("u-results");
+    if (raw === "" || isNaN(v)){
+      err.classList.toggle("show", raw !== "");
+      res.classList.remove("show");
+      el("u-val").classList.toggle("bad", raw !== "");
+      return;
+    }
+    err.classList.remove("show");
+    el("u-val").classList.remove("bad");
+
+    var from = set.units[el("u-from").value];
+    var to = set.units[el("u-to").value];
+    var out = (v * from.f) / to.f;
+
+    el("u-bk").textContent = el("u-from").selectedOptions[0].textContent + "  \u2192  " + el("u-to").selectedOptions[0].textContent;
+    el("u-bv").textContent = to.fmt === "dms" ? fmtDMS(out) : show(out);
+
+    var rows = "";
+    for (var i = 0; i < set.order.length; i++){
+      var k = set.order[i];
+      if (k === el("u-to").value) continue;
+      var u = set.units[k];
+      var val = (v * from.f) / u.f;
+      rows += '<div class="result-row"><span class="k">' + u.n + '</span><span class="v">'
+            + (u.fmt === "dms" ? fmtDMS(val) : show(val)) + "</span></div>";
+    }
+    el("u-rows").innerHTML = rows;
+    res.classList.add("show");
+    syncUrl();
+  }
+
+  /* ---------------------------------------------------------------------
+     Linkable state. A conversion is reproducible from the query string:
+       ?value=100&from=usft&to=m
+       ?mode=area&value=1&from=acre&to=ha
+       ?mode=ang&value=1&from=deg&to=rad
+       ?embed=1                     chrome-free layout for an iframe
+     --------------------------------------------------------------------- */
+  function query() {
+    var out = {}, s = location.search.replace(/^\?/, "");
+    if (!s) { return out; }
+    var parts = s.split("&");
+    for (var i = 0; i < parts.length; i++) {
+      if (parts[i] === "") { continue; }
+      var eq = parts[i].indexOf("=");
+      var key = (eq < 0 ? parts[i] : parts[i].slice(0, eq)).toLowerCase();
+      var val = eq < 0 ? "" : parts[i].slice(eq + 1);
+      try { val = decodeURIComponent(val.replace(/\+/g, " ")); } catch (e) { /* keep the raw value */ }
+      out[key] = val;
+    }
+    return out;
+  }
+
+  var STATE_ON = false;
+  function markState() { STATE_ON = true; }
+
+  var MODE_ALIAS = { len: "len", length: "len", area: "area", ang: "ang", angle: "ang" };
+
+  function applyUrl() {
+    var q = query();
+    var used = false;
+    var keys = ["mode", "tab", "from", "f", "to", "t", "value", "v"];
+    for (var i = 0; i < keys.length; i++) { if (q[keys[i]] !== undefined) { used = true; } }
+    if (q.embed === "1" || q.embed === "true") { document.body.classList.add("embed"); }
+
+    var m = MODE_ALIAS[String(q.mode || q.tab || "").toLowerCase()];
+    var set;
+    if (!m) {
+      /* no mode given: take it from the unit keys, preferring the set that holds both ends */
+      var want = String(q.from || q.f || "").toLowerCase();
+      var alt = String(q.to || q.t || "").toLowerCase();
+      var names = ["len", "area", "ang"];
+      for (var s = 0; s < names.length; s++) {
+        if (SETS[names[s]].units[want]) {
+          if (alt === "" || SETS[names[s]].units[alt]) { m = names[s]; break; }
+        }
+      }
+    }
+    if (m) {
+      mode = m;
+      for (var t = 0; t < tabs.length; t++) {
+        tabs[t].classList.toggle("active", tabs[t].getAttribute("data-tab") === m);
+      }
+    }
+    buildSelects();
+
+    var raw = q.value !== undefined ? q.value : q.v;
+    if (raw !== undefined && raw !== "" && !isNaN(parseFloat(raw))) { el("u-val").value = raw; }
+
+    set = SETS[mode];
+    var f = String(q.from || q.f || "").toLowerCase();
+    var to = String(q.to || q.t || "").toLowerCase();
+    if (set.units[f]) { el("u-from").value = f; }
+    if (set.units[to] && to !== el("u-from").value) { el("u-to").value = to; }
+
+    STATE_ON = STATE_ON || used;
+    calc();
+  }
+
+  function stateUrl() {
+    return location.href.split("?")[0].split("#")[0]
+      + "?mode=" + mode
+      + "&value=" + encodeURIComponent(el("u-val").value)
+      + "&from=" + el("u-from").value
+      + "&to=" + el("u-to").value;
+  }
+
+  function syncUrl() {
+    if (!STATE_ON || document.body.classList.contains("embed")) { return; }
+    try { history.replaceState(null, "", stateUrl()); } catch (e) { /* file:// or sandboxed frame */ }
+  }
+
+  function copyLink() {
+    var url = stateUrl(), msg = el("u-linkmsg");
+    function done(ok) {
+      msg.textContent = ok ? "Link copied to clipboard \u2014 " + url : url;
+      msg.style.display = "block";
+      clearTimeout(msg._t);
+      msg._t = setTimeout(function () { msg.style.display = "none"; }, ok ? 1800 : 9000);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(function () { done(true); }, function () { done(false); });
+    } else { done(false); }
+  }
+
+  document.addEventListener("input", markState, true);
+  document.addEventListener("change", markState, true);
+
+  var tabs = document.querySelectorAll(".tab");
+  for (var t = 0; t < tabs.length; t++){
+    tabs[t].addEventListener("click", function(){
+      markState();
+      for (var j = 0; j < tabs.length; j++) tabs[j].classList.remove("active");
+      this.classList.add("active");
+      mode = this.getAttribute("data-tab");
+      buildSelects();
+      calc();
+    });
+  }
+
+  el("u-swap").addEventListener("click", function(){
+    markState();
+    var a = el("u-from").value;
+    el("u-from").value = el("u-to").value;
+    el("u-to").value = a;
+    calc();
+  });
+
+  el("u-link").addEventListener("click", copyLink);
+
+  el("u-from").addEventListener("change", calc);
+  el("u-to").addEventListener("change", calc);
+  el("u-val").addEventListener("input", calc);
+
+  buildSelects();
+  calc();
+  applyUrl();
+})();
+</script>
+</body>
+</html>

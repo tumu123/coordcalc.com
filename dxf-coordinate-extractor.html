@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DXF Coordinate Extractor — Points, Polylines and Areas</title>
+<meta name="description" content="Open an ASCII DXF in your browser and pull out points, lines, polylines, circles and arcs, with lengths, closed areas, the drawing unit and CSV export.">
+<link rel="canonical" href="https://coordcalc.com/dxf-coordinate-extractor.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/dxf-coordinate-extractor.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/dxf-coordinate-extractor.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/dxf-coordinate-extractor.html">
+<meta property="og:title" content="DXF Coordinate Extractor — Points, Polylines and Areas">
+<meta property="og:description" content="Read the coordinates out of an ASCII DXF in your browser: entities, lengths, closed areas, drawing units and CSV export. Nothing is uploaded.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/dxf-coordinate-extractor.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is a DXF file?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "DXF, Drawing Exchange Format, is AutoCAD's documented interchange format for drawings — a plain-text file, or in one variant a binary one, of tagged pairs: a group code followed by a value. Almost every CAD package can write one, which is why it is usually the easiest way to get geometry out of a drawing and into something else."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get coordinates out of a DXF file?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Open the DXF here, or paste its text into the box. The extractor reads the ENTITIES section, lists every point, line, polyline, circle and arc with its layer, vertex count, length and closed area, and writes the vertices to a CSV you can open in a spreadsheet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why is my DXF area wrong?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Almost always a unit question. A DXF stores plain numbers and records the unit only in the header variable $INSUNITS. If that is missing or zero the drawing is unitless, and the same numbers can be millimetres, metres or feet depending on who produced the file. Check the unit against something you recognise before trusting an area."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does this work with binary DXF files?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Binary DXF starts with the sentinel AutoCAD Binary DXF and stores the same group codes in a compact binary form. Save the drawing again as an ASCII DXF — most packages offer both in the save dialog — and it will read."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are blocks and external references included?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only as their insertion point. The extractor reads the top-level ENTITIES section, so geometry inside a block definition appears where the block is inserted as a single point rather than expanded. External references are not part of the file at all."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which DXF entities are read?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "POINT, LINE, LWPOLYLINE, POLYLINE with its VERTEX entities, CIRCLE and ARC. Text, dimensions, hatches and attributes are skipped because they carry no coordinate geometry worth measuring, and unsupported entities are counted so a file that behaves unexpectedly can be diagnosed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is the area of a polyline calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By the shoelace formula on the vertices, exact for any polygon whose edges do not cross. Only polylines flagged as closed are given an area, and a vertex's bulge value, which makes a segment a true arc, is ignored, so a curve segment is measured as the straight chord between its ends."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is the DXF uploaded anywhere?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. The file is read with the browser's own file reader and parsed in JavaScript on the page. Nothing is sent to a server, which matters when the drawing describes a client's site."
+      }
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> &rsaquo; <a href="index.html#surveying">Surveying</a> &rsaquo; DXF coordinate extractor
+  </nav>
+
+  <h1>DXF Coordinate Extractor</h1>
+
+  <p class="lead">
+    A DXF is a drawing file, but to a surveyor it is usually a list of coordinates wearing a
+    drawing's clothes. Drop an ASCII DXF here and it lists every point, line, polyline, circle and
+    arc it finds, with the layer, the vertex count, the length, the enclosed area of anything
+    closed, and the drawing unit the file declares. The vertices can then be written out as CSV for
+    a spreadsheet or another calculator. The file never leaves your browser.
+  </p>
+
+  <p class="meta">
+    <span>ASCII DXF, R12 and later</span><span>Runs entirely in the browser</span><span>Updated 9 October 2026</span>
+  </p>
+
+  <section class="card">
+    <h2>Open a DXF</h2>
+    <div class="toolbar">
+      <input type="file" id="file" accept=".dxf,.txt,text/plain">
+      <button type="button" class="btn" id="sample">Load a sample parcel</button>
+      <span class="spacer"></span>
+      <button type="button" class="btn primary" id="dl" disabled>Download vertices CSV</button>
+    </div>
+    <p class="hint" style="margin-top:0;">
+      Or paste the file contents below. Binary DXF is not supported — save the drawing again as an
+      ASCII DXF and it will read.
+    </p>
+    <textarea class="box" id="text" rows="10" spellcheck="false" placeholder="0&#10;SECTION&#10;2&#10;ENTITIES&#10;0&#10;LWPOLYLINE&#10;8&#10;PARCEL&#10;90&#10;4&#10;70&#10;1&#10;10&#10;0.0&#10;20&#10;0.0 &#10;&hellip;"></textarea>
+    <p class="err" id="err" style="display:none;"></p>
+  </section>
+
+  <section class="card" id="outcard" style="display:none;">
+    <h2>What the file contains</h2>
+    <ul class="kv" id="summary"></ul>
+  </section>
+
+  <section class="card" id="tblcard" style="display:none;">
+    <h2>Entities</h2>
+    <div class="scroll">
+      <table class="data">
+        <thead><tr><th>#</th><th>Entity</th><th>Layer</th><th>Vertices</th><th>Length</th><th>Area</th></tr></thead>
+        <tbody id="tb"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px;">
+      Length and area are in the drawing unit. Only polylines flagged closed, and circles, are given
+      an area. Curve segments inside a polyline are measured as the straight chord between their
+      ends.
+    </p>
+  </section>
+
+  <section class="card" id="vercard" style="display:none;">
+    <h2>Vertices</h2>
+    <div class="scroll" style="max-height:380px;">
+      <table class="data">
+        <thead><tr><th>Entity</th><th>Layer</th><th>Point</th><th>X</th><th>Y</th></tr></thead>
+        <tbody id="vb"></tbody>
+      </table>
+    </div>
+    <p class="hint" style="margin-top:12px;">
+      The first 500 vertices are shown; the CSV download contains every one of them.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>How a DXF stores coordinates</h2>
+    <p>A DXF is not a binary blob. It is a text file of <b>tagged pairs</b>: a line holding a group
+      code, then a line holding the value for that code. Group code <code>10</code> is an X
+      coordinate, <code>20</code> is its Y, <code>8</code> is the layer name, <code>0</code> starts a
+      new entity. Read the file two lines at a time and the drawing falls out of it.</p>
+    <div class="formula" style="white-space:pre-wrap;">0
+LWPOLYLINE
+8
+PARCEL          &larr; layer
+90
+4               &larr; four vertices
+70
+1               &larr; closed
+10
+0.0             &larr; X of vertex 1
+20
+0.0             &larr; Y of vertex 1
+10
+100.0           &larr; X of vertex 2
+&hellip;</div>
+    <p>The file is divided into sections. <code>HEADER</code> holds the settings, including the
+      drawing unit; <code>TABLES</code> holds the layer definitions; <code>ENTITIES</code> holds the
+      geometry itself. This extractor reads <code>ENTITIES</code>, and looks in
+      <code>HEADER</code> only for the unit.</p>
+  </section>
+
+  <section class="card">
+    <h2>What it reads, and what it does with it</h2>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>Entity</th><th>What it is</th><th>Length</th><th>Area</th></tr></thead>
+        <tbody>
+          <tr><td><b>POINT</b></td><td>A single coordinate</td><td>&mdash;</td><td>&mdash;</td></tr>
+          <tr><td><b>LINE</b></td><td>A straight segment between two points</td><td>Segment length</td><td>&mdash;</td></tr>
+          <tr><td><b>LWPOLYLINE</b></td><td>A light polyline: many vertices, optionally closed</td><td>Sum of segments</td><td>Shoelace area when closed</td></tr>
+          <tr><td><b>POLYLINE + VERTEX</b></td><td>The older, heavier polyline, one VERTEX entity per point</td><td>Sum of segments</td><td>Shoelace area when closed</td></tr>
+          <tr><td><b>CIRCLE</b></td><td>A centre and a radius</td><td>Circumference</td><td>&pi;r&sup2;</td></tr>
+          <tr><td><b>ARC</b></td><td>A circular arc from a start angle to an end angle</td><td>r&times;&Delta;&theta;</td><td>&mdash;</td></tr>
+          <tr><td><b>INSERT</b></td><td>Where a block is placed</td><td>&mdash;</td><td>&mdash;</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Everything else — text, dimensions, hatches, attributes — is counted but not measured, since
+      it carries no coordinate geometry worth summing. Knowing that a file produced 412 unsupported
+      entities is often the fastest way to work out why a drawing looks empty when it is opened
+      somewhere else.</p>
+    <p>Two behaviours are worth stating plainly, because both change an answer. A polyline's
+      <b>bulge</b> value makes one segment into a true arc; this extractor ignores bulges and
+      measures the chord instead, so a boundary drawn with curved segments will come back slightly
+      short. And an <b>ellipse, spline or leader</b> is not measured at all — if a boundary was drawn
+      with splines, flatten or explode it in the CAD package before exporting.</p>
+  </section>
+
+  <section class="card">
+    <h2>The unit question</h2>
+    <p>A DXF stores plain numbers. It does not say whether <code>100.0</code> is a hundred metres, a
+      hundred feet or a hundred millimetres — it records that in one header variable,
+      <code>$INSUNITS</code>, and nothing forces anybody to set it. The drawing unit reported above
+      comes from that variable, and when it is missing or zero the extractor says so rather than
+      guessing.</p>
+    <div class="tblwrap">
+      <table class="lookup">
+        <thead><tr><th>$INSUNITS</th><th>Unit</th><th>$INSUNITS</th><th>Unit</th></tr></thead>
+        <tbody>
+          <tr><td><code>0</code></td><td>Unitless &mdash; not stated</td><td><code>6</code></td><td>Metre</td></tr>
+          <tr><td><code>1</code></td><td>Inch</td><td><code>7</code></td><td>Kilometre</td></tr>
+          <tr><td><code>2</code></td><td>Foot</td><td><code>10</code></td><td>Yard</td></tr>
+          <tr><td><code>3</code></td><td>Mile</td><td><code>14</code></td><td>Decimetre</td></tr>
+          <tr><td><code>4</code></td><td>Millimetre</td><td><code>17</code></td><td>Gigametre</td></tr>
+          <tr><td><code>5</code></td><td>Centimetre</td><td><code>21</code></td><td>US survey foot</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Where the unit is known, the area of every closed entity is converted as well, so a parcel
+      drawn in metres can be read straight off in hectares and acres. Where it is not, the raw
+      squares are all you get — which is the honest answer, because a unitless number of square
+      units is not a number of anything.</p>
+    <div class="note">
+      <p><b>Before you rely on a DXF area, check the unit against something you know.</b> A lot-size,
+        a road width, a boundary length you can recognise — one familiar figure settles the question
+        faster than any header, and a wrong unit is by far the most common reason a DXF area comes
+        back ten thousand times too small.</p>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>A worked example</h2>
+    <p>The sample parcel loaded by the button above is a closed polyline with four vertices on layer
+      <code>PARCEL</code>: (0,&nbsp;0), (100,&nbsp;0), (100,&nbsp;50) and (0,&nbsp;50), with
+      <code>$INSUNITS</code> set to 6 for metres. The extractor reports a perimeter of
+      <b>300.000 m</b> and an enclosed area of <b>5,000.000 m&sup2;</b>, which is <b>0.500 ha</b> or
+      <b>1.2355 acres</b>, along with a control point, a 100 m set-out line and a tank circle of
+      radius 10 m. Those four numbers can be checked by hand in less time than it takes to read
+      this paragraph — which is the point of including them.</p>
+    <p>The same four coordinates pasted into the
+      <a href="land-area-calculator.html">land area calculator</a> return the identical 5,000 m&sup2;,
+      which is a useful way to confirm that a drawing and a calculation agree before either is
+      relied on.</p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="how-to-calculate-acreage-from-coordinates.html">How to calculate acreage from coordinates<small>The shoelace formula behind the areas</small></a>
+      <a href="epsg-code-lookup.html">epsg code lookup<small>Which coordinate system the drawing is in</small></a>
+      <a href="unit-converter.html">us survey foot to meter<small>When the unit is feet rather than metres</small></a>
+      <a href="state-plane-converter.html">state plane coordinate converter<small>Drawing coordinates to latitude and longitude</small></a>
+      <a href="cut-fill-calculator.html">cut and fill calculator<small>What to do with the surface once you have it</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>What is a DXF file?</summary>
+      <p>DXF, Drawing Exchange Format, is AutoCAD's documented interchange format for drawings — a plain-text file, or in one variant a binary one, of tagged pairs: a group code followed by a value. Almost every CAD package can write one, which is why it is usually the easiest way to get geometry out of a drawing and into something else.</p>
+    </details>
+    <details>
+      <summary>How do I get coordinates out of a DXF file?</summary>
+      <p>Open the DXF here, or paste its text into the box. The extractor reads the ENTITIES section, lists every point, line, polyline, circle and arc with its layer, vertex count, length and closed area, and writes the vertices to a CSV you can open in a spreadsheet.</p>
+    </details>
+    <details>
+      <summary>Why is my DXF area wrong?</summary>
+      <p>Almost always a unit question. A DXF stores plain numbers and records the unit only in the header variable <code>$INSUNITS</code>. If that is missing or zero the drawing is unitless, and the same numbers can be millimetres, metres or feet depending on who produced the file. Check the unit against something you recognise before trusting an area.</p>
+    </details>
+    <details>
+      <summary>Does this work with binary DXF files?</summary>
+      <p>No. Binary DXF starts with the sentinel <code>AutoCAD Binary DXF</code> and stores the same group codes in a compact binary form. Save the drawing again as an ASCII DXF — most packages offer both in the save dialog — and it will read.</p>
+    </details>
+    <details>
+      <summary>Are blocks and external references included?</summary>
+      <p>Only as their insertion point. The extractor reads the top-level ENTITIES section, so geometry inside a block definition appears where the block is inserted as a single point rather than expanded. External references are not part of the file at all.</p>
+    </details>
+    <details>
+      <summary>Which DXF entities are read?</summary>
+      <p>POINT, LINE, LWPOLYLINE, POLYLINE with its VERTEX entities, CIRCLE and ARC. Text, dimensions, hatches and attributes are skipped because they carry no coordinate geometry worth measuring, and unsupported entities are counted so a file that behaves unexpectedly can be diagnosed.</p>
+    </details>
+    <details>
+      <summary>How is the area of a polyline calculated?</summary>
+      <p>By the shoelace formula on the vertices, exact for any polygon whose edges do not cross. Only polylines flagged as closed are given an area, and a vertex's bulge value, which makes a segment a true arc, is ignored, so a curve segment is measured as the straight chord between its ends.</p>
+    </details>
+    <details>
+      <summary>Is the DXF uploaded anywhere?</summary>
+      <p>No. The file is read with the browser's own file reader and parsed in JavaScript on the page. Nothing is sent to a server, which matters when the drawing describes a client's site.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  var INSUNITS = {
+    0: "unitless — not stated", 1: "inches", 2: "feet", 3: "miles", 4: "millimetres",
+    5: "centimetres", 6: "metres", 7: "kilometres", 8: "microinches", 9: "mils",
+    10: "yards", 11: "angstroms", 12: "nanometres", 13: "microns", 14: "decimetres",
+    15: "decametres", 16: "hectometres", 17: "gigametres", 18: "astronomical units",
+    19: "light years", 20: "parsecs", 21: "US survey feet", 22: "US survey inches"
+  };
+  /* metres per drawing unit, for the areas that are worth converting */
+  var TO_M = { 1: 0.0254, 2: 0.3048, 3: 1609.344, 4: 0.001, 5: 0.01, 6: 1, 7: 1000,
+    10: 0.9144, 14: 0.1, 15: 10, 16: 100, 21: 1200 / 3937, 22: 1200 / 3937 / 12 };
+  var ENT = null;
+
+  function num(s) {
+    var v = parseFloat(s);
+    return isFinite(v) ? v : null;
+  }
+
+  /* --- DXF is a stream of (group code, value) pairs ---------------------- */
+  function pairs(text) {
+    var lines = text.split(/\r\n|\r|\n/);
+    var out = [], i = 0;
+    while (i < lines.length) {
+      var code = lines[i].trim();
+      if (code === "") { i++; continue; }
+      var val = lines[i + 1];
+      if (val === undefined) { out.push([code, ""]); break; }
+      out.push([parseInt(code, 10), val]);
+      i += 2;
+    }
+    return out;
+  }
+
+  function findUnits(ps) {
+    for (var i = 0; i < ps.length - 1; i++) {
+      if (ps[i][0] === 9 && String(ps[i][1]).trim() === "$INSUNITS"
+        && ps[i + 1][0] === 70) {
+        return num(ps[i + 1][1]);
+      }
+    }
+    return null;
+  }
+
+  function seglen(a, b) {
+    var dx = b[0] - a[0], dy = b[1] - a[1];
+    return Math.sqrt(dx * dx + dy * dy);
+  }
+
+  function shoelace(v) {
+    var s = 0;
+    for (var i = 0; i < v.length; i++) {
+      var j = (i + 1) % v.length;
+      s += v[i][0] * v[j][1] - v[j][0] * v[i][1];
+    }
+    return Math.abs(s) / 2;
+  }
+
+  /* --- the ENTITIES section, one entity at a time ------------------------ */
+  function parseDxf(text) {
+    var ps = pairs(text);
+    if (!ps.length) { return { err: "This does not look like a DXF — nothing could be read." }; }
+    if (/AutoCAD Binary DXF/i.test(text.slice(0, 400))) {
+      return { err: "This is a binary DXF. Save the drawing again as an ASCII DXF and it will read." };
+    }
+    if (ps[0][0] !== 0 || String(ps[0][1]).trim() !== "SECTION") {
+      return { err: "This does not look like a DXF — it does not start with a SECTION tag. Check that the whole file was pasted." };
+    }
+
+    var units = findUnits(ps);
+    var i = 0, inEnt = false, ent = null, ents = [], unsupported = {};
+    var pendingSection = false;
+    var SUPPORTED = { POINT: 1, LINE: 1, LWPOLYLINE: 1, POLYLINE: 1, CIRCLE: 1, ARC: 1, INSERT: 1 };
+
+    function flush() {
+      if (!ent) { return; }
+      var t = ent.type, v = ent.verts;
+      var res = { type: t, layer: ent.layer || "0", flags: ent.flags || 0 };
+
+      if (t === "POINT" || t === "INSERT") { res.n = v.length; res.pts = v.slice(); }
+      else if (t === "LINE") {
+        var a = v.length ? v[0] : null;
+        var b = ent.x1 != null && ent.y1 != null ? [ent.x1, ent.y1] : null;
+        res.pts = a && b ? [a, b] : (a ? [a] : []);
+        res.n = res.pts.length;
+        if (a && b) { res.len = seglen(a, b); }
+      } else if (t === "LWPOLYLINE" || t === "POLYLINE") {
+        res.n = v.length;
+        res.closed = (ent.flags & 1) === 1;
+        var L = 0;
+        for (var k = 0; k + 1 < v.length; k++) { L += seglen(v[k], v[k + 1]); }
+        if (res.closed && v.length > 2) { L += seglen(v[v.length - 1], v[0]); res.area = shoelace(v); }
+        res.len = L;
+        res.pts = v.slice();
+      } else if (t === "CIRCLE") {
+        res.n = v.length;
+        res.pts = v.slice();
+        if (ent.r != null) { res.len = 2 * Math.PI * ent.r; res.area = Math.PI * ent.r * ent.r; }
+      } else if (t === "ARC") {
+        res.n = v.length;
+        res.pts = v.slice();
+        if (ent.r != null && ent.a0 != null && ent.a1 != null) {
+          var d = ent.a1 - ent.a0;
+          while (d <= 0) { d += 360; }
+          res.len = ent.r * d * Math.PI / 180;
+        }
+      }
+      ents.push(res);
+      ent = null;
+    }
+
+    for (i = 0; i < ps.length; i++) {
+      var code = ps[i][0], val = String(ps[i][1]).trim();
+
+      /* the section name arrives as a code-2 tag straight after 0 SECTION */
+      if (pendingSection) {
+        if (code === 2) { inEnt = (val === "ENTITIES"); pendingSection = false; }
+        continue;
+      }
+
+      if (code === 0) {
+        if (val === "SECTION") { pendingSection = true; inEnt = false; ent = null; continue; }
+        if (val === "EOF") { flush(); break; }
+        if (val === "ENDSEC") { flush(); inEnt = false; continue; }
+        if (!inEnt) { continue; }
+        /* a POLYLINE's vertices arrive as VERTEX sub-entities, one pair of
+           coordinates each, so they are absorbed into the polyline in hand */
+        if (val === "VERTEX" && ent && ent.type === "POLYLINE") { continue; }
+        flush();
+        if (val === "SEQEND") { continue; }
+        if (SUPPORTED[val]) {
+          ent = { type: val, verts: [] };
+        } else {
+          unsupported[val] = (unsupported[val] || 0) + 1;
+          unsupported._n = (unsupported._n || 0) + 1;
+          ent = null;
+        }
+        continue;
+      }
+      if (!inEnt || !ent) { continue; }
+
+      if (code === 8) { ent.layer = val; }
+      else if (code === 10) { ent.px = num(val); }
+      else if (code === 20) {
+        var y = num(val);
+        if (ent.px != null && y != null) { ent.verts.push([ent.px, y]); ent.px = null; }
+      } else if (code === 11) { ent.x1 = num(val); }
+      else if (code === 21) { ent.y1 = num(val); }
+      else if (code === 40) { ent.r = num(val); }
+      else if (code === 50) { ent.a0 = num(val); }
+      else if (code === 51) { ent.a1 = num(val); }
+      else if (code === 70) { ent.flags = parseInt(val, 10) || 0; }
+    }
+    flush();
+
+    /* a POLYLINE's vertices arrive as VERTEX entities straight after it, and
+       both share the accumulated vertex list */
+    ents = ents.filter(function (e) { return e.type !== "VERTEX" && e.type !== "SEQEND"; });
+
+    var totLen = 0, totArea = 0, totVerts = 0, closed = 0;
+    ents.forEach(function (e) {
+      totLen += e.len || 0;
+      totArea += e.area || 0;
+      totVerts += e.n || 0;
+      if (e.area != null) { closed++; }
+    });
+
+    return {
+      ents: ents, units: units, unsupported: unsupported,
+      totLen: totLen, totArea: totArea, totVerts: totVerts, closed: closed
+    };
+  }
+
+  var SAMPLE = [
+    "0", "SECTION", "2", "HEADER",
+    "9", "$INSUNITS", "70", "6",
+    "9", "$ACADVER", "1", "AC1015",
+    "0", "ENDSEC",
+    "0", "SECTION", "2", "ENTITIES",
+    "0", "LWPOLYLINE", "8", "PARCEL", "90", "4", "70", "1",
+    "10", "0.0", "20", "0.0", "10", "100.0", "20", "0.0",
+    "10", "100.0", "20", "50.0", "10", "0.0", "20", "50.0",
+    "0", "LINE", "8", "SETOUT", "10", "0.0", "20", "0.0", "11", "100.0", "21", "0.0",
+    "0", "POINT", "8", "CONTROL", "10", "50.0", "20", "25.0",
+    "0", "CIRCLE", "8", "TANK", "10", "200.0", "20", "200.0", "40", "10.0",
+    "0", "TEXT", "8", "NOTES", "10", "5.0", "20", "60.0", "1", "Parcel 12",
+    "0", "ENDSEC",
+    "0", "EOF"
+  ].join("\n");
+
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+
+  function render(res) {
+    ENT = res;
+    var n = res.ents ? res.ents.length : 0;
+    var showOut = !res.err && res.ents;
+    $("outcard").style.display = showOut ? "" : "none";
+    $("tblcard").style.display = showOut && n ? "" : "none";
+    $("vercard").style.display = showOut && n ? "" : "none";
+    $("dl").disabled = !showOut || !n;
+
+    var err = $("err");
+    if (res.err) {
+      err.style.display = "";
+      err.textContent = res.err;
+      return;
+    }
+    err.style.display = "none";
+    if (!res.ents) { return; }
+
+    var u = res.units, uName = u == null ? null : INSUNITS[u];
+    var m = TO_M[u];
+    var items = [
+      ["Entities read", res.ents.length],
+      ["Vertices", res.totVerts],
+      ["Drawing unit ($INSUNITS)", uName == null ? "not stated in the file" : uName + " (code " + u + ")"],
+      ["Total length", fmt(res.totLen, 3) + (uName && m ? " " + uName.replace(/s$/, "") : " drawing units")],
+      ["Closed entities", res.closed],
+      ["Total enclosed area", res.closed
+        ? fmt(res.totArea, 3) + (m ? " " + (u === 6 ? "m\u00B2" : "sq " + uName.replace(/s$/, ""))
+          + "   =   " + fmt(res.totArea * m * m / 10000, 4) + " ha   =   "
+          + fmt(res.totArea * m * m / 4046.8564224, 4) + " acres" : "")
+        : "\u2014"],
+      ["Entities not measured", res.unsupported._n ? res.unsupported._n + "   ("
+        + Object.keys(res.unsupported).filter(function (k) { return k.charAt(0) !== "_"; })
+          .slice(0, 4).join(", ") + ")" : "none"]
+    ];
+    $("summary").innerHTML = items.map(function (it) {
+      return "<li><span class=\"k\">" + it[0] + "</span><span class=\"v\">" + it[1] + "</span></li>";
+    }).join("");
+
+    var rows = "", show = Math.min(res.ents.length, 300);
+    for (var i = 0; i < show; i++) {
+      var e = res.ents[i];
+      rows += "<tr><td>" + (i + 1) + "</td><td>" + e.type + "</td><td>" + e.layer + "</td><td>"
+        + (e.n == null ? "\u2014" : e.n) + "</td><td>" + fmt(e.len, 3) + "</td><td>"
+        + fmt(e.area, 3) + "</td></tr>";
+    }
+    if (res.ents.length > show) {
+      rows += "<tr><td colspan=\"6\">&hellip; " + (res.ents.length - show)
+        + " more entities. The CSV download contains everything.</td></tr>";
+    }
+    $("tb").innerHTML = rows;
+
+    var vrows = "", shown = 0;
+    for (i = 0; i < res.ents.length && shown < 500; i++) {
+      var e2 = res.ents[i];
+      if (!e2.pts || !e2.pts.length) { continue; }
+      for (var k = 0; k < e2.pts.length && shown < 500; k++) {
+        vrows += "<tr><td>" + (i + 1) + " " + e2.type + "</td><td>" + e2.layer + "</td><td>"
+          + (k + 1) + "</td><td>" + fmt(e2.pts[k][0], 4) + "</td><td>" + fmt(e2.pts[k][1], 4)
+          + "</td></tr>";
+        shown++;
+      }
+    }
+    $("vb").innerHTML = vrows;
+  }
+
+  /* --- CSV -------------------------------------------------------------- */
+  function csvRows() {
+    var out = [["entity_index", "entity", "layer", "point", "x", "y"]];
+    ENT.ents.forEach(function (e, i) {
+      (e.pts || []).forEach(function (p, k) {
+        out.push([i + 1, e.type, e.layer, k + 1, p[0], p[1]]);
+      });
+    });
+    return out;
+  }
+  function downloadCsv(filename, rows) {
+    var body = rows.map(function (r) {
+      return r.map(function (c) {
+        var s = String(c);
+        return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s;
+      }).join(",");
+    }).join("\r\n");
+    var blob = new Blob(["\ufeff" + body], { type: "text/csv;charset=utf-8;" });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
+  }
+  $("dl").addEventListener("click", function () {
+    if (!ENT || !ENT.ents) { return; }
+    downloadCsv("dxf-coordinates.csv", csvRows());
+  });
+
+  $("sample").addEventListener("click", function () {
+    $("text").value = SAMPLE;
+    render(parseDxf(SAMPLE));
+  });
+
+  $("text").addEventListener("input", function () {
+    var v = this.value.trim();
+    render(v ? parseDxf(v) : { err: null });
+  });
+
+  $("file").addEventListener("change", function () {
+    var f = this.files && this.files[0];
+    if (!f) { return; }
+    var fr = new FileReader();
+    fr.onload = function () {
+      $("text").value = String(fr.result);
+      render(parseDxf(String(fr.result)));
+    };
+    fr.onerror = function () { render({ err: "The file could not be read." }); };
+    fr.readAsText(f);
+  });
+
+  /* show nothing until something arrives */
+  render({ err: null });
+})();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Horizontal &amp; Vertical Curve Calculator — Road Design (Free)</title>
+<meta name="description" content="Solve horizontal curve elements — radius, tangent, arc length, long chord, mid-ordinate, external — plus vertical curve grades and K value. Free, no login.">
+<link rel="canonical" href="https://coordcalc.com/curve-calculator.html">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/curve-calculator.html">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/curve-calculator.html">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/curve-calculator.html">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#7c3aed">
+<meta property="og:title" content="Horizontal &amp; Vertical Curve Calculator — Road Design (Free)">
+<meta property="og:description" content="Free horizontal and vertical curve calculator for road and rail design: tangent, arc length, long chord, mid-ordinate, external, degree of curve, K value and high or low point.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/curve-calculator.html">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I calculate the tangent length of a horizontal curve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The tangent distance is T equals R times the tangent of half the deflection angle, where the angle is in degrees and the tangent is taken of the angle in radians. For a radius of 300 m and a deflection angle of 60 degrees, T is 300 times tan(30 degrees), which is 173.205 m."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between arc definition and chord definition of degree of curve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Under the arc definition the degree of curve is the central angle subtended by a 100 m or 100 ft arc, so D equals 5729.577951 divided by the radius. Under the chord definition it is the angle subtended by a 100 ft chord, so D equals two times the arc sine of 50 divided by the radius. For the same D the chord definition gives a slightly different radius, so always check which definition a drawing uses."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I find the high or low point of a vertical curve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Measure from the PVC along the curve a distance of minus g1 times L divided by A, where g1 is the entry grade in percent, L is the curve length and A is the algebraic grade change g2 minus g1. If that distance falls between 0 and L the turning point is inside the curve; otherwise the curve never turns and the elevation is monotonic. For example with g1 of minus 2 percent, g2 of 3 percent and L of 300 m, the low point is 120 m from the PVC."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the K value of a vertical curve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "K is the curve length divided by the algebraic grade change, so it expresses how many metres of curve are needed to change grade by one percent. A larger K means a flatter, more comfortable curve. Design standards such as those for stopping sight distance are usually written as a minimum K for each design speed, so K is the value to compare against the standard."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can a deflection angle be 180 degrees?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. At a deflection angle of 180 degrees the two tangents are parallel and opposite, the tangent length becomes infinite and no circular curve can join them. Practical curve design keeps the deflection angle well below 180 degrees."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are station values such as 12+34.500 supported?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Enter a station as a full station-format value such as 12+34.500, or as a plain number in the same units as the curve, and the results are returned in the same station format."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How long should a spiral transition be?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Long enough to satisfy two separate limits: the superelevation must be run off at a rate the driver can follow comfortably, and the rate of change of centripetal acceleration must stay within the value the standard allows for the design speed. The longer of the two governs. Rates around 0.3 to 0.6 m per second cubed are typical, and a transition is often also quoted as a length per unit of speed, such as 0.5 to 1.0 metres of spiral for each km/h of design speed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the maximum superelevation on a road curve?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Between 6 and 8 percent in most standards for roads where snow and ice are expected, rising to 10 percent or occasionally 12 percent in warm, dry regions where a slippery surface is less of a concern. The limit exists because at a high crossfall a slow vehicle can slide down the curve, so the design speed assumed for the curve sets how much of the centripetal force may be met by crossfall rather than by side friction."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--warn:#b45309;--soft:#eef2f9;
+    --cat:#2563eb;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;}
+  header.site{background:rgba(255,255,255,.9);backdrop-filter:saturate(180%) blur(12px);
+    border-bottom:1px solid var(--line);position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;
+    letter-spacing:-.2px;text-decoration:none;}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  .wrap{max-width:820px;margin:0 auto;padding:26px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:16px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.3px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:20px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .tabs{display:inline-flex;background:#eef1f6;border-radius:10px;padding:4px;margin-bottom:20px;gap:4px;
+    flex-wrap:wrap;}
+  .tab{border:0;background:transparent;padding:8px 18px;border-radius:7px;font-size:14px;font-weight:600;
+    color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit;}
+  .tab.active{background:#fff;color:var(--accent-d);box-shadow:0 1px 2px rgba(16,24,40,.1);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .row.tight{gap:10px;}
+  .field{display:flex;flex-direction:column;gap:6px;min-width:0;}
+  .field.grow{flex:1;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],textarea,select{
+    font-family:inherit;font-size:16px;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;min-width:0;width:100%;}
+  textarea{font-size:14px;line-height:1.55;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    resize:vertical;}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.big{font-size:19px;font-weight:600;letter-spacing:.3px;}
+  .w-lg{width:230px;}
+  .w-md{width:132px;}
+  .w-sm{width:92px;}
+  .w-xs{width:74px;}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .hint code,.note code,p code,li code{background:var(--soft);padding:2px 6px;border-radius:5px;
+    font-size:13px;color:var(--accent-d);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .note{background:#f8fafc;border:1px solid var(--line);border-left:3px solid var(--cat);
+    border-radius:8px;padding:12px 14px;font-size:13.5px;color:#3b4353;margin:16px 0 0;}
+  .note.warn{border-left-color:var(--warn);background:#fffbeb;}
+  .note b{color:var(--text);}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);white-space:nowrap;}
+  .result-row .v{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;
+    word-break:break-all;}
+  .result-row.small .v{font-size:15px;font-weight:600;}
+  .result-row.transient .v{color:var(--cat);}
+  .btn{border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-d);}
+  .btn-ghost{background:#eef1f6;color:var(--text);}
+  .btn-ghost:hover{background:#e2e7ef;}
+  .actions{margin-top:16px;display:flex;gap:10px;flex-wrap:wrap;}
+  .examples{margin-top:16px;font-size:13px;color:var(--sub);}
+  .examples a{color:var(--accent);cursor:pointer;text-decoration:none;
+    border-bottom:1px dotted var(--accent);margin-right:14px;}
+  .chips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;font-size:12.5px;color:var(--sub);}
+  .chips button{font-family:inherit;font-size:12px;padding:4px 10px;border-radius:14px;border:1px solid var(--line);
+    background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  .chips button:hover{border-color:var(--accent);color:var(--accent);}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:14px;
+    font-variant-numeric:tabular-nums;}
+  th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap;}
+  th{font-size:12px;text-transform:uppercase;letter-spacing:.3px;color:var(--sub);font-weight:700;}
+  th:first-child,td:first-child{text-align:left;}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr.tot td{font-weight:700;border-top:1px solid var(--line);}
+  .tbl-scroll{overflow-x:auto;margin-top:6px;}
+  section.card h2:first-child{margin-top:0;}
+  section.card h3:first-child{margin-top:0;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;
+    padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"\2013";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  ol,ul{padding-left:22px;font-size:14.5px;}
+  ol li,ul li{margin-bottom:8px;}
+  .formula{background:#f8fafc;border:1px solid var(--line);border-radius:8px;padding:12px 14px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;color:var(--text);
+    margin:12px 0;overflow-x:auto;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);
+    padding-top:18px;}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:#1f2430;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;opacity:0;
+    transition:.25s;pointer-events:none;z-index:60;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
+  summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .w-lg,.w-md,.w-sm,.w-xs{width:100%;}
+    .field{flex:1 1 100%;}
+  }
+
+  :root{--cat:#7c3aed;}
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="index.html#coordinates">Coordinates</a>
+      <a href="index.html#distance">Distance &amp; Area</a>
+      <a href="index.html#slope">Slope &amp; Scale</a>
+      <a href="index.html#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="index.html">CoordCalc</a> › <a href="index.html#surveying">Professional surveying</a> › Curve Calculator
+  </nav>
+
+  <h1>Horizontal &amp; Vertical Curve Calculator</h1>
+
+  <p class="lead">
+    This curve calculator solves the two curves that shape every road, railway and pipe alignment. The
+    horizontal curve calculator returns the tangent, arc length, long chord, mid-ordinate, external
+    distance and degree of curve, plus the PC and PT stations. The vertical curve tab returns the
+    algebraic grade change, the K value, the PVC and PVT stations and elevations, and the location of
+    the high or low point.
+  </p>
+
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button class="tab active" id="tab-h" role="tab" aria-selected="true" type="button">Horizontal curve</button>
+      <button class="tab" id="tab-v" role="tab" aria-selected="false" type="button">Vertical curve</button>
+    </div>
+
+    <div id="panel-h">
+      <div class="row">
+        <div class="field"><label for="h-delta">Deflection angle &Delta;</label><input type="text" id="h-delta" inputmode="decimal" autocomplete="off" spellcheck="false" value="60" class="big w-md" placeholder="60 or 60 00 00"></div>
+        <div class="field w-lg"><label for="h-mode">Known quantity</label><select id="h-mode"><option value="R" selected>Radius R</option><option value="T">Tangent length T</option><option value="L">Arc length L</option><option value="D">Degree of curve D</option></select></div>
+        <div class="field"><label for="h-value">Its value</label><input type="number" id="h-value" step="any" autocomplete="off" value="300" class="big w-md"></div>
+      </div>
+      <div class="row tight" style="margin-top:14px;">
+        <div class="field grow"><label for="h-def">Degree of curve definition</label><select id="h-def"><option value="arc" selected>Arc definition (100 m or 100 ft of arc)</option><option value="chord">Chord definition (100 ft of chord)</option></select></div>
+        <div class="field"><label for="h-pi">PI station (optional)</label><input type="text" id="h-pi" inputmode="decimal" autocomplete="off" spellcheck="false" value="12+34.500" class="w-lg" placeholder="e.g. 12+34.500"></div>
+      </div>
+      <p class="hint">The deflection angle &Delta; is the angle between the two tangents, which equals twice the deflection angle measured from the PC. Decimal degrees and DMS both work.</p>
+      <p class="err" id="err-h"></p>
+      <div class="results" id="res-h">
+        <div class="result-row"><span class="k">Radius R</span><span class="v" id="h-r">&mdash;</span></div>
+        <div class="result-row"><span class="k">Tangent distance T</span><span class="v" id="h-t">&mdash;</span></div>
+        <div class="result-row"><span class="k">Arc length L</span><span class="v" id="h-l">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Long chord LC</span><span class="v" id="h-lc">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Mid-ordinate M</span><span class="v" id="h-m">&mdash;</span></div>
+        <div class="result-row small"><span class="k">External distance E</span><span class="v" id="h-e">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Degree of curve D</span><span class="v" id="h-d">&mdash;</span></div>
+        <div class="result-row small"><span class="k">PC station</span><span class="v" id="h-pc">&mdash;</span></div>
+        <div class="result-row small"><span class="k">PT station</span><span class="v" id="h-pt">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Deflection angle &Delta;</span><span class="v" id="h-dd">&mdash;</span></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-h" type="button">Copy results</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-v" style="display:none;">
+      <div class="row">
+        <div class="field"><label for="v-g1">Entry grade g1 (%)</label><input type="number" id="v-g1" step="any" autocomplete="off" value="-2" class="big w-sm"></div>
+        <div class="field"><label for="v-g2">Exit grade g2 (%)</label><input type="number" id="v-g2" step="any" autocomplete="off" value="3" class="big w-sm"></div>
+        <div class="field"><label for="v-len">Curve length L</label><input type="number" id="v-len" step="any" autocomplete="off" value="300" class="big w-sm"></div>
+      </div>
+      <div class="row tight" style="margin-top:14px;">
+        <div class="field"><label for="v-pvi">PVI station</label><input type="text" id="v-pvi" inputmode="decimal" autocomplete="off" spellcheck="false" value="10+00.000" class="w-lg" placeholder="e.g. 10+00.000"></div>
+        <div class="field"><label for="v-elev">PVI elevation</label><input type="number" id="v-elev" step="any" autocomplete="off" value="100" class="big w-md"></div>
+        <div class="field w-md"><label for="v-unit">Length unit</label><select id="v-unit"><option value="m" selected>Metres</option><option value="ft">Feet</option></select></div>
+      </div>
+      <p class="hint">Grades are percentages: <code>-2</code> is a 2&nbsp;% downgrade, <code>3</code> a 3&nbsp;% upgrade. A positive algebraic grade change gives a sag curve, a negative one a crest.</p>
+      <p class="err" id="err-v"></p>
+      <div class="results" id="res-v">
+        <div class="result-row"><span class="k">Algebraic grade change A</span><span class="v" id="v-a">&mdash;</span></div>
+        <div class="result-row"><span class="k">Curve type</span><span class="v" id="v-type">&mdash;</span></div>
+        <div class="result-row"><span class="k">K value (rate of change)</span><span class="v" id="v-k">&mdash;</span></div>
+        <div class="result-row small"><span class="k">PVC station and elevation</span><span class="v" id="v-pvc">&mdash;</span></div>
+        <div class="result-row small"><span class="k">PVT station and elevation</span><span class="v" id="v-pvt">&mdash;</span></div>
+        <div class="result-row small"><span class="k">High or low point</span><span class="v" id="v-turn">&mdash;</span></div>
+        <div class="result-row small"><span class="k">Mid-ordinate (max offset)</span><span class="v" id="v-mid">&mdash;</span></div>
+        <div class="actions">
+          <button class="btn btn-primary" id="copy-v" type="button">Copy results</button>
+        </div>
+      </div>
+      <div class="tbl-scroll">
+        <table id="vtable">
+          <thead><tr><th>Station</th><th>Offset from PVC</th><th>Grade line</th><th>Curve elevation</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <p>A <b>horizontal curve</b> is described by a small set of interlocking elements. The deflection
+      angle &Delta; is the total change of direction between the two tangents, and the radius R fixes
+      the size of the circle. From those two the rest follow: the tangent distance
+      T&nbsp;=&nbsp;R&nbsp;tan(&Delta;/2) is how far back from the intersection point the curve begins,
+      the arc length L&nbsp;=&nbsp;R&nbsp;&Delta; (with &Delta; in radians) is the distance along the
+      curve, the long chord LC&nbsp;=&nbsp;2R&nbsp;sin(&Delta;/2) is the straight line from PC to PT,
+      the mid-ordinate M&nbsp;=&nbsp;R(1&nbsp;&minus;&nbsp;cos(&Delta;/2)) is how far the curve bulges
+      away from that chord, and the external distance
+      E&nbsp;=&nbsp;R(sec(&Delta;/2)&nbsp;&minus;&nbsp;1) is the gap between the curve and the
+      intersection point.</p>
+    <p>The degree of curve is an alternative to the radius. Under the <b>arc definition</b> it is the
+      central angle subtended by a 100&nbsp;m or 100&nbsp;ft arc, so
+      D&nbsp;=&nbsp;5729.577951&nbsp;/&nbsp;R. Under the <b>chord definition</b>, used historically in
+      North American practice, it is the angle subtended by a 100&nbsp;ft chord, so
+      D&nbsp;=&nbsp;2&nbsp;asin(50&nbsp;/&nbsp;R). The two give different radii for the same D, which
+      is a common source of confusion when a drawing does not state which definition applies.</p>
+    <p>A <b>vertical curve</b> is a parabola that joins two grades smoothly. The algebraic grade change
+      A&nbsp;=&nbsp;g2&nbsp;&minus;&nbsp;g1 sets the shape: a positive A gives a sag curve with a low
+      point, a negative A a crest with a high point. The K value, K&nbsp;=&nbsp;L&nbsp;/&nbsp;|A|, is
+      the horizontal distance needed to change grade by one percent, and it is the number highway
+      design standards are written against because it also governs sight distance. The turning point
+      sits at x&nbsp;=&nbsp;&minus;g1&nbsp;L&nbsp;/&nbsp;A measured from the PVC, inside the curve
+      whenever that value falls between zero and L.</p>
+  </section>
+
+  <section class="card">
+    <h2>Spiral Curves and Transition Length</h2>
+    <p>A circular curve cannot be joined straight to a tangent without a kink in the alignment, so road and
+      rail design inserts a transition between the two. The classic form is the <b>clothoid</b>, better
+      known as the Euler spiral or simply a <b>spiral curve</b>, in which curvature grows linearly with
+      distance travelled so that lateral acceleration builds at a constant rate. A <b>spiral curve
+      calculator</b> normally works from the design speed and a permissible rate of change of centripetal
+      acceleration, or from the superelevation runoff length, and returns the minimum transition length
+      together with the spiral angle and the shift needed to set the curve out.</p>
+    <p>The <b>spiral transition</b> has three practical effects. It shifts the circular arc inwards by the
+      shift distance, so a slightly larger radius is needed to hold the same clearance; it shortens the
+      tangent at each end by the spiral contribution; and it moves the start and end of curvature outwards
+      from the PC and PT to the TS (tangent to spiral) and ST (spiral to tangent) stations. The horizontal
+      curve elements above describe the central circular portion only, so if a drawing gives TS and ST
+      stations rather than PC and PT the alignment is spiralled, and the tangent distance from the PI is
+      the circular value plus the spiral contribution.</p>
+  </section>
+
+  <section class="card">
+    <h2>Superelevation</h2>
+    <p><b>Superelevation</b> is the crossfall built into the carriageway through a horizontal curve so that
+      part of the centripetal force is carried by the road surface instead of entirely by the tyres. The
+      design relation is <code>e + f = V&sup2; / (127 R)</code> in metric units, where e is the
+      superelevation rate, f the assumed <b>side friction</b> factor, V the <b>design speed</b> in km/h and
+      R the radius in metres; the US customary form uses 15 in place of 127 with V in mph and R in feet. A
+      <b>superelevation calculator</b> solves that relation for whichever quantity is unknown — the
+      crossfall needed for a given radius and design speed, the maximum speed a sharp curve can carry, or
+      the smallest radius that is acceptable at a chosen e and f.</p>
+    <p>Where the split between e and f falls is a matter of policy rather than arithmetic, but the values
+      used in most standards are a maximum superelevation of 6 to 8 percent with a side friction factor
+      between 0.10 and 0.15 depending on design speed. The crossfall must also be introduced gradually over
+      a runoff length long enough that the outer edge does not rise faster than drivers can follow, and it
+      is often that runoff requirement, rather than comfort alone, that fixes the minimum spiral length.
+      Because a crossfall is simply a slope expressed as a percentage, the
+      <a href="slope-calculator.html">slope percentage calculator</a> is a quick way to move between a
+      crossfall, a rise and run, and a grade in degrees.</p>
+  </section>
+
+  <section class="card">
+    <h2>Station Equations and Stationing</h2>
+    <p>A <b>station equation</b> is a deliberate break in the stationing, used when a design changes length
+      without the physical alignment moving — a realignment, a re-survey or a change of origin. It is
+      written as <code>back = ahead</code>: the station measured from the start of the earlier survey is the
+      <b>back</b> station, the value in the new chainage is the <b>ahead</b> station, and when the ahead
+      value is the larger of the two the stationing gains length at that point. A <b>stationing
+      calculator</b> exists for exactly this bookkeeping, because a drawing that omits the equation is one
+      of the commonest sources of setting-out blunders.</p>
+    <p>Once an equation is in play a station number on its own no longer identifies a unique point, so the
+      station must always be quoted together with the side of the equation it falls on. The curve tab above
+      computes PC and PT stations by subtracting the tangent distance from the PI station and adding the arc
+      length back, which assumes continuous stationing; where a project carries an equation, apply the
+      offset first and only then compare the result with the drawing. Turning a chainage and an alignment
+      geometry into coordinates is COGO work rather than curve work, which is what the
+      <a href="traverse-calculator.html">traverse calculator</a> covers.</p>
+  </section>
+
+  <section class="card">
+    <h2>When to use this tool</h2>
+    <p>Curve elements are needed at every stage of an alignment, from concept through to setting out:</p>
+    <ul>
+      <li>Sizing a horizontal curve from a required radius and the deflection angle measured between two straights on a plan.</li>
+      <li>Checking that a curve fits the available space by comparing the tangent distance with the distance from the intersection point to the nearest constraint.</li>
+      <li>Converting between radius and degree of curve when a design standard is written in one and the drawing in the other.</li>
+      <li>Setting out a horizontal curve from the PC, using the tangent distance to find the station range and the mid-ordinate to check the set-out pegs.</li>
+      <li>Checking a vertical curve against a design standard: comparing the K value with the minimum for the design speed, and locating the high or low point for drainage.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <div class="links">
+      <a href="how-to-calculate-closure-error.html">How to calculate closure error in a traverse<small>How alignment measurements are checked before they are used</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related converters and calculators</h2>
+    <div class="links">
+      <a href="traverse-calculator.html">traverse calculator<small>Coordinates, closure error and Bowditch adjustment</small></a>
+      <a href="slope-calculator.html">slope percentage calculator<small>Rise and run to percent, ratio or angle</small></a>
+      <a href="distance-bearing-calculator.html">distance between two coordinates<small>Two coordinates to ground distance and azimuth</small></a>
+      <a href="map-scale-calculator.html">map scale calculator<small>Map distance to ground distance for any scale</small></a>
+      <a href="land-area-calculator.html">calculate acres from coordinates<small>Area, acreage and perimeter from coordinates</small></a>
+      <a href="azimuth-calculator.html">bearing to azimuth converter<small>Quadrant bearing to whole-circle azimuth</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+      <details open>
+      <summary>How do I calculate the tangent length of a horizontal curve?</summary>
+      <p>The tangent distance is T equals R times the tangent of half the deflection angle, where the angle is in degrees and the tangent is taken of the angle in radians. For a radius of 300 m and a deflection angle of 60 degrees, T is 300 times tan(30 degrees), which is 173.205 m.</p>
+    </details>
+      <details>
+      <summary>What is the difference between arc definition and chord definition of degree of curve?</summary>
+      <p>Under the arc definition the degree of curve is the central angle subtended by a 100 m or 100 ft arc, so D equals 5729.577951 divided by the radius. Under the chord definition it is the angle subtended by a 100 ft chord, so D equals two times the arc sine of 50 divided by the radius. For the same D the chord definition gives a slightly different radius, so always check which definition a drawing uses.</p>
+    </details>
+      <details>
+      <summary>How do I find the high or low point of a vertical curve?</summary>
+      <p>Measure from the PVC along the curve a distance of minus g1 times L divided by A, where g1 is the entry grade in percent, L is the curve length and A is the algebraic grade change g2 minus g1. If that distance falls between 0 and L the turning point is inside the curve; otherwise the curve never turns and the elevation is monotonic. For example with g1 of minus 2 percent, g2 of 3 percent and L of 300 m, the low point is 120 m from the PVC.</p>
+    </details>
+      <details>
+      <summary>What is the K value of a vertical curve?</summary>
+      <p>K is the curve length divided by the algebraic grade change, so it expresses how many metres of curve are needed to change grade by one percent. A larger K means a flatter, more comfortable curve. Design standards such as those for stopping sight distance are usually written as a minimum K for each design speed, so K is the value to compare against the standard.</p>
+    </details>
+      <details>
+      <summary>Can a deflection angle be 180 degrees?</summary>
+      <p>No. At a deflection angle of 180 degrees the two tangents are parallel and opposite, the tangent length becomes infinite and no circular curve can join them. Practical curve design keeps the deflection angle well below 180 degrees.</p>
+    </details>
+      <details>
+      <summary>Are station values such as 12+34.500 supported?</summary>
+      <p>Yes. Enter a station as a full station-format value such as 12+34.500, or as a plain number in the same units as the curve, and the results are returned in the same station format.</p>
+    </details>
+      <details>
+      <summary>How long should a spiral transition be?</summary>
+      <p>Long enough to satisfy two separate limits: the superelevation must be run off at a rate the driver can follow comfortably, and the rate of change of centripetal acceleration must stay within the value the standard allows for the design speed. The longer of the two governs. Rates around 0.3 to 0.6 m per second cubed are typical, and a transition is often also quoted as a length per unit of speed, such as 0.5 to 1.0 metres of spiral for each km/h of design speed.</p>
+    </details>
+      <details>
+      <summary>What is the maximum superelevation on a road curve?</summary>
+      <p>Between 6 and 8 percent in most standards for roads where snow and ice are expected, rising to 10 percent or occasionally 12 percent in warm, dry regions where a slippery surface is less of a concern. The limit exists because at a high crossfall a slow vehicle can slide down the curve, so the design speed assumed for the curve sets how much of the centripetal force may be met by crossfall rather than by side friction.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Verify critical values against your project's
+    coordinate reference system and specification before use in the field.
+  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+/* ---- shared geodesy library (WGS84), verified against published reference values ---- */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+
+/* ---- page logic ---- */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll(lines) {
+    var text = lines.join("\n");
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); showToast("Copied to clipboard"); }
+      catch (e) { showToast("Press Ctrl+C to copy"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Copied to clipboard"); }, fallback);
+    } else { fallback(); }
+  }
+  function readResults(root) {
+    var out = [], nodes = root.querySelectorAll(".result-row");
+    for (var i = 0; i < nodes.length; i++) {
+      var k = nodes[i].querySelector(".k"), v = nodes[i].querySelector(".v");
+      if (k && v && v.textContent !== "\u2014") { out.push(k.textContent + ": " + v.textContent); }
+    }
+    return out;
+  }
+  function num(id) {
+    var s = $(id).value.trim();
+    if (s === "") { return NaN; }
+    var v = Number(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function ang(id, kind) {
+    var s = $(id).value.trim();
+    return s === "" ? NaN : Geo.parseAngle(s, kind || "lat");
+  }
+  function txt(id, v) { $(id).textContent = v; }
+  function setErr(show, msg, id) {
+    var e = $(id || "err");
+    if (!e) { return; }
+    if (msg) { e.textContent = msg; }
+    e.classList.toggle("show", !!show);
+  }
+  function show(v, id) { $(id || "results").classList.toggle("show", v !== false); }
+  function bind(ids, fn) {
+    for (var i = 0; i < ids.length; i++) {
+      $(ids[i]).addEventListener("input", fn);
+      $(ids[i]).addEventListener("change", fn);
+    }
+  }
+  function bindChips(fn) {
+    var c = document.querySelectorAll(".chips button");
+    for (var i = 0; i < c.length; i++) {
+      c[i].addEventListener("click", function () { fn(this); });
+    }
+  }
+
+
+  var MODE = "h";
+  function switchMode(m) {
+    MODE = m;
+    var f = m === "h";
+    $("tab-h").classList.toggle("active", f);
+    $("tab-v").classList.toggle("active", !f);
+    $("tab-h").setAttribute("aria-selected", String(f));
+    $("tab-v").setAttribute("aria-selected", String(!f));
+    $("panel-h").style.display = f ? "" : "none";
+    $("panel-v").style.display = f ? "none" : "";
+  }
+
+  function parseStation(s) {
+    s = String(s).trim();
+    if (s === "") { return NaN; }
+    var m = /^(\d+)\+(\d+(?:\.\d+)?)$/.exec(s);
+    if (m) { return parseInt(m[1], 10) * 1000 + parseFloat(m[2]); }
+    var v = Number(s);
+    return isFinite(v) ? v : NaN;
+  }
+  function fmtStation(v) {
+    if (!isFinite(v)) { return "\u2014"; }
+    var km = Math.floor(v / 1000);
+    var rest = v - km * 1000;
+    return km + "+" + Geo.pad(Math.floor(rest), 3) + "." + Geo.pad(Math.round((rest - Math.floor(rest)) * 1000), 3);
+  }
+  function fmtLen(v, unit) {
+    if (!isFinite(v)) { return "\u2014"; }
+    return Geo.fmt(v, 3) + " " + unit;
+  }
+
+  function renderH() {
+    var dS = $("h-delta").value.trim();
+    if (dS === "") { setErr(false, "", "err-h"); show(false, "res-h"); return; }
+    var delta = Geo.parseAngle(dS, "lat");
+    var v = num("h-value");
+    if (isNaN(delta) || delta <= 0 || delta >= 180) {
+      setErr(true, "Enter a deflection angle between 0 and 180 degrees, exclusive. Decimal degrees and DMS both work.", "err-h");
+      show(false, "res-h");
+      return;
+    }
+    if (isNaN(v) || v <= 0) {
+      setErr(true, "Enter a positive value for the known quantity.", "err-h");
+      show(false, "res-h");
+      return;
+    }
+    setErr(false, "", "err-h");
+    var dr = Geo.toRad(delta), half = dr / 2;
+    var mode = $("h-mode").value, R;
+    if (mode === "R") { R = v; }
+    else if (mode === "T") { R = v / Math.tan(half); }
+    else if (mode === "L") { R = v / dr; }
+    else {
+      R = $("h-def").value === "chord" ? 50 / Math.sin(Geo.toRad(v) / 2) : 5729.577951 / v;
+    }
+    var T = R * Math.tan(half);
+    var L = R * dr;
+    var LC = 2 * R * Math.sin(half);
+    var M = R * (1 - Math.cos(half));
+    var E = R * (1 / Math.cos(half) - 1);
+    var Darc = 5729.577951 / R;
+    var Dchord = 2 * Geo.toDeg(Math.asin(Math.min(1, 50 / R)));
+
+    txt("h-r", fmtLen(R, ""));
+    txt("h-t", fmtLen(T, ""));
+    txt("h-l", fmtLen(L, ""));
+    txt("h-lc", fmtLen(LC, ""));
+    txt("h-m", fmtLen(M, ""));
+    txt("h-e", fmtLen(E, ""));
+    txt("h-d", Geo.fmt(Darc, 4) + "\u00B0 arc  /  " + Geo.fmt(Dchord, 4) + "\u00B0 chord");
+    txt("h-dd", Geo.fmt(delta, 6) + "\u00B0   (" + Geo.formatDMS(delta, 2, null) + ")");
+
+    var pi = parseStation($("h-pi").value);
+    if (isFinite(pi)) {
+      txt("h-pc", fmtStation(pi - T));
+      txt("h-pt", fmtStation(pi - T + L));
+    } else {
+      txt("h-pc", "enter a PI station to compute");
+      txt("h-pt", "enter a PI station to compute");
+    }
+    show(true, "res-h");
+  }
+
+  function renderV() {
+    var g1 = num("v-g1"), g2 = num("v-g2"), L = num("v-len");
+    if (isNaN(g1) && isNaN(g2) && isNaN(L)) { setErr(false, "", "err-v"); show(false, "res-v"); return; }
+    if (isNaN(g1) || isNaN(g2) || isNaN(L) || L <= 0) {
+      setErr(true, "Enter both grades in percent and a positive curve length.", "err-v");
+      show(false, "res-v");
+      return;
+    }
+    var elev = num("v-elev");
+    if (isNaN(elev)) { elev = 0; }
+    setErr(false, "", "err-v");
+    var unit = $("v-unit").value;
+    var A = g2 - g1;
+    txt("v-a", Geo.fmt(A, 4) + " %");
+
+    if (Math.abs(A) < 1e-9) {
+      txt("v-type", "no curve \u2014 constant grade");
+      txt("v-k", "\u2014");
+      txt("v-pvc", fmtStation(parseStation($("v-pvi").value)) + "  at " + Geo.fmt(elev, 3) + " " + unit);
+      txt("v-pvt", "\u2014");
+      txt("v-turn", "none, the grade never changes");
+      txt("v-mid", "0");
+      $("vtable").querySelector("tbody").innerHTML = "";
+      show(true, "res-v");
+      return;
+    }
+
+    var pvi = parseStation($("v-pvi").value);
+    var K = L / Math.abs(A);
+    txt("v-type", A > 0 ? "sag (valley)" : "crest (hill)");
+    txt("v-k", Geo.fmt(K, 3) + " " + unit + " per %");
+
+    var pvcElev = elev - (g1 / 100) * (L / 2);
+    var pvtElev = elev + (g2 / 100) * (L / 2);
+    txt("v-pvc", fmtStation(pvi - L / 2) + "  at " + Geo.fmt(pvcElev, 3) + " " + unit);
+    txt("v-pvt", fmtStation(pvi + L / 2) + "  at " + Geo.fmt(pvtElev, 3) + " " + unit);
+
+    function yAt(x) { return pvcElev + (g1 / 100) * x + (A / 100) / (2 * L) * x * x; }
+    var xTurn = -g1 * L / A;
+    if (xTurn >= 0 && xTurn <= L) {
+      txt("v-turn", fmtStation(pvi - L / 2 + xTurn) + "  at " + Geo.fmt(yAt(xTurn), 3) + " " + unit
+        + "  (" + Geo.fmt(xTurn, 3) + " " + unit + " from PVC)");
+    } else {
+      txt("v-turn", "outside the curve \u2014 the grade does not reverse");
+    }
+    txt("v-mid", Geo.fmt(Math.abs(A) / 100 * L / 8, 4) + " " + unit);
+
+    var body = "", steps = [0, 0.2, 0.4, 0.6, 0.8, 1];
+    for (var i = 0; i < steps.length; i++) {
+      var x = steps[i] * L;
+      body += "<tr><td>" + fmtStation(pvi - L / 2 + x) + "</td><td>" + Geo.fmt(x, 3) + "</td><td>"
+        + Geo.fmt(pvcElev + (g1 / 100) * x, 3) + "</td><td>" + Geo.fmt(yAt(x), 3) + "</td></tr>";
+    }
+    $("vtable").querySelector("tbody").innerHTML = body;
+    show(true, "res-v");
+  }
+
+  $("tab-h").addEventListener("click", function () { switchMode("h"); });
+  $("tab-v").addEventListener("click", function () { switchMode("v"); });
+  bind(["h-delta", "h-mode", "h-value", "h-def", "h-pi"], renderH);
+  bind(["v-g1", "v-g2", "v-len", "v-pvi", "v-elev", "v-unit"], renderV);
+  $("copy-h").addEventListener("click", function () { copyAll(readResults($("res-h"))); });
+  $("copy-v").addEventListener("click", function () { copyAll(readResults($("res-v"))); });
+
+  switchMode("h");
+  renderH();
+  renderV();
+
+})();
+</script>
+</body>
+</html>

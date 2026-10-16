@@ -1,0 +1,22 @@
+# Cloudflare Pages response headers
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+#
+# Pages already sets Referrer-Policy: strict-origin-when-cross-origin and
+# X-Content-Type-Options: nosniff on every response; they are repeated here so the
+# policy is explicit and survives a future move to another host.
+#
+# Cache-Control is deliberately NOT overridden. Pages serves each asset straight
+# from its own per-deployment cache with an ETag and
+# "Cache-Control: public, max-age=0, must-revalidate", so a new deploy is picked up
+# immediately. Adding a long max-age here would serve stale CSS/JS to returning
+# visitors, and Pages' own docs advise against custom caching on the custom domain.
+
+/*
+  Content-Security-Policy: frame-ancestors *
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+
+# NOTE: X-Frame-Options is intentionally omitted. The calculators are a documented,
+# supported embed target (?embed=1) meant to be framed by third-party sites, so
+# framing must stay open — hence the permissive frame-ancestors above.
