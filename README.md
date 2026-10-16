@@ -58,11 +58,16 @@ Cloudflare Pages 默认使用 `auto-trailing-slash` 的 HTML 处理策略，官�
 | 磁盘上的文件 | 请求 | 响应 |
 |---|---|---|
 | `dms-converter.html` | `GET /dms-converter` | **200**，直接返回该文件 |
-| `dms-converter.html` | `GET /dms-converter.html` | 307 → `/dms-converter` |
+| `dms-converter.html` | `GET /dms-converter.html` | **308** → `/dms-converter` |
 | `index.html` | `GET /` | **200** |
-| `index.html` | `GET /index.html` | 307 → `/` |
+| `index.html` | `GET /index.html` | **308** → `/` |
 | `zh/index.html` | `GET /zh/` | **200** |
-| `zh/index.html` | `GET /zh` | 307 → `/zh/` |
+| `zh/index.html` | `GET /zh` | **308** → `/zh/` |
+
+（`.html` 形式的跳转状态码是 **308 Permanent Redirect**——已在 `coordcalc-com.pages.dev`
+部署上实测确认。308 会被浏览器和爬虫缓存，比 307 更利于把旧链接的权重并过来，
+对 SEO 反而是好事。本仓库的本地预览服务器 `preview.py` 用 307 模拟同一语义，
+行为等价，仅状态码不同。）
 
 也就是说，**平台认可的规范形式是「不带扩展名」**：普通页 `/x`（无尾斜杠）、
 目录首页 `/` 与 `/zh/`（有尾斜杠）。
@@ -87,11 +92,11 @@ whether or not an asset matches the incoming request”）。
 
 ```bash
 curl -sI https://coordcalc.com/dms-converter | head -1        # 200（规范形式）
-curl -sI https://coordcalc.com/dms-converter.html | head -1   # 307 → /dms-converter
+curl -sI https://coordcalc.com/dms-converter.html | head -1   # 308 → /dms-converter
 curl -sI https://coordcalc.com/ | head -1                     # 200
 curl -sI https://coordcalc.com/zh/ | head -1                  # 200
-curl -sI https://coordcalc.com/zh | head -1                   # 307 → /zh/
-curl -sI https://coordcalc.com/index | head -1                # 301 → /
+curl -sI https://coordcalc.com/zh | head -1                   # 308 → /zh/
+curl -sI https://coordcalc.com/index | head -1                # 301 → /（_redirects 守卫）
 curl -sI https://coordcalc.com/sitemap.xml | head -1          # 200，且其中不含带 .html 的 URL
 ```
 
