@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>UTM坐标与经纬度互转 — 支持批量CSV导出</title>
 <meta name="description" content="免费在线UTM坐标转换器：经纬度转UTM带号、东坐标、北坐标，也支持度分秒输入与UTM反算经纬度。附带批量转换，整段坐标列表一次算完并导出CSV。WGS84椭球，全部在浏览器本地完成，坐标不上传。">
-<link rel="canonical" href="https://coordcalc.com/zh/utm-coordinate-converter.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/utm-coordinate-converter.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/utm-coordinate-converter.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/utm-coordinate-converter.html">
+<link rel="canonical" href="https://coordcalc.com/zh/utm-coordinate-converter">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/utm-coordinate-converter">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/utm-coordinate-converter">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/utm-coordinate-converter">
 <meta property="og:title" content="UTM坐标与经纬度互转 — 支持批量CSV导出">
 <meta property="og:description" content="经纬度转UTM、UTM转经纬度、批量坐标列表一次转换并导出CSV，WGS84椭球，浏览器本地完成。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://coordcalc.com/zh/utm-coordinate-converter.html">
+<meta property="og:url" content="https://coordcalc.com/zh/utm-coordinate-converter">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -265,11 +265,11 @@
 
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../utm-coordinate-converter.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../utm-coordinate-converter" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -278,7 +278,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › UTM坐标与经纬度互转
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › UTM坐标与经纬度互转
   </nav>
 
   <h1>UTM坐标与经纬度互转</h1>
@@ -410,7 +410,7 @@
       <code>?lat=39.906111&amp;lon=116.3974</code> 传入经纬度，
       <code>?e=448491.696&amp;n=4417510.315&amp;zone=50</code> 传入网格坐标，
       <code>?mode=batch&amp;text=…</code> 传入整段列表；再加 <code>&amp;embed=1</code> 可去掉页头与正文放进 iframe。
-      「复制链接」会按当前屏幕内容生成网址，完整参数与JavaScript接口见<a href="../developers.html">开发者文档</a>。
+      「复制链接」会按当前屏幕内容生成网址，完整参数与JavaScript接口见<a href="../developers">开发者文档</a>。
     </div>
   </div>
 
@@ -436,7 +436,7 @@
     <p>反算经纬度必须同时知道带号和半球：同一对米数，在每个带、每个半球对应完全不同的地点。
     书写惯例是东坐标在前，例如 <code>630084.301 E, 4833438.586 N, 17N</code>；顺序颠倒不影响识别，
     因为东坐标不会超过约900,000米，而北坐标常达数百万米。如果你的坐标本来就是军用网格参考，
-    请用 <a href="../mgrs-converter.html">MGRS 转换器</a>。</p>
+    请用 <a href="../mgrs-converter">MGRS 转换器</a>。</p>
   </section>
 
   <section class="card">
@@ -455,7 +455,7 @@
     <p>中国的<b>CGCS2000</b>采用的椭球常数与WGS84几乎相同（扁率差异在十亿分之一量级），
     就平面坐标而言直接套用本页公式产生的偏差通常远小于测量本身的误差。但要注意：
     国内测绘成果普遍采用<b>高斯-克吕格投影</b>而不是UTM——两者分带、长度比与加常数都不同，
-    参数不能混用，详见教程《<a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>》。
+    参数不能混用，详见教程《<a href="gauss-kruger-vs-utm">高斯-克吕格投影与UTM的区别</a>》。
     严格的成果请按项目技术设计书指定的基准与投影处理，必要时用专业软件做严格基准转换。</p>
   </section>
 
@@ -554,11 +554,11 @@
   <section class="card">
     <h2>相关教程</h2>
     <ul class="readon" style="list-style:none;margin:0;padding:0;">
-      <li><a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>
+      <li><a href="gauss-kruger-vs-utm">高斯-克吕格投影与UTM的区别</a>
         <small>分带、长度比与加常数的差异，以及国内图纸坐标怎么读。</small></li>
-      <li><a href="how-to-read-utm-coordinates.html">如何读取UTM坐标</a>
+      <li><a href="how-to-read-utm-coordinates">如何读取UTM坐标</a>
         <small>带号、纬度带、东坐标、北坐标各代表什么，四种常见误读。</small></li>
-      <li><a href="degrees-minutes-seconds-explained.html">经纬度的度分秒（DMS）</a>
+      <li><a href="degrees-minutes-seconds-explained">经纬度的度分秒（DMS）</a>
         <small>度分秒与十进制度的换算与常见书写格式。</small></li>
     </ul>
   </section>
@@ -566,19 +566,19 @@
   <section class="card">
     <h2>相关计算器</h2>
     <div class="links">
-      <a href="../mgrs-converter.html" hreflang="en">MGRS 转换器<small>军用网格参考与经纬度互转</small></a>
-      <a href="epsg-code-lookup.html">EPSG 代码查询<small>坐标系代码、单位与适用范围速查</small></a>
-      <a href="../state-plane-converter.html" hreflang="en">州平面坐标转换<small>美国 SPCS 各带与经纬度互转</small></a>
-      <a href="land-area-calculator.html">坐标算面积<small>由坐标推算地块面积与周长</small></a>
-      <a href="traverse-calculator.html">导线平差<small>闭合差与最小二乘平差</small></a>
-      <a href="../distance-bearing-calculator.html" hreflang="en">距离与方位角<small>椭球面上的两点距离</small></a>
+      <a href="../mgrs-converter" hreflang="en">MGRS 转换器<small>军用网格参考与经纬度互转</small></a>
+      <a href="epsg-code-lookup">EPSG 代码查询<small>坐标系代码、单位与适用范围速查</small></a>
+      <a href="../state-plane-converter" hreflang="en">州平面坐标转换<small>美国 SPCS 各带与经纬度互转</small></a>
+      <a href="land-area-calculator">坐标算面积<small>由坐标推算地块面积与周长</small></a>
+      <a href="traverse-calculator">导线平差<small>闭合差与最小二乘平差</small></a>
+      <a href="../distance-bearing-calculator" hreflang="en">距离与方位角<small>椭球面上的两点距离</small></a>
     </div>
   </section>
 
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

@@ -12,8 +12,22 @@
 #     Then: Dynamic redirect to https://coordcalc.com/${http.request.uri.path} (301)
 # See the "Custom domain" section of README.md.
 #
-# Nothing needs to be listed for the site's own pages: Pages already serves
-# /dms-converter from dms-converter.html and redirects the *.html form for you.
+# No rules are needed for the site's own pages. Pages serves them extension-less
+# and 307-redirects the .html form on its own (html_handling = auto-trailing-slash):
+#     /dms-converter      200  <- dms-converter.html
+#     /dms-converter.html 307 -> /dms-converter
+#     /zh/                200  <- zh/index.html
+#     /zh                 307 -> /zh/
+#
+# The two rules below are the one exception. `index.html` sits at the root and again
+# under zh/, so its extension-less form is "/index" — a URL that serves the homepage
+# a second time as a distinct address. Nothing on the site links to it, but a search
+# engine or a stray link can still invent it, so both forms are folded into the real
+# homepage. (Redirects always run, even when a matching static asset exists.)
+
+/index     /      301
+/zh/index  /zh/   301
+
 # Add site-specific rules below as they come up, for example:
 #
 # /old-tool-name dms-converter 301

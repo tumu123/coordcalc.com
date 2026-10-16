@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>关于 CoordCalc — 免费测绘计算器，算法公开可核验</title>
 <meta name="description" content="CoordCalc 是什么、写给谁用、计算器如何构建并对照 PROJ 与 EPSG 注册库校验，以及如何联系我们。">
-<link rel="canonical" href="https://coordcalc.com/zh/about.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/about.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/about.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/about.html">
+<link rel="canonical" href="https://coordcalc.com/zh/about">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/about">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/about">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/about">
 <meta property="og:title" content="关于 CoordCalc — 免费测绘计算器，算法公开可核验">
 <meta property="og:description" content="CoordCalc 是什么、写给谁用、计算器如何构建与校验，以及如何联系我们。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://coordcalc.com/zh/about.html">
+<meta property="og:url" content="https://coordcalc.com/zh/about">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -25,7 +25,7 @@
   "@type": "AboutPage",
   "name": "关于 CoordCalc",
   "description": "CoordCalc 测绘计算器是什么，如何构建与校验，以及如何联系本站。",
-  "url": "https://coordcalc.com/zh/about.html",
+  "url": "https://coordcalc.com/zh/about",
   "inLanguage": "zh-CN",
   "isPartOf": {"@type": "WebSite", "name": "CoordCalc 测绘计算器", "url": "https://coordcalc.com/zh/"}
 }
@@ -47,11 +47,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../about.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../about" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -60,7 +60,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › 关于本站
+    <a href="./">首页</a> › 关于本站
   </nav>
 
 <h1>关于 CoordCalc</h1>
@@ -100,9 +100,9 @@
       这个库是被量出来的，不是被信任的。对照 PROJ——pyproj 与 QGIS 背后的参考实现——
       从赤道到北纬 78° 的测试点上，UTM 东坐标优于 0.1 mm，北坐标优于 0.9 mm，
       正算再反算的往返闭合差在几纳米量级。
-      <a href="epsg-code-lookup.html">EPSG 代码查询</a>是从 EPSG 注册库程序化生成的，
+      <a href="epsg-code-lookup">EPSG 代码查询</a>是从 EPSG 注册库程序化生成的，
       不是手敲进去的，所以它的名称、单位、适用范围和投影参数都是注册库自己的。
-      <a href="developers.html">开发者指南</a>列出了这些精确数字，并演示如何在浏览器控制台里复现它们。
+      <a href="developers">开发者指南</a>列出了这些精确数字，并演示如何在浏览器控制台里复现它们。
     </p>
     <p>
       测试上用的是同一套规矩：每个计算器上线前都要在真实的浏览器文档里、
@@ -115,9 +115,9 @@
     <p>
       页面是手写的 HTML、CSS 和 JavaScript，不用框架、没有构建步骤，
       因此在野外用手机也打得开，打开后又能离线使用。
-      没有登录、没有上传、没有广告、没有 Cookie；<a href="privacy.html">隐私政策</a>之所以短，
+      没有登录、没有上传、没有广告、没有 Cookie；<a href="privacy">隐私政策</a>之所以短，
       是因为实在没什么可说的。计算器还支持嵌入：任一个都能用 <code>embed=1</code>
-      放进别的页面或内网，具体写在与 <a href="developers.html">URL 与 JavaScript API</a> 一起的文档里。
+      放进别的页面或内网，具体写在与 <a href="developers">URL 与 JavaScript API</a> 一起的文档里。
     </p>
   </div>
 
@@ -152,14 +152,14 @@
     <p>
       也欢迎建议新增工具，尤其是那些枯燥重复的：这里现有的计算器，
       起初多半都是某个人被迫反复填的表格。
-      使用本站所适用的条款见<a href="terms.html">使用条款</a>。
+      使用本站所适用的条款见<a href="terms">使用条款</a>。
     </p>
   </div>
 
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

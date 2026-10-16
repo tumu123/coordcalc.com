@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>东坐标北坐标怎么换算成经纬度 — 投影反算与常见错误</title>
 <meta name="description" content="东坐标和北坐标是投影平面上的米数，换成经纬度需要做投影反算，而且必须先知道带号、南北半球与椭球基准（大地基准面）。本文讲清反算所需的三个前提、四步计算方法、完整算例（17T 630084 4833438 → 43.642562°N, 79.387143°W），以及最容易把点位算偏几百公里的错误。">
-<link rel="canonical" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/convert-easting-northing-to-lat-long.html">
+<link rel="canonical" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/convert-easting-northing-to-lat-long">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/convert-easting-northing-to-lat-long">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/convert-easting-northing-to-lat-long">
 <meta property="og:title" content="东坐标北坐标怎么换算成经纬度">
 <meta property="og:description" content="反算所需的带号、半球与基准面，四步算法，完整算例，以及最常见的那几种错。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html">
+<meta property="og:url" content="https://coordcalc.com/zh/convert-easting-northing-to-lat-long">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -31,7 +31,7 @@
   "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
   "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
     "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/convert-easting-northing-to-lat-long.html"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/convert-easting-northing-to-lat-long"},
   "articleSection": "坐标与投影"
 }
 </script>
@@ -52,11 +52,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../convert-easting-northing-to-lat-long.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../convert-easting-northing-to-lat-long" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -65,7 +65,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 东坐标北坐标换算成经纬度
+    <a href="./">首页</a> › <a href="guides">教程</a> › 东坐标北坐标换算成经纬度
   </nav>
 
 <h1>东坐标北坐标怎么换算成经纬度</h1>
@@ -167,21 +167,21 @@
   <section class="card">
     <h2>本文用到的工具</h2>
     <div class="tools">
-      <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>东坐标、北坐标与带号 ↔ 经纬度</small></a>
-      <a href="state-plane-converter.html">州平面坐标换算<small>NAD83 州平面坐标与经纬度互转</small></a>
-      <a href="mgrs-converter.html">MGRS 与经纬度互转<small>军用格网坐标串 ↔ 经纬度</small></a>
-      <a href="dms-converter.html">度分秒转换器<small>把结果换算成度分秒格式</small></a>
+      <a href="utm-coordinate-converter">UTM坐标与经纬度互转<small>东坐标、北坐标与带号 ↔ 经纬度</small></a>
+      <a href="state-plane-converter">州平面坐标换算<small>NAD83 州平面坐标与经纬度互转</small></a>
+      <a href="mgrs-converter">MGRS 与经纬度互转<small>军用格网坐标串 ↔ 经纬度</small></a>
+      <a href="dms-converter">度分秒转换器<small>把结果换算成度分秒格式</small></a>
     </div>
   </section>
 
   <section class="card">
     <h2>相关教程</h2>
     <ul class="readon">
-      <li><a href="how-to-read-utm-coordinates.html">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
+      <li><a href="how-to-read-utm-coordinates">怎么读UTM坐标：带号、纬度带、东坐标、北坐标</a>
         <small>从一条记录出发，逐个部分讲清楚。</small></li>
-      <li><a href="../what-datum-does-gps-use.html">GPS 用的是哪个基准面？</a>
+      <li><a href="../what-datum-does-gps-use">GPS 用的是哪个基准面？</a>
         <small>为什么基准面决定你的答案是不是真的对。</small></li>
-      <li><a href="../utm-vs-mgrs.html">UTM 与 MGRS 的区别</a>
+      <li><a href="../utm-vs-mgrs">UTM 与 MGRS 的区别</a>
         <small>同一个格网，用米写还是用数字写。</small></li>
     </ul>
   </section>
@@ -189,7 +189,7 @@
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

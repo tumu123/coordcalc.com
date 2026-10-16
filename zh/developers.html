@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>开发者指南 — URL 参数、嵌入 iframe 与 JavaScript API</title>
 <meta name="description" content="用代码驱动 CoordCalc 计算器：查询字符串 API 可为每个工具预填参数，embed 模式提供无外壳的 iframe 面板，window.Geo 是背后的测量库。">
-<link rel="canonical" href="https://coordcalc.com/zh/developers.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/developers.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/developers.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/developers.html">
+<link rel="canonical" href="https://coordcalc.com/zh/developers">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/developers">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/developers">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/developers">
 <meta property="og:title" content="开发者指南 — URL 参数、嵌入 iframe 与 JavaScript API">
 <meta property="og:description" content="查询字符串参数、可嵌入的 iframe 模式，以及 CoordCalc 测绘计算器背后的 window.Geo 大地测量库。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://coordcalc.com/zh/developers.html">
+<meta property="og:url" content="https://coordcalc.com/zh/developers">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -25,7 +25,7 @@
   "@type": "TechArticle",
   "headline": "开发者指南：URL 参数、iframe 嵌入与 JavaScript API",
   "description": "如何用查询字符串预填 CoordCalc 测绘计算器、把它嵌入 iframe，以及直接调用背后的 window.Geo 大地测量库。",
-  "url": "https://coordcalc.com/zh/developers.html",
+  "url": "https://coordcalc.com/zh/developers",
   "inLanguage": "zh-CN",
   "about": ["横轴墨卡托投影", "MGRS", "坐标转换", "测量计算器 API"],
   "isPartOf": {"@type": "WebSite", "name": "CoordCalc 测绘计算器", "url": "https://coordcalc.com/zh/"}
@@ -138,11 +138,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../developers.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../developers" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -151,7 +151,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › 开发者指南
+    <a href="./">首页</a> › 开发者指南
   </nav>
 
 <h1>开发者指南：URL 参数、嵌入与 JavaScript API</h1>
@@ -230,13 +230,13 @@
     </p>
     <p>下面四个链接是现成可用的——点开，答案就在屏幕上：</p>
     <ul class="readon">
-      <li><a href="utm-coordinate-converter.html?lat=43.642567&amp;lon=-79.387139">utm-coordinate-converter.html?lat=43.642567&amp;lon=-79.387139</a>
+      <li><a href="utm-coordinate-converter?lat=43.642567&amp;lon=-79.387139">utm-coordinate-converter?lat=43.642567&amp;lon=-79.387139</a>
         <small>正算：17T 带，东坐标 630,084.301 m，北坐标 4,833,438.586 m。</small></li>
-      <li><a href="utm-coordinate-converter.html?e=630084.301&amp;n=4833438.586&amp;zone=17N">utm-coordinate-converter.html?e=630084.301&amp;n=4833438.586&amp;zone=17N</a>
+      <li><a href="utm-coordinate-converter?e=630084.301&amp;n=4833438.586&amp;zone=17N">utm-coordinate-converter?e=630084.301&amp;n=4833438.586&amp;zone=17N</a>
         <small>反算：回到北纬 43.642567°、西经 79.387139°。</small></li>
-      <li><a href="utm-coordinate-converter.html?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=P1%2C%20630084.301%2C%204833438.586">utm-coordinate-converter.html?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=…</a>
+      <li><a href="utm-coordinate-converter?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=P1%2C%20630084.301%2C%204833438.586">utm-coordinate-converter?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=…</a>
         <small>批量：输入一条格网坐标，输出一条经纬度。</small></li>
-      <li><a href="unit-converter.html?value=100&amp;from=usft&amp;to=m">unit-converter.html?value=100&amp;from=usft&amp;to=m</a>
+      <li><a href="unit-converter?value=100&amp;from=usft&amp;to=m">unit-converter?value=100&amp;from=usft&amp;to=m</a>
         <small>单位：100 美国测量英尺 = 30.48006096 m。</small></li>
     </ul>
 
@@ -281,11 +281,11 @@
       <div class="full">
         <label for="d-tool">工具</label>
         <select id="d-tool">
-          <option value="utm-fwd">utm-coordinate-converter.html — 经纬度 → UTM</option>
-          <option value="utm-inv">utm-coordinate-converter.html — UTM → 经纬度</option>
-          <option value="utm-batch">utm-coordinate-converter.html — 批量 CSV</option>
-          <option value="unit-len">unit-converter.html — 长度</option>
-          <option value="unit-area">unit-converter.html — 面积</option>
+          <option value="utm-fwd">utm-coordinate-converter — 经纬度 → UTM</option>
+          <option value="utm-inv">utm-coordinate-converter — UTM → 经纬度</option>
+          <option value="utm-batch">utm-coordinate-converter — 批量 CSV</option>
+          <option value="unit-len">unit-converter — 长度</option>
+          <option value="unit-area">unit-converter — 面积</option>
         </select>
       </div>
     </div>
@@ -293,7 +293,7 @@
     <div class="drow">
       <label class="chk"><input type="checkbox" id="d-embed"> 加上 <code>embed=1</code></label>
       <button class="btn" id="d-preview" type="button">预览</button>
-      <a class="btn" id="d-open" href="utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139" target="_blank" rel="noopener">在新标签页打开</a>
+      <a class="btn" id="d-open" href="utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139" target="_blank" rel="noopener">在新标签页打开</a>
     </div>
     <p class="urlbox" id="d-url"></p>
   </div>
@@ -305,7 +305,7 @@
       没有大标题、没有正文、没有页脚。剩下的就是工具卡片本身，按它的自然高度呈现，随时可以放进框架。
     </p>
 <pre class="code">&lt;iframe
-  src="https://coordcalc.com/utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
+  src="https://coordcalc.com/utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
   title="UTM 与经纬度互转"
   width="100%" height="560" style="border:1px solid #cfd6e0;border-radius:12px"
   loading="lazy"&gt;&lt;/iframe&gt;</pre>
@@ -319,12 +319,12 @@
       <table class="lookup">
         <thead><tr><th>被嵌入的工具</th><th>建议高度</th><th>说明</th></tr></thead>
         <tbody>
-          <tr><td>utm-coordinate-converter.html</td><td>560 px</td><td>批量标签页是最高的状态；如果你直接链接到它，再加 120 px</td></tr>
-          <tr><td>unit-converter.html</td><td>620 px</td><td>结果列表很长；角度标签页最高</td></tr>
-          <tr><td>dms-converter.html</td><td>560 px</td><td>单个坐标对</td></tr>
-          <tr><td>mgrs-converter.html</td><td>560 px</td><td>单条格网参考号</td></tr>
-          <tr><td>state-plane-converter.html</td><td>640 px</td><td>投影带选择器加上若干结果行</td></tr>
-          <tr><td>land-area-calculator.html</td><td>720 px</td><td>坐标输入表会随点数增加而变高</td></tr>
+          <tr><td>utm-coordinate-converter</td><td>560 px</td><td>批量标签页是最高的状态；如果你直接链接到它，再加 120 px</td></tr>
+          <tr><td>unit-converter</td><td>620 px</td><td>结果列表很长；角度标签页最高</td></tr>
+          <tr><td>dms-converter</td><td>560 px</td><td>单个坐标对</td></tr>
+          <tr><td>mgrs-converter</td><td>560 px</td><td>单条格网参考号</td></tr>
+          <tr><td>state-plane-converter</td><td>640 px</td><td>投影带选择器加上若干结果行</td></tr>
+          <tr><td>land-area-calculator</td><td>720 px</td><td>坐标输入表会随点数增加而变高</td></tr>
         </tbody>
       </table>
     </div>
@@ -335,9 +335,9 @@
       请在承载嵌入的页面上保留一个指向该工具的可见链接；没有任何署名的孤立框架，是我们唯一请你避免的用法。
     </p>
     <p style="font-size:13.5px;color:var(--sub);">实时示例——下面的框架就是
-      <code>utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>：</p>
+      <code>utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>：</p>
     <iframe class="frame"
-      src="utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
+      src="utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
       title="UTM 与经纬度互转，嵌入版"
       loading="lazy"></iframe>
   </div>
@@ -477,8 +477,8 @@ a.orientation;               // "counter-clockwise"</pre>
           请求只用于文档本身、一份样式表和一个小脚本。</li>
       <li><b>仅二维平面。</b>该库在 WGS84 椭球上按二维工作，不考虑局部基准平移、
           似大地水准面模型或美国州平面投影带；这些场合请用
-          <a href="state-plane-converter.html">州平面坐标转换器</a>，
-          并对照 <a href="epsg-code-lookup.html">EPSG 代码查询</a>核对你文件里实际带的投影。</li>
+          <a href="state-plane-converter">州平面坐标转换器</a>，
+          并对照 <a href="epsg-code-lookup">EPSG 代码查询</a>核对你文件里实际带的投影。</li>
       <li><b>仅供参考，不能替代标准。</b>结果用于核对与规划。
           凡涉及施工、边界或采购的事项，都要对照该项工作适用的规范确认。</li>
       <li><b>署名。</b>欢迎嵌入，但请保留一个指回该工具的可见链接。
@@ -493,12 +493,12 @@ a.orientation;               // "counter-clockwise"</pre>
   <div class="card">
     <h2>相关计算器</h2>
     <div class="tools">
-      <a href="utm-coordinate-converter.html">UTM 坐标与经纬度互转<small>经纬度 ↔ UTM 格网，支持批量 CSV</small></a>
-      <a href="unit-converter.html">测量英尺与米换算<small>测量英尺、测链、英亩、西班牙尺等 30 多种单位</small></a>
-      <a href="mgrs-converter.html">MGRS 与经纬度互转<small>军用格网参考号的双向换算</small></a>
-      <a href="state-plane-converter.html">州平面坐标转换<small>SPCS 投影带，英尺与米</small></a>
-      <a href="epsg-code-lookup.html">EPSG 代码查询<small>坐标参考系统代码详解</small></a>
-      <a href="dxf-coordinate-extractor.html">DXF 坐标提取<small>从 CAD 文件里取出顶点与面积</small></a>
+      <a href="utm-coordinate-converter">UTM 坐标与经纬度互转<small>经纬度 ↔ UTM 格网，支持批量 CSV</small></a>
+      <a href="unit-converter">测量英尺与米换算<small>测量英尺、测链、英亩、西班牙尺等 30 多种单位</small></a>
+      <a href="mgrs-converter">MGRS 与经纬度互转<small>军用格网参考号的双向换算</small></a>
+      <a href="state-plane-converter">州平面坐标转换<small>SPCS 投影带，英尺与米</small></a>
+      <a href="epsg-code-lookup">EPSG 代码查询<small>坐标参考系统代码详解</small></a>
+      <a href="dxf-coordinate-extractor">DXF 坐标提取<small>从 CAD 文件里取出顶点与面积</small></a>
     </div>
   </div>
 
@@ -533,7 +533,7 @@ a.orientation;               // "counter-clockwise"</pre>
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>
@@ -548,14 +548,14 @@ a.orientation;               // "counter-clockwise"</pre>
 
   var TOOLS = {
     "utm-fwd": {
-      page: "utm-coordinate-converter.html",
+      page: "utm-coordinate-converter",
       fields: [
         { k: "lat", label: "纬度", v: "43.642567" },
         { k: "lon", label: "经度", v: "-79.387139" }
       ]
     },
     "utm-inv": {
-      page: "utm-coordinate-converter.html",
+      page: "utm-coordinate-converter",
       fields: [
         { k: "e", label: "东坐标 (m)", v: "630084.301" },
         { k: "n", label: "北坐标 (m)", v: "4833438.586" },
@@ -564,14 +564,14 @@ a.orientation;               // "counter-clockwise"</pre>
       ]
     },
     "utm-batch": {
-      page: "utm-coordinate-converter.html",
+      page: "utm-coordinate-converter",
       fields: [
         { k: "dir", label: "方向", v: "fwd", sel: ["fwd", "inv", "mgrs"] },
         { k: "text", label: "记录 — 每行一条", v: "CN Tower, 43.642567, -79.387139\nBeijing, 39.906111, 116.397400", area: true }
       ]
     },
     "unit-len": {
-      page: "unit-converter.html",
+      page: "unit-converter",
       fields: [
         { k: "value", label: "数值", v: "100" },
         { k: "from", label: "从", v: "usft", sel: LEN },
@@ -579,7 +579,7 @@ a.orientation;               // "counter-clockwise"</pre>
       ]
     },
     "unit-area": {
-      page: "unit-converter.html",
+      page: "unit-converter",
       fields: [
         { k: "value", label: "数值", v: "1" },
         { k: "from", label: "从", v: "acre", sel: AREA },

@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Developer Guide — URL Parameters, Embeds and the JS API</title>
 <meta name="description" content="Drive the CoordCalc calculators from code: a query-string API to prefill every tool, a chrome-free iframe embed mode, and the window.Geo JavaScript library.">
-<link rel="canonical" href="https://coordcalc.com/developers.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/developers.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/developers.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/developers.html">
+<link rel="canonical" href="https://coordcalc.com/developers">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/developers">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/developers">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/developers">
 <meta property="og:title" content="Developer Guide — URL Parameters, Embeds and the JS API">
 <meta property="og:description" content="Query-string parameters, an embeddable iframe mode and the window.Geo geodesy library behind the CoordCalc surveying calculators.">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://coordcalc.com/developers.html">
+<meta property="og:url" content="https://coordcalc.com/developers">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="assets/site.webmanifest">
@@ -26,7 +26,7 @@
   "inLanguage": "en",
   "headline": "Developer guide: URL parameters, iframe embedding and the JavaScript API",
   "description": "How to prefill the CoordCalc surveying calculators from a query string, embed them in an iframe, and call the underlying window.Geo geodesy library directly.",
-  "url": "https://coordcalc.com/developers.html",
+  "url": "https://coordcalc.com/developers",
   "about": ["Uniform Transverse Mercator", "MGRS", "coordinate conversion", "surveying calculator API"],
   "isPartOf": {"@type": "WebSite", "name": "CoordCalc", "url": "https://coordcalc.com/"}
 }
@@ -127,12 +127,12 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
     <nav class="topnav">
-      <a href="index.html#coordinates">Coordinates</a>
-      <a href="index.html#distance">Distance &amp; Area</a>
-      <a href="index.html#slope">Slope &amp; Scale</a>
-      <a href="index.html#surveying">Surveying</a>
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -141,7 +141,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">CoordCalc</a> › Developer guide
+    <a href="./">CoordCalc</a> › Developer guide
   </nav>
 
   <h1>Developer guide: URLs, embeds and the JavaScript API</h1>
@@ -225,13 +225,13 @@
     </p>
     <p>Four links that are already complete — open them and the answer is on screen:</p>
     <ul class="readon">
-      <li><a href="utm-coordinate-converter.html?lat=43.642567&amp;lon=-79.387139">utm-coordinate-converter.html?lat=43.642567&amp;lon=-79.387139</a>
+      <li><a href="utm-coordinate-converter?lat=43.642567&amp;lon=-79.387139">utm-coordinate-converter?lat=43.642567&amp;lon=-79.387139</a>
         <small>Forward: zone 17T, easting 630,084.301 m, northing 4,833,438.586 m.</small></li>
-      <li><a href="utm-coordinate-converter.html?e=630084.301&amp;n=4833438.586&amp;zone=17N">utm-coordinate-converter.html?e=630084.301&amp;n=4833438.586&amp;zone=17N</a>
+      <li><a href="utm-coordinate-converter?e=630084.301&amp;n=4833438.586&amp;zone=17N">utm-coordinate-converter?e=630084.301&amp;n=4833438.586&amp;zone=17N</a>
         <small>Inverse: back to 43.642567° N, 79.387139° W.</small></li>
-      <li><a href="utm-coordinate-converter.html?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=P1%2C%20630084.301%2C%204833438.586">utm-coordinate-converter.html?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=…</a>
+      <li><a href="utm-coordinate-converter?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=P1%2C%20630084.301%2C%204833438.586">utm-coordinate-converter?mode=batch&amp;dir=inv&amp;zone=17N&amp;text=…</a>
         <small>Batch: one grid coordinate in, one latitude and longitude out.</small></li>
-      <li><a href="unit-converter.html?value=100&amp;from=usft&amp;to=m">unit-converter.html?value=100&amp;from=usft&amp;to=m</a>
+      <li><a href="unit-converter?value=100&amp;from=usft&amp;to=m">unit-converter?value=100&amp;from=usft&amp;to=m</a>
         <small>Units: 100 US survey feet = 30.48006096 m.</small></li>
     </ul>
 
@@ -278,11 +278,11 @@
       <div class="full">
         <label for="d-tool">Tool</label>
         <select id="d-tool">
-          <option value="utm-fwd">utm-coordinate-converter.html — latitude / longitude → UTM</option>
-          <option value="utm-inv">utm-coordinate-converter.html — UTM → latitude / longitude</option>
-          <option value="utm-batch">utm-coordinate-converter.html — batch CSV</option>
-          <option value="unit-len">unit-converter.html — length</option>
-          <option value="unit-area">unit-converter.html — area</option>
+          <option value="utm-fwd">utm-coordinate-converter — latitude / longitude → UTM</option>
+          <option value="utm-inv">utm-coordinate-converter — UTM → latitude / longitude</option>
+          <option value="utm-batch">utm-coordinate-converter — batch CSV</option>
+          <option value="unit-len">unit-converter — length</option>
+          <option value="unit-area">unit-converter — area</option>
         </select>
       </div>
     </div>
@@ -290,7 +290,7 @@
     <div class="drow">
       <label class="chk"><input type="checkbox" id="d-embed"> Add <code>embed=1</code></label>
       <button class="btn" id="d-preview" type="button">Preview</button>
-      <a class="btn" id="d-open" href="utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139" target="_blank" rel="noopener">Open in a new tab</a>
+      <a class="btn" id="d-open" href="utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139" target="_blank" rel="noopener">Open in a new tab</a>
     </div>
     <p class="urlbox" id="d-url"></p>
   </div>
@@ -303,7 +303,7 @@
       its natural height, ready to sit in a frame.
     </p>
 <pre class="code">&lt;iframe
-  src="https://coordcalc.com/utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
+  src="https://coordcalc.com/utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
   title="UTM to latitude and longitude converter"
   width="100%" height="560" style="border:1px solid #cfd6e0;border-radius:12px"
   loading="lazy"&gt;&lt;/iframe&gt;</pre>
@@ -318,12 +318,12 @@
       <table class="lookup">
         <thead><tr><th>Embedded tool</th><th>Suggested height</th><th>Notes</th></tr></thead>
         <tbody>
-          <tr><td>utm-coordinate-converter.html</td><td>560 px</td><td>Batch tab is the tallest state; add a further 120 px if you link straight to it</td></tr>
-          <tr><td>unit-converter.html</td><td>620 px</td><td>Result list is long; the angle tab is the tallest</td></tr>
-          <tr><td>dms-converter.html</td><td>560 px</td><td>Single coordinate pair</td></tr>
-          <tr><td>mgrs-converter.html</td><td>560 px</td><td>Single grid reference</td></tr>
-          <tr><td>state-plane-converter.html</td><td>640 px</td><td>Zone picker plus result rows</td></tr>
-          <tr><td>land-area-calculator.html</td><td>720 px</td><td>Coordinate input table grows with the number of points</td></tr>
+          <tr><td>utm-coordinate-converter</td><td>560 px</td><td>Batch tab is the tallest state; add a further 120 px if you link straight to it</td></tr>
+          <tr><td>unit-converter</td><td>620 px</td><td>Result list is long; the angle tab is the tallest</td></tr>
+          <tr><td>dms-converter</td><td>560 px</td><td>Single coordinate pair</td></tr>
+          <tr><td>mgrs-converter</td><td>560 px</td><td>Single grid reference</td></tr>
+          <tr><td>state-plane-converter</td><td>640 px</td><td>Zone picker plus result rows</td></tr>
+          <tr><td>land-area-calculator</td><td>720 px</td><td>Coordinate input table grows with the number of points</td></tr>
         </tbody>
       </table>
     </div>
@@ -336,9 +336,9 @@
       you to avoid.
     </p>
     <p style="font-size:13.5px;color:var(--sub);">Live example — the frame below is
-      <code>utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>:</p>
+      <code>utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>:</p>
     <iframe class="frame"
-      src="utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
+      src="utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
       title="UTM to latitude and longitude converter, embedded"
       loading="lazy"></iframe>
   </div>
@@ -486,9 +486,9 @@ a.orientation;               // "counter-clockwise"</pre>
           requests are for the document itself, one stylesheet and one small script.</li>
       <li><b>Horizontal only.</b> The library works in two dimensions on the WGS84 ellipsoid. It
           takes no account of a local datum shift, a geoid model, or a state plane zone; for those,
-          use the <a href="state-plane-converter.html">state plane converter</a> and check the
+          use the <a href="state-plane-converter">state plane converter</a> and check the
           projection your file actually carries against the
-          <a href="epsg-code-lookup.html">EPSG code lookup</a>.</li>
+          <a href="epsg-code-lookup">EPSG code lookup</a>.</li>
       <li><b>Reference, not a substitute for a standard.</b> Results are for checking and planning.
           Confirm anything that governs construction, a boundary or a procurement against the
           specification that applies to the job.</li>
@@ -504,12 +504,12 @@ a.orientation;               // "counter-clockwise"</pre>
   <div class="card">
     <h2>Related calculators</h2>
     <div class="tools">
-      <a href="utm-coordinate-converter.html">utm to lat long<small>Latitude / longitude ↔ UTM grid, with batch CSV</small></a>
-      <a href="unit-converter.html">us survey foot to meter<small>Survey foot, chain, acre, vara and 30 more units</small></a>
-      <a href="mgrs-converter.html">mgrs to lat long<small>Military grid references in both directions</small></a>
-      <a href="state-plane-converter.html">state plane converter<small>SPCS zones, feet and metres</small></a>
-      <a href="epsg-code-lookup.html">epsg code lookup<small>Coordinate reference system codes explained</small></a>
-      <a href="dxf-coordinate-extractor.html">dxf coordinate extractor<small>Pull vertices and areas out of a CAD file</small></a>
+      <a href="utm-coordinate-converter">utm to lat long<small>Latitude / longitude ↔ UTM grid, with batch CSV</small></a>
+      <a href="unit-converter">us survey foot to meter<small>Survey foot, chain, acre, vara and 30 more units</small></a>
+      <a href="mgrs-converter">mgrs to lat long<small>Military grid references in both directions</small></a>
+      <a href="state-plane-converter">state plane converter<small>SPCS zones, feet and metres</small></a>
+      <a href="epsg-code-lookup">epsg code lookup<small>Coordinate reference system codes explained</small></a>
+      <a href="dxf-coordinate-extractor">dxf coordinate extractor<small>Pull vertices and areas out of a CAD file</small></a>
     </div>
   </div>
 
@@ -544,7 +544,7 @@ a.orientation;               // "counter-clockwise"</pre>
   <p class="foot">
     Calculations run locally in your browser. Results are for reference — confirm against the
     governing design standard before construction or procurement.
-  <span style="display:block;margin-top:9px;"><a href="about.html">About</a> · <a href="privacy.html">Privacy &amp; cookies</a> · <a href="terms.html">Terms of use</a> · <a href="developers.html">Developers</a></span>
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
   </p>
 
 </div>
@@ -559,14 +559,14 @@ a.orientation;               // "counter-clockwise"</pre>
 
   var TOOLS = {
     "utm-fwd": {
-      page: "utm-coordinate-converter.html",
+      page: "utm-coordinate-converter",
       fields: [
         { k: "lat", label: "Latitude", v: "43.642567" },
         { k: "lon", label: "Longitude", v: "-79.387139" }
       ]
     },
     "utm-inv": {
-      page: "utm-coordinate-converter.html",
+      page: "utm-coordinate-converter",
       fields: [
         { k: "e", label: "Easting (m)", v: "630084.301" },
         { k: "n", label: "Northing (m)", v: "4833438.586" },
@@ -575,14 +575,14 @@ a.orientation;               // "counter-clockwise"</pre>
       ]
     },
     "utm-batch": {
-      page: "utm-coordinate-converter.html",
+      page: "utm-coordinate-converter",
       fields: [
         { k: "dir", label: "Direction", v: "fwd", sel: ["fwd", "inv", "mgrs"] },
         { k: "text", label: "Records — one per line", v: "CN Tower, 43.642567, -79.387139\nBeijing, 39.906111, 116.397400", area: true }
       ]
     },
     "unit-len": {
-      page: "unit-converter.html",
+      page: "unit-converter",
       fields: [
         { k: "value", label: "Value", v: "100" },
         { k: "from", label: "From", v: "usft", sel: LEN },
@@ -590,7 +590,7 @@ a.orientation;               // "counter-clockwise"</pre>
       ]
     },
     "unit-area": {
-      page: "unit-converter.html",
+      page: "unit-converter",
       fields: [
         { k: "value", label: "Value", v: "1" },
         { k: "from", label: "From", v: "acre", sel: AREA },

@@ -87,7 +87,7 @@
       "name": "能不能把自己的网页里嵌一个计算器？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "可以。在工具页地址后加 embed=1 放进 iframe 即可去掉站点页头与文章正文， 例如 utm-coordinate-converter.html?embed=1&lat=43.642567&lon=-79.387139。 参数表、JavaScript接口与嵌入说明见开发者文档。"
+        "text": "可以。在工具页地址后加 embed=1 放进 iframe 即可去掉站点页头与文章正文， 例如 utm-coordinate-converter?embed=1&lat=43.642567&lon=-79.387139。 参数表、JavaScript接口与嵌入说明见开发者文档。"
       }
     }
   ]
@@ -98,11 +98,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../index.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -111,7 +111,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › 测绘计算器
+    <a href="./">首页</a> › 测绘计算器
   </nav>
 
   <div class="hero">
@@ -127,88 +127,88 @@
   <h2 class="cat" id="tools">中文计算器</h2>
   <p class="cat-sub">界面与说明均为中文，计算引擎与英文版完全相同。</p>
   <div class="zh-grid">
-    <a href="utm-coordinate-converter.html">
+    <a href="utm-coordinate-converter">
       <span class="zh-tag">坐标</span>
       <h3>经纬度与UTM坐标互转</h3>
       <p>经纬度转UTM东坐标、北坐标与带号，也支持度分秒输入；反算同样可用。附带批量转换：
       整段坐标列表一次算完并导出CSV。采用WGS84椭球，含挪威与斯瓦尔巴特殊带号处理。</p>
     </a>
-    <a href="unit-converter.html">
+    <a href="unit-converter">
       <span class="zh-tag">单位</span>
       <h3>测量单位换算</h3>
       <p>美国测量英尺与米、链、杆、令、英亩、公顷、海里、 vara 等三十多种单位，
       换算因子全部按定义精确输入。看懂国外图纸、旧地籍资料时最常用。</p>
     </a>
-    <a href="cut-fill-calculator.html">
+    <a href="cut-fill-calculator">
       <span class="zh-tag">土方</span>
       <h3>场地土方量计算</h3>
       <p>输入方格网各角点的设计标高与地面标高，自动算出挖方、填方与净土方，
       并给出每个方格的贡献，便于核对平场标高是否合理。</p>
     </a>
-    <a href="land-area-calculator.html">
+    <a href="land-area-calculator">
       <span class="zh-tag">面积</span>
       <h3>坐标推算地块面积</h3>
       <p>输入一圈坐标，按椭球面上的测地边长计算周长、投影面积与地块范围，
       输出平方米、公顷、亩、英亩多种单位，并标明闭合方向。</p>
     </a>
-    <a href="dms-converter.html">
+    <a href="dms-converter">
       <span class="zh-tag">坐标</span>
       <h3>度分秒转换器</h3>
       <p>十进制度与度分秒互转，同时给出度分（DDM）格式和 N/S/E/W 方位字母；秒的小数位可设到
       6 位，并附「秒保留几位对应地面多少米」的对照表。</p>
     </a>
-    <a href="mgrs-converter.html">
+    <a href="mgrs-converter">
       <span class="zh-tag">坐标</span>
       <h3>MGRS 转经纬度</h3>
       <p>军用网格参考与经纬度互转，1 米到 10 公里五档精度，同时给出底层的 UTM 带号、
       东坐标与北坐标；空格与分隔符可省略。</p>
     </a>
-    <a href="epsg-code-lookup.html">
+    <a href="epsg-code-lookup">
       <span class="zh-tag">坐标</span>
       <h3>EPSG 代码查询</h3>
       <p>486 个常用坐标系的代码、单位、适用范围与投影参数速查，含 CGCS2000、UTM 与州平面。</p>
     </a>
-    <a href="distance-bearing-calculator.html">
+    <a href="distance-bearing-calculator">
       <span class="zh-tag">测量</span>
       <h3>两点距离与方位角</h3>
       <p>输入两个经纬度坐标，按 WGS84 椭球解 Vincenty 反算：大地线距离（米、公里、英里、英尺）
       与起始、终止、返程方位角，附北京—上海算例。</p>
     </a>
-    <a href="azimuth-calculator.html">
+    <a href="azimuth-calculator">
       <span class="zh-tag">测量</span>
       <h3>象限角与方位角换算</h3>
       <p>N 45°30′ E 这类象限角与 0–360° 全圆方位角互转，同时给出 16 方位罗盘方向、象限判定
       与反方位角，支持度分秒输入。</p>
     </a>
-    <a href="slope-calculator.html">
+    <a href="slope-calculator">
       <span class="zh-tag">测量</span>
       <h3>坡度计算器</h3>
       <p>由高差与平距算百分比坡度、坡度角、1:n 坡比与屋面坡度（x:12），角度与百分数双向换算，
       附无障碍坡道 1:12 限值与常用坡度对照表。</p>
     </a>
-    <a href="curve-calculator.html">
+    <a href="curve-calculator">
       <span class="zh-tag">工程</span>
       <h3>圆曲线与竖曲线计算</h3>
       <p>平曲线由转角与半径解出切线长、曲线长、弦长、矢距、外矢距、曲度与主点桩号；
       竖曲线给出坡度代数差、K 值、起终点桩号高程与变坡点位置。</p>
     </a>
-    <a href="traverse-calculator.html">
+    <a href="traverse-calculator">
       <span class="zh-tag">工程</span>
       <h3>导线平差计算器</h3>
       <p>按方位角与水平距离推算各点坐标，给出坐标增量合计、闭合差与相对精度，
       支持博迪茨（罗盘规则）调整与最小二乘平差，后者附坐标中误差、误差椭圆与单位权中误差。</p>
     </a>
-<a href="map-scale-calculator.html">
+<a href="map-scale-calculator">
       <span class="zh-tag">测量</span>
       <h3>比例尺计算器</h3>
       <p>图上距离与实地距离按任意比例尺互算（1:500、1:2000、1:50 000…），可反求图纸真实比例尺，
       附常用比例尺每毫米对应实地长度对照表。</p>
-    </a><a href="dxf-coordinate-extractor.html">
+    </a><a href="dxf-coordinate-extractor">
       <span class="zh-tag">工程</span>
       <h3>DXF 坐标提取</h3>
       <p>导入 ASCII DXF，读出点、直线、多段线、圆与圆弧的图层、顶点数、长度和闭合面积，
       按图面单位换算公顷与英亩，全部顶点可导出 CSV。</p>
-    </a>    <a href="state-plane-converter.html">
+    </a>    <a href="state-plane-converter">
       <span class="zh-tag">工程</span>
       <h3>美国州平面坐标转换</h3>
       <p>NAD83 州平面 50 州 134 个分带与经纬度双向转换，支持米、美制测量英尺与国际英尺，
@@ -230,7 +230,7 @@
       <p>不是一回事，但它们是近亲：都是横轴墨卡托投影，区别在于分带宽度（UTM为6°带、高斯常用6°与3°带）、
       中央子午线长度比（UTM为0.9996，高斯为1）以及坐标加常数。
       国内图纸上的 y 坐标常带500 km加常数与带号前缀，直接当作UTM处理会出错。
-      详见教程《<a href="gauss-kruger-vs-utm.html">高斯-克吕格投影与UTM的区别</a>》。</p>
+      详见教程《<a href="gauss-kruger-vs-utm">高斯-克吕格投影与UTM的区别</a>》。</p>
     </details>
     <details>
       <summary>计算精度如何？</summary>
@@ -241,40 +241,40 @@
     <details>
       <summary>能不能把自己的网页里嵌一个计算器？</summary>
       <p>可以。在工具页地址后加 <code>embed=1</code> 放进 iframe 即可去掉站点页头与文章正文，
-      例如 <code>utm-coordinate-converter.html?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>。
-      参数表、JavaScript接口与嵌入说明见<a href="../developers.html">开发者文档</a>。</p>
+      例如 <code>utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>。
+      参数表、JavaScript接口与嵌入说明见<a href="../developers">开发者文档</a>。</p>
     </details>
   </div>
 
   <h2 class="cat">中文教程</h2>
   <div class="glist">
-    <a href="gauss-kruger-vs-utm.html">
+    <a href="gauss-kruger-vs-utm">
       <span class="tagline">投影</span>
       <h3>高斯-克吕格投影与UTM的区别</h3>
       <p>3°带与6°带、y坐标的500 km加常数与带号前缀、中央子午线长度比——看懂国内图纸坐标的前提。</p>
     </a>
-    <a href="how-to-read-utm-coordinates.html">
+    <a href="how-to-read-utm-coordinates">
       <span class="tagline">坐标</span>
       <h3>如何读取UTM坐标</h3>
       <p>带号、纬度带字母、东坐标、北坐标各代表什么，以及四种会把点读错大陆的常见误读。</p>
     </a>
-    <a href="degrees-minutes-seconds-explained.html">
+    <a href="degrees-minutes-seconds-explained">
       <span class="tagline">角度</span>
       <h3>经纬度的度分秒（DMS）</h3>
       <p>度分秒与十进制度的换算、秒的精度含义、常见的书写格式与换算错误。</p>
     </a>
-    <a href="survey-foot-vs-international-foot.html">
+    <a href="survey-foot-vs-international-foot">
       <span class="tagline">单位</span>
       <h3>美国测量英尺与国际英尺</h3>
       <p>两个英尺相差百万分之二，一英里差3.2毫米——读国外图纸必须分清的那一个。</p>
     </a>
   </div>
-  <a class="more-link" href="guides.html">查看全部中文教程 →</a>
+  <a class="more-link" href="guides">查看全部中文教程 →</a>
 
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

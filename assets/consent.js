@@ -25,11 +25,11 @@
 
   /* the banner can be drawn from any directory depth (zh/ pages too), so resolve the
      privacy link against the directory this script itself was served from */
-  var PRIVACY_URL = "privacy.html#cookies";
+  var PRIVACY_URL = "privacy#cookies";
   try {
     if (document.currentScript && document.currentScript.src) {
       var root = document.currentScript.src.replace(/assets\/consent\.js.*$/, "");
-      if (root) { PRIVACY_URL = root + "privacy.html#cookies"; }
+      if (root) { PRIVACY_URL = root + "privacy#cookies"; }
     }
   } catch (e) { /* keep the relative fallback */ }
 

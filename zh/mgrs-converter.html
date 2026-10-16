@@ -5,16 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MGRS 坐标转经纬度 — 军用网格参考系统换算</title>
 <meta name="description" content="免费的 MGRS 转经纬度工具：输入 17T PJ 30084 33438 这类网格参考得到经纬度，也可把经纬度转成 10 公里到 1 米精度的 MGRS，基于 WGS84，浏览器本地运行。">
-<link rel="canonical" href="https://coordcalc.com/zh/mgrs-converter.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/mgrs-converter.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/mgrs-converter.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/mgrs-converter.html">
+<link rel="canonical" href="https://coordcalc.com/zh/mgrs-converter">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/mgrs-converter">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/mgrs-converter">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/mgrs-converter">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#2563eb">
 <meta property="og:title" content="MGRS 坐标转经纬度 — 军用网格参考系统换算">
 <meta property="og:description" content="免费的 MGRS 转经纬度工具：输入 17T PJ 30084 33438 这类网格参考得到经纬度，也可把经纬度转成 10 公里到 1 米精度的 MGRS，基于 WGS84，浏览器本地运行。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://coordcalc.com/zh/mgrs-converter.html">
+<meta property="og:url" content="https://coordcalc.com/zh/mgrs-converter">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -238,11 +238,11 @@
 
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../mgrs-converter.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../mgrs-converter" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -251,7 +251,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › MGRS 转经纬度
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › MGRS 转经纬度
   </nav>
 
 <h1>MGRS 坐标转经纬度</h1>
@@ -345,7 +345,7 @@
       是网格参考无法换算的最常见原因。反算精度同样由你提供的位数决定——每轴 5 位对应 1 米，
       3 位对应 100 米，只写方格字母则结果就是方格本身。</p>
     <p>如果你要的是底层的网格数字而不是地理坐标，本页与
-      <a href="utm-coordinate-converter.html">UTM 坐标转经纬度</a>共用同一套 WGS84 引擎，
+      <a href="utm-coordinate-converter">UTM 坐标转经纬度</a>共用同一套 WGS84 引擎，
       这里给出的东坐标、北坐标与 UTM 结果一致到毫米。</p>
   </section>
 
@@ -360,26 +360,26 @@
       <li>把手写的网格参考与制图软件记录的坐标互相印证。</li>
     </ul>
     <p>国内工程图纸用的是高斯-克吕格投影而非 UTM/MGRS，两者带宽、长度比和加常数都不同。
-      如果你的数据来自国内图纸，请先看<a href="gauss-kruger-vs-utm.html">高斯-克吕格与 UTM 的区别</a>，
+      如果你的数据来自国内图纸，请先看<a href="gauss-kruger-vs-utm">高斯-克吕格与 UTM 的区别</a>，
       不要把高斯坐标直接当 MGRS 解算。</p>
   </section>
 
   <section class="card">
     <h2>延伸阅读</h2>
     <div class="links">
-      <a href="../utm-vs-mgrs.html" hreflang="en">UTM 与 MGRS 有什么区别<small>同一套网格的两种写法，数字各代表什么</small></a>
+      <a href="../utm-vs-mgrs" hreflang="en">UTM 与 MGRS 有什么区别<small>同一套网格的两种写法，数字各代表什么</small></a>
     </div>
   </section>
 
   <section class="card">
     <h2>相关计算器</h2>
     <div class="links">
-      <a href="utm-coordinate-converter.html">UTM 坐标转经纬度<small>WGS84 经纬度与 UTM 东坐标、北坐标、带号互转</small></a>
-      <a href="dms-converter.html">度分秒转换器<small>十进制度与度分秒、度分互转</small></a>
-      <a href="distance-bearing-calculator.html">两点距离与方位角<small>两个坐标算地面距离和方位角</small></a>
-      <a href="land-area-calculator.html">地块面积计算<small>由坐标算面积、亩数和周长</small></a>
-      <a href="../map-scale-calculator.html" hreflang="en">比例尺计算器（英文）<small>任意比例尺下图上距离换地面距离</small></a>
-      <a href="../traverse-calculator.html" hreflang="en">导线平差计算器（英文）<small>坐标、闭合差与博迪茨调整</small></a>
+      <a href="utm-coordinate-converter">UTM 坐标转经纬度<small>WGS84 经纬度与 UTM 东坐标、北坐标、带号互转</small></a>
+      <a href="dms-converter">度分秒转换器<small>十进制度与度分秒、度分互转</small></a>
+      <a href="distance-bearing-calculator">两点距离与方位角<small>两个坐标算地面距离和方位角</small></a>
+      <a href="land-area-calculator">地块面积计算<small>由坐标算面积、亩数和周长</small></a>
+      <a href="../map-scale-calculator" hreflang="en">比例尺计算器（英文）<small>任意比例尺下图上距离换地面距离</small></a>
+      <a href="traverse-calculator">导线平差计算器<small>坐标、闭合差与博迪茨调整</small></a>
     </div>
   </section>
 
@@ -419,7 +419,7 @@
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

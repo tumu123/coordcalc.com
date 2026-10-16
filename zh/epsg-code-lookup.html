@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EPSG 代码查询 — 坐标系代码速查（486 个常用系统）</title>
 <meta name="description" content="免费的 EPSG 代码查询工具：按代码、名称或地区检索 486 个常用坐标系，查看基准、投影、单位、适用范围与投影参数，数据来自 EPSG 官方数据集。">
-<link rel="canonical" href="https://coordcalc.com/zh/epsg-code-lookup.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/epsg-code-lookup.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/epsg-code-lookup.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/epsg-code-lookup.html">
+<link rel="canonical" href="https://coordcalc.com/zh/epsg-code-lookup">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/epsg-code-lookup">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/epsg-code-lookup">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/epsg-code-lookup">
 <meta property="og:title" content="EPSG 代码查询 — 坐标系代码速查（486 个常用系统）">
 <meta property="og:description" content="免费的 EPSG 代码查询工具：按代码、名称或地区检索 486 个常用坐标系，查看基准、投影、单位、适用范围与投影参数，数据来自 EPSG 官方数据集。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://coordcalc.com/zh/epsg-code-lookup.html">
+<meta property="og:url" content="https://coordcalc.com/zh/epsg-code-lookup">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -109,11 +109,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../epsg-code-lookup.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../epsg-code-lookup" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -122,7 +122,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › <a href="index.html#tools">计算器</a> › EPSG 代码查询
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › EPSG 代码查询
   </nav>
 
 <h1>EPSG 代码查询</h1>
@@ -210,7 +210,7 @@
     </div>
     <p><b>复合</b>代码把平面系统和高程系统捆绑在一起——例如某个州平面分带配 NAVD88 高程，
       这正是绝大多数测量成果的实际形态。3D 代码里的椭球高与高程代码里的海拔之间的差异由大地水准面
-      决定，详见<a href="../geoid-vs-ellipsoid.html" hreflang="en">大地水准面与椭球面（英文）</a>。</p>
+      决定，详见<a href="../geoid-vs-ellipsoid" hreflang="en">大地水准面与椭球面（英文）</a>。</p>
   </section>
 
   <section class="card">
@@ -242,9 +242,9 @@
     </div>
     <p>UTM 各带的代码有规律可背：第 <i>n</i> 带北半球是 <code>32600 + n</code>，南半球是
       <code>32700 + n</code>。带号本身由经度算出，方法见
-      <a href="how-to-read-utm-coordinates.html">如何读取 UTM 坐标</a>。
+      <a href="how-to-read-utm-coordinates">如何读取 UTM 坐标</a>。
       国内图纸使用的高斯-克吕格投影另有对应的 EPSG 代码族：CGCS2000 6° 带是 4491–4512，
-      3° 带是 4513–4554，与 UTM 完全不同，详见<a href="gauss-kruger-vs-utm.html">高斯-克吕格与 UTM 的区别</a>。</p>
+      3° 带是 4513–4554，与 UTM 完全不同，详见<a href="gauss-kruger-vs-utm">高斯-克吕格与 UTM 的区别</a>。</p>
   </section>
 
   <section class="card">
@@ -272,7 +272,7 @@
       公里级的偏差，怎么复核测量数据都对不上。</p>
     <p>Pseudo-Mercator 还会在离赤道越远处夸大距离和面积：30° 处长度比约 1.15，45° 处约 1.41，
       60° 处达 2.0。绝不要在 Web Mercator 图层上量面积和距离，应换到
-      <a href="../state-plane-converter.html" hreflang="en">州平面</a>或 UTM 分带这样的投影坐标系，
+      <a href="../state-plane-converter" hreflang="en">州平面</a>或 UTM 分带这样的投影坐标系，
       或先转回经纬度再在椭球面上计算。</p>
   </section>
 
@@ -317,7 +317,7 @@
             <td><code>2227</code> vs <code>2222</code></td>
             <td>百万分之二，不是 3.28 倍</td>
             <td>美国测量英尺与国际英尺只差百万分之二，英尺带读错英尺是边界量级的误差而非粗差。见
-              <a href="survey-foot-vs-international-foot.html">测量英尺与国际英尺</a>。</td>
+              <a href="survey-foot-vs-international-foot">测量英尺与国际英尺</a>。</td>
           </tr>
         </tbody>
       </table>
@@ -368,23 +368,23 @@
   <section class="card">
     <h2>延伸阅读</h2>
     <div class="links">
-      <a href="../what-datum-does-gps-use.html" hreflang="en">GPS 用的是什么基准？（英文）<small>WGS 84、NAD83 与 ITRF 比较</small></a>
-      <a href="how-to-read-utm-coordinates.html">如何读取 UTM 坐标<small>带号、纬度带、东坐标、北坐标逐项拆解</small></a>
-      <a href="../utm-vs-mgrs.html" hreflang="en">UTM 与 MGRS 有什么区别（英文）<small>同一套网格的两种写法</small></a>
-      <a href="../geoid-vs-ellipsoid.html" hreflang="en">大地水准面与椭球面（英文）<small>3D 代码里的高为什么不等于海拔</small></a>
-      <a href="survey-foot-vs-international-foot.html">美国测量英尺与国际英尺<small>两个英尺、两套代码、百万分之二</small></a>
+      <a href="../what-datum-does-gps-use" hreflang="en">GPS 用的是什么基准？（英文）<small>WGS 84、NAD83 与 ITRF 比较</small></a>
+      <a href="how-to-read-utm-coordinates">如何读取 UTM 坐标<small>带号、纬度带、东坐标、北坐标逐项拆解</small></a>
+      <a href="../utm-vs-mgrs" hreflang="en">UTM 与 MGRS 有什么区别（英文）<small>同一套网格的两种写法</small></a>
+      <a href="../geoid-vs-ellipsoid" hreflang="en">大地水准面与椭球面（英文）<small>3D 代码里的高为什么不等于海拔</small></a>
+      <a href="survey-foot-vs-international-foot">美国测量英尺与国际英尺<small>两个英尺、两套代码、百万分之二</small></a>
     </div>
   </section>
 
   <section class="card">
     <h2>相关计算器</h2>
     <div class="links">
-      <a href="utm-coordinate-converter.html">UTM 坐标转经纬度<small>经纬度、UTM 网格与批量转换</small></a>
-      <a href="../state-plane-converter.html" hreflang="en">州平面坐标转换（英文）<small>134 个 NAD83 州平面分带，双向互转</small></a>
-      <a href="mgrs-converter.html">MGRS 转经纬度<small>军用网格参考与经纬度互转</small></a>
-      <a href="dms-converter.html">度分秒转换器<small>十进制度与度分秒、度分互转</small></a>
-      <a href="land-area-calculator.html">坐标推算地块面积<small>由坐标算面积、亩数与周长</small></a>
-      <a href="guides.html">全部教程<small>中文教程索引</small></a>
+      <a href="utm-coordinate-converter">UTM 坐标转经纬度<small>经纬度、UTM 网格与批量转换</small></a>
+      <a href="../state-plane-converter" hreflang="en">州平面坐标转换（英文）<small>134 个 NAD83 州平面分带，双向互转</small></a>
+      <a href="mgrs-converter">MGRS 转经纬度<small>军用网格参考与经纬度互转</small></a>
+      <a href="dms-converter">度分秒转换器<small>十进制度与度分秒、度分互转</small></a>
+      <a href="land-area-calculator">坐标推算地块面积<small>由坐标算面积、亩数与周长</small></a>
+      <a href="guides">全部教程<small>中文教程索引</small></a>
     </div>
   </section>
 
@@ -428,7 +428,7 @@
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

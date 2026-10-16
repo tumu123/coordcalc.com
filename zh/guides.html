@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>中文教程 — 投影、坐标、角度与测量单位详解</title>
 <meta name="description" content="测绘计算器的中文教程合集，共 13 篇：高斯-克吕格投影与UTM的区别、UTM坐标怎么读、东坐标北坐标换算经纬度、UTM与MGRS的区别、GPS基准面与WGS84、大地水准面与椭球面、导线闭合差、方位角与象限角、坡度百分比、坐标算面积、美国公共土地测量系统、度分秒、两种英尺。每篇都用真实算例算到底，并链接回对应的计算器。">
-<link rel="canonical" href="https://coordcalc.com/zh/guides.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/guides.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/guides.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/guides.html">
+<link rel="canonical" href="https://coordcalc.com/zh/guides">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/guides">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/guides">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/guides">
 <meta property="og:title" content="中文教程 — 投影、坐标、角度、单位与地界详解">
 <meta property="og:description" content="13 篇中文教程：投影、坐标、方向、坡度、面积、单位与地界，每篇附真实算例与对应的计算器。">
 <meta property="og:type" content="website">
-<meta property="og:url" content="https://coordcalc.com/zh/guides.html">
+<meta property="og:url" content="https://coordcalc.com/zh/guides">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -25,7 +25,7 @@
   "@type": "CollectionPage",
   "name": "CoordCalc 中文教程",
   "description": "13 篇中文教程，覆盖投影与坐标、基准面与高程、导线与方向、面积与地界，以及角度与测量单位。",
-  "url": "https://coordcalc.com/zh/guides.html",
+  "url": "https://coordcalc.com/zh/guides",
   "inLanguage": "zh-CN",
   "isPartOf": {"@type": "WebSite", "name": "CoordCalc 测绘计算器", "url": "https://coordcalc.com/zh/"}
 }
@@ -37,11 +37,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../guides.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../guides" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -50,7 +50,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › 教程
+    <a href="./">首页</a> › 教程
   </nav>
 
   <h1>中文教程</h1>
@@ -67,37 +67,37 @@
 
   <h2 id="coords">坐标与投影</h2>
   <div class="glist">
-    <a href="gauss-kruger-vs-utm.html">
+    <a href="gauss-kruger-vs-utm">
       <span class="tagline">建议先读</span>
       <h3>高斯-克吕格投影与UTM的区别</h3>
       <p>国内图纸用高斯-克吕格，不是UTM。3°带与6°带、长度比 1 与 0.9996、y坐标的 500 km 加常数与带号前缀——
       同一个点上的实测对照：东坐标差 20.6 米、北坐标差 1 767.7 米。附判别清单与常用 EPSG 代码表。</p>
     </a>
-    <a href="how-to-read-utm-coordinates.html">
+    <a href="how-to-read-utm-coordinates">
       <span class="tagline">基础</span>
       <h3>怎么读UTM坐标：带号、纬度带、东坐标与北坐标</h3>
       <p>一串 UTM 参考由四部分组成，少一个点就可能跑到别的半球。为什么东坐标从 500 000 米起算、
       纬度带字母到底管什么用，以及四种最常见的误读。</p>
     </a>
-    <a href="convert-easting-northing-to-lat-long.html">
+    <a href="convert-easting-northing-to-lat-long">
       <span class="tagline">反算</span>
       <h3>东坐标北坐标怎么换算成经纬度</h3>
       <p>这不是一个公式能解决的换算：必须先有带号、南北半球与基准面。含四步反算过程与完整算例
       （17T 630084 4833438 → 43.642562°N, 79.387143°W），以及把点位算偏几百公里的坐标写反错误。</p>
     </a>
-    <a href="utm-vs-mgrs.html">
+    <a href="utm-vs-mgrs">
       <span class="tagline">格网</span>
       <h3>UTM 与 MGRS 的区别</h3>
       <p>同一个格网写的两遍：一个用距带原点的米数，一个用字母加数字。为什么位数就等于精度、
       100 km 方格怎么解码，以及带偏移量为什么是最容易出错的一步。</p>
     </a>
-    <a href="what-datum-does-gps-use.html">
+    <a href="what-datum-does-gps-use">
       <span class="tagline">基准面</span>
       <h3>GPS 用的是哪个基准面？WGS84 详解</h3>
       <p>WGS84 不是一个固定的东西，而是椭球加一次实现，已经实现过多次。NAD83 与 WGS84 明明椭球
       几乎重合，坐标却相差约一米；NAD27 更是能差到 100 米。差多少可以忽略，差多少不能。</p>
     </a>
-    <a href="geoid-vs-ellipsoid.html">
+    <a href="geoid-vs-ellipsoid">
       <span class="tagline">高程</span>
       <h3>大地水准面与椭球面的区别</h3>
       <p>h = H + N。GNSS 给出的椭球高与地形图上的海拔高程相差几十米，而这个差别各地不同。
@@ -107,19 +107,19 @@
 
   <h2 id="measure">导线、方向与坡度</h2>
   <div class="glist">
-    <a href="how-to-calculate-closure-error.html">
+    <a href="how-to-calculate-closure-error">
       <span class="tagline">导线</span>
       <h3>导线闭合差怎么算</h3>
       <p>坐标增量、线性闭合差、相对精度与罗盘规则（博迪茨法）调整，用 521.02 米四边闭合环
       一路算到 1:24,644。附精度等级对照表，以及「先查角度闭合」这条最容易被跳过的前置校验。</p>
     </a>
-    <a href="bearing-vs-azimuth.html">
+    <a href="bearing-vs-azimuth">
       <span class="tagline">角度</span>
       <h3>方位角与象限角的区别</h3>
       <p>方位角是一个连续角度，象限角先声明象限再给角度。四个象限的换算规则、正反方位角的关系，
       以及真北、磁北、格网北三者混用会怎样让坐标闭合得很漂亮却整体旋转。</p>
     </a>
-    <a href="how-to-calculate-slope-percentage.html">
+    <a href="how-to-calculate-slope-percentage">
       <span class="tagline">坡度</span>
       <h3>坡度百分比怎么算</h3>
       <p>高差比水平距离。百分比、角度、比值与屋顶坡度四者互换对照表；
@@ -129,13 +129,13 @@
 
   <h2 id="land">面积与地界</h2>
   <div class="glist">
-    <a href="how-to-calculate-acreage-from-coordinates.html">
+    <a href="how-to-calculate-acreage-from-coordinates">
       <span class="tagline p2">面积</span>
       <h3>用坐标计算面积</h3>
       <p>算术只有一行（鞋带公式），难点全在假设里：格网面积与实地面积相差长度比的平方，
       而把经纬度直接喂进公式会得到「平方度」。含顶点顺序的两项自查与六种单位换算因子。</p>
     </a>
-    <a href="section-township-range.html">
+    <a href="section-township-range">
       <span class="tagline p2">地界</span>
       <h3>Section、Township 与 Range 详解</h3>
       <p>美国公共土地测量系统的三层格网：640 英亩的 section、36 个 section 的 township。
@@ -145,13 +145,13 @@
 
   <h2 id="units">角度与单位</h2>
   <div class="glist">
-    <a href="degrees-minutes-seconds-explained.html">
+    <a href="degrees-minutes-seconds-explained">
       <span class="tagline p2">角度</span>
       <h3>度分秒怎么读、怎么算</h3>
       <p>度分秒是 60 进制，不是十进制。互转公式、实际算例、秒值对应的地面距离表，
       以及把「39.5422」直接当十进制度读所带来的 40.4 公里误差。</p>
     </a>
-    <a href="survey-foot-vs-international-foot.html">
+    <a href="survey-foot-vs-international-foot">
       <span class="tagline p2">单位</span>
       <h3>测量英尺与国际英尺：你手上的资料用的是哪一种</h3>
       <p>两个定义、百万分之二的差别、2023 年那次没有让旧资料消失的变更，
@@ -162,26 +162,26 @@
   <h2 id="tools">中文计算器</h2>
   <p>教程里用到的计算器都在这里，界面与说明为中文，计算引擎与英文版完全相同。</p>
   <div class="tools">
-    <a href="utm-coordinate-converter.html">UTM坐标与经纬度互转<small>正算、反算与批量CSV导出</small></a>
-    <a href="unit-converter.html">测量单位换算器<small>亩、公顷、英尺、链、英亩互换</small></a>
-    <a href="cut-fill-calculator.html">场地土方量计算<small>断面法与方格网法，含松散与压实系数</small></a>
-    <a href="land-area-calculator.html">坐标推算地块面积<small>面积、周长、形心与顶点校核</small></a>
-    <a href="dms-converter.html">十进制度 ↔ 度分秒<small>支持带方位字母的DMS格式</small></a>
-    <a href="mgrs-converter.html">MGRS 军用网格参考<small>精度从 100 km 到 1 m 可选</small></a>
-    <a href="azimuth-calculator.html">方位角与象限角互转<small>0°–360° 方位角与罗盘方位互换</small></a>
-    <a href="slope-calculator.html">坡度计算器<small>百分比、角度、比值与屋顶坡度</small></a>
-    <a href="distance-bearing-calculator.html">两点距离与方位角<small>正反方位角与边长方差</small></a>
-    <a href="map-scale-calculator.html">比例尺计算器<small>图上距离与实地距离换算</small></a>
-    <a href="traverse-calculator.html">导线平差计算器<small>闭合差、相对精度与最小二乘平差</small></a>
-    <a href="state-plane-converter.html">美国州平面坐标转换<small>NAD83 各分带，英尺与米</small></a>
-    <a href="epsg-code-lookup.html">EPSG 代码查询<small>486 个坐标系的单位与投影参数</small></a>
-    <a href="dxf-coordinate-extractor.html">DXF 坐标提取<small>从CAD图纸里读出点与顶点</small></a>
+    <a href="utm-coordinate-converter">UTM坐标与经纬度互转<small>正算、反算与批量CSV导出</small></a>
+    <a href="unit-converter">测量单位换算器<small>亩、公顷、英尺、链、英亩互换</small></a>
+    <a href="cut-fill-calculator">场地土方量计算<small>断面法与方格网法，含松散与压实系数</small></a>
+    <a href="land-area-calculator">坐标推算地块面积<small>面积、周长、形心与顶点校核</small></a>
+    <a href="dms-converter">十进制度 ↔ 度分秒<small>支持带方位字母的DMS格式</small></a>
+    <a href="mgrs-converter">MGRS 军用网格参考<small>精度从 100 km 到 1 m 可选</small></a>
+    <a href="azimuth-calculator">方位角与象限角互转<small>0°–360° 方位角与罗盘方位互换</small></a>
+    <a href="slope-calculator">坡度计算器<small>百分比、角度、比值与屋顶坡度</small></a>
+    <a href="distance-bearing-calculator">两点距离与方位角<small>正反方位角与边长方差</small></a>
+    <a href="map-scale-calculator">比例尺计算器<small>图上距离与实地距离换算</small></a>
+    <a href="traverse-calculator">导线平差计算器<small>闭合差、相对精度与最小二乘平差</small></a>
+    <a href="state-plane-converter">美国州平面坐标转换<small>NAD83 各分带，英尺与米</small></a>
+    <a href="epsg-code-lookup">EPSG 代码查询<small>486 个坐标系的单位与投影参数</small></a>
+    <a href="dxf-coordinate-extractor">DXF 坐标提取<small>从CAD图纸里读出点与顶点</small></a>
   </div>
 
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>

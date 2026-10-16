@@ -7,9 +7,10 @@
 
 ```
 /                    英文首页
-/<tool>.html         英文工具页与教程页（33 个）
-/zh/<tool>.html      中文对应页面（35 个）
-/404.html            英文自定义 404（Cloudflare 会按目录就近查找，/zh/404.html 同理）
+/<name>              英文工具页与教程页（33 个）
+/zh/                 中文首页
+/zh/<name>           中文对应页面（34 个）
+/404                 英文自定义 404（Cloudflare 按目录就近查找；/zh/404 同理）
 /assets/             article.css、consent.js、track.js、图标、OG 图、webmanifest
 /robots.txt          屏蔽 /assets/consent.js 与 /assets/track.js，声明 sitemap 位置
 /sitemap.xml         67 条 URL
@@ -17,6 +18,9 @@
 /_redirects          Cloudflare Pages 跳转规则
 ```
 
+> 磁盘上的文件仍然叫 `x.html`（Cloudflare 要求如此），但**对外地址不带扩展名**——
+> 详见下面「URL 形式」一节。
+>
 > `_headers` 和 `_redirects` 是 Cloudflare 的约定文件，不会被当成静态资源对外提供。
 
 ---
@@ -47,46 +51,48 @@
 
 ---
 
-## ⚠️ 上线前需要决定的一件事：`.html` 地址会被跳转
+## URL 形式（已定：无扩展名）
 
-Cloudflare（Pages 与 Workers 静态资源行为一致）会**把 `.html` 地址重定向到无扩展名地址**，
-官方文档原话是 “Pages will also redirect HTML pages to their extension-less counterparts:
-for instance, `/contact.html` will be redirected to `/contact`”。
+Cloudflare Pages 默认使用 `auto-trailing-slash` 的 HTML 处理策略，官方行为是：
 
-而本站目前所有的 canonical、hreflang、`og:url`、`sitemap.xml` 和站内链接**都写成 `.html` 形式**，
-两者是冲突的。当前的实际效果是：
+| 磁盘上的文件 | 请求 | 响应 |
+|---|---|---|
+| `dms-converter.html` | `GET /dms-converter` | **200**，直接返回该文件 |
+| `dms-converter.html` | `GET /dms-converter.html` | 307 → `/dms-converter` |
+| `index.html` | `GET /` | **200** |
+| `index.html` | `GET /index.html` | 307 → `/` |
+| `zh/index.html` | `GET /zh/` | **200** |
+| `zh/index.html` | `GET /zh` | 307 → `/zh/` |
 
-| 请求 | 结果 |
-|---|---|
-| `GET /dms-converter.html` | 307 → `/dms-converter` |
-| `GET /dms-converter` | 200，返回 `dms-converter.html` 的内容 |
-| `GET /index.html` | 跳转到 `/` |
-| `GET /zh/index.html` | 跳转到 `/zh/` |
+也就是说，**平台认可的规范形式是「不带扩展名」**：普通页 `/x`（无尾斜杠）、
+目录首页 `/` 与 `/zh/`（有尾斜杠）。
 
-也就是说站点能正常访问，但每个 `.html` 链接多一跳，且 canonical 指向的是一个会跳转的地址。
-搜索引擎一般能自己收敛（canonical、sitemap、hreflang 三者一致，都指向 `.html`），
-但这属于“本可以避免的信号噪音”，上 Search Console 后大概率会看到
-「Sitemap 包含重定向网址」之类的提示。
+本仓库已按这个形式统一：站内链接、`<link rel="canonical">`、`hreflang` 三元组、
+`og:url`、JSON-LD 的 `url` / `@id`、`sitemap.xml` **全部**写成无扩展名地址。
+三者（链接目标 / canonical / 实际服务的地址）完全一致，**没有任何一跳**。
 
-**三种处理方式，我建议选 B：**
+另一条路是反过来把 `.html` 当规范形式（Workers 静态资源 + `html_handling: "none"`），
+但那个模式只做精确匹配，`/` 和 `/zh/` 都不再自动指向 `index.html`，需要另补代理规则，
+配置更绕，因此不采用。
 
-**A. 保持现状** — 什么都不用改，站点可用，只是多一跳 + 上述提示。适合“先上线看看”。
+### 两条守卫规则
 
-**B. 把无扩展名地址作为规范形式（推荐）** — 文件仍叫 `x.html`（Cloudflare 会为
-`/x` 提供它，返回 200），但站内链接与 canonical / hreflang / `og:url` / sitemap
-统一改成 `https://coordcalc.com/x`。这样链接、canonical、实际服务的地址三者完全一致，
-没有任何跳转。代价是要改 69 个页面里的内链和全部回归测试。
-
-**C. 不用 Pages，改用 Workers 静态资源 + `html_handling: "none"`** — 能保住 `.html` 形式，
-但该模式只做精确匹配，`/` 和 `/zh/` 都不再自动指向 `index.html`，需要再补代理规则，
-配置更绕、更容易踩坑。除非你有别的理由必须用 Workers，否则不建议。
+`index.html` 位于根目录和 `zh/` 下，它的无扩展名形式会变成 `/index` 和 `/zh/index`——
+一个能把首页再提供一遍的地址。站内没有任何链接指向它们，但搜索引擎可能自己推出来，
+所以 `_redirects` 里把两者 301 到真正的首页。这两条规则一定生效：Pages 会先执行
+`_redirects`，再匹配静态资源（官方原文：“Redirects are always followed, regardless of
+whether or not an asset matches the incoming request”）。
 
 ### 上线后如何验证
 
 ```bash
-curl -sI https://coordcalc.com/dms-converter.html | head -1   # 看是否 307
-curl -sI https://coordcalc.com/dms-converter      | head -1   # 应为 200
-curl -sI https://coordcalc.com/                   | head -1   # 应为 200
+curl -sI https://coordcalc.com/dms-converter | head -1        # 200（规范形式）
+curl -sI https://coordcalc.com/dms-converter.html | head -1   # 307 → /dms-converter
+curl -sI https://coordcalc.com/ | head -1                     # 200
+curl -sI https://coordcalc.com/zh/ | head -1                  # 200
+curl -sI https://coordcalc.com/zh | head -1                   # 307 → /zh/
+curl -sI https://coordcalc.com/index | head -1                # 301 → /
+curl -sI https://coordcalc.com/sitemap.xml | head -1          # 200，且其中不含带 .html 的 URL
 ```
 
 ---
@@ -100,21 +106,29 @@ curl -sI https://coordcalc.com/                   | head -1   # 应为 200
 - [ ] **HSTS**：Cloudflare → SSL/TLS → Edge Certificates → 打开 HSTS。不要写在 `_headers` 里，
       以免影响账号下其他子域。
 - [ ] **`www` 跳转**：按上文 Redirect Rule 配好，并确认 `https://www.coordcalc.com/x` → `https://coordcalc.com/x`。
-- [ ] **确认 `.html` 地址策略**：按上一节决定是 A 还是 B。
+- [ ] **确认无多余跳转**：按上一节的 `curl` 清单过一遍，Search Console 的「网页」报告里
+      不应出现「已提交的网址含有重定向」。
 
 ---
 
 ## 本地预览
 
-站点是纯静态的，用任意静态服务器起在仓库根目录即可：
+因为对外地址不带扩展名，**普通的 `python -m http.server` 不再够用**——它不理解
+「`/dms-converter` → `dms-converter.html`」的映射，站内每个链接都会 404。
+两个可用的方式：
 
 ```bash
-python -m http.server 8080
-# 或 npx serve .
+# 方式一：与线上行为完全一致（推荐）
+npx wrangler pages dev .
+
+# 方式二：不起依赖，用本地工作区里的等价实现
+python <本地工作区>/.workbuddy/scratch/preview.py --port 8080
 ```
 
-注意：用 `file://` 直接打开会被浏览器的同源策略挡住一部分能力（`fetch`、部分剪贴板 API），
-请用上面的方式起本地服务。`/404.html` 依赖 `<base href="/">`，只有在服务器根目录访问时行为才正确。
+`preview.py` 复刻了 Pages 的 `auto-trailing-slash` 与就近查找 `404.html` 的行为，
+并会读取 `_redirects` 里的静态规则，因此 `/index` → `/` 这类规则也能在本地验证。
+
+用 `file://` 直接打开页面同样不可行：无扩展名链接在本地文件系统上无对应文件。
 
 ---
 
@@ -126,3 +140,6 @@ python -m http.server 8080
   改完英文页后重新生成，否则下次重建会被覆盖。唯一例外是英文 `404.html`：
   它是中文 404 页的源文件，改动后需同步重建 `zh/404.html`。
 - 品牌名与域名的批量替换脚本是 `rebrand.py`；若要换域名，改 `PAIRS` 后跑一次即可。
+- 把 `.html` 链接改成无扩展名形式的脚本是 `extensionless.py`（幂等，可重复运行）。
+- `preview.py`（本地预览）、`crawl_links.py`（内链全量探活）、`url_matrix.py`
+  （逐页校验规范地址与 `.html` 跳转）是本地验证工具，不参与部署。

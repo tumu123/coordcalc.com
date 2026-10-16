@@ -5,14 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>导线闭合差怎么算 — 坐标增量、相对精度与罗盘规则调整</title>
 <meta name="description" content="闭合导线回到起点时的偏差就是闭合差。本文讲清坐标增量（纬度差与经距差）的计算、线性闭合差与相对精度的换算、精度等级判定，以及用罗盘规则（博迪茨法）分配改正数的方法，附完整算例与角度闭合的先行检查。">
-<link rel="canonical" href="https://coordcalc.com/zh/how-to-calculate-closure-error.html">
-<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-closure-error.html">
-<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-closure-error.html">
-<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-closure-error.html">
+<link rel="canonical" href="https://coordcalc.com/zh/how-to-calculate-closure-error">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-closure-error">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-closure-error">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-closure-error">
 <meta property="og:title" content="导线闭合差怎么算 — 坐标增量、相对精度与罗盘规则">
 <meta property="og:description" content="坐标增量、线性闭合差、相对精度、罗盘规则调整，一步步带真实数字算一遍。">
 <meta property="og:type" content="article">
-<meta property="og:url" content="https://coordcalc.com/zh/how-to-calculate-closure-error.html">
+<meta property="og:url" content="https://coordcalc.com/zh/how-to-calculate-closure-error">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
 <meta name="twitter:card" content="summary_large_image">
 <link rel="manifest" href="../assets/site.webmanifest">
@@ -31,7 +31,7 @@
   "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
   "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
     "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
-  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-calculate-closure-error.html"},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-calculate-closure-error"},
   "articleSection": "导线与平差"
 }
 </script>
@@ -52,11 +52,11 @@
 <body>
 <header class="site">
   <div class="hwrap">
-    <a class="brand" href="index.html"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
-      <a href="index.html#tools">计算器</a>
-      <a href="guides.html">教程</a>
-      <a href="../how-to-calculate-closure-error.html" hreflang="en">English</a>
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../how-to-calculate-closure-error" hreflang="en">English</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -65,7 +65,7 @@
 <div class="wrap">
 
   <nav class="crumb">
-    <a href="index.html">首页</a> › <a href="guides.html">教程</a> › 导线闭合差怎么算
+    <a href="./">首页</a> › <a href="guides">教程</a> › 导线闭合差怎么算
   </nav>
 
 <h1>导线闭合差怎么算</h1>
@@ -164,7 +164,7 @@
   <p>
     当已知误差集中在某处，或图形本身价值很高时，应改用<b>最小二乘平差</b>：它以各观测的
     预期精度为权，使改正数的平方和最小，并且给出残差及其不确定度的评估，
-    而不只是一套平差后的坐标。本站的<a href="traverse-calculator.html">导线平差计算器</a>
+    而不只是一套平差后的坐标。本站的<a href="traverse-calculator">导线平差计算器</a>
     两种方法都支持。
   </p>
 
@@ -178,21 +178,21 @@
   <section class="card">
     <h2>本文用到的工具</h2>
     <div class="tools">
-      <a href="traverse-calculator.html">导线平差计算器<small>坐标增量、闭合差与博迪茨/最小二乘平差</small></a>
-      <a href="azimuth-calculator.html">方位角转换器<small>先把每条边统一成 0°–360° 的方位角</small></a>
-      <a href="land-area-calculator.html">坐标算面积（亩/公顷）<small>调整之后计算闭合图形的面积</small></a>
-      <a href="distance-bearing-calculator.html">两点距离与方位角<small>独立复核各边的边长与方位角</small></a>
+      <a href="traverse-calculator">导线平差计算器<small>坐标增量、闭合差与博迪茨/最小二乘平差</small></a>
+      <a href="azimuth-calculator">方位角转换器<small>先把每条边统一成 0°–360° 的方位角</small></a>
+      <a href="land-area-calculator">坐标算面积（亩/公顷）<small>调整之后计算闭合图形的面积</small></a>
+      <a href="distance-bearing-calculator">两点距离与方位角<small>独立复核各边的边长与方位角</small></a>
     </div>
   </section>
 
   <section class="card">
     <h2>相关教程</h2>
     <ul class="readon">
-      <li><a href="../bearing-vs-azimuth.html">方位角与象限角的区别</a>
+      <li><a href="../bearing-vs-azimuth">方位角与象限角的区别</a>
         <small>在分解之前，先把所有边统一到同一种角度约定。</small></li>
-      <li><a href="../how-to-calculate-acreage-from-coordinates.html">用坐标计算面积</a>
+      <li><a href="../how-to-calculate-acreage-from-coordinates">用坐标计算面积</a>
         <small>调整后的坐标通常是为了做什么。</small></li>
-      <li><a href="../how-to-calculate-slope-percentage.html">坡度百分比怎么算</a>
+      <li><a href="../how-to-calculate-slope-percentage">坡度百分比怎么算</a>
         <small>导线里的水平距离，对应的竖直方向那一半。</small></li>
     </ul>
   </section>
@@ -200,7 +200,7 @@
   <p class="foot">
     所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
     请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about.html">关于</a> · <a href="../privacy.html">隐私与 Cookie</a> · <a href="../terms.html">使用条款</a> · <a href="../developers.html">开发者</a></span>
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
   </p>
 
 </div>
