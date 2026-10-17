@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>测绘计算器 — 经纬度与UTM坐标转换、单位换算、土方与面积计算</title>
-<meta name="description" content="免费在线测绘计算器：经纬度与UTM坐标互转、测量单位换算（美国测量英尺、链、杆、英亩）、场地土方量计算、坐标推算面积，全部在浏览器本地完成，不上传数据、无需登录。附高斯-克吕格投影、度分秒、坐标基准等中文教程。">
+<meta name="description" content="免费在线测绘计算器：经纬度与UTM坐标互转、度分秒、MGRS、距离与方位角、地块面积、坡度、比例尺、导线平差与曲线计算、场地土方量，全部在浏览器本地完成，数据不上传、无需登录。附高斯-克吕格投影、度分秒、坐标基准等中文教程。">
 <link rel="canonical" href="https://coordcalc.com/zh/">
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/">
 <link rel="alternate" hreflang="en" href="https://coordcalc.com/">
 <link rel="alternate" hreflang="x-default" href="https://coordcalc.com/">
 <meta property="og:title" content="测绘计算器 — 经纬度与UTM坐标转换、单位换算、土方与面积计算">
-<meta property="og:description" content="经纬度与UTM互转、测量单位换算、土方量与地块面积计算，全部在浏览器本地完成，数据不上传。">
+<meta property="og:description" content="经纬度与UTM互转、度分秒、MGRS、距离与方位角、地块面积、坡度、比例尺、导线平差与曲线计算，15 个免费在线计算器，全部在浏览器本地完成，无需登录。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://coordcalc.com/zh/">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
@@ -24,34 +24,11 @@
   "@context": "https://schema.org",
   "@type": "WebSite",
   "name": "CoordCalc 测绘计算器",
-  "description": "免费的测绘与坐标计算器，全部计算在浏览器本地完成。",
   "url": "https://coordcalc.com/zh/",
+  "description": "免费的测绘与地理空间计算器：坐标转换、距离与方位角、地块面积、坡度、比例尺、导线平差与曲线计算，全部在浏览器本地完成。",
   "inLanguage": "zh-CN"
 }
 </script>
-<link rel="stylesheet" href="../assets/article.css">
-<script src="../assets/consent.js" defer></script>
-<script src="../assets/track.js" defer></script>
-<style>
-  .hero{margin:6px 0 8px;}
-  .hero h1{margin-bottom:10px;}
-  .zh-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:18px 0;}
-  .zh-grid a{display:block;background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:16px 18px;text-decoration:none;color:var(--text);transition:.15s;}
-  .zh-grid a:hover{border-color:var(--accent);box-shadow:0 2px 8px rgba(37,99,235,.08);}
-  .zh-grid h3{margin:0 0 6px;font-size:15.5px;}
-  .zh-grid p{margin:0;font-size:13.5px;color:var(--sub);line-height:1.6;}
-  .zh-grid .zh-tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px;
-    margin-bottom:8px;background:var(--accent);color:#fff;}
-  .zh-grid .en-tag{background:#98a2b3;}
-  .cat{margin:34px 0 4px;font-size:17px;}
-  .cat-sub{font-size:13.5px;color:var(--sub);margin:0 0 4px;}
-  .glist .tagline{display:inline-block;margin:0 0 9px;}
-  .more-link{display:inline-block;margin-top:4px;font-size:14px;font-weight:600;
-    color:var(--accent-d);text-decoration:none;}
-  .more-link:hover{text-decoration:underline;}
-  @media(max-width:640px){.zh-grid{grid-template-columns:1fr;}}
-</style>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -63,15 +40,15 @@
       "name": "我输入的坐标会被上传吗？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "不会。所有计算都由浏览器里的JavaScript完成，页面加载之后计算过程不再产生任何网络请求。 你可以在浏览器的开发者工具里打开网络面板自己验证。上传CAD文件也一样：DXF文件通过浏览器本地接口读取， 只存在于内存中，关闭页面即消失。"
+        "text": "不会。所有计算都由浏览器里的JavaScript完成，页面加载之后计算过程不再产生任何网络请求。你可以在浏览器的开发者工具里打开网络面板自己验证。上传CAD文件也一样：DXF文件通过浏览器本地接口读取，只存在于内存中，关闭页面即消失。"
       }
     },
     {
       "@type": "Question",
-      "name": "UTM投影和国内的 高斯-克吕格投影 是一回事吗？",
+      "name": "UTM投影和国内的高斯-克吕格投影是一回事吗？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "不是一回事，但它们是近亲：都是横轴墨卡托投影，区别在于分带宽度（UTM为6°带、高斯常用6°与3°带）、 中央子午线长度比（UTM为0.9996，高斯为1）以及坐标加常数。 国内图纸上的 y 坐标常带500 km加常数与带号前缀，直接当作UTM处理会出错。 详见教程《高斯-克吕格投影与UTM的区别》。"
+        "text": "不是一回事，但它们是近亲：都是横轴墨卡托投影，区别在于分带宽度（UTM为6°带、高斯常用6°与3°带）、中央子午线长度比（UTM为0.9996，高斯为1）以及坐标加常数。国内图纸上的 y 坐标常带500 km加常数与带号前缀，直接当作UTM处理会出错。详见教程《高斯-克吕格投影与UTM的区别》。"
       }
     },
     {
@@ -79,7 +56,7 @@
       "name": "计算精度如何？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "UTM正算采用公开发表的横轴墨卡托级数，反算用牛顿迭代求解，与PROJ（pyproj、QGIS背后的实现） 对比：10个从赤道到北纬78°的测点上，东坐标偏差小于0.1毫米，北坐标偏差小于0.9毫米； 正反算往返闭合差在几纳米量级，即双精度浮点的极限。"
+        "text": "UTM正算采用公开发表的横轴墨卡托级数，反算用牛顿迭代求解，与PROJ（pyproj、QGIS背后的实现）对比：10个从赤道到北纬78°的测点上，东坐标偏差小于0.1毫米，北坐标偏差小于0.9毫米；正反算往返闭合差在几纳米量级，即双精度浮点的极限。"
       }
     },
     {
@@ -87,196 +64,737 @@
       "name": "能不能把自己的网页里嵌一个计算器？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "可以。在工具页地址后加 embed=1 放进 iframe 即可去掉站点页头与文章正文， 例如 utm-coordinate-converter?embed=1&lat=43.642567&lon=-79.387139。 参数表、JavaScript接口与嵌入说明见开发者文档。"
+        "text": "可以。在工具页地址后加 embed=1 放进 iframe 即可去掉站点页头与文章正文，例如 utm-coordinate-converter?embed=1&lat=43.642567&lon=-79.387139。参数表、JavaScript接口与嵌入说明见开发者文档。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这些计算器收费吗？需要注册吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "全部免费，无需注册、无需登录，也没有使用次数限制。所有计算都在你的浏览器里完成，输入的坐标和上传的文件不会上传到任何服务器。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "手机在外业现场能用吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。每个计算器都按移动端优先设计，输入框足够大，页面加载完成后断网也能继续计算，信号不好的工地照样能用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "支持哪些坐标系统与基准？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "WGS84 经纬度（十进制度、度分秒、度分）、UTM 与 MGRS 网格、NAD83 州平面 50 州 134 个分带，以及 CGCS2000 等常用坐标系的参数速查。每个工具页都注明所用椭球、基准与取整规则；用于放样等关键工作前，请按项目采用的坐标系统复核。"
       }
     }
   ]
 }
 </script>
+<style>
+  :root{
+    --bg:#f6f8fb;--card:#ffffff;--line:#e4e8ef;--text:#1a2230;--sub:#5d6779;
+    --accent:#2563eb;--accent-d:#1d4ed8;--accent-soft:#eef4ff;
+    --ok:#0f9d58;--warn:#b7791f;--radius:14px;
+    --cat-c:#2563eb;--cat-cs:#eef4ff;
+    --cat-d:#0d9488;--cat-ds:#e6f7f4;
+    --cat-s:#d97706;--cat-ss:#fdf3e3;
+    --cat-p:#7c3aed;--cat-ps:#f3eefe;
+  }
+  .sec-coord{--cat:var(--cat-c);--cat-soft:var(--cat-cs);}
+  .sec-dist{--cat:var(--cat-d);--cat-soft:var(--cat-ds);}
+  .sec-slope{--cat:var(--cat-s);--cat-soft:var(--cat-ss);}
+  .sec-pro{--cat:var(--cat-p);--cat-soft:var(--cat-ps);}
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.7;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB",
+      "Microsoft YaHei","Noto Sans CJK SC",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+  .container{max-width:1080px;margin:0 auto;padding:0 20px;}
 
+  /* ---------- header ---------- */
+  header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.88);
+    backdrop-filter:saturate(180%) blur(12px);border-bottom:1px solid var(--line);}
+  .navbar{display:flex;align-items:center;justify-content:space-between;height:62px;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;}
+  .brand .logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:15px;font-weight:800;}
+  nav.mainnav{display:flex;gap:22px;font-size:14px;color:var(--sub);font-weight:500;}
+  nav.mainnav a:hover{color:var(--accent);}
+  @media(max-width:720px){
+    .navbar{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.mainnav{display:flex;width:100%;gap:18px;overflow-x:auto;-webkit-overflow-scrolling:touch;
+      font-size:13px;padding-bottom:10px;}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{background:
+      radial-gradient(640px 320px at 88% -12%,rgba(37,99,235,.10),transparent 62%),
+      radial-gradient(520px 280px at 6% 112%,rgba(79,156,255,.11),transparent 62%),
+      linear-gradient(180deg,#eef3fd 0%,#f6f8fb 100%);
+    border-bottom:1px solid var(--line);padding:58px 0 52px;}
+  .hero-inner{display:grid;grid-template-columns:1.05fr .95fr;gap:44px;align-items:center;}
+  .hero h1{font-size:40px;line-height:1.22;margin:0 0 16px;letter-spacing:-.5px;}
+  .hero h1 em{font-style:normal;color:var(--accent);}
+  .hero p.lede{font-size:16px;color:#414b5e;margin:0 0 22px;max-width:540px;}
+  .badges{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--sub);}
+  .badges span{display:inline-flex;align-items:center;gap:6px;}
+  .badges svg{flex:none;}
+  .cta-row{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 20px;}
+  .btn{display:inline-flex;align-items:center;gap:8px;font-size:14.5px;font-weight:600;
+    padding:11px 20px;border-radius:10px;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;box-shadow:0 6px 16px -6px rgba(37,99,235,.5);}
+  .btn-primary:hover{background:var(--accent-d);transform:translateY(-1px);}
+  .btn-ghost{background:#fff;border:1px solid var(--line);color:var(--text);}
+  .btn-ghost:hover{border-color:#c3d3f5;color:var(--accent);}
+
+  /* quick tool */
+  .quick{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;
+    box-shadow:0 10px 30px -12px rgba(31,58,120,.22);}
+  .quick h2{font-size:15px;margin:0 0 4px;}
+  .quick .qt-sub{font-size:12.5px;color:var(--sub);margin:0 0 16px;}
+  .quick .qrow{display:flex;gap:10px;flex-wrap:wrap;}
+  .quick input,.quick select{font-family:inherit;font-size:15px;padding:10px 12px;border:1px solid #cfd6e0;
+    border-radius:9px;background:#fff;color:var(--text);transition:.15s;}
+  .quick input{flex:1;min-width:150px;font-weight:600;font-size:17px;}
+  .quick input:focus,.quick select:focus{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  .qout{margin-top:16px;background:var(--accent-soft);border-radius:10px;padding:13px 15px;
+    font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);
+    word-break:break-all;min-height:50px;display:flex;align-items:center;}
+  .qerr{color:#d9534f;font-size:13px;font-weight:500;}
+  .qchips{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:12px;}
+  .qchips .lbl{font-size:12px;color:var(--sub);}
+  .qchips button{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+    padding:4px 10px;border-radius:14px;border:1px solid var(--line);background:#fff;
+    color:var(--sub);cursor:pointer;transition:.15s;}
+  .qchips button:hover{border-color:var(--accent);color:var(--accent);}
+  .quick .more{display:inline-block;margin-top:14px;font-size:13.5px;font-weight:600;color:var(--accent);}
+  .quick .more:hover{text-decoration:underline;}
+
+  /* ---------- sections ---------- */
+  section{padding:46px 0;}
+  .sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px;}
+  h2.cat{font-size:22px;margin:0;letter-spacing:-.3px;}
+  h2.cat .idx{display:inline-block;color:var(--cat,var(--accent));font-size:14px;font-weight:700;
+    margin-right:10px;vertical-align:2px;}
+  .sec-head p{margin:0;font-size:13.5px;color:var(--sub);}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(285px,100%),1fr));gap:16px;}
+  .tool-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;
+    display:flex;flex-direction:column;transition:.18s;position:relative;}
+  .tool-card:hover{transform:translateY(-2px);border-color:#c3d3f5;
+    box-shadow:0 12px 26px -14px rgba(31,58,120,.3);}
+  .tool-card .ico{width:38px;height:38px;border-radius:10px;background:var(--cat-soft,var(--accent-soft));
+    display:flex;align-items:center;justify-content:center;margin-bottom:13px;color:var(--cat,var(--accent));}
+  .tool-card h3{font-size:15.5px;margin:0 0 7px;}
+  .tool-card p{margin:0 0 14px;font-size:13.5px;color:var(--sub);flex:1;}
+  .tool-card .kw{display:inline-block;align-self:flex-start;font-size:11.5px;color:#7c8698;
+    background:#f4f6fa;border-radius:6px;padding:3px 9px;}
+  .tool-card .tag{position:absolute;top:18px;right:18px;font-size:11px;font-weight:700;
+    padding:2px 9px;border-radius:20px;}
+  .tag.live{background:#e8f7ee;color:var(--ok);}
+  .tool-card.filler{border-style:dashed;background:transparent;justify-content:center;}
+  .tool-card.filler:hover{transform:none;border-color:var(--line);box-shadow:none;}
+  .tool-card.filler .ico{background:#f0f2f6;color:#93a0b5;}
+  .tool-card.filler h3{color:#5d6779;}
+
+  /* popular links */
+  .popular{background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .popular ul{columns:3;column-gap:34px;list-style:none;padding:0;margin:14px 0 0;font-size:13.5px;}
+  .popular li{margin-bottom:0;break-inside:avoid;}
+  .popular a{display:inline-block;margin-bottom:9px;background:#fff;border:1px solid var(--line);
+    border-radius:20px;padding:5px 14px;font-size:13px;color:var(--accent-d);transition:.15s;}
+  .popular a:hover{border-color:#c3d3f5;background:var(--accent-soft);}
+  .popular .note{font-size:12.5px;color:var(--sub);margin:4px 0 0;}
+  @media(max-width:820px){.popular ul{columns:1;}}
+
+  /* why */
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px;}
+  .why-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;}
+  .why-card h3{font-size:14.5px;margin:0 0 8px;display:flex;align-items:center;gap:8px;}
+  .why-card h3 svg{color:var(--accent);flex:none;background:var(--accent-soft);
+    border-radius:8px;padding:5px;box-sizing:content-box;}
+  .why-card p{margin:0;font-size:13.5px;color:var(--sub);}
+
+  /* faq */
+  details.faq{background:#fff;border:1px solid var(--line);border-radius:12px;padding:0 18px;margin-bottom:10px;}
+  details.faq[open]{border-color:#d5dce7;}
+  details.faq summary{cursor:pointer;padding:15px 0;font-weight:600;font-size:14.5px;list-style:none;
+    position:relative;padding-right:28px;}
+  details.faq summary::-webkit-details-marker{display:none;}
+  details.faq summary::after{content:"+";position:absolute;right:2px;top:13px;font-size:19px;
+    color:var(--sub);font-weight:400;}
+  details.faq[open] summary::after{content:"–";}
+  details.faq p{font-size:14px;color:#3b4353;padding:0 0 8px;margin:0;}
+
+  /* footer */
+  footer.site{background:#101828;color:#c3cbd9;padding:44px 0 30px;font-size:13.5px;}
+  .foot-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:32px;margin-bottom:30px;}
+  footer.site h4{color:#fff;font-size:11.5px;margin:0 0 12px;letter-spacing:.3px;}
+  footer.site ul{list-style:none;padding:0;margin:0;}
+  footer.site li{margin-bottom:9px;}
+  footer.site a:hover{color:#fff;}
+  .foot-brand .logo{width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:inline-flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;
+    margin-bottom:12px;}
+  .foot-brand p{margin:0;color:#8b95a7;font-size:13px;max-width:280px;}
+  .foot-bottom{border-top:1px solid #232c3d;padding-top:20px;display:flex;justify-content:space-between;
+    gap:16px;flex-wrap:wrap;color:#8b95a7;font-size:12.5px;}
+  .foot-legal a{color:#aeb8c9;margin:0 2px;}
+  .foot-legal a:hover{color:#fff;text-decoration:underline;}
+
+  section[id]{scroll-margin-top:78px;}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible{
+    outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
+
+  @media(max-width:900px){
+    .hero-inner{grid-template-columns:1fr;gap:32px;}
+    .hero h1{font-size:30px;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+  }
+  @media(max-width:560px){
+    .foot-grid{grid-template-columns:1fr;}
+    .hero{padding:38px 0 34px;}
+  }
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
 </head>
 <body>
+
 <header class="site">
-  <div class="hwrap">
-    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
-    <nav class="topnav">
-      <a href="./#tools">计算器</a>
+  <div class="container navbar">
+    <a class="brand" href="./">
+      <span class="logo">C</span>
+      CoordCalc 测绘计算器
+    </a>
+    <nav class="mainnav">
+      <a href="#coordinates">坐标换算</a>
+      <a href="#distance">距离与面积</a>
+      <a href="#slope">坡度与比例尺</a>
+      <a href="#surveying">工程测量</a>
       <a href="guides">教程</a>
-      <a href="../" hreflang="en">English</a>
+      <a href="../" hreflang="en" lang="en">English</a>
     </nav>
   </div>
-  <div class="accentbar"></div>
 </header>
 
-<div class="wrap">
+<main>
 
-  <nav class="crumb">
-    <a href="./">首页</a> › 测绘计算器
-  </nav>
+  <!-- ================= 首屏 ================= -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div>
+        <h1>免费在线<em>测绘</em>与坐标计算器</h1>
+        <p class="lede">
+          经纬度与UTM坐标互转、距离与方位角、地块面积、坡度与比例尺、导线平差与曲线计算——
+          15 个面向测绘、GIS 与土木工程的高精度计算器。全部在浏览器里完成，无需登录，数据不上传。
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#coordinates">浏览计算器</a>
+          <a class="btn btn-ghost" href="#faq">常见问题</a>
+        </div>
+        <div class="badges">
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            完全免费
+          </span>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            无需注册
+          </span>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            断网可用
+          </span>
+          <span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0f9d58" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            数据不出设备
+          </span>
+        </div>
+      </div>
 
-  <div class="hero">
-    <h1>测绘计算器</h1>
-    <p class="lead">
-      这里收录的是测绘外业和内业中反复出现的那几类计算：经纬度与UTM坐标互转、测量单位换算、
-      场地土方量、坐标推算地块面积。每一项计算都在你的浏览器里完成——输入的坐标、
-      上传的CAD文件、粘贴的坐标列表都不会发送到任何服务器，打开页面后断网也能继续算。
-      每个计算器都写明了所用的椭球、投影与单位约定，算出来的数才知道该不该信。
-    </p>
+      <div class="quick">
+        <h2>快速换算</h2>
+        <p class="qt-sub">十进制度 → 度、分、秒</p>
+        <div class="qrow">
+          <input id="q-in" type="text" inputmode="decimal" placeholder="如 39.906111" value="39.906111" autocomplete="off">
+          <select id="q-type">
+            <option value="lat">纬度（北纬 / 南纬）</option>
+            <option value="lon">经度（东经 / 西经）</option>
+          </select>
+        </div>
+        <div class="qchips">
+          <span class="lbl">试一试：</span>
+          <button type="button" data-v="116.3912757" data-t="lon">116.3912757</button>
+          <button type="button" data-v="-0.1276" data-t="lon">-0.1276</button>
+          <button type="button" data-v="48.8566" data-t="lat">48.8566</button>
+        </div>
+        <div class="qout" id="q-out">—</div>
+        <a class="more" href="dms-converter">度分秒转换器：更多格式与精度设置 &rarr;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 坐标换算 ================= -->
+  <section id="coordinates" class="sec-coord">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">01</span>坐标换算工具</h2>
+        <p>在设备、图纸与软件各自要求的坐标格式之间切换。</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="dms-converter">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 2.5 15.3 0 18M12 3c-2.5 2.7-2.5 15.3 0 18"/></svg>
+          </span>
+          <h3>度分秒转换器</h3>
+          <p>十进制度经纬度与度分秒互转，同时给出度分（DDM）格式和 N/S/E/W 方位字母，附秒位精度与地面长度的对照表。</p>
+          <span class="kw">十进制度转度分秒</span>
+        </a>
+
+        <a class="tool-card" href="utm-coordinate-converter">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 3v18"/></svg>
+          </span>
+          <h3>经纬度与UTM坐标互转</h3>
+          <p>WGS84 经纬度与 UTM 东坐标、北坐标、带号双向转换；单个点或整段粘贴的坐标列表都能算，可导出 CSV。</p>
+          <span class="kw">经纬度转UTM</span>
+        </a>
+
+        <a class="tool-card" href="mgrs-converter">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16M4 12h16M4 18h16"/><circle cx="8" cy="6" r="1.6"/><circle cx="15" cy="12" r="1.6"/></svg>
+          </span>
+          <h3>MGRS 转经纬度</h3>
+          <p>军用网格参考与经纬度互转，1 米到 10 公里五档精度，同时给出底层的 UTM 带号与坐标；空格与分隔符可省略。</p>
+          <span class="kw">MGRS转经纬度</span>
+        </a>
+
+        <a class="tool-card" href="state-plane-converter">
+          <span class="tag live">新上线</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/><circle cx="7" cy="6" r="1.7"/><circle cx="16" cy="18" r="1.7"/></svg>
+          </span>
+          <h3>美国州平面坐标转换</h3>
+          <p>NAD83 州平面 50 州 134 个分带与经纬度双向转换，支持米、美制测量英尺与国际英尺，附投影参数。</p>
+          <span class="kw">州平面坐标转换</span>
+        </a>
+
+        <a class="tool-card" href="epsg-code-lookup">
+          <span class="tag live">新上线</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+          </span>
+          <h3>EPSG 代码查询</h3>
+          <p>486 个常用坐标系速查——UTM 分带、州平面、国家网格与高程基准，含 CGCS2000、单位与投影参数。</p>
+          <span class="kw">EPSG代码查询</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 距离、方位角与面积 ================= -->
+  <section id="distance" class="sec-dist" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">02</span>距离、方位角与面积</h2>
+        <p>点与点之间量距，地块定量。</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="distance-bearing-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 20L21 4"/><circle cx="3" cy="20" r="1.8"/><circle cx="21" cy="4" r="1.8"/></svg>
+          </span>
+          <h3>两点距离与方位角</h3>
+          <p>输入两个经纬度坐标，按 WGS84 椭球解算大地线距离（米、公里、英里、英尺）与正反方位角。</p>
+          <span class="kw">两点坐标距离计算</span>
+        </a>
+
+        <a class="tool-card" href="azimuth-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v2M12 18.5v2M3.5 12h2M18.5 12h2M14.5 9.5L9.5 14.5"/></svg>
+          </span>
+          <h3>象限角与方位角换算</h3>
+          <p>N 45°30′ E 这类象限角与 0–360° 全圆方位角双向换算，同时给出 16 方位罗盘方向与反方位角。</p>
+          <span class="kw">象限角转方位角</span>
+        </a>
+
+        <a class="tool-card" href="land-area-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l8-4 10 5-8 12z"/><path d="M3 7l10 13"/></svg>
+          </span>
+          <h3>坐标推算地块面积</h3>
+          <p>由边界角点坐标按椭球面测地边长计算周长与投影面积，输出平方米、公顷、亩、英亩多种单位。</p>
+          <span class="kw">坐标算地块面积</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 坡度、高程与比例尺 ================= -->
+  <section id="slope" class="sec-slope">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">03</span>坡度、高程与比例尺</h2>
+        <p>地形与图纸计算。</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="slope-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 19h18L3 6z"/><path d="M3 19L14 8"/></svg>
+          </span>
+          <h3>坡度计算器</h3>
+          <p>由高差与平距算百分比坡度、1:n 坡比与坡度角，角度与百分数双向换算，附常用坡度对照表。</p>
+          <span class="kw">坡度百分比计算</span>
+        </a>
+
+        <a class="tool-card" href="map-scale-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16L16 4"/><path d="M2 18h6M4 20v-6M16 4h6M18 2v6" opacity=".9"/></svg>
+          </span>
+          <h3>比例尺计算器</h3>
+          <p>任意比例尺（1:500、1:2000、1:50 000…）下图上距离与实地距离互算，也可反求图纸真实比例尺。</p>
+          <span class="kw">比例尺换算</span>
+        </a>
+
+        <a class="tool-card" href="unit-converter">
+          <span class="tag live">新上线</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v18M16 3v18M4 8h4M4 16h4M16 8h4M16 16h4"/></svg>
+          </span>
+          <h3>测量单位换算</h3>
+          <p>美国测量英尺与米、英亩与公顷、链、令、杆等三十多种单位，换算因子全部按定义精确输入。</p>
+          <span class="kw">美国测量英尺换米</span>
+        </a>
+
+        <div class="tool-card filler">
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <h3>更多地形工具</h3>
+          <p>坡度梯度与等高线工具排在开发队列前列。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 工程与专业测量 ================= -->
+  <section id="surveying" class="sec-pro" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">04</span>工程与专业测量</h2>
+        <p>放样、导线与道路设计。</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="traverse-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19l5-10 4 6 3-5 4 9z"/><circle cx="4" cy="19" r="1.6"/><circle cx="20" cy="19" r="1.6"/></svg>
+          </span>
+          <h3>导线平差计算器（COGO）</h3>
+          <p>按方位角与水平距离推算各点坐标，给出闭合差与相对精度，支持博迪茨（罗盘规则）与最小二乘平差。</p>
+          <span class="kw">导线平差计算</span>
+        </a>
+
+        <a class="tool-card" href="curve-calculator">
+          <span class="tag live">可用</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 18h5a6 6 0 016-6h7"/><path d="M3 15v6M18 9v6"/></svg>
+          </span>
+          <h3>圆曲线与竖曲线计算</h3>
+          <p>由转角与半径解出切线长、曲线长、弦长、矢距、外矢距与主点桩号，用于道路与铁路设计。</p>
+          <span class="kw">圆曲线要素计算</span>
+        </a>
+
+        <a class="tool-card" href="dxf-coordinate-extractor">
+          <span class="tag live">新上线</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h18v18H3z"/><path d="M3 9l6-6M9 21V9H3"/></svg>
+          </span>
+          <h3>DXF 坐标提取</h3>
+          <p>导入 ASCII DXF，读出点、多段线与闭合区域的顶点坐标和面积，按图面单位换算，可导出 CSV。</p>
+          <span class="kw">DXF坐标提取</span>
+        </a>
+
+        <a class="tool-card" href="cut-fill-calculator">
+          <span class="tag live">新上线</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17h7l4-10h7"/><path d="M3 20h18" opacity=".5"/><circle cx="10" cy="17" r="1.6"/></svg>
+          </span>
+          <h3>场地土方量计算</h3>
+          <p>输入方格网各角点的设计标高与地面标高，自动算出挖方、填方与净土方，并给出每个方格的贡献。</p>
+          <span class="kw">土方量计算</span>
+        </a>
+
+        <div class="tool-card filler">
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <h3>请求添加计算器</h3>
+          <p>专业工具箱随用户需求增长——导线手簿与曲线表已列入计划，欢迎提出你需要的计算。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 热门换算 ================= -->
+  <section class="popular">
+    <div class="container">
+      <h2 class="cat" style="font-size:18px;">CoordCalc 上的热门换算</h2>
+      <p class="note">直达你要算的那一步。</p>
+      <ul>
+        <li><a href="dms-converter">十进制度转度分秒</a></li>
+        <li><a href="utm-coordinate-converter">经纬度转UTM坐标</a></li>
+        <li><a href="mgrs-converter">MGRS 转经纬度</a></li>
+        <li><a href="distance-bearing-calculator">两点坐标距离计算</a></li>
+        <li><a href="azimuth-calculator">象限角转方位角</a></li>
+        <li><a href="land-area-calculator">坐标算地块面积</a></li>
+        <li><a href="slope-calculator">坡度百分比换算角度</a></li>
+        <li><a href="map-scale-calculator">比例尺图上实地换算</a></li>
+        <li><a href="traverse-calculator">导线闭合差计算</a></li>
+        <li><a href="unit-converter">美国测量英尺换米</a></li>
+        <li><a href="state-plane-converter">州平面坐标转经纬度</a></li>
+        <li><a href="cut-fill-calculator">场地土方量计算</a></li>
+        <li><a href="../developers">开发者文档 — URL 参数与嵌入</a></li>
+        <li><a href="guides">全部中文教程</a></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ================= 中文教程 ================= -->
+  <section id="guides" style="background:#fff;border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat">中文教程</h2>
+        <p>计算器背后的原理——得出能信的数之前，该核对什么。</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="how-to-read-utm-coordinates">
+          <span class="tag live">教程</span>
+          <h3>如何读取UTM坐标</h3>
+          <p>带号、纬度带字母、东坐标、北坐标各代表什么，以及四种会把点读错大陆的常见误读。</p>
+          <span class="kw">如何读取UTM坐标</span>
+        </a>
+        <a class="tool-card" href="gauss-kruger-vs-utm">
+          <span class="tag live">教程</span>
+          <h3>高斯-克吕格投影与UTM的区别</h3>
+          <p>3°带与6°带、y 坐标的 500 km 加常数与带号前缀、中央子午线长度比——看懂国内图纸坐标的前提。</p>
+          <span class="kw">高斯克吕格投影</span>
+        </a>
+        <a class="tool-card" href="survey-foot-vs-international-foot">
+          <span class="tag live">教程</span>
+          <h3>美国测量英尺与国际英尺</h3>
+          <p>两个英尺、两种定义，一英里差 3.2 毫米——你手里那份图纸用的是哪一个。</p>
+          <span class="kw">测量英尺与国际英尺</span>
+        </a>
+        <a class="tool-card" href="how-to-calculate-closure-error">
+          <span class="tag live">教程</span>
+          <h3>导线闭合差怎么算</h3>
+          <p>坐标增量、线性闭合差、相对精度与博迪茨（罗盘规则）调整的完整算法。</p>
+          <span class="kw">导线闭合差计算</span>
+        </a>
+        <a class="tool-card" href="guides">
+          <span class="tag live">全部教程</span>
+          <h3>浏览全部中文教程</h3>
+          <p>投影与坐标系、方向与面积、单位与地籍资料，一篇一篇讲清楚。</p>
+          <span class="kw">测绘教程</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 为什么用 CoordCalc ================= -->
+  <section>
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat">为什么用 CoordCalc</h2>
+      </div>
+      <div class="why-grid">
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5-3.4 8.5-8 10-4.6-1.5-8-5-8-10V6z"/></svg>
+            数据不出设备
+          </h3>
+          <p>每个计算都在浏览器本地完成。坐标、CAD 文件与坐标列表不传输、不存储、不记录。</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L4.5 13H11l-1 9L19.5 11H13z"/></svg>
+            即开即用
+          </h3>
+          <p>无账号、无邮箱、无使用次数限制。打开页面，得到结果，继续干活。</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7V5h16v2M12 5v14M9 19h6"/></svg>
+            假设条件写明
+          </h3>
+          <p>每个工具都注明所用椭球、单位与取整规则，你可以自己判断它适不适合你的项目。</p>
+        </div>
+        <div class="why-card">
+          <h3>
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><path d="M10 18h4"/></svg>
+            为外业而生
+          </h3>
+          <p>移动端优先的布局与大号输入框，工地上用手机也顺手。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 常见问题 ================= -->
+  <section id="faq" style="background:#fff;border-top:1px solid var(--line);">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat">常见问题</h2>
+      </div>
+      <details class="faq" open>
+        <summary>我输入的坐标会被上传吗？</summary>
+        <p>不会。所有计算都由浏览器里的JavaScript完成，页面加载之后计算过程不再产生任何网络请求。你可以在浏览器的开发者工具里打开网络面板自己验证。上传CAD文件也一样：DXF文件通过浏览器本地接口读取，只存在于内存中，关闭页面即消失。</p>
+      </details>
+      <details class="faq">
+        <summary>UTM投影和国内的高斯-克吕格投影是一回事吗？</summary>
+        <p>不是一回事，但它们是近亲：都是横轴墨卡托投影，区别在于分带宽度（UTM为6°带、高斯常用6°与3°带）、中央子午线长度比（UTM为0.9996，高斯为1）以及坐标加常数。国内图纸上的 y 坐标常带500 km加常数与带号前缀，直接当作UTM处理会出错。详见教程《<a href="gauss-kruger-vs-utm">高斯-克吕格投影与UTM的区别</a>》。</p>
+      </details>
+      <details class="faq">
+        <summary>计算精度如何？</summary>
+        <p>UTM正算采用公开发表的横轴墨卡托级数，反算用牛顿迭代求解，与PROJ（pyproj、QGIS背后的实现）对比：10个从赤道到北纬78°的测点上，东坐标偏差小于0.1毫米，北坐标偏差小于0.9毫米；正反算往返闭合差在几纳米量级，即双精度浮点的极限。</p>
+      </details>
+      <details class="faq">
+        <summary>能不能把自己的网页里嵌一个计算器？</summary>
+        <p>可以。在工具页地址后加 <code>embed=1</code> 放进 iframe 即可去掉站点页头与文章正文，例如 <code>utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>。参数表、JavaScript接口与嵌入说明见<a href="../developers">开发者文档</a>。</p>
+      </details>
+      <details class="faq">
+        <summary>这些计算器收费吗？需要注册吗？</summary>
+        <p>全部免费，无需注册、无需登录，也没有使用次数限制。所有计算都在你的浏览器里完成，输入的坐标和上传的文件不会上传到任何服务器。</p>
+      </details>
+      <details class="faq">
+        <summary>手机在外业现场能用吗？</summary>
+        <p>可以。每个计算器都按移动端优先设计，输入框足够大，页面加载完成后断网也能继续计算，信号不好的工地照样能用。</p>
+      </details>
+      <details class="faq">
+        <summary>支持哪些坐标系统与基准？</summary>
+        <p>WGS84 经纬度（十进制度、度分秒、度分）、UTM 与 MGRS 网格、NAD83 州平面 50 州 134 个分带，以及 CGCS2000 等常用坐标系的参数速查。每个工具页都注明所用椭球、基准与取整规则；用于放样等关键工作前，请按项目采用的坐标系统复核。</p>
+      </details>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="logo">C</span>
+        <p>免费的浏览器端测绘与地理空间计算器。无需登录，数据不上传，没有挡路的广告。</p>
+      </div>
+      <div>
+        <h4>坐标换算</h4>
+        <ul>
+          <li><a href="dms-converter">度分秒转换器</a></li>
+          <li><a href="utm-coordinate-converter">经纬度转UTM</a></li>
+          <li><a href="mgrs-converter">MGRS 转经纬度</a></li>
+          <li><a href="state-plane-converter">州平面坐标转换</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>测量计算</h4>
+        <ul>
+          <li><a href="distance-bearing-calculator">两点距离与方位角</a></li>
+          <li><a href="land-area-calculator">坐标算地块面积</a></li>
+          <li><a href="slope-calculator">坡度计算器</a></li>
+          <li><a href="map-scale-calculator">比例尺计算器</a></li>
+          <li><a href="unit-converter">测量单位换算</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>工程与文档</h4>
+        <ul>
+          <li><a href="traverse-calculator">导线平差计算器</a></li>
+          <li><a href="curve-calculator">圆曲线与竖曲线</a></li>
+          <li><a href="cut-fill-calculator">场地土方量</a></li>
+          <li><a href="dxf-coordinate-extractor">DXF 坐标提取</a></li>
+          <li><a href="guides">中文教程</a></li>
+          <li><a href="../developers">开发者文档</a></li>
+          <li><a href="#faq">常见问题</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 CoordCalc 测绘计算器。所有计算均在浏览器本地完成。</span>
+      <span class="foot-legal"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a> · <a href="../" hreflang="en" lang="en">English</a></span>
+      <span>用于施工、放样或结算前，请按项目坐标系统复核关键坐标。</span>
+    </div>
   </div>
+</footer>
 
-  <h2 class="cat" id="tools">中文计算器</h2>
-  <p class="cat-sub">界面与说明均为中文，计算引擎与英文版完全相同。</p>
-  <div class="zh-grid">
-    <a href="utm-coordinate-converter">
-      <span class="zh-tag">坐标</span>
-      <h3>经纬度与UTM坐标互转</h3>
-      <p>经纬度转UTM东坐标、北坐标与带号，也支持度分秒输入；反算同样可用。附带批量转换：
-      整段坐标列表一次算完并导出CSV。采用WGS84椭球，含挪威与斯瓦尔巴特殊带号处理。</p>
-    </a>
-    <a href="unit-converter">
-      <span class="zh-tag">单位</span>
-      <h3>测量单位换算</h3>
-      <p>美国测量英尺与米、链、杆、令、英亩、公顷、海里、 vara 等三十多种单位，
-      换算因子全部按定义精确输入。看懂国外图纸、旧地籍资料时最常用。</p>
-    </a>
-    <a href="cut-fill-calculator">
-      <span class="zh-tag">土方</span>
-      <h3>场地土方量计算</h3>
-      <p>输入方格网各角点的设计标高与地面标高，自动算出挖方、填方与净土方，
-      并给出每个方格的贡献，便于核对平场标高是否合理。</p>
-    </a>
-    <a href="land-area-calculator">
-      <span class="zh-tag">面积</span>
-      <h3>坐标推算地块面积</h3>
-      <p>输入一圈坐标，按椭球面上的测地边长计算周长、投影面积与地块范围，
-      输出平方米、公顷、亩、英亩多种单位，并标明闭合方向。</p>
-    </a>
-    <a href="dms-converter">
-      <span class="zh-tag">坐标</span>
-      <h3>度分秒转换器</h3>
-      <p>十进制度与度分秒互转，同时给出度分（DDM）格式和 N/S/E/W 方位字母；秒的小数位可设到
-      6 位，并附「秒保留几位对应地面多少米」的对照表。</p>
-    </a>
-    <a href="mgrs-converter">
-      <span class="zh-tag">坐标</span>
-      <h3>MGRS 转经纬度</h3>
-      <p>军用网格参考与经纬度互转，1 米到 10 公里五档精度，同时给出底层的 UTM 带号、
-      东坐标与北坐标；空格与分隔符可省略。</p>
-    </a>
-    <a href="epsg-code-lookup">
-      <span class="zh-tag">坐标</span>
-      <h3>EPSG 代码查询</h3>
-      <p>486 个常用坐标系的代码、单位、适用范围与投影参数速查，含 CGCS2000、UTM 与州平面。</p>
-    </a>
-    <a href="distance-bearing-calculator">
-      <span class="zh-tag">测量</span>
-      <h3>两点距离与方位角</h3>
-      <p>输入两个经纬度坐标，按 WGS84 椭球解 Vincenty 反算：大地线距离（米、公里、英里、英尺）
-      与起始、终止、返程方位角，附北京—上海算例。</p>
-    </a>
-    <a href="azimuth-calculator">
-      <span class="zh-tag">测量</span>
-      <h3>象限角与方位角换算</h3>
-      <p>N 45°30′ E 这类象限角与 0–360° 全圆方位角互转，同时给出 16 方位罗盘方向、象限判定
-      与反方位角，支持度分秒输入。</p>
-    </a>
-    <a href="slope-calculator">
-      <span class="zh-tag">测量</span>
-      <h3>坡度计算器</h3>
-      <p>由高差与平距算百分比坡度、坡度角、1:n 坡比与屋面坡度（x:12），角度与百分数双向换算，
-      附无障碍坡道 1:12 限值与常用坡度对照表。</p>
-    </a>
-    <a href="curve-calculator">
-      <span class="zh-tag">工程</span>
-      <h3>圆曲线与竖曲线计算</h3>
-      <p>平曲线由转角与半径解出切线长、曲线长、弦长、矢距、外矢距、曲度与主点桩号；
-      竖曲线给出坡度代数差、K 值、起终点桩号高程与变坡点位置。</p>
-    </a>
-    <a href="traverse-calculator">
-      <span class="zh-tag">工程</span>
-      <h3>导线平差计算器</h3>
-      <p>按方位角与水平距离推算各点坐标，给出坐标增量合计、闭合差与相对精度，
-      支持博迪茨（罗盘规则）调整与最小二乘平差，后者附坐标中误差、误差椭圆与单位权中误差。</p>
-    </a>
-<a href="map-scale-calculator">
-      <span class="zh-tag">测量</span>
-      <h3>比例尺计算器</h3>
-      <p>图上距离与实地距离按任意比例尺互算（1:500、1:2000、1:50 000…），可反求图纸真实比例尺，
-      附常用比例尺每毫米对应实地长度对照表。</p>
-    </a><a href="dxf-coordinate-extractor">
-      <span class="zh-tag">工程</span>
-      <h3>DXF 坐标提取</h3>
-      <p>导入 ASCII DXF，读出点、直线、多段线、圆与圆弧的图层、顶点数、长度和闭合面积，
-      按图面单位换算公顷与英亩，全部顶点可导出 CSV。</p>
-    </a>    <a href="state-plane-converter">
-      <span class="zh-tag">工程</span>
-      <h3>美国州平面坐标转换</h3>
-      <p>NAD83 州平面 50 州 134 个分带与经纬度双向转换，支持米、美制测量英尺与国际英尺，
-      附标准纬线、比例因子与假定原点等投影参数。</p>
-    </a>
+<script>
+(function(){
+  "use strict";
+  var input = document.getElementById("q-in");
+  var type = document.getElementById("q-type");
+  var out = document.getElementById("q-out");
 
-  </div>
+  function pad(n, len){ n = String(n); while (n.length < len) { n = "0" + n; } return n; }
 
-  <h2 class="cat" id="faq">常见问题</h2>
-  <div class="card">
-    <details open>
-      <summary>我输入的坐标会被上传吗？</summary>
-      <p>不会。所有计算都由浏览器里的JavaScript完成，页面加载之后计算过程不再产生任何网络请求。
-      你可以在浏览器的开发者工具里打开网络面板自己验证。上传CAD文件也一样：DXF文件通过浏览器本地接口读取，
-      只存在于内存中，关闭页面即消失。</p>
-    </details>
-    <details>
-      <summary>UTM投影和国内的 高斯-克吕格投影 是一回事吗？</summary>
-      <p>不是一回事，但它们是近亲：都是横轴墨卡托投影，区别在于分带宽度（UTM为6°带、高斯常用6°与3°带）、
-      中央子午线长度比（UTM为0.9996，高斯为1）以及坐标加常数。
-      国内图纸上的 y 坐标常带500 km加常数与带号前缀，直接当作UTM处理会出错。
-      详见教程《<a href="gauss-kruger-vs-utm">高斯-克吕格投影与UTM的区别</a>》。</p>
-    </details>
-    <details>
-      <summary>计算精度如何？</summary>
-      <p>UTM正算采用公开发表的横轴墨卡托级数，反算用牛顿迭代求解，与PROJ（pyproj、QGIS背后的实现）
-      对比：10个从赤道到北纬78°的测点上，东坐标偏差小于0.1毫米，北坐标偏差小于0.9毫米；
-      正反算往返闭合差在几纳米量级，即双精度浮点的极限。</p>
-    </details>
-    <details>
-      <summary>能不能把自己的网页里嵌一个计算器？</summary>
-      <p>可以。在工具页地址后加 <code>embed=1</code> 放进 iframe 即可去掉站点页头与文章正文，
-      例如 <code>utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139</code>。
-      参数表、JavaScript接口与嵌入说明见<a href="../developers">开发者文档</a>。</p>
-    </details>
-  </div>
+  function toDMS(v, isLat){
+    var neg = v < 0, abs = Math.abs(v);
+    var prec = 2, factor = 100;
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = rem - m * 60;
+    s = Math.round(s * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = isLat ? (neg ? "S" : "N") : (neg ? "W" : "E");
+    var secStr = pad(Math.floor(s), 2) + s.toFixed(prec).slice(String(Math.floor(s)).length);
+    return h + " " + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
 
-  <h2 class="cat">中文教程</h2>
-  <div class="glist">
-    <a href="gauss-kruger-vs-utm">
-      <span class="tagline">投影</span>
-      <h3>高斯-克吕格投影与UTM的区别</h3>
-      <p>3°带与6°带、y坐标的500 km加常数与带号前缀、中央子午线长度比——看懂国内图纸坐标的前提。</p>
-    </a>
-    <a href="how-to-read-utm-coordinates">
-      <span class="tagline">坐标</span>
-      <h3>如何读取UTM坐标</h3>
-      <p>带号、纬度带字母、东坐标、北坐标各代表什么，以及四种会把点读错大陆的常见误读。</p>
-    </a>
-    <a href="degrees-minutes-seconds-explained">
-      <span class="tagline">角度</span>
-      <h3>经纬度的度分秒（DMS）</h3>
-      <p>度分秒与十进制度的换算、秒的精度含义、常见的书写格式与换算错误。</p>
-    </a>
-    <a href="survey-foot-vs-international-foot">
-      <span class="tagline">单位</span>
-      <h3>美国测量英尺与国际英尺</h3>
-      <p>两个英尺相差百万分之二，一英里差3.2毫米——读国外图纸必须分清的那一个。</p>
-    </a>
-  </div>
-  <a class="more-link" href="guides">查看全部中文教程 →</a>
+  function run(){
+    var raw = input.value.trim();
+    if (raw === "") { out.textContent = "—"; out.classList.remove("qerr"); return; }
+    var v = Number(raw);
+    if (!isFinite(v) || Math.abs(v) > 180) {
+      out.textContent = "请输入 -180 到 180 之间的数字";
+      out.classList.add("qerr");
+      return;
+    }
+    out.classList.remove("qerr");
+    out.textContent = toDMS(v, type.value === "lat");
+  }
 
-  <p class="foot">
-    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
-    请按项目采用的坐标系统与技术标准复核。
-    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
-  </p>
+  input.addEventListener("input", run);
+  type.addEventListener("change", run);
 
-</div>
+  var chips = document.querySelectorAll(".qchips button");
+  for (var i = 0; i < chips.length; i++) {
+    chips[i].addEventListener("click", function(){
+      input.value = this.getAttribute("data-v");
+      type.value = this.getAttribute("data-t");
+      run();
+    });
+  }
+
+  run();
+})();
+</script>
 </body>
 </html>
