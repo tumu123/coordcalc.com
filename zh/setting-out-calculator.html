@@ -1,0 +1,1427 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>放样计算器 — 由坐标算方位角、拨角与水平距离（免费）</title>
+<meta name="description" content="免费的放样计算器：输入测站与后视坐标，粘贴待放样点，逐个算出方位角、需要拨的水平角、水平距离与度盘读数，并给出最省转身的放样顺序。可顺时针/逆时针计角，填入仪器高、棱镜高与两处高程还能给出斜距与竖直角。支持米与英尺，浏览器本地计算。">
+<link rel="canonical" href="https://coordcalc.com/zh/setting-out-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/setting-out-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/setting-out-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/setting-out-calculator">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#0d9488">
+<meta property="og:title" content="放样计算器 — 由坐标算方位角、拨角与水平距离（免费）">
+<meta property="og:description" content="由测站与后视坐标算出每个待放样点的方位角、拨角、水平距离与度盘读数；支持左角右角、米与英尺，填高程还给斜距与竖直角。浏览器本地计算。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/setting-out-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "放样计算器",
+  "url": "https://coordcalc.com/zh/setting-out-calculator",
+  "description": "免费的放样计算器：输入测站与后视坐标，粘贴待放样点，逐个算出方位角、需要拨的水平角、水平距离与度盘读数，并给出最省转身的放样顺序。可顺时针/逆时针计角，填入仪器高、棱镜高与两处高程还能给出斜距与竖直角。支持米与英尺，浏览器本地计算。",
+  "inLanguage": "zh-CN",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "计算器",
+      "item": "https://coordcalc.com/#tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "放样计算器",
+      "item": "https://coordcalc.com/zh/setting-out-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "用全站仪怎么放样一个点？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在测站上整置仪器，照准后视，然后二选一：把水平度盘在后视上配零，拨计算器给出的角度； 或把度盘配成后视方位角，转到读数等于该点方位角。再沿这个方向量出水平距离把它定下来 ——若该点与测站不同高，量斜距。最后打桩、标记。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "方位角和拨角有什么区别？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "方位角从正北量起，属于那个点；拨角从后视量起，属于仪器这一次架设。 只有后视恰好正北时两者才相等；一般情况下拨角等于该点方位角减后视方位角，对 360° 取模。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "该用左角还是右角？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "用仪器实际显示的那一种，并在记录本上写明。计算器按你选的一侧计算， 所以它的列永远对得上显示。右角是更常见的约定，但按左角设置的全站仪仍在日常使用。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "怎么算斜距而不是水平距离？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "填上测站高程、该点的设计高程，以及仪器高与棱镜高。高差等于两处高程之差加上仪器高再减去棱镜高， 斜距就是这个高差与水平距离构成的直角三角形的斜边。高程留空，计算器就停在平面上。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么后视要填坐标，而不是直接填方位角？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因为方位角本就是从两个坐标来的，让计算器来算就省掉一次抄录：结果不可能与图上的坐标对不上。 如果你手里已经有后视方位角，把「后视给定方式」切成「已知方位角」直接填进去即可。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "什么是度盘读数？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "它是把水平度盘配到某个参考方向之后，照准该点时度盘显示的数。配到后视方位角之后， 照准各点的读数就分别是各点自身的方位角，于是你可以转到读数对上为止，望远镜也就落在点上。 很多全站仪可以直接键入后视方位角，比拨角更快。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "放样计算能有多准？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "三角运算是精确的，精度取决于你填的坐标。真正的限制来自控制：坐标取到毫米， 方位角与距离就能算到毫米；但测站偏 20 mm，所有点就都偏 20 mm。 放样前用第三个已知点核对一次架设。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个放样计算器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费，不用登录、不用注册、不限次数。所有计算都在你的浏览器本地完成，坐标不会上传到任何地方。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="./#drone">无人机</a>
+      <a href="guides">教程</a>
+      <a href="../setting-out-calculator" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › 放样计算器
+  </nav>
+
+<h1>放样计算器</h1>
+
+  <p class="lead">   放样计算器把设计坐标换算成全站仪真正要用的两个数：从后视拨过去的角度，和到该点的水平距离。
+    填上测站与后视，粘贴要放样的点，每个点都会给出方位角、拨角与距离——还会给出度盘配到后视方位角时
+    你会看到的读数，以及让你顺着一个方向把现场跑完的转点顺序。角度可按顺时针或逆时针计，
+    再填两处高程还能得到斜距与竖直角。坐标可用米或英尺，全部在浏览器里算完。</p>
+
+  <div class="card">
+    <div class="row" style="margin-top:2px;">
+      <div class="field grow">
+        <label for="so-station">测站坐标（东, 北）</label>
+        <input id="so-station" type="text" value="1000.000, 2000.000" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field grow">
+        <label for="so-backsight">后视点坐标（东, 北）</label>
+        <input id="so-backsight" type="text" value="1000.000, 2100.000" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">
+      东坐标在前、北坐标在后——坐标表一向就是这么写的。后视可以是已知点上的目标，
+      也可以是仪器配零时照准的参照物。若你手里有后视方位角而没有它的坐标，
+      把「后视给定方式」切成「已知后视方位角」，在下框里填角度，坐标留空即可。
+    </p>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 200px;">
+        <label for="so-mode">后视给定方式</label>
+        <select id="so-mode">
+          <option value="point" selected>后视点坐标</option>
+          <option value="bearing">已知后视方位角</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 200px;display:none;" id="so-brgwrap">
+        <label for="so-bsbrg">后视方位角（度）</label>
+        <input id="so-bsbrg" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="so-turn">拨角方向</label>
+        <select id="so-turn">
+          <option value="right" selected>顺时针（右角）</option>
+          <option value="left">逆时针（左角）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="so-units">坐标单位</label>
+        <select id="so-units">
+          <option value="m" selected>米</option>
+          <option value="ft">英尺</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field grow">
+        <label for="so-points">待放样点（东, 北 —— 每行一个）</label>
+        <textarea id="so-points" rows="6" spellcheck="false" placeholder="1050.000, 2000.000&#10;1030.000, 2040.000">1050.000, 2000.000
+1030.000, 2040.000</textarea>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-hi">仪器高（m）</label>
+        <input id="so-hi" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-ht">棱镜高（m）</label>
+        <input id="so-ht" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-zs">测站高程（m，可空）</label>
+        <input id="so-zs" type="number" step="any" value="" placeholder="—" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-zt">待放样点高程（m，可空）</label>
+        <input id="so-zt" type="number" step="any" value="" placeholder="—" autocomplete="off">
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">
+      四处高度都可以空着，只影响<b>斜距</b>与<b>竖直角</b>。留空时计算器停在平面上，
+      而水平角与水平距离本来就只需平面坐标。填上两处高程，它还会告诉你竖盘该拨到多少。
+    </p>
+
+    <div class="chips">
+      <span>算例：</span>
+      <button type="button" data-ex="right">正北后视下的直角</button>
+      <button type="button" data-ex="diag">斜向点</button>
+      <button type="button" data-ex="east">后视正东</button>
+      <button type="button" data-ex="feet">以英尺计</button>
+    </div>
+
+    <p class="err" id="so-err"></p>
+
+    <div class="results" id="so-results">
+      <div class="big">
+        <span class="bk" id="so-bk">后视方位角</span>
+        <span class="bv" id="so-bv">&mdash;</span>
+      </div>
+      <div id="so-rows"></div>
+      <h3 id="so-th">各点，按你该转过去的顺序排列</h3>
+      <div class="tscroll">
+        <table class="lookup" id="so-table">
+          <thead>
+            <tr><th>点号</th><th>方位角</th><th>拨角</th><th>度盘读数</th><th>距离</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint" id="so-sum" style="font-weight:600;"></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="so-copy" type="button">复制全部结果</button>
+      </div>
+    </div>
+    <div class="note" id="so-note" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <h2>测站、后视与各点</h2>
+    <p class="hint" style="margin-top:0;">按你填的坐标绘制。圆点是仪器，空心方块是后视，
+      带编号的圆圈是待放样点。正北朝上，所以图上的角就是仪器上的角。</p>
+    <div class="plot" id="so-plot"></div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <h3>方位角就是从正北起算的角度</h3>
+    <p>把东坐标记为向右、北坐标记为向上，从测站到某点的方向就是
+      <code>atan2(ΔE, ΔN)</code>，从正北顺时针量——这正是全站仪度盘显示的整圆方位角。
+      唯一需要的处理是把它规范到 0–360°。注意参数顺序：<b>ΔE 在前</b>。
+      把两个参数写反，是得到「两个象限对、另两个象限错」的方位角最常见的原因，
+      而它在核对时往往还看不出来。</p>
+    <p>水平距离是 <code>√(ΔE² + ΔN²)</code>。这两个数来自同样两次相减，
+      所以不可能互相矛盾，也不可能与反算得到的距离方位角矛盾。</p>
+    <h3>从后视起拨角</h3>
+    <p>仪器是以后视为定向的，所以真正要用的不是该点的方位角，而是后视方向与该点方向之间的夹角：
+      <code>拨角 = 该点方位角 − 后视方位角</code>，对 360° 取模。
+      顺时针拨、视准轴向右转，正角就是右角；若仪器读的是左角刻度，同一个转身是
+      <code>360° − 该角</code>。计算器按你选定的一侧计算并标明列名，
+      所以表里的数字永远与仪器显示对得上。</p>
+    <h3>度盘读数</h3>
+    <p>很多测量员根本不拨角：他们把水平度盘配到后视的方位角（或配零），然后直接读该点。
+      这就是表里有一列<b>度盘读数</b>的原因。度盘配到后视方位角时，
+      照准某点时的读数就是该点自身的方位角——转到显示值等于表里的方位角，望远镜也就落在该点上。
+      两种做法打出来的桩是同一个，这一列只是替你在现场省掉一次减法。</p>
+    <h3>斜距与竖直角</h3>
+    <p>全站仪量的是斜距，不是水平距离。若填了测站高程与该点的设计高程，再加上仪器高与棱镜高，
+      高差就是</p>
+    <p><code>ΔH =（该点高程 − 测站高程）+（仪器高 − 棱镜高）</code></p>
+    <p>斜距为 <code>√(水平距离² + ΔH²)</code>，竖直角为 <code>atan2(ΔH, 水平距离)</code>。
+      高程留空则整个计算停在平面上，而水平角与水平距离本来就只需平面坐标。
+      注意：任一处高程留空都不算填了——空字段按「没有给」处理，不会被当成 0.000。</p>
+  </section>
+
+  <section class="card">
+    <h2>开挖前先核这几件事</h2>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>要核的</th><th>为什么</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>测站落在控制点上，而不是点在旁边</td>
+            <td>测站偏 20 mm，放出去的点就全都偏 20 mm；在目标点上再怎么小心也补不回来。</td>
+          </tr>
+          <tr>
+            <td>后视距离够远</td>
+            <td>定向差 1″ 时，1 km 处偏 5 mm，100 m 处只偏 0.5 mm；更要紧的是后视太短会让定向本身不可靠。
+              现场尽量选最长、最稳的一条视线。</td>
+          </tr>
+          <tr>
+            <td>坐标顺序</td>
+            <td>东坐标在前。写反的一对坐标照样能算出一个像样的方位角与距离，
+              所以这类错误特别容易过关。</td>
+          </tr>
+          <tr>
+            <td>仪器读的是哪一侧角</td>
+            <td>右角与左角差的是补角，不是差一个符号。对表之前先确认度盘设定。</td>
+          </tr>
+          <tr>
+            <td>用第三个点做检核</td>
+            <td>量一条到已知点的距离，与计算值比一比。只花一分钟，却能抓住光靠角度看不出来的错误。</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>测站设于 <code>(1000.000, 2000.000)</code>，后视照准 <code>(1000.000, 2100.000)</code> 的目标。
+      后视正北，所以后视方位角是 000.0000°。</p>
+    <p>待放样点 <code>(1050.000, 2000.000)</code> 在测站正东 50 m：方位角 090.0000°，距离 50.000 m，
+      顺时针拨角 090.0000°。度盘配到后视方位角时，仪器读 090.0000°——就是方位角本身。</p>
+    <p>第二个点 <code>(1030.000, 2040.000)</code> 在东 30 m、北 40 m 处。方位角
+      <code>atan2(30, 40) = 036.8699°</code>，距离 50.000 m——正好是 3-4-5 三角形，
+      适合手算复核。从后视顺时针拨 036.8699°。</p>
+    <p>若后视在正东，即测站 <code>(500000.000, 4000000.000)</code>、后视
+      <code>(500100.000, 4000000.000)</code>，后视方位角就是 090.0000°。
+      此时点 <code>(500080.000, 4000080.000)</code> 的方位角是 045.0000°，
+      从后视顺时针拨过去是 <b>315.0000°</b>，不是 45°——这一例正是用来验 atan2 参数顺序的。</p>
+  </section>
+
+  <section class="card">
+    <h2>右角、左角与度盘</h2>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>做法</th><th>在仪器上怎么做</th><th>计算器给出哪一列</th><th>常用场合</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>拨角</td>
+            <td>后视配零，转动到水平度盘读出所需角度</td>
+            <td><b>拨角</b>列</td>
+            <td>多数作业的默认做法，经纬仪上也只有这一种</td>
+          </tr>
+          <tr>
+            <td>度盘配方位角</td>
+            <td>在后视方向上把水平度盘配成后视方位角</td>
+            <td><b>度盘读数</b>列——即该点自身方位角</td>
+            <td>全站仪作业，点数较多时</td>
+          </tr>
+          <tr>
+            <td>左角</td>
+            <td>读逆时针刻度</td>
+            <td>同一列，按另一侧计算</td>
+            <td>以左角为习惯的仪器与地区</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p>三种做法在地面上落的是同一个桩。不同的只是你在仪器上读到的那个数，
+      所以真正的风险只有一个：拿错了配对——表里读的是右角，度盘上读的是左角。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <ul class="readon">
+      <li><a href="distance-bearing-calculator">两点间的距离与方位角</a>
+        <small>所有放样数字都是由这一个量算出来的。</small></li>
+      <li><a href="bearing-vs-azimuth">方位角与象限度盘</a>
+        <small>同一个角为什么有两个名字，仪器认的是哪一个。</small></li>
+      <li><a href="how-to-read-utm-coordinates">UTM 坐标怎么读</a>
+        <small>从图上取东坐标与北坐标时别把顺序搞反。</small></li>
+      <li><a href="how-to-calculate-closure-error">导线计算与闭合差</a>
+        <small>放样之前，先核测站所在的那套控制。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <ul class="readon">
+      <li><a href="distance-bearing-calculator">距离与方位角计算器</a>
+        <small>任意两点连线的长度与方向。</small></li>
+      <li><a href="traverse-calculator">导线计算器</a>
+        <small>控制导线的闭合差与 Bowditch 平差。</small></li>
+      <li><a href="land-parcel-split-calculator">地块分割计算器</a>
+        <small>分割地块，并给出要打桩的那两个点。</small></li>
+      <li><a href="azimuth-calculator">方位角计算器</a>
+        <small>象限角与整圆方位角互换。</small></li>
+      <li><a href="utm-coordinate-converter">UTM 坐标转换</a>
+        <small>经纬度与格网坐标互换。</small></li>
+      <li><a href="unit-converter">测量单位换算</a>
+        <small>米、英尺、链与令。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details>
+      <summary>用全站仪怎么放样一个点？</summary>
+      <p>在测站上整置仪器，照准后视，然后二选一：把水平度盘在后视上配零，拨计算器给出的角度；
+        或把度盘配成后视方位角，转到读数等于该点方位角。再沿这个方向量出水平距离把它定下来
+        ——若该点与测站不同高，量斜距。最后打桩、标记。</p>
+    </details>
+    <details>
+      <summary>方位角和拨角有什么区别？</summary>
+      <p>方位角从正北量起，属于那个点；拨角从后视量起，属于仪器这一次架设。
+        只有后视恰好正北时两者才相等；一般情况下拨角等于该点方位角减后视方位角，对 360° 取模。</p>
+    </details>
+    <details>
+      <summary>该用左角还是右角？</summary>
+      <p>用仪器实际显示的那一种，并在记录本上写明。计算器按你选的一侧计算，
+        所以它的列永远对得上显示。右角是更常见的约定，但按左角设置的全站仪仍在日常使用。</p>
+    </details>
+    <details>
+      <summary>怎么算斜距而不是水平距离？</summary>
+      <p>填上测站高程、该点的设计高程，以及仪器高与棱镜高。高差等于两处高程之差加上仪器高再减去棱镜高，
+        斜距就是这个高差与水平距离构成的直角三角形的斜边。高程留空，计算器就停在平面上。</p>
+    </details>
+    <details>
+      <summary>为什么后视要填坐标，而不是直接填方位角？</summary>
+      <p>因为方位角本就是从两个坐标来的，让计算器来算就省掉一次抄录：结果不可能与图上的坐标对不上。
+        如果你手里已经有后视方位角，把「后视给定方式」切成「已知方位角」直接填进去即可。</p>
+    </details>
+    <details>
+      <summary>什么是度盘读数？</summary>
+      <p>它是把水平度盘配到某个参考方向之后，照准该点时度盘显示的数。配到后视方位角之后，
+        照准各点的读数就分别是各点自身的方位角，于是你可以转到读数对上为止，望远镜也就落在点上。
+        很多全站仪可以直接键入后视方位角，比拨角更快。</p>
+    </details>
+    <details>
+      <summary>放样计算能有多准？</summary>
+      <p>三角运算是精确的，精度取决于你填的坐标。真正的限制来自控制：坐标取到毫米，
+        方位角与距离就能算到毫米；但测站偏 20 mm，所有点就都偏 20 mm。
+        放样前用第三个已知点核对一次架设。</p>
+    </details>
+    <details>
+      <summary>这个放样计算器免费吗？</summary>
+      <p>免费，不用登录、不用注册、不限次数。所有计算都在你的浏览器本地完成，坐标不会上传到任何地方。</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">已复制到剪贴板</div>
+
+<script>
+/* CoordCalc shared geodesy library (WGS84) */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+
+(function () {
+  "use strict";
+
+  var FT = 0.3048;
+  var ACRE_M2 = 4046.8564224;
+  var HA_M2 = 10000;
+
+  function $(id) { return document.getElementById(id); }
+  function fmt(v, n) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    var s = Math.abs(v).toFixed(n == null ? 4 : n);
+    var parts = s.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return (v < 0 ? "-" : "") + parts.join(".");
+  }
+  function round(v, n) {
+    var p = Math.pow(10, n);
+    return Math.round(v * p) / p;
+  }
+  function norm360(d) {
+    var r = d % 360;
+    return r < 0 ? r + 360 : r;
+  }
+
+  /* ---------- the geometry: bearing and distance ---------- */
+  /* Eastings grow to the right, northings up, which is the same convention the instrument
+     uses for a whole-circle bearing: measured clockwise from north. atan2(dE, dN) then gives
+     the bearing directly, and the 0..360 wrap is the only correction needed. */
+  function bearingBetween(e1, n1, e2, n2) {
+    return norm360(Math.atan2(e2 - e1, n2 - n1) * 180 / Math.PI);
+  }
+  function distanceBetween(e1, n1, e2, n2) {
+    return Math.hypot(e2 - e1, n2 - n1);
+  }
+  /* the angle to turn from the backsight to the point, on the side the instrument reads */
+  function turnAngle(bs, pt, side) {
+    return norm360(side === "left" ? bs - pt : pt - bs);
+  }
+  /* a numeric input that reports "not given" as null rather than as 0 */
+  function fieldNum(id) {
+    var el = $(id);
+    if (!el) { return null; }
+    var raw = String(el.value).trim();
+    if (raw === "") { return null; }
+    var v = Number(raw);
+    return isFinite(v) ? v : null;
+  }
+
+  /* ---------- parsing a coordinate pair ---------- */
+  function parsePair(text) {
+    if (text == null) { return null; }
+    var t = String(text).trim();
+    if (t === "") { return null; }
+    var parts = t.split(/[,;\s]+/).filter(function (x) { return x !== ""; });
+    if (parts.length < 2) { return { bad: t }; }
+    var e = Number(parts[0]), n = Number(parts[1]);
+    if (!isFinite(e) || !isFinite(n)) { return { bad: t }; }
+    return { e: e, n: n };
+  }
+  function parseLines(text, scale) {
+    var lines = String(text || "").split(/\r?\n/), out = [], bad = [];
+    for (var i = 0; i < lines.length; i++) {
+      var s = lines[i].trim();
+      if (s === "" || s.charAt(0) === "#") { continue; }
+      var p = parsePair(s);
+      if (p === null) { continue; }
+      if (p.bad) { bad.push(p.bad); continue; }
+      out.push({ e: p.e * scale, n: p.n * scale });
+    }
+    return { pts: out, bad: bad };
+  }
+
+  /* ---------- the instrument view ---------- */
+  var ST = { bs: 0, side: "right", unitLen: "m", pts: [], rows: [] };
+
+  function render() {
+    var err = $("so-err"), note = $("so-note");
+    function fail(msg) {
+      err.textContent = msg;
+      err.classList.add("show");
+      $("so-results").classList.remove("show");
+      note.style.display = "none";
+      renderPlot(null);
+    }
+    err.textContent = "";
+    err.classList.remove("show");
+
+    var unitSel = $("so-units").value;
+    var scale = unitSel === "ft" ? FT : 1;
+    var unitLen = unitSel === "ft" ? "ft" : "m";
+    ST.unitLen = unitLen;
+
+    var st = parsePair($("so-station").value);
+    if (st === null) { fail("请把测站填成一对坐标：东坐标在前，北坐标在后。"); return; }
+    if (st.bad) { fail("测站坐标读不出来：" + st.bad); return; }
+    var E0 = st.e * scale, N0 = st.n * scale;
+
+    /* the backsight, either as a point or as a bearing that is already known */
+    var bsBrg;
+    var bsPoint = null;
+    if ($("so-mode").value === "point") {
+      var b = parsePair($("so-backsight").value);
+      if (b === null) { fail("请填写后视点坐标，或把后视切成「已知方位角」再填角度。"); return; }
+      if (b.bad) { fail("后视点坐标读不出来：" + b.bad); return; }
+      bsPoint = { e: b.e * scale, n: b.n * scale };
+      if (distanceBetween(E0, N0, bsPoint.e, bsPoint.n) < 1e-9) {
+        fail("后视点与测站重合，无法由此定出方向。");
+        return;
+      }
+      bsBrg = bearingBetween(E0, N0, bsPoint.e, bsPoint.n);
+    } else {
+      var bv = Number($("so-bsbrg").value);
+      if (!isFinite(bv)) { fail("请填写后视方位角（度）。"); return; }
+      bsBrg = norm360(bv);
+    }
+    ST.bs = bsBrg;
+
+    var side = $("so-turn").value;
+    ST.side = side;
+
+    var list = parseLines($("so-points").value, scale);
+    if (list.bad.length) {
+      err.textContent = "以下行读不出来，已跳过："
+        + list.bad.slice(0, 3).join(" | ")
+        + (list.bad.length > 3 ? "（另有 " + (list.bad.length - 3) + " 行）" : "");
+      err.classList.add("show");
+    }
+    if (!list.pts.length) { fail("至少填一个待放样点，东坐标在前，北坐标在后。"); return; }
+
+    /* the optional heights, for the slope distance and the vertical angle.
+       An empty field means "not given" — Number("") is 0 and isFinite(null) is true, so
+       neither check may lean on the value alone, or a blank field would silently become
+       a level of 0.000 and turn a plan-only run into a bogus vertical angle. */
+    var hi = fieldNum("so-hi"), ht = fieldNum("so-ht");
+    var zs = fieldNum("so-zs"), zt = fieldNum("so-zt");
+    if (hi === null) { hi = 0; }
+    if (ht === null) { ht = 0; }
+    var haveLevels = zs !== null && zt !== null;
+
+    var rows = [], near = null;
+    for (var i = 0; i < list.pts.length; i++) {
+      var p = list.pts[i];
+      var d = distanceBetween(E0, N0, p.e, p.n);
+      if (d < 1e-9) {
+        fail("第 " + (i + 1) + " 个点与测站重合，没有方位角可言。");
+        return;
+      }
+      var bd = bearingBetween(E0, N0, p.e, p.n);
+      var ang = turnAngle(bsBrg, bd, side);
+      /* if the circle was set to the backsight, the reading at the point is its own bearing */
+      var circ = norm360(bsBrg + (side === "left" ? -ang : ang));
+      var vd = haveLevels ? (zt - zs) + (hi - ht) : 0;
+      var sd = haveLevels ? Math.hypot(d, vd) : d;
+      var vang = haveLevels ? Math.atan2(vd, d) * 180 / Math.PI : 0;
+      rows.push({ i: i + 1, e: p.e, n: p.n, brg: bd, ang: ang, circ: circ, d: d, sd: sd, vang: vang, vd: vd });
+      if (d < 2) { near = i + 1; }
+    }
+    /* the order the instrument would be turned in: by angle, in the reading direction */
+    var order = rows.slice().sort(function (a, b) {
+      return side === "left" ? b.ang - a.ang : a.ang - b.ang;
+    });
+    ST.rows = rows;
+
+    /* ---- the figures ---- */
+    var lenDisp = unitSel === "ft" ? 1 / FT : 1;
+    $("so-bk").textContent = "Backsight bearing";
+    $("so-bv").textContent = fmt(bsBrg, 4) + "\u00B0" + (bsPoint
+      ? "  \u00B7  距 " + fmt(distanceBetween(E0, N0, bsPoint.e, bsPoint.n) * lenDisp, 3) + " " + unitLen
+      : "  \u00B7  直接键入");
+
+    var out = [];
+    function row(k, v, small) {
+      out.push('<div class="result-row"><span class="k">' + k + '</span><span class="v">' + v
+        + (small ? '<small>' + small + '</small>' : '') + '</span></div>');
+    }
+    row("测站", fmt(E0 * lenDisp, 3) + ", " + fmt(N0 * lenDisp, 3) + " " + unitLen);
+    row("拨角方向", side === "left" ? "逆时针（左角）" : "顺时针（右角）");
+    row("待放样点数", String(rows.length));
+    if (haveLevels) {
+      row("仪器高 / 棱镜高",
+        fmt(hi, 3) + " / " + fmt(ht, 3) + " " + unitLen,
+        "高程 " + fmt(zs, 3) + " \u2192 " + fmt(zt, 3));
+    } else {
+      row("高程方向", "仅平面",
+        "两处高程都填才给斜距与竖直角");
+    }
+    $("so-rows").innerHTML = out.join("");
+
+    /* ---- the point table ---- */
+    var tb = $("so-table").querySelector("tbody"), html = "";
+    for (var k = 0; k < rows.length; k++) {
+      var r = rows[k];
+      html += "<tr><td>" + r.i + "</td><td>" + fmt(r.brg, 4) + "\u00B0</td><td><b>"
+        + fmt(r.ang, 4) + "\u00B0</b></td><td>" + fmt(r.circ, 4) + "\u00B0</td><td>"
+        + fmt(r.d * lenDisp, 3) + " " + unitLen
+        + (haveLevels ? " <small>斜距 " + fmt(r.sd * lenDisp, 3) + (unitSel === "ft" ? " ft" : " m")
+          + "，竖直角 " + fmt(r.vang, 3) + "\u00B0</small>" : "")
+        + "</td></tr>";
+    }
+    tb.innerHTML = html;
+
+    $("so-sum").textContent = "最短 " + fmt(Math.min.apply(null, rows.map(function (x) { return x.d; })) * lenDisp, 3)
+      + " " + unitLen + "，最长 " + fmt(Math.max.apply(null, rows.map(function (x) { return x.d; })) * lenDisp, 3)
+      + " " + unitLen + "。转点顺序："  + order.map(function (x) { return "#" + x.i; }).join(" \u2192 ") + ".";
+
+    /* ---- notes ---- */
+    /* a point too close to the instrument is a real risk on site, so it outranks the two
+       advisory notes: only one can be shown, and it must be the one that can ruin a set-out */
+    note.className = "note";
+    if (near !== null) {
+      note.className = "note warn";
+      note.innerHTML = "<b>第 " + near + " 个点距测站不足 2 " + unitLen + "。</b>这个距离上，坐标差 1 mm 方位角就会差出好几分，"
+        + "而垂球本身也有宽度。请换一个测站放样，或改用偏距法。";
+      note.style.display = "";
+    } else if ($("so-mode").value === "point" && bsPoint && bsBrg === 0) {
+      note.innerHTML = "<b>后视正北。</b>这是方便的特例，不算错，"
+        + "但值得核一下：后视正好落在子午线上，教科书里常见，实地很少见。若方位角本不该是 000\u00B0，就是两个坐标里有一个写错了。";
+      note.style.display = "";
+    } else if (side === "left") {
+      note.innerHTML = "<b>左角。</b>拨角列给的是从后视逆时针转过去的角。"
+        + "不同地区、不同仪器有的读左角有的读右角，两者差 360° 减该角，"
+        + "对数字之前先确认度盘显示的是哪一种。";
+      note.style.display = "";
+    } else {
+      note.style.display = "none";
+    }
+
+    renderPlot({ e: E0, n: N0, bs: bsPoint, pts: list.pts });
+    $("so-results").classList.add("show");
+  }
+
+  /* ---------- the drawing ---------- */
+  function renderPlot(st) {
+    var host = $("so-plot");
+    if (!host) { return; }
+    if (!st) { host.innerHTML = ""; return; }
+    var W = 640, H = 440, pad = 34;
+
+    /* everything that has to fit, including the backsight */
+    var all = [{ e: st.e, n: st.n }].concat(st.pts.slice());
+    if (st.bs) { all.push(st.bs); }
+    var es = all.map(function (p) { return p.e; }), ns = all.map(function (p) { return p.n; });
+    var minE = Math.min.apply(null, es), maxE = Math.max.apply(null, es);
+    var minN = Math.min.apply(null, ns), maxN = Math.max.apply(null, ns);
+    /* a symmetric window around the station keeps the angles readable */
+    var half = Math.max((maxE - minE) / 2, (maxN - minN) / 2, 1e-6) * 1.25;
+    var cE = st.e, cN = st.n;
+    minE = Math.min(minE, cE - half); maxE = Math.max(maxE, cE + half);
+    minN = Math.min(minN, cN - half); maxN = Math.max(maxN, cN + half);
+    var spanE = Math.max(maxE - minE, 1e-9), spanN = Math.max(maxN - minN, 1e-9);
+    var sc = Math.min((W - 2 * pad) / spanE, (H - 2 * pad) / spanN);
+    function X(e) { return pad + (e - minE) * sc + ((W - 2 * pad) - spanE * sc) / 2; }
+    function Y(n) { return H - pad - (n - minN) * sc - ((H - 2 * pad) - spanN * sc) / 2; }
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" role="img" '
+      + 'aria-label="Station, backsight and the points to set out">';
+
+    /* a light graticule, so the drawing reads as a plan rather than a diagram */
+    var gstep = Math.pow(10, Math.floor(Math.log(half * 2) / Math.LN10)) / 2;
+    svg += '<g stroke="#e6ebf3" stroke-width="1">';
+    for (var g = Math.ceil(minE / gstep) * gstep; g <= maxE; g += gstep) {
+      svg += '<line x1="' + X(g).toFixed(1) + '" y1="' + pad + '" x2="' + X(g).toFixed(1)
+        + '" y2="' + (H - pad) + '"/>';
+    }
+    for (var h = Math.ceil(minN / gstep) * gstep; h <= maxN; h += gstep) {
+      svg += '<line x1="' + pad + '" y1="' + Y(h).toFixed(1) + '" x2="' + (W - pad)
+        + '" y2="' + Y(h).toFixed(1) + '"/>';
+    }
+    svg += '</g>';
+
+    var cx = X(st.e), cy = Y(st.n);
+
+    /* north arrow, top right, always drawn so the reader knows which way is up */
+    svg += '<g stroke="#1f2430" stroke-width="1.6" fill="none">'
+      + '<line x1="' + (W - 30) + '" y1="' + 46 + '" x2="' + (W - 30) + '" y2="' + 18 + '"/>'
+      + '<path d="M' + (W - 34) + ' 25 L' + (W - 30) + ' 17 L' + (W - 26) + ' 25"/></g>'
+      + '<text x="' + (W - 30) + '" y="' + 60 + '" font-size="11" fill="#1f2430" '
+      + 'text-anchor="middle" font-weight="700">北</text>';
+
+    /* the backsight ray and the circle it sets */
+    var palette = ["#2563eb", "#0d9488", "#b45309", "#7c3aed", "#0891b2", "#be123c"];
+    if (st.bs) {
+      svg += '<line x1="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + X(st.bs.e).toFixed(1)
+        + '" y2="' + Y(st.bs.n).toFixed(1) + '" stroke="#6b7280" stroke-width="1.6" '
+        + 'stroke-dasharray="6 4"/>';
+      svg += '<rect x="' + (X(st.bs.e) - 4.5).toFixed(1) + '" y="' + (Y(st.bs.n) - 4.5).toFixed(1)
+        + '" width="9" height="9" fill="#fff" stroke="#1f2430" stroke-width="1.6"/>';
+      svg += '<text x="' + (X(st.bs.e) + 9).toFixed(1) + '" y="' + (Y(st.bs.n) - 7).toFixed(1)
+        + '" font-size="11" fill="#4b5563" font-weight="600">后视</text>';
+    }
+
+    /* each point, with its ray and its number */
+    var rmax = 0;
+    st.pts.forEach(function (p) { rmax = Math.max(rmax, Math.hypot(X(p.e) - cx, Y(p.n) - cy)); });
+    st.pts.forEach(function (p, i) {
+      var px = X(p.e), py = Y(p.n);
+      svg += '<line x1="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + px.toFixed(1)
+        + '" y2="' + py.toFixed(1) + '" stroke="' + palette[i % 6] + '" stroke-width="1.5" opacity=".85"/>';
+      svg += '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="10" fill="' + palette[i % 6]
+        + '" opacity=".14"/>';
+      svg += '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="10" fill="none" stroke="'
+        + palette[i % 6] + '" stroke-width="1.6"/>';
+      svg += '<text x="' + px.toFixed(1) + '" y="' + (py + 3.8).toFixed(1) + '" font-size="11" '
+        + 'font-weight="700" fill="' + palette[i % 6] + '" text-anchor="middle">' + (i + 1) + '</text>';
+    });
+
+    /* the station, on top of everything */
+    svg += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="5.2" fill="#1f2430"/>';
+    svg += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="9.5" fill="none" '
+      + 'stroke="#1f2430" stroke-width="1.3"/>';
+    svg += '<text x="' + (cx + 13).toFixed(1) + '" y="' + (cy - 8).toFixed(1) + '" font-size="11" '
+      + 'fill="#1f2430" font-weight="700">测站</text>';
+
+    svg += '</svg>';
+    host.innerHTML = svg;
+  }
+
+  /* ---------- examples ---------- */
+  var EXAMPLES = {
+    right: {
+      station: "1000.000, 2000.000", bs: "1000.000, 2100.000", mode: "point",
+      pts: "1050.000, 2000.000\n1000.000, 1900.000\n950.000, 2000.000", turn: "right", units: "m"
+    },
+    diag: {
+      station: "1000.000, 2000.000", bs: "1000.000, 2100.000", mode: "point",
+      pts: "1030.000, 2040.000\n1070.000, 2020.000", turn: "right", units: "m"
+    },
+    east: {
+      station: "500000.000, 4000000.000", bs: "500100.000, 4000000.000", mode: "point",
+      pts: "500080.000, 4000080.000\n500120.000, 3999950.000", turn: "right", units: "m"
+    },
+    feet: {
+      station: "1000.000, 2000.000", bs: "1000.000, 2100.000", mode: "point",
+      pts: "1050.000, 2000.000", turn: "right", units: "ft"
+    }
+  };
+
+  function applyExample(key) {
+    var ex = EXAMPLES[key];
+    if (!ex) { return; }
+    $("so-station").value = ex.station;
+    $("so-backsight").value = ex.bs;
+    $("so-mode").value = ex.mode;
+    $("so-points").value = ex.pts;
+    $("so-turn").value = ex.turn;
+    $("so-units").value = ex.units;
+    syncMode();
+    render();
+  }
+
+  function syncMode() {
+    var m = $("so-mode").value;
+    $("so-brgwrap").style.display = m === "bearing" ? "" : "none";
+    $("so-backsight").parentNode.style.display = m === "point" ? "" : "none";
+  }
+
+  /* ---------- copy ---------- */
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll() {
+    var lines = [];
+    lines.push("Backsight bearing, " + fmt(ST.bs, 4) + " deg");
+    lines.push("Point, Bearing, Angle to turn, Circle reading, Horizontal distance, Coordinates");
+    ST.rows.forEach(function (r) {
+      lines.push([r.i, fmt(r.brg, 4), fmt(r.ang, 4), fmt(r.circ, 4), fmt(r.d, 3),
+        fmt(r.e, 3) + " " + fmt(r.n, 3)].join(", "));
+    });
+    var text = lines.join("\n");
+    var fallback = function () {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); showToast("已复制到剪贴板"); }
+      catch (e) { showToast("复制失败"); }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("已复制到剪贴板"); }, fallback);
+    } else { fallback(); }
+  }
+
+  /* ---------- wiring ---------- */
+  function bindAll() {
+    ["so-station", "so-backsight", "so-bsbrg", "so-points", "so-hi", "so-ht", "so-zs", "so-zt"]
+      .forEach(function (id) {
+        var e = $(id);
+        if (e) { e.addEventListener("input", render); }
+      });
+    ["so-mode", "so-turn", "so-units"].forEach(function (id) {
+      $(id).addEventListener("change", function () {
+        if (id === "so-mode") { syncMode(); }
+        render();
+      });
+    });
+    $("so-copy").addEventListener("click", copyAll);
+    Array.prototype.forEach.call(document.querySelectorAll(".chips button"), function (b) {
+      b.addEventListener("click", function () { applyExample(b.getAttribute("data-ex")); });
+    });
+  }
+
+  /* this script sits at the end of the body, so every element above already exists:
+     run straight away rather than waiting on DOMContentLoaded, which the two deferred
+     scripts earlier in the document can hold up */
+  syncMode();
+  bindAll();
+  render();
+})();
+</script>
+</body>
+</html>

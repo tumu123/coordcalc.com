@@ -1,0 +1,1658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Land Parcel Split Calculator — Divide a Lot by Area (Free)</title>
+<meta name="description" content="Split a land parcel into equal-area pieces by cutting it with a straight line. Paste the boundary coordinates, give the number of lots or an area per lot, get the cutting line, the stake points and the area of every piece. Acres, hectares, m² and feet.">
+<link rel="canonical" href="https://coordcalc.com/land-parcel-split-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/land-parcel-split-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/land-parcel-split-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/land-parcel-split-calculator">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#0d9488">
+<meta property="og:title" content="Land Parcel Split Calculator — Divide a Lot by Area (Free)">
+<meta property="og:description" content="Cut a parcel into equal-area lots with one straight line: boundary coordinates in, cutting line, stake coordinates and the area of every piece out. Acres, hectares and metric.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/land-parcel-split-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Land Parcel Split Calculator",
+  "url": "https://coordcalc.com/land-parcel-split-calculator",
+  "description": "Split a land parcel into equal-area pieces by cutting it with a straight line. Paste the boundary coordinates, give the number of lots or an area per lot, get the cutting line, the stake points and the area of every piece. Acres, hectares, m² and feet.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Distance, bearing & area",
+      "item": "https://coordcalc.com/#distance"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "›  › Land Parcel Split Calculator",
+      "item": "https://coordcalc.com/land-parcel-split-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I split a land parcel into equal areas?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Enter the boundary coordinates in order, set the number of pieces, and choose a bearing for the cutting line. The calculator finds the offset of a straight line parallel to that bearing which leaves exactly one n-th of the parcel on one side, cuts the polygon with it, and reports the area of each piece together with the coordinates of the two points where the line crosses the boundary. Once those points are staked, the line is on the ground."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I split a parcel into equal acres instead of equal pieces?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Set the split method to \"Area per piece\" and enter the acreage each lot must have. The calculator cuts one piece of that size at a time, working along the parcel from the chosen side, and stops when the remainder is too small for another full lot. The remainder is reported as a left-over piece with its own area, which is what you would actually convey."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where does the cutting line start?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "From whichever side you nominate. The drop-down offers the whole boundary as a choice of sides, and the cut is placed relative to that side — the first lot is the strip next to it. Changing the side is how you control which end of the parcel gets the first lot, and it usually matters because the frontage, the road access and the corner value are not the same at both ends."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the split keep the frontage equal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only when the cut runs parallel to the frontage. A line parallel to the front gives every lot the same frontage, because the front of the parcel is not touched — the cuts run back from it. A line at any other bearing gives equal areas but unequal frontages, which is often not what a subdivision wants even though the areas are right."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is the split?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The solver iterates the offset of the cutting line until the piece area matches the target to about one part in a billion of the parcel area, so the arithmetic is not the limit. The limit is the boundary: coordinates that were themselves rounded to the nearest metre cannot support a split to the nearest square metre. The calculator reports the closing error of the parcel and the area identity piece by piece so you can see whether the boundary adds up."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the cut sometimes cross more than two sides?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A straight line through a convex parcel always meets the boundary in two places; through a concave one it can meet it in four or more, and then a single straight cut does not produce two clean pieces. The calculator reports the number of crossings, so a concave boundary is flagged rather than silently producing a shape that no fence can follow."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use coordinates from a deed or a GIS in latitude and longitude?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes — the tool accepts latitude and longitude, and converts them onto a local plane centred on the parcel before splitting, so the cut is a straight line on the ground rather than a rhumb line on a map. If you already hold projected coordinates (State Plane, UTM, a local grid), enter those instead: the split is then done in exactly the coordinate system your survey uses, which is what a deed wants."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this land parcel split calculator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no boundary or ownership data is uploaded anywhere."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* ---------- page-specific ---------- */
+  .big{background:var(--cat-soft,var(--soft));border-radius:11px;padding:15px 18px;margin-bottom:14px;
+    display:flex;justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;
+    text-transform:uppercase;}
+  .big .bv{font-size:19px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;
+    word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:#0f9d58;font-weight:600;}
+  .plot{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:8px;}
+  .plot svg{display:block;}
+  textarea{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;
+    line-height:1.7;padding:11px 12px;border:1px solid #cfd6e0;border-radius:9px;background:#fff;
+    color:var(--text);resize:vertical;}
+  textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  .chips{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:16px;font-size:12.5px;
+    color:var(--sub);}
+  .chips button{font-family:inherit;font-size:12px;padding:5px 11px;border-radius:14px;
+    border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer;transition:.15s;}
+  .chips button:hover{border-color:var(--accent);color:var(--accent);}
+  .actions{margin-top:16px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  h2+table.lookup,h3+table.lookup{margin-top:10px;}
+  table.lookup th,table.lookup td{vertical-align:top;}
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  .tscroll > table{width:max-content;min-width:100%;}
+  .toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%) translateY(20px);
+    background:#1f2430;color:#fff;font-size:13px;padding:9px 18px;border-radius:8px;opacity:0;
+    transition:.25s;pointer-events:none;z-index:60;}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .btn{border:0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    font-family:inherit;transition:.15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-d);}
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> &rsaquo; <a href="./#distance">Distance, bearing &amp; area</a> &rsaquo; Land Parcel Split Calculator
+  </nav>
+
+  <h1>Land Parcel Split Calculator</h1>
+
+  <p class="lead">    This land parcel split calculator divides a boundary into lots of equal area with a single straight
+    cut. Paste the boundary coordinates, say how many pieces you want — or the area each piece must be —
+    and choose the direction the cut runs: parallel to a boundary line, through a bearing of your own,
+    or the shortest cut that still works. You get the cutting line, the two points where it meets the
+    boundary, and the area and perimeter of every piece. Acres, hectares, square metres and feet all at
+    once, in your browser, no login.</p>
+
+  <div class="card">
+    <div class="row" style="margin-top:2px;">
+      <div class="field grow">
+        <label for="lp-coords">Boundary coordinates (one vertex per line)</label>
+        <textarea id="lp-coords" rows="7" spellcheck="false" placeholder="0, 0&#10;50, 0&#10;50, 40&#10;0, 40">0, 0
+50, 0
+50, 40
+0, 40</textarea>
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">
+      Either <b>projected</b> coordinates — <code>x, y</code> or <code>easting, northing</code> in metres
+      or feet, one vertex per line — or <b>latitude, longitude</b> in decimal degrees, which is recognised
+      automatically and converted onto a local plane. Blank lines and lines starting with
+      <code>#</code> are ignored. List the corners in order, clockwise or anticlockwise. Do not repeat the
+      first vertex at the end.
+    </p>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:0 0 210px;">
+        <label for="lp-mode">Split into</label>
+        <select id="lp-mode">
+          <option value="count" selected>Equal pieces — set the number</option>
+          <option value="area">Equal areas — set the area per piece</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 170px;" id="lp-nwrap">
+        <label for="lp-n">Number of pieces</label>
+        <input id="lp-n" type="number" step="1" min="2" max="20" value="2" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 170px;display:none;" id="lp-awrap">
+        <label for="lp-aw">Area per piece</label>
+        <input id="lp-aw" type="number" step="any" value="1" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 150px;" id="lp-aunitwrap">
+        <label for="lp-aunit">Area unit</label>
+        <select id="lp-aunit">
+          <option value="ac" selected>acres</option>
+          <option value="ha">hectares</option>
+          <option value="m2">square metres</option>
+          <option value="ft2">square feet</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 150px;">
+        <label for="lp-units">Coordinate units</label>
+        <select id="lp-units">
+          <option value="m" selected>metres</option>
+          <option value="ft">feet</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 240px;">
+        <label for="lp-dir">Cutting line runs</label>
+        <select id="lp-dir">
+          <option value="edge" selected>Parallel to a boundary side</option>
+          <option value="bearing">At a bearing I type</option>
+          <option value="shortest">Shortest cut (least new fence)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:1;min-width:170px;display:none;" id="lp-edgewrap">
+        <label for="lp-edge">Which side</label>
+        <select id="lp-edge"></select>
+      </div>
+      <div class="field" style="flex:0 0 170px;display:none;" id="lp-brgwrap">
+        <label for="lp-brg">Bearing (degrees, from north)</label>
+        <input id="lp-brg" type="number" step="any" value="0" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="chips">
+      <span>Examples:</span>
+      <button type="button" data-ex="rect">50 &times; 40 m rectangle</button>
+      <button type="button" data-ex="acre">One-acre square</button>
+      <button type="button" data-ex="pent">Five-sided paddock</button>
+      <button type="button" data-ex="geo">Latitude / longitude</button>
+    </div>
+
+    <p class="err" id="lp-err"></p>
+
+    <div class="results" id="lp-results">
+      <div class="big">
+        <span class="bk" id="lp-bk">Parcel area</span>
+        <span class="bv" id="lp-bv">&mdash;</span>
+      </div>
+      <div id="lp-rows"></div>
+      <h3 id="lp-th">The lots</h3>
+      <div class="tscroll">
+        <table class="lookup" id="lp-lots">
+          <thead>
+            <tr><th>Lot</th><th>Area</th><th>Perimeter</th><th>Frontage</th><th>Cut length</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint" id="lp-arith" style="font-weight:600;"></p>
+      <h3 id="lp-sh">Where to stake the cuts</h3>
+      <div class="tscroll">
+        <table class="lookup" id="lp-stakes">
+          <thead>
+            <tr><th>Cut</th><th>From (x, y)</th><th>To (x, y)</th><th>Bearing</th><th>Length</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="actions">
+        <button class="btn btn-primary" id="lp-copy" type="button">Copy all results</button>
+      </div>
+    </div>
+    <div class="note" id="lp-note" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <h2>Parcel and pieces at a glance</h2>
+    <p class="hint" style="margin-top:0;">Drawn from the coordinates you entered, with the cutting lines
+      over it. North is up and the aspect is true, so the shape is the shape you will see on the ground.</p>
+    <div class="plot" id="lp-plot"></div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>One straight cut, swept until the area matches</h3>
+    <p>
+      A single straight cut has one degree of freedom once its direction is fixed: how far along the
+      normal it sits. So the split reduces to a one-dimensional search. Take the unit normal
+      <code>(a, b)</code> of the chosen bearing, define the family of lines
+      <code>a·x + b·y = c</code>, and compute the piece area to the positive side of the line as a
+      function of <code>c</code>. That function is continuous and increases monotonically as the line
+      sweeps across a convex polygon, so a bisection on <code>c</code> converges in a few dozen steps to
+      the offset that leaves exactly the target area on one side.
+    </p>
+    <p>
+      Each candidate line cuts the polygon with the Sutherland–Hodgman algorithm: walk the boundary, keep
+      the vertices on the wanted side, and where an edge crosses the line insert the intersection point.
+      The crossings are not a by-product — they <b>are</b> the answer. They are the two coordinates a
+      surveyor stakes to put the fence on the ground.
+    </p>
+    <h3>Area, and how the pieces are checked</h3>
+    <p>
+      The area of each piece comes from the shoelace formula,
+      <code>A = ½ |Σ (xᵢ·yᵢ₊₁ − xᵢ₊₁·yᵢ)|</code>. Every piece is then summed and compared with the
+      whole parcel: the difference is the <b>area identity</b>, and it is reported rather than hidden.
+      A split that loses a square metre usually means the cutting line crossed the boundary more than
+      twice — a concave parcel — and the same figure is what tells you so.
+    </p>
+    <h3>Several lots</h3>
+    <p>
+      With more than two pieces the cut is applied repeatedly: the first line is placed to leave the
+      target area at the near side, the remaining polygon is cut again for the next lot, and so on. Each
+      cut is therefore solved against the <i>remaining</i> piece rather than against the original parcel,
+      which is what keeps the lots equal when the parcel is not a simple rectangle. The last piece is
+      whatever is left, and it is reported even when it does not match the target.
+    </p>
+    <h3>Which bearing</h3>
+    <p>
+      Three options. <b>Parallel to a boundary</b> takes the direction of one of the parcel's own
+      sides — the usual choice, because a line parallel to the frontage keeps every lot's frontage
+      equal and the cuts run back from the road. <b>A bearing you type</b> allows a cut at, say, 090° to
+      follow a fence, a contour or a drainage line. <b>The shortest cut</b> searches the bearings and
+      returns the one whose cutting line is shortest, which is the least fencing for the same division.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>The three ways a parcel gets divided</h2>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>Method</th><th>What it fixes</th><th>What it gives up</th><th>Where it is used</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Equal area, parallel to the front</td>
+            <td>Area and frontage, both equal</td>
+            <td>Depth varies if the rear boundary is not parallel to the front</td>
+            <td>Subdivisions along a road, field strips</td>
+          </tr>
+          <tr>
+            <td>Equal area, one bearing</td>
+            <td>Area only</td>
+            <td>Frontages and depths differ between lots</td>
+            <td>Dividing an irregular block, a wood or a paddock</td>
+          </tr>
+          <tr>
+            <td>Equal area, shortest cut</td>
+            <td>Area, and the least new fence line</td>
+            <td>The cut runs at an arbitrary angle to the boundaries</td>
+            <td>Tidying a division before it is fenced</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      No single straight cut can make every lot equal in area, frontage and depth at once — that needs
+      three constraints and one line has only one degree of freedom. Decide first which of the three
+      matters to the transaction, then choose the bearing that protects it.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked example</h2>
+    <p>
+      Take the default parcel — a 50 × 40 m rectangle, 2 000 m², or 0.4942 acres — and divide it into two
+      equal lots with the cut running parallel to the 50 m front, which is side 1 of the default boundary.
+    </p>
+    <p>
+      The target is <code>2 000 ÷ 2 = 1 000 m²</code> per lot. Every cut parallel to that front is a
+      horizontal line at some distance <code>d</code> from it, and the strip behind it is a
+      <code>50 × d</code> rectangle. So <code>50 × d = 1 000</code> gives <code>d = 20 m</code>, the two
+      lots are 50 × 20 = 1 000 m² each, and both keep the full 50 m frontage. The stake points are
+      <code>(0.000, 20.000)</code> and <code>(50.000, 20.000)</code>.
+    </p>
+    <p>
+      Three lots instead: each must be <code>2 000 ÷ 3 = 666.667 m²</code>, and a <code>50 × d</code>
+      strip reaches that at <code>d = 13.333 m</code>, so the cuts land at
+      <code>y = 13.333</code> and <code>y = 26.667</code>. Note what the third lot's figure does — it is
+      not rounded separately but taken as the remainder, so the three areas add back to 2 000 exactly
+      rather than to 1 999.999 or 2 000.001.
+    </p>
+    <p>
+      Now cut the same parcel at a bearing of 045° instead. The two lots still hold 1 000 m² each, but
+      the cut is a diagonal and the frontages are no longer equal: the lot at the near corner takes a
+      larger share of the front. That is the trade the bearing makes, and it is why a subdivision
+      drawing normally works with cuts parallel to the road.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>What to check before you stake it</h2>
+    <ul>
+      <li><b>The boundary closes.</b> The tool reports the misclosure of the polygon after the cut —
+        if the input had a typo, the area identity shows it up.</li>
+      <li><b>The cut stays inside the parcel.</b> A bearing can be valid and still produce a line that
+        clips a sliver at one end; read the two piece areas, not just the target.</li>
+      <li><b>Concave parcels.</b> More than two crossings means one straight line does not divide the
+        parcel cleanly. Split it into two convex parts first.</li>
+      <li><b>The units of the coordinates.</b> Latitude and longitude are converted onto a local plane;
+        projected coordinates are used as they are. Mixing the two in one entry is the commonest way to
+        get a plausible but wrong parcel.</li>
+      <li><b>The governing rule.</b> A planning scheme, a covenant or a by-law may set a minimum lot
+        width or frontage. An equal-area split that produces an under-width lot is not a lawful
+        subdivision, whatever the arithmetic says.</li>
+    </ul>
+  </section>
+
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-acreage-from-coordinates">How to calculate acreage from coordinates</a>
+        <small>The shoelace formula worked through to acres and hectares.</small></li>
+      <li><a href="section-township-range">Sections, townships and ranges explained</a>
+        <small>Why a section is 640 acres, and why half of it is not always 320.</small></li>
+      <li><a href="bearing-vs-azimuth">Bearing vs azimuth</a>
+        <small>Which of the two the cutting line's direction is quoted in.</small></li>
+      <li><a href="how-to-calculate-closure-error">Closure error in a traverse</a>
+        <small>What a boundary that does not close does to your areas.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="land-area-calculator">land area calculator<small>Area, acreage and perimeter from coordinates</small></a>
+      <a href="distance-bearing-calculator">distance and bearing<small>Length and direction of any line you stake</small></a>
+      <a href="azimuth-calculator">bearing to azimuth<small>Quadrant bearing to whole-circle azimuth</small></a>
+      <a href="traverse-calculator">traverse calculator<small>Closure error and Bowditch adjustment</small></a>
+      <a href="dxf-coordinate-extractor">dxf coordinate extractor<small>Pull the boundary out of a drawing</small></a>
+      <a href="setting-out-calculator">setting out calculator<small>Station and backsight to the stake point</small></a>
+      <a href="unit-converter">unit converter<small>Acres, hectares, chains and links</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do I split a land parcel into equal areas?</summary>
+      <p>Enter the boundary coordinates in order, set the number of pieces, and choose a bearing for the cutting line. The calculator finds the offset of a straight line parallel to that bearing which leaves exactly one n-th of the parcel on one side, cuts the polygon with it, and reports the area of each piece together with the coordinates of the two points where the line crosses the boundary. Once those points are staked, the line is on the ground.</p>
+    </details>
+    <details>
+      <summary>Can I split a parcel into equal acres instead of equal pieces?</summary>
+      <p>Yes. Set the split method to "Area per piece" and enter the acreage each lot must have. The calculator cuts one piece of that size at a time, working along the parcel from the chosen side, and stops when the remainder is too small for another full lot. The remainder is reported as a left-over piece with its own area, which is what you would actually convey.</p>
+    </details>
+    <details>
+      <summary>Where does the cutting line start?</summary>
+      <p>From whichever side you nominate. The drop-down offers the whole boundary as a choice of sides, and the cut is placed relative to that side — the first lot is the strip next to it. Changing the side is how you control which end of the parcel gets the first lot, and it usually matters because the frontage, the road access and the corner value are not the same at both ends.</p>
+    </details>
+    <details>
+      <summary>Does the split keep the frontage equal?</summary>
+      <p>Only when the cut runs parallel to the frontage. A line parallel to the front gives every lot the same frontage, because the front of the parcel is not touched — the cuts run back from it. A line at any other bearing gives equal areas but unequal frontages, which is often not what a subdivision wants even though the areas are right.</p>
+    </details>
+    <details>
+      <summary>How accurate is the split?</summary>
+      <p>The solver iterates the offset of the cutting line until the piece area matches the target to about one part in a billion of the parcel area, so the arithmetic is not the limit. The limit is the boundary: coordinates that were themselves rounded to the nearest metre cannot support a split to the nearest square metre. The calculator reports the closing error of the parcel and the area identity piece by piece so you can see whether the boundary adds up.</p>
+    </details>
+    <details>
+      <summary>Why does the cut sometimes cross more than two sides?</summary>
+      <p>A straight line through a convex parcel always meets the boundary in two places; through a concave one it can meet it in four or more, and then a single straight cut does not produce two clean pieces. The calculator reports the number of crossings, so a concave boundary is flagged rather than silently producing a shape that no fence can follow.</p>
+    </details>
+    <details>
+      <summary>Can I use coordinates from a deed or a GIS in latitude and longitude?</summary>
+      <p>Yes — the tool accepts latitude and longitude, and converts them onto a local plane centred on the parcel before splitting, so the cut is a straight line on the ground rather than a rhumb line on a map. If you already hold projected coordinates (State Plane, UTM, a local grid), enter those instead: the split is then done in exactly the coordinate system your survey uses, which is what a deed wants.</p>
+    </details>
+    <details>
+      <summary>Is this land parcel split calculator free?</summary>
+      <p>Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no boundary or ownership data is uploaded anywhere.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. A split is a geometric division, not a legal one — have the
+    result checked against the governing survey and planning requirements before it is staked or conveyed.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> &middot; <a href="privacy">Privacy &amp; cookies</a> &middot; <a href="terms">Terms of use</a> &middot; <a href="developers">Developers</a></span>
+  </p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+/* ---- shared geodesy library (WGS84), verified against published reference values ---- */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+</script>
+
+<script>
+/* ---- page logic ---- */
+(function () {
+  "use strict";
+
+  var $ = function (id) { return document.getElementById(id); };
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000, FT = 0.3048;
+  var M_PER_DEG = 111319.4907932736;   /* not used: the local plane handles scale */
+
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(t._t);
+    t._t = setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll(text) {
+    function fallback() {
+      var ta = document.createElement("textarea");
+      ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); showToast("Copied to clipboard"); }
+      catch (e) { showToast("Press Ctrl+C to copy"); }
+      document.body.removeChild(ta);
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Copied to clipboard"); }, fallback);
+    } else { fallback(); }
+  }
+
+  /* ---------- geometry on a plane ---------- */
+  function polyArea(p) {
+    var n = p.length, s = 0;
+    if (n < 3) { return 0; }
+    for (var i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      s += p[i][0] * p[j][1] - p[j][0] * p[i][1];
+    }
+    return Math.abs(s) / 2;
+  }
+  function polyPerim(p) {
+    var n = p.length, s = 0;
+    for (var i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      s += Math.hypot(p[j][0] - p[i][0], p[j][1] - p[i][1]);
+    }
+    return s;
+  }
+  function signedArea(p) {
+    var n = p.length, s = 0;
+    for (var i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      s += p[i][0] * p[j][1] - p[j][0] * p[i][1];
+    }
+    return s / 2;
+  }
+
+  /* Sutherland-Hodgman against one infinite line a*x + b*y = c, keeping the positive side */
+  function clip(poly, a, b, c) {
+    var out = [], cross = [], n = poly.length;
+    for (var i = 0; i < n; i++) {
+      var P = poly[i], Q = poly[(i + 1) % n];
+      var sp = a * P[0] + b * P[1] - c;
+      var sq = a * Q[0] + b * Q[1] - c;
+      if (sp >= 0) { out.push([P[0], P[1]]); }
+      if ((sp > 0 && sq < 0) || (sp < 0 && sq > 0)) {
+        var t = sp / (sp - sq);
+        out.push([P[0] + t * (Q[0] - P[0]), P[1] + t * (Q[1] - P[1])]);
+        cross.push([P[0] + t * (Q[0] - P[0]), P[1] + t * (Q[1] - P[1])]);
+      }
+    }
+    return { poly: out, cross: cross };
+  }
+
+  /* ---------- examples ---------- */
+  var EXAMPLES = {
+    rect: "0, 0\n50, 0\n50, 40\n0, 40",
+    acre: "0, 0\n208.71, 0\n208.71, 208.71\n0, 208.71",
+    pent: "0, 0\n60, 0\n60, 30\n30, 45\n0, 30",
+    geo: "39.9061110, 116.3974000\n39.9061110, 116.4000000\n39.9030000, 116.4000000\n39.9030000, 116.3974000"
+  };
+
+  /* ---------- parsing ---------- */
+  /* Is this input geographic? Latitude and longitude are written with a decimal point
+     ("39.9061110"), a projected pair usually is not ("0", "50"). The distinction has to
+     be made carefully: reading a 50 m field as degrees turns it into 5,500 km of Siberia,
+     and reading a Beijing parcel as metres puts it in the Atlantic. So the rule is:
+     every pair must lie inside the lat/lon range AND at least one number must carry a
+     decimal point, which is what lat/lon practically always does and what a metric grid
+     usually does not. The unit selector forces projected on feet, and a value above the
+     range forces projected outright. */
+  function anyDecimal(text) {
+    var lines = text.split(/\r?\n/);
+    for (var i = 0; i < lines.length; i++) {
+      var s = lines[i].trim();
+      if (s === "" || s.charAt(0) === "#") { continue; }
+      if (/\d\.\d/.test(s)) { return true; }
+    }
+    return false;
+  }
+  function looksGeographic(raw, text, unitSel) {
+    if (unitSel === "ft" || !raw.length) { return false; }
+    for (var i = 0; i < raw.length; i++) {
+      if (Math.abs(raw[i][0]) > 90 || Math.abs(raw[i][1]) > 180) { return false; }
+      if (Math.abs(raw[i][0]) > 1000 || Math.abs(raw[i][1]) > 1000) { return false; }
+    }
+    return anyDecimal(text);
+  }
+  function parseInput(text, unitScale, unitSel) {
+    var lines = text.split(/\r?\n/), raw = [], bad = [];
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].trim();
+      if (line === "" || line.charAt(0) === "#") { continue; }
+      var parts = line.split(",").map(function (x) { return x.trim(); }).filter(function (x) { return x !== ""; });
+      if (parts.length < 2) {
+        var ws = line.split(/\s+/);
+        if (ws.length === 2) { parts = ws; }
+      }
+      if (parts.length < 2) { bad.push(line); continue; }
+      var a = Number(parts[0]), b = Number(parts[1]);
+      if (!isFinite(a) || !isFinite(b)) { bad.push(line); continue; }
+      raw.push([a, b]);
+    }
+    /* geographic if it looks geographic; the unit selector and the range settle it */
+    var geo = looksGeographic(raw, text, unitSel);
+    var pts = [], meta = { geo: false };
+    if (geo) {
+      var lat0 = 0, lon0 = 0;
+      for (var k = 0; k < raw.length; k++) { lat0 += raw[k][0]; lon0 += raw[k][1]; }
+      lat0 /= raw.length; lon0 /= raw.length;
+      var plane = Geo.localPlane(raw, lat0, lon0);
+      for (var m = 0; m < plane.length; m++) { pts.push([plane[m].x, plane[m].y]); }
+      meta.geo = true;
+      meta.origin = [lat0, lon0];
+    } else {
+      for (var q = 0; q < raw.length; q++) { pts.push([raw[q][0] * unitScale, raw[q][1] * unitScale]); }
+    }
+    return { pts: pts, bad: bad, meta: meta };
+  }
+
+  /* ---------- the split ---------- */
+  function bearingOf(p, q) {
+    var d = Math.atan2(q[0] - p[0], q[1] - p[1]) * 180 / Math.PI;
+    return Geo.norm360(d);
+  }
+
+  function buildEdgeList(pts) {
+    var sel = $("lp-edge"), html = "", n = pts.length;
+    for (var i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var len = Math.hypot(pts[j][0] - pts[i][0], pts[j][1] - pts[i][1]);
+      var brg = bearingOf(pts[i], pts[j]);
+      html += '<option value="' + i + '">Side ' + (i + 1) + ' \u2014 ' + fmt(len, 2)
+        + ' (bearing ' + fmt(brg, 1) + '\u00B0)</option>';
+    }
+    sel.innerHTML = html;
+  }
+
+  /* The side list must match the boundary that was just read, but render() must not
+     rebuild it on every keystroke either: rewriting the options resets the selection and
+     the chosen side would jump on each input event. So the list is rebuilt only when the
+     vertex count changes, and the previous choice is carried over when it still exists. */
+  var edgeSig = "";
+  function syncEdgeList(pts) {
+    var sig = pts.length + ":" + pts.slice(0, 2).map(function (p) {
+      return p[0].toFixed(3) + "," + p[1].toFixed(3);
+    }).join(";") + ":" + pts.slice(-1)[0][0].toFixed(3) + "," + pts.slice(-1)[0][1].toFixed(3);
+    if (sig === edgeSig) { return; }
+    edgeSig = sig;
+    var keep = $("lp-edge").value;
+    buildEdgeList(pts);
+    if (keep !== "" && Number(keep) < pts.length) { $("lp-edge").value = keep; }
+  }
+
+  function renderPlot(pts, pieces, cuts) {
+    var host = $("lp-plot");
+    if (!host || pts.length < 3) { host.innerHTML = ""; return; }
+    var W = 640, H = 420, pad = 26;
+    var xs = pts.map(function (p) { return p[0]; }), ys = pts.map(function (p) { return p[1]; });
+    var minX = Math.min.apply(null, xs), maxX = Math.max.apply(null, xs);
+    var minY = Math.min.apply(null, ys), maxY = Math.max.apply(null, ys);
+    var spanX = Math.max(maxX - minX, 1e-9), spanY = Math.max(maxY - minY, 1e-9);
+    var sc = Math.min((W - 2 * pad) / spanX, (H - 2 * pad) / spanY);
+    function X(v) { return pad + (v - minX) * sc + ((W - 2 * pad) - spanX * sc) / 2; }
+    function Y(v) { return H - pad - (v - minY) * sc - ((H - 2 * pad) - spanY * sc) / 2; }
+
+    var palette = ["#e0edff", "#d8f5ec", "#fdeccd", "#ece0fb", "#d9f2fb", "#fbe0e6"];
+    var stroke = ["#2563eb", "#0d9488", "#b45309", "#7c3aed", "#0891b2", "#be123c"];
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" role="img" '
+      + 'aria-label="Parcel outline with the cutting lines">';
+    var i, j, d;
+    for (i = 0; i < pieces.length; i++) {
+      d = "";
+      for (j = 0; j < pieces[i].length; j++) {
+        d += (j ? "L" : "M") + X(pieces[i][j][0]).toFixed(2) + " " + Y(pieces[i][j][1]).toFixed(2) + " ";
+      }
+      d += "Z";
+      svg += '<path d="' + d + '" fill="' + palette[i % 6] + '" stroke="' + stroke[i % 6]
+        + '" stroke-width="1.4" />';
+    }
+    /* the cut lines, drawn heavier */
+    for (i = 0; i < cuts.length; i++) {
+      if (cuts[i].length < 2) { continue; }
+      svg += '<line x1="' + X(cuts[i][0][0]).toFixed(2) + '" y1="' + Y(cuts[i][0][1]).toFixed(2)
+        + '" x2="' + X(cuts[i][1][0]).toFixed(2) + '" y2="' + Y(cuts[i][1][1]).toFixed(2)
+        + '" stroke="#be123c" stroke-width="2.2" stroke-dasharray="7 4" />';
+    }
+    /* the boundary, on top, so its own vertices stay readable */
+    d = "";
+    for (j = 0; j < pts.length; j++) {
+      d += (j ? "L" : "M") + X(pts[j][0]).toFixed(2) + " " + Y(pts[j][1]).toFixed(2) + " ";
+    }
+    d += "Z";
+    svg += '<path d="' + d + '" fill="none" stroke="#1f2430" stroke-width="1.9" />';
+    for (j = 0; j < pts.length; j++) {
+      svg += '<circle cx="' + X(pts[j][0]).toFixed(2) + '" cy="' + Y(pts[j][1]).toFixed(2)
+        + '" r="3.2" fill="#fff" stroke="#1f2430" stroke-width="1.6" />';
+    }
+    /* lot number at each piece centroid */
+    for (i = 0; i < pieces.length; i++) {
+      var cx = 0, cy = 0;
+      for (j = 0; j < pieces[i].length; j++) { cx += pieces[i][j][0]; cy += pieces[i][j][1]; }
+      cx /= pieces[i].length; cy /= pieces[i].length;
+      svg += '<text x="' + X(cx).toFixed(2) + '" y="' + Y(cy).toFixed(2)
+        + '" font-size="13" font-weight="700" fill="#1f2430" text-anchor="middle" dominant-baseline="middle">'
+        + (i + 1) + '</text>';
+    }
+    svg += '</svg>';
+    host.innerHTML = svg;
+  }
+
+  /* render() works out the parcel, finish() draws it. They are separate functions only
+     for readability, so the figures the two halves share live here. */
+  var ST = { parsed: null, pts: [], total: 0, n: 2, target: 0, unitSel: "m" };
+
+  function render() {
+    var unitSel = $("lp-units").value;
+    var unitScale = unitSel === "ft" ? FT : 1;
+    var parsed = parseInput($("lp-coords").value, unitScale, unitSel);
+    var pts = parsed.pts;
+    var err = $("lp-err"), note = $("lp-note");
+
+    function fail(msg) {
+      err.textContent = msg;
+      err.classList.add("show");
+      $("lp-results").classList.remove("show");
+      note.style.display = "none";
+      renderPlot([], [], []);
+    }
+
+    /* A message from the previous keystroke must not linger once the input is good again:
+       clear it on every render, and let the checks below set it again if they still object. */
+    function clearErr() {
+      err.textContent = "";
+      err.classList.remove("show");
+    }
+    clearErr();
+
+    if (parsed.bad.length) {
+      err.textContent = "These lines could not be read and were skipped: "
+        + parsed.bad.slice(0, 3).join(" | ")
+        + (parsed.bad.length > 3 ? " (and " + (parsed.bad.length - 3) + " more)" : "");
+      err.classList.add("show");
+    }
+    if (pts.length < 3) { fail("At least three boundary vertices are needed to enclose an area."); return; }
+
+    var total = polyArea(pts);
+    if (total <= 0) { fail("The boundary encloses no area — check the vertex order."); return; }
+
+    /* the side list follows the parsed boundary, without resetting the current choice */
+    syncEdgeList(pts);
+
+    /* how many pieces and how big each one is */
+    var n, target;
+    if ($("lp-mode").value === "count") {
+      n = parseInt($("lp-n").value, 10);
+      if (!isFinite(n) || n < 2 || n > 20) { fail("The number of pieces must be between 2 and 20."); return; }
+      target = total / n;
+    } else {
+      var av = Number($("lp-aw").value), au = $("lp-aunit").value;
+      if (!isFinite(av) || av <= 0) { fail("The area per piece must be greater than zero."); return; }
+      var per = au === "ac" ? av * ACRE_M2 : au === "ha" ? av * HA_M2 : au === "ft2" ? av * FT * FT : av;
+      n = Math.ceil(total / per - 1e-9);
+      if (n < 1) { fail("The area per piece is larger than the whole parcel."); return; }
+      if (n > 20) { n = 20; }
+      target = per;
+    }
+
+    ST.parsed = parsed; ST.pts = pts; ST.total = total; ST.n = n; ST.target = target; ST.unitSel = unitSel;
+
+    /* A line has two sides, and the split means different things on each. The first lot
+       has to be the strip nearest the side the user nominated — that is the whole point
+       of choosing a side — and for a typed bearing or the shortest cut it should be the
+       strip nearest the lower-left corner, so the answer is at least deterministic. So
+       the normal is oriented by the side itself: a·x + b·y = c with the parcel on the
+       positive side and the nominated edge on the line, and the first lot is the sliver
+       between the edge and the first cut. */
+    var dir = $("lp-dir").value;
+    var a, b, brgUsed = null, desc = "";
+    if (dir === "edge") {
+      var ei = parseInt($("lp-edge").value, 10) || 0;
+      var P = pts[ei], Q = pts[(ei + 1) % pts.length];
+      /* a unit normal to the edge, pointed into the parcel */
+      var nx = -(Q[1] - P[1]), ny = (P[0] - Q[0]);
+      var nm = Math.hypot(nx, ny);
+      nx /= nm; ny /= nm;
+      var cen = centroid(pts);
+      if (nx * (cen[0] - P[0]) + ny * (cen[1] - P[1]) < 0) { nx = -nx; ny = -ny; }
+      a = nx; b = ny;
+      brgUsed = bearingOf(P, Q);
+      desc = "parallel to side " + (ei + 1);
+      /* start the search at the edge itself, so the first lot lies against it */
+      var cEdge = a * P[0] + b * P[1];
+      var sArr = pts.map(function (p) { return a * p[0] + b * p[1]; });
+      var cFar = Math.max.apply(null, sArr);
+      var res = cutFrom(pts, a, b, cEdge, cFar, n, target);
+      if (!res) { fail("No cut parallel to side " + (ei + 1) + " divides this parcel into " + n
+        + " pieces of equal area."); return; }
+      finish(res, a, b, brgUsed, desc, "edge");
+      return;
+    } else if (dir === "bearing") {
+      var bd = Number($("lp-brg").value);
+      if (!isFinite(bd)) { fail("Enter a bearing for the cutting line."); return; }
+      var r = bd * Math.PI / 180;
+      a = -Math.cos(r); b = Math.sin(r);
+      brgUsed = Geo.norm360(bd);
+      desc = "at bearing " + fmt(brgUsed, 1) + "\u00B0";
+    } else {
+      /* shortest cut: sweep the bearings and keep the one whose cut line is shortest */
+      var best = null;
+      for (var t = 0; t < 180; t += 0.5) {
+        var rr = t * Math.PI / 180;
+        var aa = -Math.cos(rr), bb = Math.sin(rr);
+        var ss = pts.map(function (p) { return aa * p[0] + bb * p[1]; });
+        var lo0 = Math.min.apply(null, ss), hi0 = Math.max.apply(null, ss);
+        var tst = cutFrom(pts, aa, bb, lo0, hi0, n, target);
+        if (!tst || tst.cuts.length !== n - 1) { continue; }
+        var dsum = 0, okk = true;
+        for (var ci = 0; ci < tst.cuts.length; ci++) {
+          if (tst.cuts[ci].length !== 2) { okk = false; break; }
+          dsum += Math.hypot(tst.cuts[ci][1][0] - tst.cuts[ci][0][0],
+                             tst.cuts[ci][1][1] - tst.cuts[ci][0][1]);
+        }
+        if (!okk) { continue; }
+        if (best === null || dsum < best.len) { best = { a: aa, b: bb, len: dsum }; }
+      }
+      if (best === null) { fail("No single straight cut was found for this boundary."); return; }
+      a = best.a; b = best.b;
+      brgUsed = normBearing(a, b);
+      desc = "the shortest cut, at bearing " + fmt(brgUsed, 1) + "\u00B0";
+    }
+
+    /* a typed bearing or the shortest cut: sweep from the far side of the parcel inwards,
+       so that lot 1 is the strip nearest the lower-left corner */
+    var cen2 = centroid(pts);
+    var sAll = pts.map(function (p) { return a * p[0] + b * p[1]; });
+    var cLo = Math.min.apply(null, sAll), cHi = Math.max.apply(null, sAll);
+    if (a * cen2[0] + b * cen2[1] > (cLo + cHi) / 2) {
+      var res2 = cutFrom(pts, a, b, cHi, cLo, n, target);
+      if (!res2) { fail("The cutting line could not produce " + n + " pieces here."); return; }
+      finish(res2, a, b, brgUsed, desc, "open");
+    } else {
+      var res3 = cutFrom(pts, a, b, cLo, cHi, n, target);
+      if (!res3) { fail("The cutting line could not produce " + n + " pieces here."); return; }
+      finish(res3, a, b, brgUsed, desc, "open");
+    }
+  }
+
+  /* ---- helpers that only run once the direction is known ---- */
+  function centroid(p) {
+    var x = 0, y = 0;
+    for (var i = 0; i < p.length; i++) { x += p[i][0]; y += p[i][1]; }
+    return [x / p.length, y / p.length];
+  }
+  function normBearing(a, b) {
+    /* a unit normal (a,b) corresponds to a line direction (-b, a); north is +y */
+    return Geo.norm360(Math.atan2(-b, a) * 180 / Math.PI);
+  }
+
+  /* Take n-1 slices of `target` area off the cStart side of `poly`, in order, then let the
+     last slice be whatever is left. Each slice is cut from the polygon that is still there,
+     never from the original boundary — that is what makes the areas come out right and what
+     keeps the sum of the pieces equal to the parcel instead of 1 m² short.
+     `cStart` is the offset the first slice begins at (the nominated side, or the far side of
+     the parcel); the slice grows in the +normal direction, so it is the region between
+     cStart and the solved c, which clip(poly, -a, -b, -c) keeps when cStart is the minimum. */
+  function cutFrom(poly, a, b, cStart, cEnd, n, target) {
+    var pieces = [], cuts = [], rest = poly;
+    /* the slice is taken from cStart inwards: flip the normal if cStart is the maximum */
+    var flip = cEnd < cStart;
+    var aa = flip ? -a : a, bb = flip ? -b : b;
+    var start = flip ? -cStart : cStart;
+    for (var k = 0; k < n - 1; k++) {
+      var want = (k === n - 2) ? target : Math.min(target, polyArea(rest));
+      var sAll = rest.map(function (p) { return aa * p[0] + bb * p[1]; });
+      var cLow = Math.min.apply(null, sAll), cHigh = Math.max.apply(null, sAll);
+      cLow = Math.max(cLow, start);
+      var c = solveBetween(rest, aa, bb, cLow, cHigh, want, cStart === null ? null : start);
+      if (c === null) { return null; }
+      /* the slice is the part on the near side of the cut, i.e. between start and c */
+      var sl = clip(rest, -aa, -bb, -c);
+      var rem = clip(rest, aa, bb, c);
+      if (sl.poly.length < 3 || rem.poly.length < 3) { return null; }
+      pieces.push(sl.poly);
+      cuts.push(sl.cross);
+      rest = rem.poly;
+    }
+    if (rest.length < 3) { return null; }
+    pieces.push(rest);
+    return { pieces: pieces, cuts: cuts };
+  }
+
+  /* the offset c for which the region between `floor` (or the minimum side) and the line
+     a·x + b·y = c has `target` area. Monotone in c, so plain bisection converges. */
+  function solveBetween(poly, a, b, cLow, cHigh, target, floor) {
+    function areaNeg(c) {
+      var r = clip(poly, -a, -b, -c);
+      return polyArea(r.poly);
+    }
+    var lo = cLow, hi = cHigh;
+    if (areaNeg(hi) < target - 1e-9) { return null; }
+    for (var i = 0; i < 200; i++) {
+      var mid = (lo + hi) / 2;
+      if (areaNeg(mid) < target) { lo = mid; } else { hi = mid; }
+      if (hi - lo < 1e-12) { break; }
+    }
+    return (lo + hi) / 2;
+  }
+
+  function finish(res, a, b, brgUsed, desc, how) {
+
+    /* reported figures */
+    var sumArea = 0, sumPer = 0, cutTotal = 0, i;
+    for (i = 0; i < res.pieces.length; i++) {
+      sumArea += polyArea(res.pieces[i]);
+      sumPer += polyPerim(res.pieces[i]);
+      if (i < res.cuts.length && res.cuts.length) {
+        cutTotal += Math.hypot(res.cuts[i][1][0] - res.cuts[i][0][0], res.cuts[i][1][1] - res.cuts[i][0][1]);
+      }
+    }
+
+    var unitArea = ST.unitSel === "ft" ? "ft\u00B2" : "m\u00B2";
+    var unitLen = ST.unitSel === "ft" ? "ft" : "m";
+    var toDisp = ST.unitSel === "ft" ? 1 / (FT * FT) : 1;
+    var lenDisp = ST.unitSel === "ft" ? 1 / FT : 1;
+
+    $("lp-bk").textContent = ST.parsed.meta.geo ? "Parcel area (on the local plane)" : "Parcel area";
+    $("lp-bv").textContent = fmt(ST.total * toDisp, 2) + " " + unitArea + "  \u00B7  "
+      + fmt(ST.total / ACRE_M2, 4) + " ac  \u00B7  " + fmt(ST.total / HA_M2, 4) + " ha";
+
+    var rows = [];
+    function row(k, v, small, cls) {
+      rows.push('<div class="result-row"><span class="k">' + k + '</span><span class="v">' + v
+        + (small ? '<small' + (cls ? ' class="' + cls + '"' : '') + '>' + small + '</small>' : '')
+        + '</span></div>');
+    }
+    row("Area in acres", fmt(ST.total / ACRE_M2, 4) + " ac");
+    row("Area in hectares", fmt(ST.total / HA_M2, 4) + " ha");
+    row("Perimeter", fmt(polyPerim(ST.pts) * lenDisp, 2) + " " + unitLen);
+    row("Pieces", String(ST.n) + " \u00D7 " + fmt(ST.target * toDisp, 2) + " " + unitArea);
+    row("Total cut length", fmt(cutTotal * lenDisp, 2) + " " + unitLen, "new fence line to build");
+    row("Cutting line", desc);
+    var ident = sumArea - ST.total;
+    row("Area identity", (Math.abs(ident) < 1e-6 * Math.max(ST.total, 1) ? "exact" : fmt(ident * toDisp, 4) + " " + unitArea),
+      Math.abs(ident) < 1e-6 * Math.max(ST.total, 1)
+        ? "the pieces add back to the parcel"
+        : "pieces do not add up — check for a concave boundary",
+      Math.abs(ident) < 1e-6 * Math.max(ST.total, 1) ? "ok" : "warn");
+    $("lp-rows").innerHTML = rows.join("");
+
+    /* the lot table */
+    var tb = $("lp-lots").querySelector("tbody"), html = "";
+    var frontage = 0;
+    for (i = 0; i < res.pieces.length; i++) {
+      var ar = polyArea(res.pieces[i]);
+      var cutLen = 0;
+      if (i < res.cuts.length) {
+        cutLen = Math.hypot(res.cuts[i][1][0] - res.cuts[i][0][0], res.cuts[i][1][1] - res.cuts[i][0][1]);
+      }
+      html += "<tr><td>" + (i + 1) + "</td><td>" + fmt(ar * toDisp, 2) + " " + unitArea
+        + "</td><td>" + fmt(polyPerim(res.pieces[i]) * lenDisp, 2) + " " + unitLen
+        + "</td><td>" + fmt(ar / ACRE_M2, 4) + " ac"
+        + "</td><td>" + (cutLen ? fmt(cutLen * lenDisp, 2) + " " + unitLen : "\u2014")
+        + "</td></tr>";
+    }
+    tb.innerHTML = html;
+
+    /* the stake table */
+    var sb = $("lp-stakes").querySelector("tbody"), shtml = "";
+    for (i = 0; i < res.cuts.length; i++) {
+      var cr = res.cuts[i];
+      if (cr.length < 2) { continue; }
+      var L = Math.hypot(cr[1][0] - cr[0][0], cr[1][1] - cr[0][1]);
+      shtml += "<tr><td>Cut " + (i + 1) + "</td><td>" + fmt(cr[0][0] * lenDisp, 3) + ", "
+        + fmt(cr[0][1] * lenDisp, 3) + "</td><td>" + fmt(cr[1][0] * lenDisp, 3) + ", "
+        + fmt(cr[1][1] * lenDisp, 3) + "</td><td>" + fmt(bearingOf(cr[0], cr[1]), 2) + "\u00B0"
+        + "</td><td>" + fmt(L * lenDisp, 2) + " " + unitLen + "</td></tr>";
+    }
+    sb.innerHTML = shtml || '<tr><td colspan="5">\u2014</td></tr>';
+
+    $("lp-arith").textContent = "Largest piece " + fmt(Math.max.apply(null, res.pieces.map(function (p) {
+      return polyArea(p);
+    })) * toDisp, 3) + " " + unitArea + ", smallest " + fmt(res.pieces.reduce(function (m, p) {
+      return Math.min(m, polyArea(p));
+    }, Infinity) * toDisp, 3) + " " + unitArea + ".";
+
+    /* notes */
+    var note = $("lp-note");
+    var crossings = 0;
+    for (i = 0; i < res.cuts.length; i++) { crossings += res.cuts[i].length; }
+    note.className = "note";
+    if (res.cuts.length && res.cuts[0].length > 2) {
+      note.className = "note warn";
+      note.innerHTML = "<b>Concave boundary.</b> The first cutting line meets the boundary in "
+        + res.cuts[0].length + " points, not 2, so a single straight cut does not divide this parcel "
+        + "cleanly. Split the parcel into convex parts first, or choose a bearing that crosses the "
+        + "boundary only twice.";
+      note.style.display = "";
+    } else if (ST.parsed.meta.geo) {
+      note.innerHTML = "<b>Latitude / longitude input.</b> The vertices were projected onto a local "
+        + "plane centred on the parcel, so the cutting line is a straight line on the ground. Areas are "
+        + "ground areas. For a deed, run the same split in the projected system your survey uses.";
+      note.style.display = "";
+    } else if (Math.abs(ident) >= 1e-6 * Math.max(ST.total, 1)) {
+      note.className = "note warn";
+      note.innerHTML = "<b>The pieces do not add up.</b> The summed piece areas differ from the parcel "
+        + "area, which means part of the boundary was left out of a piece — usually a concave corner.";
+      note.style.display = "";
+    } else {
+      note.style.display = "none";
+    }
+
+    renderPlot(ST.pts, res.pieces, res.cuts);
+    $("lp-results").classList.add("show");
+  }
+
+  function syncMode() {
+    var m = $("lp-mode").value;
+    $("lp-nwrap").style.display = m === "count" ? "" : "none";
+    $("lp-awrap").style.display = m === "area" ? "" : "none";
+    $("lp-aunitwrap").style.display = m === "area" ? "" : "none";
+  }
+  function syncDir() {
+    var d = $("lp-dir").value;
+    $("lp-edgewrap").style.display = d === "edge" ? "" : "none";
+    $("lp-brgwrap").style.display = d === "bearing" ? "" : "none";
+  }
+
+  function bindAll() {
+    ["lp-coords", "lp-n", "lp-aw", "lp-brg"].forEach(function (id) {
+      $(id).addEventListener("input", render);
+    });
+    ["lp-mode", "lp-aunit", "lp-units", "lp-dir", "lp-edge"].forEach(function (id) {
+      $(id).addEventListener("change", function () {
+        if (id === "lp-mode") { syncMode(); }
+        if (id === "lp-dir") { syncDir(); }
+        render();
+      });
+    });
+    var chips = document.querySelectorAll(".chips button");
+    for (var i = 0; i < chips.length; i++) {
+      chips[i].addEventListener("click", function () {
+        $("lp-coords").value = EXAMPLES[this.getAttribute("data-ex")];
+        $("lp-units").value = this.getAttribute("data-ex") === "acre" ? "m" : "m";
+        render();
+      });
+    }
+    $("lp-copy").addEventListener("click", function () {
+      var lines = [];
+      var rs = $("lp-results").querySelectorAll(".result-row");
+      for (var i = 0; i < rs.length; i++) {
+        lines.push(rs[i].querySelector(".k").textContent + ": " + rs[i].querySelector(".v").childNodes[0].textContent.trim());
+      }
+      var tr = $("lp-lots").querySelectorAll("tbody tr");
+      for (var j = 0; j < tr.length; j++) {
+        var cells = [];
+        for (var c = 0; c < tr[j].children.length; c++) { cells.push(tr[j].children[c].textContent.trim()); }
+        lines.push(cells.join("\t"));
+      }
+      var st = $("lp-stakes").querySelectorAll("tbody tr");
+      for (var k = 0; k < st.length; k++) {
+        var cc = [];
+        for (var d2 = 0; d2 < st[k].children.length; d2++) { cc.push(st[k].children[d2].textContent.trim()); }
+        lines.push(cc.join("\t"));
+      }
+      copyAll(lines.join("\n"));
+    });
+  }
+
+  syncMode();
+  syncDir();
+  bindAll();
+  render();
+
+})();
+</script>
+</body>
+</html>

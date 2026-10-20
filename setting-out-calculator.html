@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Setting Out Calculator — Total Station Angles and Distances (Free)</title>
+<meta name="description" content="Set out points from a total station: enter the station and backsight, and get the bearing, the angle to turn and the distance to every design point, with the circle reading when the backsight is set to its azimuth. Slope distance and vertical angle from the two heights.">
+<link rel="canonical" href="https://coordcalc.com/setting-out-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/setting-out-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/setting-out-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/setting-out-calculator">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#0d9488">
+<meta property="og:title" content="Setting Out Calculator — Total Station Angles and Distances (Free)">
+<meta property="og:description" content="Station and backsight in, the angle to turn and the distance to each design point out. Left or right angles, slope distance and vertical angle, coordinates in metres or feet.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/setting-out-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Setting Out Calculator",
+  "url": "https://coordcalc.com/setting-out-calculator",
+  "description": "Set out points from a total station: enter the station and backsight, and get the bearing, the angle to turn and the distance to every design point, with the circle reading when the backsight is set to its azimuth. Slope distance and vertical angle from the two heights.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Surveying",
+      "item": "https://coordcalc.com/#surveying"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "›  › Setting Out Calculator",
+      "item": "https://coordcalc.com/setting-out-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do I set out a point from a total station?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Set up over the station, sight the backsight, and either zero the horizontal circle on it and turn the angle the calculator gives, or set the circle to the backsight's bearing and turn until it reads the point's bearing. Then measure out the horizontal distance along that line — or the slope distance if the point is not at the same level — and mark it."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between a bearing and an angle to turn?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A bearing is measured from north and belongs to the point. The angle to turn is measured from the backsight and belongs to the instrument's setup. The two are equal only when the backsight happens to sit due north; in general the angle is the point's bearing minus the backsight's bearing, modulo 360 degrees."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use left angles or right angles?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use whichever your instrument is set to display, and say which in the field book. The calculator computes on the side you select, so its column always matches the display. Right angles are the commoner convention, but instruments configured for left angles are still in daily use."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I get the slope distance instead of the horizontal distance?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fill in the station level, the design level of the point, and the instrument and target heights. The vertical difference is the level difference plus the instrument height minus the target height, and the slope distance is the hypotenuse of that difference and the horizontal distance. Leave the levels blank and the calculator stays in plan."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the calculator ask for the backsight as coordinates rather than a bearing?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because the bearing comes from the two coordinates, and computing it removes a transcription step: the answer cannot disagree with the coordinates on the plan. If you already hold the backsight bearing, switch the backsight field to \"a bearing I already know\" and type it instead."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a circle reading?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is what the horizontal circle displays at the point when the circle has been set to a reference direction. Set it to the backsight's bearing and the display at each point becomes that point's bearing, so you can turn until the reading matches and the scope is on the mark. Many total stations let you type the backsight azimuth in directly, which is faster than turning angles."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is a setting-out calculation?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The trigonometry is exact to the precision of the coordinates you enter. The limit is the control: coordinates rounded to the nearest millimetre give the bearing and distance to a millimetre, but a station set 20 mm off the mark moves every point 20 mm. Check the setup against a third known point before setting anything out."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this setting out calculator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, free, no login, no account and no usage limit. Every calculation runs locally in your browser, so no coordinates are uploaded anywhere."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> &rsaquo; <a href="./#surveying">Surveying</a> &rsaquo; Setting Out Calculator
+  </nav>
+
+  <h1>Setting Out Calculator</h1>
+
+  <p class="lead">    This setting out calculator turns design coordinates into the two numbers a total station actually
+    needs: the angle to turn from the backsight and the horizontal distance to the point. Enter the
+    station and the backsight, paste the points to be set out, and you get a bearing, an angle and a
+    distance for each one — with the circle reading you would see if the backsight is set to its own
+    azimuth, and the turn order that keeps you working round the site in one direction. Angles can be
+    read clockwise or anticlockwise, and adding the two heights gives the slope distance and the
+    vertical angle as well. Metres or feet, all in your browser.</p>
+
+  <div class="card">
+    <div class="row" style="margin-top:2px;">
+      <div class="field grow">
+        <label for="so-station">Instrument station (E, N)</label>
+        <input id="so-station" type="text" value="1000.000, 2000.000" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="field grow">
+        <label for="so-backsight">Backsight point (E, N)</label>
+        <input id="so-backsight" type="text" value="1000.000, 2100.000" autocomplete="off" spellcheck="false">
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">
+      Easting first, then northing — the order a coordinate list is always written in. The backsight may
+      be a target on a known point, or the reference object the instrument was zeroed on. If you have the
+      backsight's own bearing instead of its coordinates, type the bearing into the field below and leave
+      the point blank.
+    </p>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 200px;">
+        <label for="so-mode">Backsight given as</label>
+        <select id="so-mode">
+          <option value="point" selected>Coordinates of the backsight point</option>
+          <option value="bearing">A bearing I already know</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 200px;display:none;" id="so-brgwrap">
+        <label for="so-bsbrg">Backsight bearing (degrees)</label>
+        <input id="so-bsbrg" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="so-turn">Angles are turned</label>
+        <select id="so-turn">
+          <option value="right" selected>Clockwise (right)</option>
+          <option value="left">Anticlockwise (left)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="so-units">Coordinate units</label>
+        <select id="so-units">
+          <option value="m" selected>metres</option>
+          <option value="ft">feet</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field grow">
+        <label for="so-points">Points to set out (E, N — one per line)</label>
+        <textarea id="so-points" rows="6" spellcheck="false" placeholder="1050.000, 2000.000&#10;1030.000, 2040.000">1050.000, 2000.000
+1030.000, 2040.000</textarea>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-hi">Instrument height (m)</label>
+        <input id="so-hi" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-ht">Target height (m)</label>
+        <input id="so-ht" type="number" step="any" value="0" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-zs">Station level (m, optional)</label>
+        <input id="so-zs" type="number" step="any" value="" placeholder="—" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="so-zt">Target level (m, optional)</label>
+        <input id="so-zt" type="number" step="any" value="" placeholder="—" autocomplete="off">
+      </div>
+    </div>
+    <p class="hint" style="margin-top:10px;">
+      The four heights are optional and only affect the <b>slope distance</b> and the <b>vertical angle</b>.
+      Leave them empty and the calculator works in plan, which is what the horizontal angle and the
+      horizontal distance need. Fill the two levels and it also tells you what to set on the vertical
+      circle.
+    </p>
+
+    <div class="chips">
+      <span>Examples:</span>
+      <button type="button" data-ex="right">Right angle from a north backsight</button>
+      <button type="button" data-ex="diag">A diagonal point</button>
+      <button type="button" data-ex="east">Backsight due east</button>
+      <button type="button" data-ex="feet">In feet</button>
+    </div>
+
+    <p class="err" id="so-err"></p>
+
+    <div class="results" id="so-results">
+      <div class="big">
+        <span class="bk" id="so-bk">Backsight bearing</span>
+        <span class="bv" id="so-bv">&mdash;</span>
+      </div>
+      <div id="so-rows"></div>
+      <h3 id="so-th">The points, in the order you would turn them</h3>
+      <div class="tscroll">
+        <table class="lookup" id="so-table">
+          <thead>
+            <tr><th>Point</th><th>Bearing</th><th>Angle to turn</th><th>Circle reading</th><th>Distance</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint" id="so-sum" style="font-weight:600;"></p>
+      <div class="actions">
+        <button class="btn btn-primary" id="so-copy" type="button">Copy all results</button>
+      </div>
+    </div>
+    <div class="note" id="so-note" style="display:none;"></div>
+  </div>
+
+  <div class="card">
+    <h2>Station, backsight and points</h2>
+    <p class="hint" style="margin-top:0;">Drawn from the coordinates you entered. The dot is the instrument,
+      the hollow square is the backsight, and each numbered circle is a point to set out. North is up, so
+      the angle on the drawing is the angle on the instrument.</p>
+    <div class="plot" id="so-plot"></div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>A bearing is just an angle from north</h3>
+    <p>
+      With eastings to the right and northings up, the direction from the station to a point is
+      <code>atan2(ΔE, ΔN)</code>, measured clockwise from north — which is exactly the whole-circle
+      bearing a total station displays. The wrap to 0–360° is the only adjustment needed. Note the
+      argument order: <code>ΔE</code> first. Swapping it is the single most common way to get a bearing
+      that is right in two quadrants and wrong in the other two.
+    </p>
+    <p>
+      The horizontal distance is <code>√(ΔE² + ΔN²)</code>. Both figures come from the same two
+      subtractions, so they cannot disagree with each other, and they cannot disagree with the distance
+      and bearing the reverse calculation would give.
+    </p>
+    <h3>Turning from the backsight</h3>
+    <p>
+      The instrument is oriented on the backsight, so what matters is not the point's bearing but the
+      angle between the backsight direction and the point direction:
+      <code>angle = bearing(point) − bearing(backsight)</code>, taken modulo 360°. Turn clockwise and a
+      positive angle is a right turn; read the instrument's left-angle scale and the same turn is
+      <code>360° − angle</code>. The calculator reports the side you select and labels the column, so
+      the number always matches what the instrument will show.
+    </p>
+    <h3>The circle reading</h3>
+    <p>
+      Many surveyors do not turn angles at all: they set the horizontal circle to the backsight's
+      bearing (or to zero) and then read the point directly. That is why the table has a
+      <b>circle reading</b> column. If the circle is set to the backsight azimuth, the reading at the
+      point is the point's own bearing — turn until the display shows the bearing in the table and the
+      scope is on the point. The two methods give the same stake; the column just saves a subtraction in
+      the field.
+    </p>
+    <h3>Slope distance and vertical angle</h3>
+    <p>
+      A total station measures a slope distance, not a horizontal one. If you fill in the station level
+      and the design level of the point, together with the instrument and target heights, the vertical
+      difference is <code>ΔH = (level(point) − level(station)) + (instrument height − target height)</code>
+      and the slope distance is <code>√(horizontal² + ΔH²)</code>. The vertical angle is
+      <code>atan2(ΔH, horizontal)</code>. Leaving the levels blank keeps the whole calculation in plan,
+      which is what the horizontal angle and distance need anyway.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Before you turn the first angle</h2>
+    <ul>
+      <li><b>The station is on the control, not near it.</b> A station set up 20 mm off the mark puts
+        every point out by the same 20 mm, and no amount of care at the target recovers it.</li>
+      <li><b>The backsight is far enough away.</b> An orientation error of 1″ moves a point by 5 mm at
+        1 km but only 0.5 mm at 100 m — and, more importantly, a short backsight makes the orientation
+        itself uncertain. Prefer the longest reliable sight on the site.</li>
+      <li><b>Coordinate order.</b> Easting first. A transposed pair still produces a plausible bearing
+        and distance, which is why it survives review so often.</li>
+      <li><b>Which side the instrument reads.</b> Right angles and left angles differ by the complement,
+        not by the sign. Check the display before comparing it with the table.</li>
+      <li><b>A third point as a check.</b> Measure to a point whose coordinates you already know and
+        compare the distance with the calculated one. It costs a minute and catches the errors that the
+        angles alone cannot show.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>A worked example</h2>
+    <p>
+      Station at <code>(1000.000, 2000.000)</code>, backsight on a target at
+      <code>(1000.000, 2100.000)</code>. The backsight is due north, so its bearing is 000.0000°.
+    </p>
+    <p>
+      A point at <code>(1050.000, 2000.000)</code> is 50 m due east: bearing 090.0000°, distance
+      50.000 m, and the angle to turn is 090.0000° clockwise. With the circle set to the backsight
+      azimuth, the instrument reads 090.0000° — the bearing itself.
+    </p>
+    <p>
+      A second point at <code>(1030.000, 2040.000)</code> is 30 m east and 40 m north. Its bearing is
+      <code>atan2(30, 40) = 036.8699°</code> and its distance is 50.000 m — the 3-4-5 triangle, which
+      makes this a good example to check by hand. Turn 036.8699° clockwise from the backsight.
+    </p>
+    <p>
+      Now the same point with the instrument 1.500 m above the ground and the target at 2.000 m, the
+      station level 100.000 m and the design level 100.500 m. The vertical difference is
+      <code>(100.500 − 100.000) + (1.500 − 2.000) = 0.000 m</code>, so the slope distance equals the
+      horizontal distance and the vertical angle is 0°. Change the design level to 101.000 m and the
+      difference becomes 0.500 m: the slope distance grows to 50.0025 m and the vertical angle to
+      0.5730°.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Right angles, left angles and the circle</h2>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>Method</th><th>What you do at the instrument</th><th>What the calculator gives</th><th>Where it is used</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Turn the angle</td>
+            <td>Zero on the backsight, turn until the horizontal circle reads the angle</td>
+            <td>The <b>angle to turn</b> column</td>
+            <td>The default in most work, and the only option on a theodolite</td>
+          </tr>
+          <tr>
+            <td>Set the circle to the azimuth</td>
+            <td>Set the horizontal circle to the backsight bearing on the backsight</td>
+            <td>The <b>circle reading</b> column — the point's own bearing</td>
+            <td>Total stations, and any job with more than a few points</td>
+          </tr>
+          <tr>
+            <td>Left angles</td>
+            <td>Read the anticlockwise scale</td>
+            <td>The same column, computed on the other side</td>
+            <td>Instruments and regions whose convention is left</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      The three methods produce the same stake on the ground. What differs is the number you read at
+      the instrument, so the only real risk is comparing the wrong pair — a right angle from the table
+      against a left reading on the display.
+    </p>
+  </section>
+
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="distance-bearing-calculator">Distance and bearing between two points</a>
+        <small>The single measurement every setting-out figure is built from.</small></li>
+      <li><a href="bearing-vs-azimuth">Bearing vs azimuth</a>
+        <small>Why the same angle has two names, and which one the instrument expects.</small></li>
+      <li><a href="how-to-read-utm-coordinates">How to read UTM coordinates</a>
+        <small>Getting the easting and northing off a plan in the right order.</small></li>
+      <li><a href="traverse-calculator">Traverse calculator</a>
+        <small>Checking the control the station sits on before you set anything out.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <ul class="readon">
+      <li><a href="distance-bearing-calculator">Distance and bearing calculator</a>
+        <small>Length and direction of any line between two coordinates.</small></li>
+      <li><a href="traverse-calculator">Traverse calculator</a>
+        <small>Closure error and Bowditch adjustment of a control run.</small></li>
+      <li><a href="land-parcel-split-calculator">Land parcel split calculator</a>
+        <small>Divide a parcel and get the two points to stake.</small></li>
+      <li><a href="azimuth-calculator">Azimuth calculator</a>
+        <small>Quadrant bearing to whole-circle azimuth and back.</small></li>
+      <li><a href="utm-coordinate-converter">UTM coordinate converter</a>
+        <small>Latitude and longitude to grid coordinates and back.</small></li>
+      <li><a href="unit-converter">Survey unit converter</a>
+        <small>Metres, feet, chains and links.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do I set out a point from a total station?</summary>
+      <p>Set up over the station, sight the backsight, and either zero the horizontal circle on it and turn the angle the calculator gives, or set the circle to the backsight's bearing and turn until it reads the point's bearing. Then measure out the horizontal distance along that line — or the slope distance if the point is not at the same level — and mark it.</p>
+    </details>
+    <details>
+      <summary>What is the difference between a bearing and an angle to turn?</summary>
+      <p>A bearing is measured from north and belongs to the point. The angle to turn is measured from the backsight and belongs to the instrument's setup. The two are equal only when the backsight happens to sit due north; in general the angle is the point's bearing minus the backsight's bearing, modulo 360 degrees.</p>
+    </details>
+    <details>
+      <summary>Should I use left angles or right angles?</summary>
+      <p>Use whichever your instrument is set to display, and say which in the field book. The calculator computes on the side you select, so its column always matches the display. Right angles are the commoner convention, but instruments configured for left angles are still in daily use.</p>
+    </details>
+    <details>
+      <summary>How do I get the slope distance instead of the horizontal distance?</summary>
+      <p>Fill in the station level, the design level of the point, and the instrument and target heights. The vertical difference is the level difference plus the instrument height minus the target height, and the slope distance is the hypotenuse of that difference and the horizontal distance. Leave the levels blank and the calculator stays in plan.</p>
+    </details>
+    <details>
+      <summary>Why does the calculator ask for the backsight as coordinates rather than a bearing?</summary>
+      <p>Because the bearing comes from the two coordinates, and computing it removes a transcription step: the answer cannot disagree with the coordinates on the plan. If you already hold the backsight bearing, switch the backsight field to "a bearing I already know" and type it instead.</p>
+    </details>
+    <details>
+      <summary>What is a circle reading?</summary>
+      <p>It is what the horizontal circle displays at the point when the circle has been set to a reference direction. Set it to the backsight's bearing and the display at each point becomes that point's bearing, so you can turn until the reading matches and the scope is on the mark. Many total stations let you type the backsight azimuth in directly, which is faster than turning angles.</p>
+    </details>
+    <details>
+      <summary>How accurate is a setting-out calculation?</summary>
+      <p>The trigonometry is exact to the precision of the coordinates you enter. The limit is the control: coordinates rounded to the nearest millimetre give the bearing and distance to a millimetre, but a station set 20 mm off the mark moves every point 20 mm. Check the setup against a third known point before setting anything out.</p>
+    </details>
+    <details>
+      <summary>Is this setting out calculator free?</summary>
+      <p>Yes, free, no login, no account and no usage limit. Every calculation runs locally in your browser, so no coordinates are uploaded anywhere.</p>
+    </details>
+  </section>
+
+  <p class="foot">    A setting out calculator is arithmetic, not a substitute for a check. Every figure here assumes the
+    station and the backsight are where you say they are; if the control is wrong, the angles will be
+    consistent and consistently wrong. Measure a known distance to a third point before you set anything
+    out, and compare the reading with the calculated one.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> &middot; <a href="privacy">Privacy &amp; cookies</a> &middot; <a href="terms">Terms of use</a> &middot; <a href="developers">Developers</a></span></p>
+
+</div>
+
+<div class="toast" id="toast">Copied to clipboard</div>
+
+<script>
+/* CoordCalc shared geodesy library (WGS84) */
+/* CoordCalc shared geodesy library (WGS84). Inlined verbatim into every tool page.
+   Verified against published reference values; see the project test harness. */
+var Geo = (function () {
+  "use strict";
+
+  var A = 6378137.0;              // semi-major axis, metres
+  var F = 1 / 298.257223563;      // flattening
+  var E2 = F * (2 - F);           // first eccentricity squared
+  var EP2 = E2 / (1 - E2);        // second eccentricity squared
+  var E4 = E2 * E2, E6 = E4 * E2;
+  var K0 = 0.9996;                // UTM central scale factor
+  var FALSE_E = 500000.0;         // UTM false easting
+  var FALSE_N = 10000000.0;       // UTM false northing, southern hemisphere
+
+  var D2R = Math.PI / 180, R2D = 180 / Math.PI;
+  var BANDS = "CDEFGHJKLMNPQRSTUVWX";          // 8 degree bands, I and O omitted
+  var COL_SETS = ["ABCDEFGH", "JKLMNPQR", "STUVWXYZ"];
+  var ROW_LETTERS = "ABCDEFGHJKLMNPQRSTUV";    // 20 rows of 100 km, I and O omitted
+
+  function toRad(d) { return d * D2R; }
+  function toDeg(r) { return r * R2D; }
+  function pad(s, n) { s = String(s); while (s.length < n) { s = "0" + s; } return s; }
+  function clamp(v, lo, hi) { return v < lo ? lo : (v > hi ? hi : v); }
+  function norm360(a) { return ((a % 360) + 360) % 360; }
+
+  /* ---------- radii and meridian arc (Snyder 3-21) ---------- */
+  function meridionalArc(phi) {
+    return A * ((1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256) * phi
+      - (3 * E2 / 8 + 3 * E4 / 32 + 45 * E6 / 1024) * Math.sin(2 * phi)
+      + (15 * E4 / 256 + 45 * E6 / 1024) * Math.sin(4 * phi)
+      - (35 * E6 / 3072) * Math.sin(6 * phi));
+  }
+  function primeVertical(phi) {
+    var s = Math.sin(phi);
+    return A / Math.sqrt(1 - E2 * s * s);
+  }
+  function meridionalRadius(phi) {
+    var s = Math.sin(phi);
+    return A * (1 - E2) / Math.pow(1 - E2 * s * s, 1.5);
+  }
+
+  /* ---------- UTM zone, including the Norway and Svalbard exceptions ---------- */
+  function utmZone(lonDeg) {
+    return clamp(Math.floor((lonDeg + 180) / 6) + 1, 1, 60);
+  }
+  function utmZoneAt(latDeg, lonDeg) {
+    var z = utmZone(lonDeg);
+    if (latDeg >= 56 && latDeg < 64 && lonDeg >= 3 && lonDeg < 12) { z = 32; }
+    if (latDeg >= 72 && latDeg < 84) {
+      if (lonDeg >= 0 && lonDeg < 9) { z = 31; }
+      else if (lonDeg >= 9 && lonDeg < 21) { z = 33; }
+      else if (lonDeg >= 21 && lonDeg < 33) { z = 35; }
+      else if (lonDeg >= 33 && lonDeg < 42) { z = 37; }
+    }
+    return z;
+  }
+  function centralMeridian(zone) { return (zone - 1) * 6 - 180 + 3; }
+
+  function utmBand(latDeg) {
+    if (latDeg < -80 || latDeg > 84) { return ""; }
+    return BANDS.charAt(clamp(Math.floor((latDeg + 80) / 8), 0, 19));
+  }
+  function isNorthBand(band) { return BANDS.indexOf(band) >= 10; }
+
+  /* ---------- transverse Mercator core (Snyder 8-9 .. 8-11) ---------- */
+  function projectXY(phi, lamRad, zone) {
+    var lam0 = toRad(centralMeridian(zone));
+    var sp = Math.sin(phi), cp = Math.cos(phi), tp = Math.tan(phi);
+    var N = A / Math.sqrt(1 - E2 * sp * sp);
+    var T = tp * tp;
+    var C = EP2 * cp * cp;
+    var Aa = cp * (lamRad - lam0);
+    var M = meridionalArc(phi);
+    var A2 = Aa * Aa, A3 = A2 * Aa, A4 = A2 * A2, A5 = A4 * Aa, A6 = A4 * A2;
+    return {
+      x: K0 * N * (Aa
+        + (1 - T + C) * A3 / 6
+        + (5 - 18 * T + T * T + 72 * C - 58 * EP2) * A5 / 120),
+      y: K0 * (M + N * tp * (A2 / 2
+        + (5 - T + 9 * C + 4 * C * C) * A4 / 24
+        + (61 - 58 * T + T * T + 600 * C - 330 * EP2) * A6 / 720)),
+      A2: A2, C: C, T: T, K0: K0
+    };
+  }
+
+  function utmForward(latDeg, lonDeg) {
+    var phi = toRad(latDeg), lam = toRad(lonDeg);
+    var zone = utmZoneAt(latDeg, lonDeg);
+    var p = projectXY(phi, lam, zone);
+    var north = latDeg >= 0;
+    return {
+      zone: zone, north: north, band: utmBand(latDeg), centralMeridian: centralMeridian(zone),
+      easting: p.x + FALSE_E,
+      northing: p.y + (north ? 0 : FALSE_N),
+      convergence: toDeg(Math.atan(Math.tan(lam - toRad(centralMeridian(zone))) * Math.sin(phi))),
+      scaleFactor: K0 * (1 + (1 + p.C) * p.A2 / 2
+        + (5 - 4 * p.T + 42 * p.C + 13 * p.C * p.C - 28 * EP2) * p.A2 * p.A2 / 24)
+    };
+  }
+
+  /* ---------- footpoint latitude, used only to seed the Newton inverse ---------- */
+  function footpointLatitude(y) {
+    var e1 = (1 - Math.sqrt(1 - E2)) / (1 + Math.sqrt(1 - E2));
+    var e12 = e1 * e1, e13 = e12 * e1, e14 = e12 * e12;
+    var mu = y / (A * (1 - E2 / 4 - 3 * E4 / 64 - 5 * E6 / 256));
+    return mu
+      + (3 * e1 / 2 - 27 * e13 / 32) * Math.sin(2 * mu)
+      + (21 * e12 / 16 - 55 * e14 / 32) * Math.sin(4 * mu)
+      + (151 * e13 / 96) * Math.sin(6 * mu)
+      + (1097 * e14 / 512) * Math.sin(8 * mu);
+  }
+
+  /* ---------- UTM inverse: Newton solve against the verified forward series ---------- */
+  function utmInverse(easting, northing, zone, north) {
+    var tx = easting - FALSE_E;
+    var ty = north ? northing : northing - FALSE_N;
+    var phi = footpointLatitude(ty);
+    var lam = toRad(centralMeridian(zone)) + tx / (primeVertical(phi) * K0 * Math.max(Math.cos(phi), 1e-6));
+    var h = 1e-6, it, p, dx, dy;
+
+    for (it = 0; it < 30; it++) {
+      p = projectXY(phi, lam, zone);
+      dx = p.x - tx; dy = p.y - ty;
+      if (Math.abs(dx) < 1e-9 && Math.abs(dy) < 1e-9) { break; }
+      var pp = projectXY(phi + h, lam, zone), pm = projectXY(phi - h, lam, zone);
+      var lp = projectXY(phi, lam + h, zone), lm = projectXY(phi, lam - h, zone);
+      var j11 = (pp.x - pm.x) / (2 * h), j21 = (pp.y - pm.y) / (2 * h);
+      var j12 = (lp.x - lm.x) / (2 * h), j22 = (lp.y - lm.y) / (2 * h);
+      var det = j11 * j22 - j12 * j21;
+      if (Math.abs(det) < 1e-9) { break; }
+      phi -= (dx * j22 - j12 * dy) / det;
+      lam -= (j11 * dy - dx * j21) / det;
+    }
+    return { lat: clamp(toDeg(phi), -90, 90), lon: toDeg(lam), iterations: it };
+  }
+
+  /* ---------- MGRS ---------- */
+  function mgrsForward(latDeg, lonDeg, digits) {
+    if (latDeg < -80 || latDeg > 84) { return null; }
+    digits = digits == null ? 5 : clamp(digits, 0, 5);
+    var u = utmForward(latDeg, lonDeg);
+    var col = Math.floor(u.easting / 100000);
+    var row = Math.floor(u.northing / 100000) % 20;
+    var rowOffset = (u.zone % 2 === 0) ? 5 : 0;
+    var colLetter = COL_SETS[(u.zone - 1) % 3].charAt(clamp(col - 1, 0, 7));
+    var rowLetter = ROW_LETTERS.charAt((row + rowOffset) % 20);
+    var f = Math.pow(10, 5 - digits);
+    var e = digits === 0 ? "" : pad(Math.floor((u.easting % 100000) / f), digits);
+    var n = digits === 0 ? "" : pad(Math.floor((u.northing % 100000) / f), digits);
+    return {
+      mgrs: u.zone + u.band + colLetter + rowLetter + e + n,
+      square: colLetter + rowLetter, zone: u.zone, band: u.band, digits: digits,
+      easting: u.easting, northing: u.northing
+    };
+  }
+
+  function mgrsInverse(str) {
+    var s = String(str).toUpperCase().replace(/[^0-9A-Z]/g, "");
+    var m = /^(\d{1,2})([C-HJ-NP-X])([A-HJ-NP-Z])([A-HJ-NP-V])(\d{0,10})$/.exec(s);
+    if (!m) { return null; }
+    var zone = parseInt(m[1], 10);
+    if (zone < 1 || zone > 60) { return null; }
+    var band = m[2], colLetter = m[3], rowLetter = m[4], digits = m[5];
+    if (digits.length % 2 !== 0) { return null; }
+    var per = digits.length / 2;
+    var col = COL_SETS[(zone - 1) % 3].indexOf(colLetter);
+    if (col < 0) { return null; }
+    var rowIdx = ROW_LETTERS.indexOf(rowLetter);
+    if (rowIdx < 0) { return null; }
+    var row = ((rowIdx - (zone % 2 === 0 ? 5 : 0)) % 20 + 20) % 20;
+
+    var easting = (col + 1) * 100000;
+    var northing = row * 100000;
+    if (per > 0) {
+      var f = Math.pow(10, 5 - per);
+      easting += parseInt(digits.slice(0, per), 10) * f;
+      northing += parseInt(digits.slice(per), 10) * f;
+    }
+
+    var north = isNorthBand(band);
+    var bandIdx = BANDS.indexOf(band);
+    var latMin = -80 + 8 * bandIdx;
+    var latMax = bandIdx === 19 ? 84 : latMin + 8;
+    var best = null;
+    for (var k = 0; k < 5; k++) {
+      var n = northing + k * 2000000;
+      var g = utmInverse(easting, n, zone, north);
+      if (g.lat >= latMin - 1e-9 && g.lat < latMax + 1e-9) {
+        var re = utmForward(g.lat, g.lon);
+        if (Math.abs(re.easting - easting) < 2000 && Math.abs(re.northing - n) < 2000) {
+          return { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n };
+        }
+        if (!best) { best = { lat: g.lat, lon: g.lon, zone: zone, band: band, easting: easting, northing: n }; }
+      }
+    }
+    return best;
+  }
+
+  /* ---------- Vincenty inverse on the WGS84 ellipsoid ---------- */
+  function vincentyInverse(lat1, lon1, lat2, lon2) {
+    var f = F, a = A, b = a * (1 - f);
+    var p1 = toRad(lat1), p2 = toRad(lat2);
+    var L = toRad(lon2 - lon1);
+    var U1 = Math.atan((1 - f) * Math.tan(p1));
+    var U2 = Math.atan((1 - f) * Math.tan(p2));
+    var sU1 = Math.sin(U1), cU1 = Math.cos(U1);
+    var sU2 = Math.sin(U2), cU2 = Math.cos(U2);
+    var lam = L, lamPrev, iter = 0;
+    var sinSigma, cosSigma, sigma, sinAlpha, cos2Alpha, cos2SigmaM, C;
+
+    do {
+      var sinLam = Math.sin(lam), cosLam = Math.cos(lam);
+      sinSigma = Math.sqrt(Math.pow(cU2 * sinLam, 2)
+        + Math.pow(cU1 * sU2 - sU1 * cU2 * cosLam, 2));
+      if (sinSigma === 0) {
+        return { distance: 0, initialBearing: 0, finalBearing: 0, converged: true };
+      }
+      cosSigma = sU1 * sU2 + cU1 * cU2 * cosLam;
+      sigma = Math.atan2(sinSigma, cosSigma);
+      sinAlpha = cU1 * cU2 * sinLam / sinSigma;
+      cos2Alpha = 1 - sinAlpha * sinAlpha;
+      cos2SigmaM = cos2Alpha === 0 ? 0 : cosSigma - 2 * sU1 * sU2 / cos2Alpha;
+      C = f / 16 * cos2Alpha * (4 + f * (4 - 3 * cos2Alpha));
+      lamPrev = lam;
+      lam = L + (1 - C) * f * sinAlpha * (sigma + C * sinSigma
+        * (cos2SigmaM + C * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)));
+      iter++;
+    } while (Math.abs(lam - lamPrev) > 1e-13 && iter < 300);
+
+    var converged = Math.abs(lam - lamPrev) <= 1e-13;
+    var u2 = cos2Alpha * (a * a - b * b) / (b * b);
+    var Ac = 1 + u2 / 16384 * (4096 + u2 * (-768 + u2 * (320 - 175 * u2)));
+    var Bc = u2 / 1024 * (256 + u2 * (-128 + u2 * (74 - 47 * u2)));
+    var dSigma = Bc * sinSigma * (cos2SigmaM + Bc / 4
+      * (cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)
+        - Bc / 6 * cos2SigmaM * (-3 + 4 * sinSigma * sinSigma)
+        * (-3 + 4 * cos2SigmaM * cos2SigmaM)));
+    var distance = b * Ac * (sigma - dSigma);
+
+    var sinLamF = Math.sin(lam), cosLamF = Math.cos(lam);
+    var alpha1 = Math.atan2(cU2 * sinLamF, cU1 * sU2 - sU1 * cU2 * cosLamF);
+    var alpha2 = Math.atan2(cU1 * sinLamF, -sU1 * cU2 + cU1 * sU2 * cosLamF);
+
+    return {
+      distance: distance,
+      initialBearing: norm360(toDeg(alpha1)),
+      finalBearing: norm360(toDeg(alpha2)),
+      converged: converged
+    };
+  }
+
+  /* spherical fallback, only used when Vincenty fails near-antipodal input */
+  function haversineDistance(lat1, lon1, lat2, lon2) {
+    var R = 6371008.8;
+    var dLat = toRad(lat2 - lat1), dLon = toRad(lon2 - lon1);
+    var a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+      + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    return 2 * R * Math.asin(Math.min(1, Math.sqrt(a)));
+  }
+
+  /* ---------- local plane, and ground area of a lat/lon polygon ---------- */
+  function localPlane(coords, lat0Deg, lon0Deg) {
+    var p0 = toRad(lat0Deg), l0 = toRad(lon0Deg);
+    var m0 = meridionalArc(p0);
+    var n0 = primeVertical(p0) * Math.cos(p0);
+    var out = [];
+    for (var i = 0; i < coords.length; i++) {
+      out.push({
+        x: (toRad(coords[i][1]) - l0) * n0,
+        y: meridionalArc(toRad(coords[i][0])) - m0
+      });
+    }
+    return out;
+  }
+
+  function polygonArea(coords) {
+    var n = coords.length, i;
+    if (n < 3) { return null; }
+    var sumLat = 0, sumLon = 0;
+    for (i = 0; i < n; i++) { sumLat += coords[i][0]; sumLon += coords[i][1]; }
+    var lat0 = sumLat / n, lon0 = sumLon / n;
+    var pts = localPlane(coords, lat0, lon0);
+
+    var twice = 0, lastX = pts[n - 1].x, lastY = pts[n - 1].y;
+    for (i = 0; i < n; i++) {
+      twice += lastX * pts[i].y - pts[i].x * lastY;
+      lastX = pts[i].x; lastY = pts[i].y;
+    }
+    var area = Math.abs(twice) / 2;
+
+    var perimeter = 0, geodesic = true;
+    for (i = 0; i < n; i++) {
+      var j = (i + 1) % n;
+      var g = vincentyInverse(coords[i][0], coords[i][1], coords[j][0], coords[j][1]);
+      if (!g.converged) { geodesic = false; }
+      perimeter += g.distance;
+    }
+
+    var minLat = coords[0][0], maxLat = coords[0][0];
+    var minLon = coords[0][1], maxLon = coords[0][1];
+    for (i = 1; i < n; i++) {
+      minLat = Math.min(minLat, coords[i][0]); maxLat = Math.max(maxLat, coords[i][0]);
+      minLon = Math.min(minLon, coords[i][1]); maxLon = Math.max(maxLon, coords[i][1]);
+    }
+    var ns = vincentyInverse(minLat, lon0, maxLat, lon0).distance;
+    var ew = vincentyInverse(lat0, minLon, lat0, maxLon).distance;
+
+    return {
+      area: area, perimeter: perimeter, centroid: { lat: lat0, lon: lon0 },
+      orientation: twice > 0 ? "counter-clockwise" : (twice < 0 ? "clockwise" : "degenerate"),
+      span: Math.max(ns, ew), geodesicPerimeter: geodesic,
+      box: { minLat: minLat, maxLat: maxLat, minLon: minLon, maxLon: maxLon }
+    };
+  }
+
+  /* ---------- bearings and azimuths ---------- */
+  var COMPASS = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE",
+    "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"];
+
+  function compassPoint(az) { return COMPASS[Math.round(norm360(az) / 22.5) % 16]; }
+
+  function bearingToAzimuth(angleDeg, ns, ew) {
+    ns = String(ns).toUpperCase(); ew = String(ew).toUpperCase();
+    if (ns === "N" && ew === "E") { return norm360(angleDeg); }
+    if (ns === "S" && ew === "E") { return norm360(180 - angleDeg); }
+    if (ns === "S" && ew === "W") { return norm360(180 + angleDeg); }
+    if (ns === "N" && ew === "W") { return norm360(360 - angleDeg); }
+    return NaN;
+  }
+  function azimuthToBearing(az) {
+    az = norm360(az);
+    var q, ang, ns, ew;
+    if (az < 90) { q = 1; ang = az; ns = "N"; ew = "E"; }
+    else if (az < 180) { q = 2; ang = 180 - az; ns = "S"; ew = "E"; }
+    else if (az < 270) { q = 3; ang = az - 180; ns = "S"; ew = "W"; }
+    else { q = 4; ang = 360 - az; ns = "N"; ew = "W"; }
+    return { quadrant: q, angle: ang, ns: ns, ew: ew,
+      text: ns + " " + ang.toFixed(4) + "\u00B0 " + ew };
+  }
+
+  /* ---------- angle parsing: "39.906111", "N 39 54 22.0", "77°02'11.4\"W", "-77.0365" ---------- */
+  function parseAngle(str, kind) {
+    if (str == null) { return NaN; }
+    var s = String(str).trim().toUpperCase();
+    if (s === "") { return NaN; }
+    var hemi = "";
+    var mh = /^([NSEW])\s*/.exec(s);
+    if (mh) { hemi = mh[1]; s = s.slice(mh[0].length); }
+    var mt = /([NSEW])\s*$/.exec(s);
+    if (mt) { hemi = mt[1]; s = s.slice(0, s.length - mt[0].length); }
+    s = s.replace(/[NSEW]/g, " ");
+    s = s.replace(/[\u00B0\u00BA]/g, " ").replace(/['\u2032]/g, " ")
+      .replace(/["\u2033]/g, " ").replace(/,/g, " ");
+    var parts = s.split(/\s+/).filter(function (p) { return p !== ""; });
+    if (parts.length === 0) { return NaN; }
+
+    var nums = [];
+    for (var i = 0; i < parts.length && i < 3; i++) {
+      if (!/^-?\d*\.?\d+$/.test(parts[i])) { return NaN; }
+      nums.push(Number(parts[i]));
+    }
+    var sign = 1;
+    if (nums[0] < 0) { sign = -1; nums[0] = -nums[0]; }
+    if (nums.length > 1 && (nums[1] < 0 || nums[1] >= 60)) { return NaN; }
+    if (nums.length > 2 && (nums[2] < 0 || nums[2] >= 60)) { return NaN; }
+
+    var val = sign * (nums[0] + (nums[1] || 0) / 60 + (nums[2] || 0) / 3600);
+    if (hemi === "S" || hemi === "W") { val = -Math.abs(val); }
+    if (hemi === "N" || hemi === "E") { val = Math.abs(val); }
+    if (kind === "lat" && Math.abs(val) > 90) { return NaN; }
+    if (kind === "lon" && Math.abs(val) > 180) { return NaN; }
+    return val;
+  }
+
+  /* ---------- formatting ---------- */
+  function fmt(v, dp) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    dp = dp == null ? 3 : dp;
+    return v.toLocaleString("en-US", { minimumFractionDigits: dp, maximumFractionDigits: dp });
+  }
+  function formatDMS(value, dp, kind) {
+    dp = dp == null ? 2 : dp;
+    var neg = value < 0, abs = Math.abs(value);
+    var factor = Math.pow(10, dp);
+    var total = Math.round(abs * 3600 * factor) / factor;
+    var d = Math.floor(total / 3600);
+    var rem = total - d * 3600;
+    var m = Math.floor(rem / 60);
+    var s = Math.round((rem - m * 60) * factor) / factor;
+    if (s >= 60) { s -= 60; m += 1; }
+    if (m >= 60) { m -= 60; d += 1; }
+    var h = kind === "lat" ? (neg ? "S" : "N") : (kind === "lon" ? (neg ? "W" : "E") : "");
+    var si = Math.floor(s);
+    var secStr = dp === 0 ? pad(Math.round(s), 2) : pad(si, 2) + s.toFixed(dp).slice(String(si).length);
+    return (h ? h + " " : "") + d + "\u00B0 " + pad(m, 2) + "\u2032 " + secStr + "\u2033";
+  }
+
+  var M_PER_FT = 0.3048, M_PER_MI = 1609.344, M_PER_NM = 1852;
+  var SQFT_PER_M2 = 1 / (M_PER_FT * M_PER_FT);
+  var ACRE_M2 = 4046.8564224, HA_M2 = 10000;
+
+  return {
+    A: A, F: F, E2: E2, toRad: toRad, toDeg: toDeg, norm360: norm360, clamp: clamp, pad: pad,
+    meridionalArc: meridionalArc, primeVertical: primeVertical, meridionalRadius: meridionalRadius,
+    utmZone: utmZone, utmZoneAt: utmZoneAt, centralMeridian: centralMeridian, utmBand: utmBand,
+    utmForward: utmForward, utmInverse: utmInverse, footpointLatitude: footpointLatitude,
+    mgrsForward: mgrsForward, mgrsInverse: mgrsInverse,
+    vincentyInverse: vincentyInverse, haversineDistance: haversineDistance,
+    polygonArea: polygonArea, localPlane: localPlane,
+    bearingToAzimuth: bearingToAzimuth, azimuthToBearing: azimuthToBearing,
+    compassPoint: compassPoint, parseAngle: parseAngle,
+    fmt: fmt, formatDMS: formatDMS, isNorthBand: isNorthBand,
+    UNITS: { M_PER_FT: M_PER_FT, M_PER_MI: M_PER_MI, M_PER_NM: M_PER_NM,
+      SQFT_PER_M2: SQFT_PER_M2, ACRE_M2: ACRE_M2, HA_M2: HA_M2 }
+  };
+})();
+if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
+
+
+(function () {
+  "use strict";
+
+  var FT = 0.3048;
+  var ACRE_M2 = 4046.8564224;
+  var HA_M2 = 10000;
+
+  function $(id) { return document.getElementById(id); }
+  function fmt(v, n) {
+    if (v == null || !isFinite(v)) { return "\u2014"; }
+    var s = Math.abs(v).toFixed(n == null ? 4 : n);
+    var parts = s.split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return (v < 0 ? "-" : "") + parts.join(".");
+  }
+  function round(v, n) {
+    var p = Math.pow(10, n);
+    return Math.round(v * p) / p;
+  }
+  function norm360(d) {
+    var r = d % 360;
+    return r < 0 ? r + 360 : r;
+  }
+
+  /* ---------- the geometry: bearing and distance ---------- */
+  /* Eastings grow to the right, northings up, which is the same convention the instrument
+     uses for a whole-circle bearing: measured clockwise from north. atan2(dE, dN) then gives
+     the bearing directly, and the 0..360 wrap is the only correction needed. */
+  function bearingBetween(e1, n1, e2, n2) {
+    return norm360(Math.atan2(e2 - e1, n2 - n1) * 180 / Math.PI);
+  }
+  function distanceBetween(e1, n1, e2, n2) {
+    return Math.hypot(e2 - e1, n2 - n1);
+  }
+  /* the angle to turn from the backsight to the point, on the side the instrument reads */
+  function turnAngle(bs, pt, side) {
+    return norm360(side === "left" ? bs - pt : pt - bs);
+  }
+  /* a numeric input that reports "not given" as null rather than as 0 */
+  function fieldNum(id) {
+    var el = $(id);
+    if (!el) { return null; }
+    var raw = String(el.value).trim();
+    if (raw === "") { return null; }
+    var v = Number(raw);
+    return isFinite(v) ? v : null;
+  }
+
+  /* ---------- parsing a coordinate pair ---------- */
+  function parsePair(text) {
+    if (text == null) { return null; }
+    var t = String(text).trim();
+    if (t === "") { return null; }
+    var parts = t.split(/[,;\s]+/).filter(function (x) { return x !== ""; });
+    if (parts.length < 2) { return { bad: t }; }
+    var e = Number(parts[0]), n = Number(parts[1]);
+    if (!isFinite(e) || !isFinite(n)) { return { bad: t }; }
+    return { e: e, n: n };
+  }
+  function parseLines(text, scale) {
+    var lines = String(text || "").split(/\r?\n/), out = [], bad = [];
+    for (var i = 0; i < lines.length; i++) {
+      var s = lines[i].trim();
+      if (s === "" || s.charAt(0) === "#") { continue; }
+      var p = parsePair(s);
+      if (p === null) { continue; }
+      if (p.bad) { bad.push(p.bad); continue; }
+      out.push({ e: p.e * scale, n: p.n * scale });
+    }
+    return { pts: out, bad: bad };
+  }
+
+  /* ---------- the instrument view ---------- */
+  var ST = { bs: 0, side: "right", unitLen: "m", pts: [], rows: [] };
+
+  function render() {
+    var err = $("so-err"), note = $("so-note");
+    function fail(msg) {
+      err.textContent = msg;
+      err.classList.add("show");
+      $("so-results").classList.remove("show");
+      note.style.display = "none";
+      renderPlot(null);
+    }
+    err.textContent = "";
+    err.classList.remove("show");
+
+    var unitSel = $("so-units").value;
+    var scale = unitSel === "ft" ? FT : 1;
+    var unitLen = unitSel === "ft" ? "ft" : "m";
+    ST.unitLen = unitLen;
+
+    var st = parsePair($("so-station").value);
+    if (st === null) { fail("Enter the instrument station as a pair of coordinates, easting then northing."); return; }
+    if (st.bad) { fail("The instrument station could not be read: " + st.bad); return; }
+    var E0 = st.e * scale, N0 = st.n * scale;
+
+    /* the backsight, either as a point or as a bearing that is already known */
+    var bsBrg;
+    var bsPoint = null;
+    if ($("so-mode").value === "point") {
+      var b = parsePair($("so-backsight").value);
+      if (b === null) { fail("Enter the backsight point, or switch the backsight to a bearing you already know."); return; }
+      if (b.bad) { fail("The backsight point could not be read: " + b.bad); return; }
+      bsPoint = { e: b.e * scale, n: b.n * scale };
+      if (distanceBetween(E0, N0, bsPoint.e, bsPoint.n) < 1e-9) {
+        fail("The backsight point sits on the instrument station, so no direction can be derived from it.");
+        return;
+      }
+      bsBrg = bearingBetween(E0, N0, bsPoint.e, bsPoint.n);
+    } else {
+      var bv = Number($("so-bsbrg").value);
+      if (!isFinite(bv)) { fail("Enter the backsight bearing in degrees."); return; }
+      bsBrg = norm360(bv);
+    }
+    ST.bs = bsBrg;
+
+    var side = $("so-turn").value;
+    ST.side = side;
+
+    var list = parseLines($("so-points").value, scale);
+    if (list.bad.length) {
+      err.textContent = "These lines could not be read and were skipped: "
+        + list.bad.slice(0, 3).join(" | ")
+        + (list.bad.length > 3 ? " (and " + (list.bad.length - 3) + " more)" : "");
+      err.classList.add("show");
+    }
+    if (!list.pts.length) { fail("Enter at least one point to set out, easting then northing."); return; }
+
+    /* the optional heights, for the slope distance and the vertical angle.
+       An empty field means "not given" — Number("") is 0 and isFinite(null) is true, so
+       neither check may lean on the value alone, or a blank field would silently become
+       a level of 0.000 and turn a plan-only run into a bogus vertical angle. */
+    var hi = fieldNum("so-hi"), ht = fieldNum("so-ht");
+    var zs = fieldNum("so-zs"), zt = fieldNum("so-zt");
+    if (hi === null) { hi = 0; }
+    if (ht === null) { ht = 0; }
+    var haveLevels = zs !== null && zt !== null;
+
+    var rows = [], near = null;
+    for (var i = 0; i < list.pts.length; i++) {
+      var p = list.pts[i];
+      var d = distanceBetween(E0, N0, p.e, p.n);
+      if (d < 1e-9) {
+        fail("Point " + (i + 1) + " sits on the instrument station, so it has no bearing.");
+        return;
+      }
+      var bd = bearingBetween(E0, N0, p.e, p.n);
+      var ang = turnAngle(bsBrg, bd, side);
+      /* if the circle was set to the backsight, the reading at the point is its own bearing */
+      var circ = norm360(bsBrg + (side === "left" ? -ang : ang));
+      var vd = haveLevels ? (zt - zs) + (hi - ht) : 0;
+      var sd = haveLevels ? Math.hypot(d, vd) : d;
+      var vang = haveLevels ? Math.atan2(vd, d) * 180 / Math.PI : 0;
+      rows.push({ i: i + 1, e: p.e, n: p.n, brg: bd, ang: ang, circ: circ, d: d, sd: sd, vang: vang, vd: vd });
+      if (d < 2) { near = i + 1; }
+    }
+    /* the order the instrument would be turned in: by angle, in the reading direction */
+    var order = rows.slice().sort(function (a, b) {
+      return side === "left" ? b.ang - a.ang : a.ang - b.ang;
+    });
+    ST.rows = rows;
+
+    /* ---- the figures ---- */
+    var lenDisp = unitSel === "ft" ? 1 / FT : 1;
+    $("so-bk").textContent = "Backsight bearing";
+    $("so-bv").textContent = fmt(bsBrg, 4) + "\u00B0" + (bsPoint
+      ? "  \u00B7  " + fmt(distanceBetween(E0, N0, bsPoint.e, bsPoint.n) * lenDisp, 3) + " " + unitLen + " away"
+      : "  \u00B7  entered directly");
+
+    var out = [];
+    function row(k, v, small) {
+      out.push('<div class="result-row"><span class="k">' + k + '</span><span class="v">' + v
+        + (small ? '<small>' + small + '</small>' : '') + '</span></div>');
+    }
+    row("Station", fmt(E0 * lenDisp, 3) + ", " + fmt(N0 * lenDisp, 3) + " " + unitLen);
+    row("Angles turned", side === "left" ? "anticlockwise (left)" : "clockwise (right)");
+    row("Points to set out", String(rows.length));
+    if (haveLevels) {
+      row("Instrument height / target height",
+        fmt(hi, 3) + " / " + fmt(ht, 3) + " " + unitLen,
+        "levels " + fmt(zs, 3) + " \u2192 " + fmt(zt, 3));
+    } else {
+      row("Vertical", "plan only",
+        "fill both levels for slope distance and vertical angle");
+    }
+    $("so-rows").innerHTML = out.join("");
+
+    /* ---- the point table ---- */
+    var tb = $("so-table").querySelector("tbody"), html = "";
+    for (var k = 0; k < rows.length; k++) {
+      var r = rows[k];
+      html += "<tr><td>" + r.i + "</td><td>" + fmt(r.brg, 4) + "\u00B0</td><td><b>"
+        + fmt(r.ang, 4) + "\u00B0</b></td><td>" + fmt(r.circ, 4) + "\u00B0</td><td>"
+        + fmt(r.d * lenDisp, 3) + " " + unitLen
+        + (haveLevels ? " <small>slope " + fmt(r.sd * lenDisp, 3) + (unitSel === "ft" ? " ft" : " m")
+          + ", v " + fmt(r.vang, 3) + "\u00B0</small>" : "")
+        + "</td></tr>";
+    }
+    tb.innerHTML = html;
+
+    $("so-sum").textContent = "Shortest " + fmt(Math.min.apply(null, rows.map(function (x) { return x.d; })) * lenDisp, 3)
+      + " " + unitLen + ", longest " + fmt(Math.max.apply(null, rows.map(function (x) { return x.d; })) * lenDisp, 3)
+      + " " + unitLen + ". Turn order: " + order.map(function (x) { return "#" + x.i; }).join(" \u2192 ") + ".";
+
+    /* ---- notes ---- */
+    /* a point too close to the instrument is a real risk on site, so it outranks the two
+       advisory notes: only one can be shown, and it must be the one that can ruin a set-out */
+    note.className = "note";
+    if (near !== null) {
+      note.className = "note warn";
+      note.innerHTML = "<b>Point " + near + " is within 2 " + unitLen + " of the instrument.</b> At that "
+        + "range a 1 mm error in the coordinates swings the bearing by minutes of arc, and the plumb "
+        + "line subtends the point itself. Set it out from a different station, or by offsets.";
+      note.style.display = "";
+    } else if ($("so-mode").value === "point" && bsPoint && bsBrg === 0) {
+      note.innerHTML = "<b>The backsight is due north.</b> That is a convenient case rather than an error, "
+        + "but check it: a backsight exactly on the meridian is common in textbook examples and rare on a "
+        + "real site. If the bearing should not be 000\u00B0, one of the two coordinates is wrong.";
+      note.style.display = "";
+    } else if (side === "left") {
+      note.innerHTML = "<b>Left angles.</b> The angle column is the anticlockwise turn from the backsight. "
+        + "Many instruments are set to read left angles in some regions and right angles in others, and "
+        + "the two differ by 360\u00B0 minus the angle — check which your instrument displays before you "
+        + "compare the numbers.";
+      note.style.display = "";
+    } else {
+      note.style.display = "none";
+    }
+
+    renderPlot({ e: E0, n: N0, bs: bsPoint, pts: list.pts });
+    $("so-results").classList.add("show");
+  }
+
+  /* ---------- the drawing ---------- */
+  function renderPlot(st) {
+    var host = $("so-plot");
+    if (!host) { return; }
+    if (!st) { host.innerHTML = ""; return; }
+    var W = 640, H = 440, pad = 34;
+
+    /* everything that has to fit, including the backsight */
+    var all = [{ e: st.e, n: st.n }].concat(st.pts.slice());
+    if (st.bs) { all.push(st.bs); }
+    var es = all.map(function (p) { return p.e; }), ns = all.map(function (p) { return p.n; });
+    var minE = Math.min.apply(null, es), maxE = Math.max.apply(null, es);
+    var minN = Math.min.apply(null, ns), maxN = Math.max.apply(null, ns);
+    /* a symmetric window around the station keeps the angles readable */
+    var half = Math.max((maxE - minE) / 2, (maxN - minN) / 2, 1e-6) * 1.25;
+    var cE = st.e, cN = st.n;
+    minE = Math.min(minE, cE - half); maxE = Math.max(maxE, cE + half);
+    minN = Math.min(minN, cN - half); maxN = Math.max(maxN, cN + half);
+    var spanE = Math.max(maxE - minE, 1e-9), spanN = Math.max(maxN - minN, 1e-9);
+    var sc = Math.min((W - 2 * pad) / spanE, (H - 2 * pad) / spanN);
+    function X(e) { return pad + (e - minE) * sc + ((W - 2 * pad) - spanE * sc) / 2; }
+    function Y(n) { return H - pad - (n - minN) * sc - ((H - 2 * pad) - spanN * sc) / 2; }
+
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" role="img" '
+      + 'aria-label="Station, backsight and the points to set out">';
+
+    /* a light graticule, so the drawing reads as a plan rather than a diagram */
+    var gstep = Math.pow(10, Math.floor(Math.log(half * 2) / Math.LN10)) / 2;
+    svg += '<g stroke="#e6ebf3" stroke-width="1">';
+    for (var g = Math.ceil(minE / gstep) * gstep; g <= maxE; g += gstep) {
+      svg += '<line x1="' + X(g).toFixed(1) + '" y1="' + pad + '" x2="' + X(g).toFixed(1)
+        + '" y2="' + (H - pad) + '"/>';
+    }
+    for (var h = Math.ceil(minN / gstep) * gstep; h <= maxN; h += gstep) {
+      svg += '<line x1="' + pad + '" y1="' + Y(h).toFixed(1) + '" x2="' + (W - pad)
+        + '" y2="' + Y(h).toFixed(1) + '"/>';
+    }
+    svg += '</g>';
+
+    var cx = X(st.e), cy = Y(st.n);
+
+    /* north arrow, top right, always drawn so the reader knows which way is up */
+    svg += '<g stroke="#1f2430" stroke-width="1.6" fill="none">'
+      + '<line x1="' + (W - 30) + '" y1="' + 46 + '" x2="' + (W - 30) + '" y2="' + 18 + '"/>'
+      + '<path d="M' + (W - 34) + ' 25 L' + (W - 30) + ' 17 L' + (W - 26) + ' 25"/></g>'
+      + '<text x="' + (W - 30) + '" y="' + 60 + '" font-size="11" fill="#1f2430" '
+      + 'text-anchor="middle" font-weight="700">N</text>';
+
+    /* the backsight ray and the circle it sets */
+    var palette = ["#2563eb", "#0d9488", "#b45309", "#7c3aed", "#0891b2", "#be123c"];
+    if (st.bs) {
+      svg += '<line x1="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + X(st.bs.e).toFixed(1)
+        + '" y2="' + Y(st.bs.n).toFixed(1) + '" stroke="#6b7280" stroke-width="1.6" '
+        + 'stroke-dasharray="6 4"/>';
+      svg += '<rect x="' + (X(st.bs.e) - 4.5).toFixed(1) + '" y="' + (Y(st.bs.n) - 4.5).toFixed(1)
+        + '" width="9" height="9" fill="#fff" stroke="#1f2430" stroke-width="1.6"/>';
+      svg += '<text x="' + (X(st.bs.e) + 9).toFixed(1) + '" y="' + (Y(st.bs.n) - 7).toFixed(1)
+        + '" font-size="11" fill="#4b5563" font-weight="600">backsight</text>';
+    }
+
+    /* each point, with its ray and its number */
+    var rmax = 0;
+    st.pts.forEach(function (p) { rmax = Math.max(rmax, Math.hypot(X(p.e) - cx, Y(p.n) - cy)); });
+    st.pts.forEach(function (p, i) {
+      var px = X(p.e), py = Y(p.n);
+      svg += '<line x1="' + cx.toFixed(1) + '" y1="' + cy.toFixed(1) + '" x2="' + px.toFixed(1)
+        + '" y2="' + py.toFixed(1) + '" stroke="' + palette[i % 6] + '" stroke-width="1.5" opacity=".85"/>';
+      svg += '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="10" fill="' + palette[i % 6]
+        + '" opacity=".14"/>';
+      svg += '<circle cx="' + px.toFixed(1) + '" cy="' + py.toFixed(1) + '" r="10" fill="none" stroke="'
+        + palette[i % 6] + '" stroke-width="1.6"/>';
+      svg += '<text x="' + px.toFixed(1) + '" y="' + (py + 3.8).toFixed(1) + '" font-size="11" '
+        + 'font-weight="700" fill="' + palette[i % 6] + '" text-anchor="middle">' + (i + 1) + '</text>';
+    });
+
+    /* the station, on top of everything */
+    svg += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="5.2" fill="#1f2430"/>';
+    svg += '<circle cx="' + cx.toFixed(1) + '" cy="' + cy.toFixed(1) + '" r="9.5" fill="none" '
+      + 'stroke="#1f2430" stroke-width="1.3"/>';
+    svg += '<text x="' + (cx + 13).toFixed(1) + '" y="' + (cy - 8).toFixed(1) + '" font-size="11" '
+      + 'fill="#1f2430" font-weight="700">station</text>';
+
+    svg += '</svg>';
+    host.innerHTML = svg;
+  }
+
+  /* ---------- examples ---------- */
+  var EXAMPLES = {
+    right: {
+      station: "1000.000, 2000.000", bs: "1000.000, 2100.000", mode: "point",
+      pts: "1050.000, 2000.000\n1000.000, 1900.000\n950.000, 2000.000", turn: "right", units: "m"
+    },
+    diag: {
+      station: "1000.000, 2000.000", bs: "1000.000, 2100.000", mode: "point",
+      pts: "1030.000, 2040.000\n1070.000, 2020.000", turn: "right", units: "m"
+    },
+    east: {
+      station: "500000.000, 4000000.000", bs: "500100.000, 4000000.000", mode: "point",
+      pts: "500080.000, 4000080.000\n500120.000, 3999950.000", turn: "right", units: "m"
+    },
+    feet: {
+      station: "1000.000, 2000.000", bs: "1000.000, 2100.000", mode: "point",
+      pts: "1050.000, 2000.000", turn: "right", units: "ft"
+    }
+  };
+
+  function applyExample(key) {
+    var ex = EXAMPLES[key];
+    if (!ex) { return; }
+    $("so-station").value = ex.station;
+    $("so-backsight").value = ex.bs;
+    $("so-mode").value = ex.mode;
+    $("so-points").value = ex.pts;
+    $("so-turn").value = ex.turn;
+    $("so-units").value = ex.units;
+    syncMode();
+    render();
+  }
+
+  function syncMode() {
+    var m = $("so-mode").value;
+    $("so-brgwrap").style.display = m === "bearing" ? "" : "none";
+    $("so-backsight").parentNode.style.display = m === "point" ? "" : "none";
+  }
+
+  /* ---------- copy ---------- */
+  function showToast(msg) {
+    var t = $("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    setTimeout(function () { t.classList.remove("show"); }, 1600);
+  }
+  function copyAll() {
+    var lines = [];
+    lines.push("Backsight bearing, " + fmt(ST.bs, 4) + " deg");
+    lines.push("Point, Bearing, Angle to turn, Circle reading, Horizontal distance, Coordinates");
+    ST.rows.forEach(function (r) {
+      lines.push([r.i, fmt(r.brg, 4), fmt(r.ang, 4), fmt(r.circ, 4), fmt(r.d, 3),
+        fmt(r.e, 3) + " " + fmt(r.n, 3)].join(", "));
+    });
+    var text = lines.join("\n");
+    var fallback = function () {
+      var ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand("copy"); showToast("Copied to clipboard"); }
+      catch (e) { showToast("Could not copy"); }
+      document.body.removeChild(ta);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Copied to clipboard"); }, fallback);
+    } else { fallback(); }
+  }
+
+  /* ---------- wiring ---------- */
+  function bindAll() {
+    ["so-station", "so-backsight", "so-bsbrg", "so-points", "so-hi", "so-ht", "so-zs", "so-zt"]
+      .forEach(function (id) {
+        var e = $(id);
+        if (e) { e.addEventListener("input", render); }
+      });
+    ["so-mode", "so-turn", "so-units"].forEach(function (id) {
+      $(id).addEventListener("change", function () {
+        if (id === "so-mode") { syncMode(); }
+        render();
+      });
+    });
+    $("so-copy").addEventListener("click", copyAll);
+    Array.prototype.forEach.call(document.querySelectorAll(".chips button"), function (b) {
+      b.addEventListener("click", function () { applyExample(b.getAttribute("data-ex")); });
+    });
+  }
+
+  /* this script sits at the end of the body, so every element above already exists:
+     run straight away rather than waiting on DOMContentLoaded, which the two deferred
+     scripts earlier in the document can hold up */
+  syncMode();
+  bindAll();
+  render();
+})();
+</script>
+</body>
+</html>
