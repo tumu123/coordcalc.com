@@ -147,6 +147,10 @@ python <本地工作区>/.workbuddy/scratch/preview.py --port 8080
 - 四个工具页（UTM / 单位换算 / 面积 / 土方）走「英文引擎 + 翻译表 + 中文模板」：
   模板在 `.workbuddy/scratch/zh_templates/`，文案改模板、引擎里的字符串改 `build_zh.py`
   的翻译表。**只改产物会在下次重建时丢失。**
+- 往翻译表里加中文时，别手敲 `\uXXXX` 码点——同区段的形近字极易错位
+  （曾把「楔」U+6954 写成「楛」U+695B、「棱」U+68F1 写成「楑」U+6951，
+  正文看着没问题、只有结果行标签是错的）。改完必须跑一遍真实浏览器断言，
+  静态检查抓不到这类问题。
 - 每个工具页底部必须有 Related 区块，且**至少 3 条指向同语言的其它工具**
   （`audit.py` 的 `related tool links` 断言会拦住退化；语言切换链接不算）。
 - 30 个工具页（15 EN + 15 ZH）都带 `WebApplication` + `BreadcrumbList` 结构化数据，
