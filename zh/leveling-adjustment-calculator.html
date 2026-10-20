@@ -273,6 +273,7 @@
     <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
     <nav class="topnav">
       <a href="./#tools">计算器</a>
+      <a href="./#drone">无人机</a>
       <a href="guides">教程</a>
       <a href="../leveling-adjustment-calculator" hreflang="en">English</a>
     </nav>
@@ -314,10 +315,12 @@
         <label for="lv-order">闭合差限值</label>
         <select id="lv-order">
           <option value="custom">自定义常数</option>
-          <option value="4" selected>4 mm — 一等 / FGCS class I</option>
-          <option value="6">6 mm — 二等 class I（FM）</option>
-          <option value="8">8 mm — 二等 class II</option>
+          <option value="40">40 mm — 图根水准</option>
+          <option value="20" selected>20 mm — 四等（默认）</option>
           <option value="12">12 mm — 三等 / GB/T 12898 平地</option>
+          <option value="8">8 mm — 二等 class II</option>
+          <option value="6">6 mm — 二等 class I</option>
+          <option value="4">4 mm — 一等 / FGCS class I</option>
         </select>
       </div>
     </div>
@@ -329,7 +332,7 @@
       </div>
       <div class="field" style="flex:0 0 220px;">
         <label for="lv-k">闭合差限值常数 k</label>
-        <input id="lv-k" type="number" step="any" value="4" autocomplete="off">
+        <input id="lv-k" type="number" step="any" value="20" autocomplete="off">
         <span class="hint" id="lv-ku" style="margin:0;">mm/√km</span>
       </div>
       <div class="field" style="flex:1;min-width:180px;">
@@ -485,9 +488,9 @@
     <p>两条算术校核都成立：<code>Σ后视 = 5.892</code>、<code>Σ前视 = 6.025</code>、
       <code>Σ高差 = 0.032</code>、<code>Σ降低 = 0.165</code>，两者之差均为 <code>−0.133 m</code>，
       也正是 <code>49.867 − 50.000</code>。这条环线<b>低了 133 mm</b>。</p>
-    <p>在 <code>1.2 km</code> 上，<code>k = 4 mm/√km</code> 的限差为
-      <code>4 × √1.2 = 4.38 mm</code>，<code>k = 8</code> 时为 <code>8.76 mm</code>。
-      闭合差是最严一档的 30 倍，这条测线过不了表里任何一级——一条含粗差的测量就是这样。
+    <p>在 <code>1.2 km</code> 上，默认的 <code>k = 20 mm/√km</code>（四等）限差为
+      <code>20 × √1.2 = 21.91 mm</code>；换成最严的一等 <code>k = 4</code> 只有 <code>4.38 mm</code>。
+      这条测线闭合差 133 mm，是最严一档的 30 倍，四等也超了 6 倍——一条含粗差的测量就是这样。
       而且这 133 mm 并不是平均分布在四个测站上的：其中 108 mm 就出现在第一个测站，
       这正是你该先去看的地方。</p>
     <p>若仍然平差，按距离法修正为 <code>−e × (累计 ÷ 1200)</code>：
@@ -873,8 +876,8 @@
     seed();
     el("lv-start").value = "50.000";
     el("lv-close").value = "";
-    el("lv-k").value = "4";
-    el("lv-order").value = "4";
+    el("lv-k").value = "20";
+    el("lv-order").value = "20";
     el("lv-method").value = "dist";
     calc();
   });
@@ -902,7 +905,7 @@
         el("lv-k").value = String(Math.round((kk / FT / Math.sqrt(1.609344) * 1000) * 1e3) / 1e3);
       }
     }
-    el("lv-order").value = "custom";
+    syncOrder();
     if (!metric() && !parseFloat(el("lv-precision").value)){
       el("lv-precision").value = "3";
     }
@@ -914,9 +917,35 @@
 
   el("lv-method").addEventListener("change", calc);
   el("lv-precision").addEventListener("change", calc);
+
+  // The <option> values are mm per sqrt(km); the input holds the same constant in the
+  // unit on screen. Matching the input against the option values directly works only in
+  // metric, so the option list is re-expressed whenever the unit system changes.
+  function syncOrder(){
+    var kk = parseFloat(el("lv-k").value);
+    if (isNaN(kk)){ el("lv-order").value = "custom"; return; }
+    // Compare in mm/sqrt(km) so the tolerance means the same thing in both unit systems:
+    // the stored constant is rounded to 6 decimals in ft/mile, which is ~2e-4 mm/km^0.5.
+    var mmPerKmRoot = metric() ? kk : kk * 1000 / (FT * Math.sqrt(1.609344));
+    var best = "custom", bestErr = 0.01;
+    for (var i = 0; i < el("lv-order").options.length; i++){
+      var v = parseFloat(el("lv-order").options[i].value);
+      if (isNaN(v)) continue;
+      var e = Math.abs(v - mmPerKmRoot);
+      if (e < bestErr){ bestErr = e; best = String(v); }
+    }
+    el("lv-order").value = best;
+  }
+
   el("lv-order").addEventListener("change", function(){
     var v = el("lv-order").value;
-    if (v !== "custom"){ el("lv-k").value = v; }
+    if (v !== "custom"){
+      var mm = parseFloat(v);
+      // Re-express the chosen mm/√km constant in the unit currently on screen.
+      el("lv-k").value = metric()
+        ? String(mm)
+        : String(Math.round((mm / 1000 * FT * Math.sqrt(1.609344)) * 1e6) / 1e6);
+    }
     calc();
   });
   var head = ["lv-start", "lv-close", "lv-k"];

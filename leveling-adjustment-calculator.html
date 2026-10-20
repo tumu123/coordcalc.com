@@ -265,6 +265,7 @@
       <a href="./#distance">Distance &amp; Area</a>
       <a href="./#slope">Slope &amp; Scale</a>
       <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -306,10 +307,12 @@
         <label for="lv-order">Allowed misclosure</label>
         <select id="lv-order">
           <option value="custom">Custom constant</option>
-          <option value="4" selected>4 mm — first order (FGCS)</option>
-          <option value="6">6 mm — second order, class I (FGCS)</option>
-          <option value="8">8 mm — second order, class II (FGCS)</option>
+          <option value="40">40 mm — topographic / map control</option>
+          <option value="20" selected>20 mm — fourth order (FGCS / GB)</option>
           <option value="12">12 mm — third order (FGCS)</option>
+          <option value="8">8 mm — second order, class II (FGCS)</option>
+          <option value="6">6 mm — second order, class I (FGCS)</option>
+          <option value="4">4 mm — first order (FGCS)</option>
         </select>
       </div>
     </div>
@@ -321,7 +324,7 @@
       </div>
       <div class="field" style="flex:0 0 220px;">
         <label for="lv-k">Allowed misclosure constant</label>
-        <input id="lv-k" type="number" step="any" value="4" autocomplete="off">
+        <input id="lv-k" type="number" step="any" value="20" autocomplete="off">
         <span class="hint" id="lv-ku" style="margin:0;">mm per √km</span>
       </div>
       <div class="field" style="flex:1;min-width:180px;">
@@ -908,8 +911,8 @@
     seed();
     el("lv-start").value = "50.000";
     el("lv-close").value = "";
-    el("lv-k").value = "4";
-    el("lv-order").value = "4";
+    el("lv-k").value = "20";
+    el("lv-order").value = "20";
     el("lv-method").value = "dist";
     calc();
   });
@@ -937,7 +940,7 @@
         el("lv-k").value = String(Math.round((kk / FT / Math.sqrt(1.609344) * 1000) * 1e3) / 1e3);
       }
     }
-    el("lv-order").value = "custom";
+    syncOrder();
     if (!metric() && !parseFloat(el("lv-precision").value)){
       el("lv-precision").value = "3";
     }
@@ -949,9 +952,35 @@
 
   el("lv-method").addEventListener("change", calc);
   el("lv-precision").addEventListener("change", calc);
+
+  // The <option> values are mm per sqrt(km); the input holds the same constant in the
+  // unit on screen. Matching the input against the option values directly works only in
+  // metric, so the option list is re-expressed whenever the unit system changes.
+  function syncOrder(){
+    var kk = parseFloat(el("lv-k").value);
+    if (isNaN(kk)){ el("lv-order").value = "custom"; return; }
+    // Compare in mm/sqrt(km) so the tolerance means the same thing in both unit systems:
+    // the stored constant is rounded to 6 decimals in ft/mile, which is ~2e-4 mm/km^0.5.
+    var mmPerKmRoot = metric() ? kk : kk * 1000 / (FT * Math.sqrt(1.609344));
+    var best = "custom", bestErr = 0.01;
+    for (var i = 0; i < el("lv-order").options.length; i++){
+      var v = parseFloat(el("lv-order").options[i].value);
+      if (isNaN(v)) continue;
+      var e = Math.abs(v - mmPerKmRoot);
+      if (e < bestErr){ bestErr = e; best = String(v); }
+    }
+    el("lv-order").value = best;
+  }
+
   el("lv-order").addEventListener("change", function(){
     var v = el("lv-order").value;
-    if (v !== "custom"){ el("lv-k").value = v; }
+    if (v !== "custom"){
+      var mm = parseFloat(v);
+      // Re-express the chosen mm/√km constant in the unit currently on screen.
+      el("lv-k").value = metric()
+        ? String(mm)
+        : String(Math.round((mm / 1000 * FT * Math.sqrt(1.609344)) * 1e6) / 1e6);
+    }
     calc();
   });
   var head = ["lv-start", "lv-close", "lv-k"];

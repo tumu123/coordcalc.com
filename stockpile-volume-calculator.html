@@ -250,6 +250,7 @@
       <a href="./#distance">Distance &amp; Area</a>
       <a href="./#slope">Slope &amp; Scale</a>
       <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
     </nav>
   </div>
   <div class="accentbar"></div>
@@ -535,12 +536,25 @@
       nothing is wrong — piles are normally built flatter than they could stand.
     </p>
     <p>
-      Change the top diameter to 4 m and it becomes a truncated cone. With <code>r = 2 m</code>,
-      <code>V = π × 3 ÷ 3 × (25 + 10 + 4) = 39π ≈ 122.52 m³</code> — 44 m³ less than the cone, because
-      the top 2 m of the pile have been taken off. The face angle goes to
-      <code>arctan(3 ÷ 3) = 45°</code>, which is steeper than gravel can stand, and the calculator says
-      so: a flat-topped gravel pile 10 m wide with a 2 m top and 3 m sides is not something that forms
-      by itself.
+      Change the top diameter to 4 m and it becomes a truncated cone:
+      <code>V = π × 3 ÷ 3 × (25 + 10 + 4) = 39π ≈ 122.52 m³</code>. Note that this is
+      <b>44 m³ more</b> than the cone, not less. A flat-topped pile with a 10 m base, a 4 m top and
+      3 m of sides is the lower part of a <b>5 m tall</b> cone (130.90 m³) with its top 2 m taken off
+      (8.38 m³), and <code>130.90 − 8.38 = 122.52</code>. The 5 m matters: it is not the same 3 m cone
+      from the paragraph above.
+    </p>
+    <p>
+      Cut the 3 m cone down to a 4 m top instead and you get a different pile — what remains is the
+      small cone above the cut, only 1.8 m high and holding 7.54 m³, so 71.00 m³ was removed. The
+      height changes when you crop the top, and the volume follows it. Note that <code>39π</code> and
+      <code>130.90 − 8.38</code> are the same field by two routes: given a 10 m base, a 4 m top and
+      3 m of sides, the volume is fixed and needs no assumption about where the pile came from.
+    </p>
+    <p>
+      The face of the 10/4 truncated cone rises 3 m over a horizontal 3 m —
+      <code>(5 − 2) ÷ 3 = 1</code>, so <code>arctan(1) = 45°</code> — steeper than gravel can stand,
+      and the calculator says so: a flat-topped gravel pile 10 m wide with a 4 m top and 3 m sides is
+      not something that forms by itself.
     </p>
     <p>
       Now a ridge: base width 6 m, sharp crest, 20 m long, 2 m high. The body is
