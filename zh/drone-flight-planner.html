@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无人机航线规划器 — 航线数、照片数与飞行时间（免费）</title>
+<meta name="description" content="免费的无人机航线规划器：由重叠度算出航向与旁向间距，进而得出航线数、每航线照片数、总照片数、飞行距离与飞行时间。支持米/英尺、km/h 与 mph，内置常见机型参数。">
+<link rel="canonical" href="https://coordcalc.com/zh/drone-flight-planner">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/drone-flight-planner">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/drone-flight-planner">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/drone-flight-planner">
+<meta property="og:title" content="无人机航线规划器 — 航线数、照片数与飞行时间">
+<meta property="og:description" content="由重叠度算航线间距，由场地尺寸算照片数与飞行距离，并给出按地速折算的飞行时间。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/drone-flight-planner">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "无人机航线规划器",
+  "url": "https://coordcalc.com/zh/drone-flight-planner",
+  "description": "免费的无人机航线规划器：由重叠度算出航向与旁向间距，进而得出航线数、每航线照片数、总照片数、飞行距离与飞行时间。支持米/英尺、km/h 与 mph，内置常见机型参数。",
+  "inLanguage": "zh-CN",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "计算器",
+      "item": "https://coordcalc.com/#tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "无人机航线规划器",
+      "item": "https://coordcalc.com/zh/drone-flight-planner"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "一公顷需要多少张照片？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "在航向 70%、旁向 70% 重叠下，Phantom 4 RTK 在 120 m 时单张覆盖 2.16 公顷，航线间距 54 m、拍照间距 36 m，纯按面积算一公顷约 5 张。实际场地会更多：间距要向上取整成整条航线与整张照片，而且场地边缘要在边界外多飞一条航线。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "重叠度应该用多少？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "普通平坦地表用航向 70–80%、旁向 60–70%。植被地表、陡坡，或地表纹理稀少的地方提到 80/70：因为视差会让同一点在不同照片上表观位置移动，匹配需要多余帧才能扛住。超过约 85% 后收益很小，而照片数陡增。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "规划器算不算转弯和加减速？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "直线距离是各航线长度之和，加上相邻航线之间的间距，后者已经包含了转弯所需的横向跨度。真实飞行还要加上进出每个转弯的加减速时间，以及爬升到航高与返航的时间。经验做法是：几十条航线的区块，在算得时间上加 15% 到 25%。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么航线要沿短边方向排列？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "更少、更长的航线比更多、更短的航线效率高，因为每个转弯都要花时间，每条航线在两端还有损失。让航线沿场地的长轴方向排列，可以把转弯次数降到最低。有些规划器还会把区块稍微旋转，让航线顺着地形或道路的主导走向，从而减少尴尬的半截航线。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "GSD 怎样影响规划？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GSD 定住航高，航高定住单张覆盖，覆盖定住航线间距。GSD 减半就是航高减半，间距不只是减半，按面积算其实是降到四分之一，于是照片数约涨四倍。分辨率翻倍，意味着飞行时长大约翻四倍，而不是翻一倍。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "电池怎么配？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "按说明书上的实用续航选，不要用宣传数字，并留 30% 余量应对风和返航。Phantom 4 RTK 可用的悬停时间约 25 分钟，Mavic 3E 约 35 分钟。若算得的飞行时间超过这个数的三分之二，就安排换电池、分成两个架次，而不是把飞机推到极限。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个航线规划器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费，不用登录、不用注册、不限次数。全部计算都在你的浏览器里完成，场地边界与航线计划不会上传到任何地方。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:#0f9d58;font-weight:600;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  /* Wide tables have more columns than a phone has width: the wrapper needs an explicit
+     max-width and the table a max-content width, or the table's min-content width
+     propagates up and widens the document instead of scrolling. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  .tscroll > table{width:max-content;min-width:100%;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../drone-flight-planner" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › 无人机航线规划器
+  </nav>
+
+<h1>无人机航线规划器</h1>
+
+  <p class="lead">
+    本站把单张照片的覆盖范围变成一份任务书：在你选定的重叠度下，给出航线间距与拍照间距，
+    针对给定尺寸的场地算出航线数、照片数、飞行距离与所需时间。
+    相机与航高设定一次，就能读出这个任务在电池上究竟要花多少。免费，浏览器本地计算，无需登录。
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 240px;">
+        <label for="fp-cam">相机</label>
+        <select id="fp-cam">
+          <option value="custom">自定义 — 在下方设定传感器与镜头</option>
+          <option value="m3e">DJI Mavic 3E 御 3 行业版（4/3，24 mm）</option>
+          <option value="m3m">DJI Mavic 3M 多光谱（4/3，24 mm）</option>
+          <option value="p4rtk" selected>DJI Phantom 4 RTK（1 英寸，8.8 mm）</option>
+          <option value="m300-p1">DJI 禅思 P1（全画幅，35 mm）</option>
+          <option value="mavic2pro">DJI Mavic 2 Pro（1 英寸，10.26 mm）</option>
+          <option value="mini3">DJI Mini 3 Pro（1/1.3 英寸，6.7 mm）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="fp-units">单位制</label>
+        <select id="fp-units">
+          <option value="m">公制（m、km/h）</option>
+          <option value="ft">英制（ft、mph）</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 126px;">
+        <label for="fp-sw">传感器宽 (mm)</label>
+        <input id="fp-sw" type="number" step="any" value="13.2" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 126px;">
+        <label for="fp-sh">传感器高 (mm)</label>
+        <input id="fp-sh" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 130px;">
+        <label for="fp-f">焦距 (mm)</label>
+        <input id="fp-f" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 130px;">
+        <label for="fp-w">图像宽 (px)</label>
+        <input id="fp-w" type="number" step="1" value="5472" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 130px;">
+        <label for="fp-h">图像高 (px)</label>
+        <input id="fp-h" type="number" step="1" value="3648" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:1;min-width:150px;">
+        <label for="fp-alt">相对地面航高 <span id="fp-altu">(m)</span></label>
+        <input id="fp-alt" type="number" step="any" value="120" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:150px;">
+        <label for="fp-len">场地长度（沿航线）<span id="fp-lenu">(m)</span></label>
+        <input id="fp-len" type="number" step="any" value="400" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:150px;">
+        <label for="fp-wid">场地宽度（跨航线）<span id="fp-widu">(m)</span></label>
+        <input id="fp-wid" type="number" step="any" value="500" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:1;min-width:140px;">
+        <label for="fp-fwd">航向重叠 (%)</label>
+        <input id="fp-fwd" type="number" step="1" min="0" max="95" value="70" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:140px;">
+        <label for="fp-side">旁向重叠 (%)</label>
+        <input id="fp-side" type="number" step="1" min="0" max="95" value="70" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:140px;">
+        <label for="fp-spd">地速 <span id="fp-spdu">(km/h)</span></label>
+        <input id="fp-spd" type="number" step="any" value="29" autocomplete="off">
+      </div>
+    </div>
+
+    <p class="hint" style="margin-top:14px;">
+      航线沿<b>长度</b>方向推进，所以这里要填的是「沿你打算飞的方向」与「跨这个方向」两个尺寸。
+      想换个方向飞，把两个数字对调即可。对于非矩形场地，取区块的外接矩形——
+      规划器是矩形模型，在不规则形状上会略微高估。
+    </p>
+
+    <p class="err" id="fp-err">请检查参数——传感器、焦距与图像像素都必须为正，
+      场地尺寸与航高必须大于零，两个重叠度都必须小于 95%。</p>
+
+    <div class="results" id="fp-results">
+      <div class="big">
+        <span class="bk" id="fp-bk">本次任务的照片数</span>
+        <span class="bv" id="fp-bv">—</span>
+      </div>
+      <div id="fp-rows"></div>
+      <h3 id="fp-fph">任务全貌</h3>
+      <div class="tscroll">
+        <table class="lookup" id="fp-out">
+          <thead>
+            <tr><th id="fp-h1">项目</th><th id="fp-h2">数值</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">规划器只数整条航线与整张照片——间距一律向上取整，
+        因为半条航线也得飞完，半张照片也得拍。</p>
+      <p class="hint" id="fp-arith" style="font-weight:600;"></p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <h3>从覆盖范围到间距</h3>
+    <p>单张照片的地面覆盖由相机与航高给出——与
+      <a href="drone-gsd-calculator">GSD 计算器</a>用的是同一个比例：
+      旁向 <code>覆盖宽 = H × S_w ÷ f</code>，航向 <code>覆盖长 = H × S_h ÷ f</code>。
+      重叠度则规定每一张照片、每一条航线可以与前一张共用多少覆盖：</p>
+    <p><code>航线间距 = 覆盖宽 × (1 − 旁向重叠)</code><br>
+       <code>拍照间距 = 覆盖长 × (1 − 航向重叠)</code></p>
+    <p>注意哪个间距用哪个覆盖。航线是一条一条往<b>侧向</b>推进的，推进的步长是一张照片的<b>宽</b>，
+      所以旁向重叠决定航线间距；拍照是沿<b>航向</b>推进的，步长是一张照片的<b>长</b>，
+      所以航向重叠决定拍照间距。这两者对调是规划中最常见的错误，得到的结果内部自洽、却是错的。</p>
+    <h3>从间距到照片数</h3>
+    <p>把场地尺寸除以间距，并<b>向上取整</b>，因为飞机飞不了几分之一条航线：</p>
+    <p><code>航线数 = ⌈场地宽 ÷ 航线间距⌉</code><br>
+       <code>每航线照片数 = ⌈场地长 ÷ 拍照间距⌉</code><br>
+       <code>照片总数 = 航线数 × 每航线照片数</code></p>
+    <p>飞行距离等于每条航线的长度之和，加上航线之间的过渡宽度：
+      <code>距离 = 航线数 × 场地长 + 航线间距 × (航线数 − 1)</code>。除以地速即得时间。</p>
+    <h3>为什么还要加余量</h3>
+    <p>矩形模型会让最外半幅覆盖落在边界之外：第一条航线压在边界上，它的照片只向外多出半个覆盖，
+      向内则是第二排的事。实际作业因此要在每边外扩一条航线、并把第一张照片提前到边界之前。
+      工程上的做法是航线数加一条、长度加半个覆盖；边界处的实际重叠度，才决定正射影像能否在边界干净裁切。</p>
+  </section>
+
+  <section class="card">
+    <h2>重叠度怎么选</h2>
+    <p>重叠度不是一个「调高就安全」的质量旋钮——它按线性代价换成照片数和飞行时间，超过一定范围就不再买来精度。
+      下面这些区间是实践中站得住的。</p>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>地表</th><th>航向重叠</th><th>旁向重叠</th><th>理由</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>平坦硬地、纹理充分</td><td>70%</td><td>60%</td><td>匹配有足够特征可锁定，多给帧就是浪费电池</td></tr>
+          <tr><td>一般地表、混合覆盖</td><td>75%</td><td>65%</td><td>测绘成果的稳妥默认值</td></tr>
+          <tr><td>草地、农作物、裸沙</td><td>80%</td><td>70%</td><td>特征随风移动，相隔较远的帧匹配很差</td></tr>
+          <tr><td>陡坡或高耸建筑物</td><td>80%</td><td>75%</td><td>地物顶部与底部的视差大，需多余帧覆盖遮挡</td></tr>
+          <tr><td>走廊、道路或管线</td><td>80%</td><td>—</td><td>每个方向只飞一条航线，冗余全靠航向重叠提供</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">超过约 85% 后收益迅速变平，而照片数陡增：从 80/70 提到 90/80 大致让任务量翻倍。
+      在植被场地，通常「飞低一点、用 80/70」比「飞高一点、用 90/80」更划算，因为 GSD 同时变好了。</p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>取默认参数：Phantom 4 RTK 在 120 m，场地 500 × 400 m，航向与旁向重叠各 70%，
+      地速 8 m/s。120 m 处单张覆盖 180 × 120 m（2.16 公顷），这一点由 GSD 计算器给出。</p>
+    <p>间距：旁向 <code>180 × (1 − 0.70) = 54 m</code>，即航线间距；
+      航向 <code>120 × (1 − 0.70) = 36 m</code>，即拍照间距。</p>
+    <p>数量：<code>航线数 = ⌈500 ÷ 54⌉ = 10</code>，<code>每航线照片 = ⌈400 ÷ 36⌉ = 12</code>，
+      故 <code>10 × 12 = 120 张</code>。</p>
+    <p>距离：<code>10 × 400 + 54 × 9 = 4 000 + 486 = 4 486 m</code>。以 8 m/s 计为
+      <b>561 秒</b>，约 9.3 分钟的直线飞行。转弯与爬升再加四分之一，整个任务约 12 分钟——
+      一块电池够用。</p>
+    <p>现在把 GSD 减半到 1.6 cm/px，航高降到 60 m。覆盖随之减半为 90 × 60 m，
+      间距变成 27 m 与 18 m，两个方向的数量都翻倍：
+      <code>⌈500 ÷ 27⌉ = 19</code> 条航线、每条 <code>⌈400 ÷ 18⌉ = 23</code> 张，
+      共 <b>437 张</b>，飞行时间约为原来的 3.6 倍。这就是分辨率翻倍的真正代价，
+      也正是成果指标必须在飞之前定下来、而不是飞完再说的原因。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <ul class="readon">
+      <li><a href="drone-gsd-calculator">无人机 GSD 计算器</a>
+        <small>本规划器所依据的覆盖范围，以及达到目标 GSD 所需的航高。</small></li>
+      <li><a href="map-scale-calculator">地图比例尺计算器</a>
+        <small>成果比例尺对分辨率提出了什么要求。</small></li>
+      <li><a href="how-to-read-utm-coordinates">如何读 UTM 坐标</a>
+        <small>航线与控制点所在的坐标格网。</small></li>
+      <li><a href="geoid-vs-ellipsoid">大地水准面与椭球面</a>
+        <small>为什么离地高度不等于飞机上报的高度。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="drone-gsd-calculator">无人机 GSD 计算器<small>覆盖范围与目标 GSD 所需航高</small></a>
+      <a href="stockpile-volume-calculator">料堆体积计算器<small>要量的那堆料</small></a>
+      <a href="cut-fill-calculator">土方计算器<small>由所测地表面算方量</small></a>
+      <a href="map-scale-calculator">地图比例尺计算器<small>比例尺与地面距离</small></a>
+      <a href="land-area-calculator">面积计算器<small>不是矩形的场地有多大</small></a>
+      <a href="unit-converter">单位换算器<small>米与英尺、km/h 与 mph</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>一公顷需要多少张照片？</summary>
+      <p>在航向 70%、旁向 70% 重叠下，Phantom 4 RTK 在 120 m 时单张覆盖 2.16 公顷，航线间距 54 m、拍照间距 36 m，纯按面积算一公顷约 5 张。实际场地会更多：间距要向上取整成整条航线与整张照片，而且场地边缘要在边界外多飞一条航线。</p>
+    </details>
+    <details>
+      <summary>重叠度应该用多少？</summary>
+      <p>普通平坦地表用航向 70–80%、旁向 60–70%。植被地表、陡坡，或地表纹理稀少的地方提到 80/70：因为视差会让同一点在不同照片上表观位置移动，匹配需要多余帧才能扛住。超过约 85% 后收益很小，而照片数陡增。</p>
+    </details>
+    <details>
+      <summary>规划器算不算转弯和加减速？</summary>
+      <p>直线距离是各航线长度之和，加上相邻航线之间的间距，后者已经包含了转弯所需的横向跨度。真实飞行还要加上进出每个转弯的加减速时间，以及爬升到航高与返航的时间。经验做法是：几十条航线的区块，在算得时间上加 15% 到 25%。</p>
+    </details>
+    <details>
+      <summary>为什么航线要沿短边方向排列？</summary>
+      <p>更少、更长的航线比更多、更短的航线效率高，因为每个转弯都要花时间，每条航线在两端还有损失。让航线沿场地的长轴方向排列，可以把转弯次数降到最低。有些规划器还会把区块稍微旋转，让航线顺着地形或道路的主导走向，从而减少尴尬的半截航线。</p>
+    </details>
+    <details>
+      <summary>GSD 怎样影响规划？</summary>
+      <p>GSD 定住航高，航高定住单张覆盖，覆盖定住航线间距。GSD 减半就是航高减半，间距不只是减半，按面积算其实是降到四分之一，于是照片数约涨四倍。分辨率翻倍，意味着飞行时长大约翻四倍，而不是翻一倍。</p>
+    </details>
+    <details>
+      <summary>电池怎么配？</summary>
+      <p>按说明书上的实用续航选，不要用宣传数字，并留 30% 余量应对风和返航。Phantom 4 RTK 可用的悬停时间约 25 分钟，Mavic 3E 约 35 分钟。若算得的飞行时间超过这个数的三分之二，就安排换电池、分成两个架次，而不是把飞机推到极限。</p>
+    </details>
+    <details>
+      <summary>这个航线规划器免费吗？</summary>
+      <p>免费，不用登录、不用注册、不限次数。全部计算都在你的浏览器里完成，场地边界与航线计划不会上传到任何地方。</p>
+    </details>
+  </section>
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var FT = 3.280839895013123;
+  var MI = 1609.344;
+
+  function el(id){ return document.getElementById(id); }
+
+  // Cameras: [sensorW mm, sensorH mm, focal mm, imageW px, imageH px]. True values, not
+  // 35 mm equivalents — the same table the GSD calculator uses, so a plan built here matches
+  // the footprint computed there.
+  var CAMS = {
+    "m3e":      [13.2, 8.8, 12.29, 5280, 3956],
+    "m3m":      [13.2, 8.8, 12.29, 5280, 3956],
+    "p4rtk":    [13.2, 8.8, 8.8, 5472, 3648],
+    "m300-p1":  [35.9, 24.0, 35.0, 8192, 5460],
+    "mavic2pro":[13.2, 8.8, 10.26, 5472, 3648],
+    "mini3":    [9.6, 7.2, 6.7, 4032, 3024]
+  };
+
+  function num(id){
+    var v = parseFloat(el(id).value);
+    return isNaN(v) ? NaN : v;
+  }
+  function metric(){ return el("fp-units").value === "m"; }
+  function show(v, d){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-9 || a >= 1e12)) return v.toExponential(4);
+    return d === undefined ? String(v) : v.toFixed(d);
+  }
+  function row(k, v, sub, cls){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small'+(cls?' class="'+cls+'"':'')+'>'+sub+'</small>' : '') + '</span></div>';
+  }
+  // A tidy number: drop zeros only after the decimal point, so a whole number keeps its digits.
+  function tidy(v, d){
+    var s = v.toFixed(d);
+    if (s.indexOf(".") < 0) return s;
+    return s.replace(/0+$/,"").replace(/\.$/,"");
+  }
+
+  function loadCamera(key){
+    var c = CAMS[key];
+    if (!c) return;
+    el("fp-sw").value = String(c[0]);
+    el("fp-sh").value = String(c[1]);
+    el("fp-f").value  = String(c[2]);
+    el("fp-w").value  = String(c[3]);
+    el("fp-h").value  = String(c[4]);
+  }
+
+  // Minutes -> "1 h 12 min" / "48 min" / "45 s"
+  function dur(minutes){
+    if (!isFinite(minutes) || minutes <= 0) return "—";
+    if (minutes < 1) return show(minutes * 60, 0) + " 秒";
+    var h = Math.floor(minutes / 60), m = minutes - h * 60;
+    if (h === 0) return show(m, 1) + " 分钟";
+    return h + " 小时 " + show(m, 0) + " 分";
+  }
+
+  function calc(){
+    var sw = num("fp-sw"), sh = num("fp-sh"), f = num("fp-f");
+    var W = num("fp-w"), H = num("fp-h");
+    var altIn = num("fp-alt"), lenIn = num("fp-len"), widIn = num("fp-wid");
+    var ovF = num("fp-fwd") / 100, ovS = num("fp-side") / 100;
+    var spd = num("fp-spd");
+
+    var badCam = !(sw > 0) || !(sh > 0) || !(f > 0) || !(W > 0) || !(H > 0);
+    var badGeo = !(altIn > 0) || !(lenIn > 0) || !(widIn > 0) || !(spd > 0);
+    // A 100% overlap means zero spacing: infinite photos. 95% is the practical ceiling, and it
+    // has to stay reachable — a corridor mission with 95% side overlap is a real request.
+    var badOv  = !(ovF >= 0) || !(ovS >= 0) || ovF >= 0.950001 || ovS >= 0.950001;
+    var bad = badCam || badGeo || badOv;
+
+    el("fp-sw").classList.toggle("bad", !(sw > 0));
+    el("fp-sh").classList.toggle("bad", !(sh > 0));
+    el("fp-f").classList.toggle("bad", !(f > 0));
+    el("fp-w").classList.toggle("bad", !(W > 0));
+    el("fp-h").classList.toggle("bad", !(H > 0));
+    el("fp-alt").classList.toggle("bad", !(altIn > 0));
+    el("fp-len").classList.toggle("bad", !(lenIn > 0));
+    el("fp-wid").classList.toggle("bad", !(widIn > 0));
+    el("fp-spd").classList.toggle("bad", !(spd > 0));
+    el("fp-fwd").classList.toggle("bad", !(ovF >= 0) || ovF >= 0.950001);
+    el("fp-side").classList.toggle("bad", !(ovS >= 0) || ovS >= 0.950001);
+
+    var err = el("fp-err"), res = el("fp-results");
+    err.classList.toggle("show", bad);
+    if (bad){ res.classList.remove("show"); return; }
+
+    // Everything internal is metres; the display converts.
+    var L = metric() ? 1 : FT;                 // metres -> display length unit
+    var altM  = metric() ? altIn : altIn / FT;
+    var lenM  = metric() ? lenIn : lenIn / FT;
+    var widM  = metric() ? widIn : widIn / FT;
+    var spdMS = metric() ? spd / 3.6 : spd * MI / 3600;
+
+    // Footprint of one photo in metres
+    var fpW = altM * sw / f;
+    var fpH = altM * sh / f;
+    // Side overlap steps across the photo WIDTH; forward overlap steps along the photo HEIGHT.
+    var sAcross = fpW * (1 - ovS);
+    var sAlong  = fpH * (1 - ovF);
+
+    var nLines = Math.ceil(widM / sAcross);
+    var nPer   = Math.ceil(lenM / sAlong);
+    var nPhotos = nLines * nPer;
+
+    // The aircraft flies each line in full, then steps sideways to the next.
+    var distM = nLines * lenM + sAcross * (nLines - 1);
+    var secs  = distM / spdMS;
+    var mins  = secs / 60;
+
+    // Consistency check: the covered area must be at least the site, and lines × spacing must
+    // reach across the site. Both are cheap arithmetic that catch a swapped overlap.
+    var coveredM2 = nPhotos * fpW * fpH;
+    var siteM2 = lenM * widM;
+    var okArith = coveredM2 >= siteM2 - 1e-6 && nLines * sAcross >= widM - 1e-6;
+    // GSD, so the plan can be read against the deliverable spec
+    var gsdMm = altM * 1000 * sw / (f * W);
+
+    var lunit = metric() ? "m" : "ft";
+    var sunit = metric() ? "km/h" : "mph";
+
+    el("fp-bk").textContent = "本次任务的照片数";
+    el("fp-bv").textContent = String(nPhotos);
+
+    var rows = "";
+    rows += row("航线数", String(nLines), "每条长 " + show(lenM * L, 0) + " " + lunit);
+    rows += row("每航线照片数", String(nPer), "相隔 " + show(sAlong * L, 1) + " " + lunit);
+    rows += row("航线间距", show(sAcross * L, 1) + " " + lunit, "来自 " + show(ovS * 100, 0) + "% 旁向重叠");
+    rows += row("拍照间距", show(sAlong * L, 1) + " " + lunit, "来自 " + show(ovF * 100, 0) + "% 航向重叠");
+    rows += row("单张覆盖", show(fpW * L, 1) + " × " + show(fpH * L, 1) + " " + lunit,
+      show(fpW * fpH / (metric() ? 10000 : 4046.8564224), 2) + " " + (metric() ? "ha" : "ac") + " 每张");
+    rows += row("该航高下的 GSD", show(gsdMm / (metric() ? 10 : 25.4), 4) + " " + (metric() ? "cm/px" : "in/px"),
+      show(gsdMm, 4) + " mm/px");
+    el("fp-rows").innerHTML = rows;
+
+    var tb = el("fp-out").querySelector("tbody");
+    el("fp-h1").textContent = "结果";
+    el("fp-h2").textContent = "数值";
+    var rowsHtml = "";
+    rowsHtml += "<tr><td>照片总数</td><td>" + nPhotos + "</td></tr>";
+    rowsHtml += "<tr><td>航线数</td><td>" + nLines + "</td></tr>";
+    rowsHtml += "<tr><td>每航线照片数</td><td>" + nPer + "</td></tr>";
+    rowsHtml += "<tr><td>航线间距</td><td>" + show(sAcross * L, 1) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>拍照间距</td><td>" + show(sAlong * L, 1) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>场地面积</td><td>" + show(siteM2 / (metric() ? 10000 : 4046.8564224), 2)
+      + " " + (metric() ? "ha" : "ac") + "</td></tr>";
+    rowsHtml += "<tr><td>全部照片覆盖的地面</td><td>"
+      + show(coveredM2 / (metric() ? 10000 : 4046.8564224), 2) + " " + (metric() ? "ha" : "ac") + "</td></tr>";
+    rowsHtml += "<tr><td>飞行距离</td><td>" + show(distM * L / (metric() ? 1000 : 5280), 2)
+      + " " + (metric() ? "km" : "mi") + "</td></tr>";
+    rowsHtml += "<tr><td>飞行时间（地速 " + show(spd, spd < 10 ? 1 : 0) + " " + sunit + "）</td><td>"
+      + dur(mins) + "</td></tr>";
+    rowsHtml += "<tr><td>每公顷照片数" + (metric() ? "" : "（每英亩）") + "</td><td>"
+      + show(nPhotos / (siteM2 / (metric() ? 10000 : 4046.8564224)), 1) + "</td></tr>";
+    tb.innerHTML = rowsHtml;
+
+    el("fp-arith").textContent = okArith
+      ? "一致性校核通过：航线间距合计 " + show(nLines * sAcross * L, 0) + " " + lunit + "，覆盖了 "
+        + show(widM * L, 0) + " " + lunit + " 的场地宽度；全部照片合计覆盖场地面积的 "
+        + show(coveredM2 / siteM2, 2) + " 倍。"
+      : "一致性校核未通过——间距不足以覆盖场地，请反馈。";
+    el("fp-arith").style.color = okArith ? "#0f9d58" : "#d9534f";
+
+    res.classList.add("show");
+  }
+
+  // ---- wiring --------------------------------------------------------------
+  el("fp-cam").addEventListener("change", function(){
+    if (this.value !== "custom") loadCamera(this.value);
+    calc();
+  });
+  // Editing a camera field by hand means the preset no longer describes the camera.
+  ["fp-sw","fp-sh","fp-f","fp-w","fp-h"].forEach(function(id){
+    el(id).addEventListener("input", function(){
+      if (el("fp-cam").value !== "custom"){
+        var c = CAMS[el("fp-cam").value];
+        var same = Math.abs(num("fp-sw") - c[0]) < 1e-9 && Math.abs(num("fp-sh") - c[1]) < 1e-9
+                && Math.abs(num("fp-f") - c[2]) < 1e-9 && Math.abs(num("fp-w") - c[3]) < 1e-9
+                && Math.abs(num("fp-h") - c[4]) < 1e-9;
+        if (!same) el("fp-cam").value = "custom";
+      }
+      calc();
+    });
+  });
+
+  el("fp-units").addEventListener("change", function(){
+    // Every length on screen converts; the speed converts between km/h and mph, which is not a
+    // simple length ratio, so it gets its own factor.
+    var toFeet = this.value === "ft";
+    var a = num("fp-alt"), l = num("fp-len"), w = num("fp-wid"), s = num("fp-spd");
+    if (!isNaN(a)) el("fp-alt").value = tidy(toFeet ? a * FT : a / FT, 2);
+    if (!isNaN(l)) el("fp-len").value = tidy(toFeet ? l * FT : l / FT, 2);
+    if (!isNaN(w)) el("fp-wid").value = tidy(toFeet ? w * FT : w / FT, 2);
+    if (!isNaN(s)) el("fp-spd").value = tidy(toFeet ? s / 1.609344 : s * 1.609344, 1);
+    el("fp-altu").textContent  = toFeet ? "(ft)" : "(m)";
+    el("fp-lenu").textContent  = toFeet ? "(ft)" : "(m)";
+    el("fp-widu").textContent  = toFeet ? "(ft)" : "(m)";
+    el("fp-spdu").textContent  = toFeet ? "(mph)" : "(km/h)";
+    calc();
+  });
+
+  ["fp-alt","fp-len","fp-wid","fp-fwd","fp-side","fp-spd"].forEach(function(id){
+    el(id).addEventListener("input", calc);
+  });
+
+  // ---- first paint ---------------------------------------------------------
+  // The default is the Phantom 4 RTK optics so the worked example matches the page.
+  el("fp-cam").value = "p4rtk";
+  loadCamera("p4rtk");
+  el("fp-alt").value = "120";
+  el("fp-len").value = "400";
+  el("fp-wid").value = "500";
+  el("fp-fwd").value = "70";
+  el("fp-side").value = "70";
+  el("fp-spd").value = "29";
+  calc();
+})();
+</script>
+</body>
+</html>

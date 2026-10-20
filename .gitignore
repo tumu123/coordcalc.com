@@ -12,3 +12,6 @@ desktop.ini
 # Local preview / tooling leftovers
 __pycache__/
 *.log
+
+# local screenshot artifacts
+_shots/

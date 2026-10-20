@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone GSD Calculator — Ground Sampling Distance from Height (Free)</title>
+<meta name="description" content="Free drone GSD calculator: ground sampling distance from sensor size, focal length and flight height, the ground footprint of one photo, and the height needed for a target GSD.">
+<link rel="canonical" href="https://coordcalc.com/drone-gsd-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/drone-gsd-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/drone-gsd-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/drone-gsd-calculator">
+<meta property="og:title" content="Drone GSD Calculator — Ground Sampling Distance from Height">
+<meta property="og:description" content="Ground sampling distance, photo footprint and the flight height needed for a target GSD, from sensor size, focal length and image pixels.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/drone-gsd-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Drone GSD Calculator",
+  "url": "https://coordcalc.com/drone-gsd-calculator",
+  "description": "Free drone GSD calculator: ground sampling distance from sensor size, focal length and flight height, the ground footprint of one photo, and the height needed for a target GSD.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Drone and aerial mapping",
+      "item": "https://coordcalc.com/#drone"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Drone GSD Calculator",
+      "item": "https://coordcalc.com/drone-gsd-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate drone GSD?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GSD = H times sensor width divided by focal length times image width, with height and sensor width in the same unit. In practice: convert the flight height to millimetres, multiply by the physical sensor width in millimetres, and divide by the focal length in millimetres times the image width in pixels."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What GSD do I need for a 1:500 map?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "About 2 cm per pixel. The usual planning rule is that the GSD should be around one tenth of the contour interval, so a 0.2 m interval calls for 2 cm; most specifications for 1:500 mapping ask for 1.5 to 2 cm. Fly lower if the site has hard edges you must resolve exactly."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does latitude or terrain height change the GSD?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The GSD depends on the height above the ground under the camera, not on the barometric or above-sea-level altitude the aircraft reports. At 1000 m elevation a planned 120 m AGL flight is still 120 m above the ground if the aircraft uses a terrain-following or radar height, but a fixed take-off-relative altitude on sloping ground gives a smaller GSD uphill and a larger one downhill."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does my measured GSD differ from the calculator?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Three usual reasons: the focal length quoted is the 35 mm equivalent rather than the true focal length, the sensor size is the marketing 1-inch or 4/3 class rather than the actual active area, or the lens is focused closer than infinity at the height flown, which changes the effective focal length slightly. Compare a measured distance in the orthomosaic with the same distance on the ground to calibrate once."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I use the full sensor or a cropped image size?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Use the pixel dimensions of the images you will actually fly with. If the camera crops the full sensor for a 16:9 video mode but the photos are 4:3, the photo dimensions are the ones that matter. If you process with a fixed crop, use the cropped dimensions and the matching portion of the sensor."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How many photos and how much flight time for a site?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The GSD gives the footprint of one photo; the overlap then gives the spacing between flight lines and between shots. Divide the site by that spacing and multiply. The flight planner next to this page does exactly that, including turn distance and battery time."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this drone GSD calculator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no flight or project data is uploaded."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:#0f9d58;font-weight:600;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  /* Wide tables have more columns than a phone has width: the wrapper needs an explicit
+     max-width and the table a max-content width, or the table's min-content width
+     propagates up and widens the document instead of scrolling. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  .tscroll > table{width:max-content;min-width:100%;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> › <a href="./#drone">Drone and aerial mapping</a> › Drone GSD Calculator
+  </nav>
+
+  <h1>Drone GSD Calculator</h1>
+
+  <p class="lead">
+    This drone GSD calculator works out the ground sampling distance — the size on the ground of one
+    image pixel — from the sensor, the lens and the height you fly. It also returns the ground footprint
+    of a single photo and, in the other direction, the height you need to hit a target GSD. Enter the
+    camera once and the height becomes the design variable. Free, in your browser, no login.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 240px;">
+        <label for="gs-cam">Camera</label>
+        <select id="gs-cam">
+          <option value="custom">Custom — set sensor and lens below</option>
+          <option value="m3e" selected>DJI Mavic 3 Enterprise (4/3, 24 mm)</option>
+          <option value="m3m">DJI Mavic 3 Multispectral (4/3, 24 mm)</option>
+          <option value="p4rtk">DJI Phantom 4 RTK (1", 8.8 mm)</option>
+          <option value="m300-p1">DJI Zenmuse P1 (full frame, 35 mm)</option>
+          <option value="mavic2pro">DJI Mavic 2 Pro (1", 10.26 mm)</option>
+          <option value="mini3">DJI Mini 3 Pro (1/1.3", 6.7 mm)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="gs-units">Unit system</label>
+        <select id="gs-units">
+          <option value="m">Metres (m, cm/px)</option>
+          <option value="ft">Feet (ft, in/px)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 200px;">
+        <label for="gs-solve">Solve for</label>
+        <select id="gs-solve">
+          <option value="gsd" selected>GSD at a given height</option>
+          <option value="height">Height for a target GSD</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:0 0 150px;">
+        <label for="gs-sw">Sensor width (mm)</label>
+        <input id="gs-sw" type="number" step="any" value="13.2" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 150px;">
+        <label for="gs-sh">Sensor height (mm)</label>
+        <input id="gs-sh" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 140px;">
+        <label for="gs-f">Focal length (mm)</label>
+        <input id="gs-f" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 140px;">
+        <label for="gs-w">Image width (px)</label>
+        <input id="gs-w" type="number" step="1" value="5472" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 140px;">
+        <label for="gs-h">Image height (px)</label>
+        <input id="gs-h" type="number" step="1" value="3648" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:1;min-width:200px;" id="gs-altwrap">
+        <label for="gs-alt">Flight height above ground <span id="gs-altu">(m)</span></label>
+        <input id="gs-alt" type="number" step="any" value="120" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:200px;display:none;" id="gs-tgtwrap">
+        <label for="gs-tgt">Target GSD <span id="gs-tgtu">(cm/px)</span></label>
+        <input id="gs-tgt" type="number" step="any" value="2" autocomplete="off">
+      </div>
+    </div>
+
+    <p class="hint" style="margin-top:14px;">
+      Sensor and focal length are the <b>true</b> values, not the 35 mm equivalent. Picking a camera sets
+      all five camera fields; edit any of them and the selection drops to Custom. If your camera crops
+      its sensor for the photo mode you fly, enter the cropped sensor width and the matching pixel count.
+    </p>
+
+    <p class="err" id="gs-err">Check the camera — sensor, focal length and image pixels must all be
+      positive, and the height or target GSD must be greater than zero.</p>
+
+    <div class="results" id="gs-results">
+      <div class="big">
+        <span class="bk" id="gs-bk">Ground sampling distance</span>
+        <span class="bv" id="gs-bv">—</span>
+      </div>
+      <div id="gs-rows"></div>
+      <h3 id="gs-fph">Ground coverage of one photo</h3>
+      <div class="tscroll">
+        <table class="lookup" id="gs-out">
+          <thead>
+            <tr><th id="gs-h1">At this height</th><th id="gs-h2">Value</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">The footprint must equal the image size in pixels multiplied by the GSD — the
+        calculator checks that identity and reports it below.</p>
+      <p class="hint" id="gs-arith" style="font-weight:600;"></p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>The single formula behind all of it</h3>
+    <p>
+      A pinhole camera projects the ground onto the sensor by simple proportion. One pixel subtends the
+      same angle as one sensor pixel, so the size of that angle on the ground grows linearly with the
+      distance to it:
+    </p>
+    <p><code>GSD = H × S_w ÷ (f × W)</code></p>
+    <p>
+      with <code>H</code> the height above ground, <code>S_w</code> the physical sensor width,
+      <code>f</code> the focal length and <code>W</code> the image width in pixels. Height and sensor
+      width must be in the same unit; because focal length and sensor width are both in millimetres and
+      cancel dimensionally, the safest habit is to convert the height to millimetres as well. The result
+      is millimetres per pixel — divide by 10 for the centimetres per pixel that everyone quotes.
+    </p>
+    <p>
+      The same proportion gives the ground footprint of one photo directly, without going through the
+      GSD: <code>footprint_width = H × S_w ÷ f</code> and <code>footprint_height = H × S_h ÷ f</code>.
+      The two routes must agree — footprint width divided by image width is exactly the GSD — and the
+      calculator tests that identity on every recalculation, because a factor of ten slipping into
+      either route is the most common way these numbers go wrong.
+    </p>
+    <h3>Solving for the height</h3>
+    <p>
+      Rearranged, <code>H = GSD × f × W ÷ S_w</code>. That is the form you actually use on a job: the
+      deliverable fixes the GSD, so the height is what you compute and then program into the flight
+      app. Because the relationship is linear, halving the GSD means halving the height — which is why
+      going from 3 cm/px to 1.5 cm/px doubles the number of flight lines and roughly quadruples the
+      photos.
+    </p>
+    <h3>What the GSD is used for</h3>
+    <p>
+      The GSD is the resolution limit of the whole product. A ground feature smaller than about two or
+      three pixels cannot be identified reliably no matter how the images are processed, so a 3 cm/px
+      survey will not produce a trustworthy 1:500 plan even though the orthomosaic looks sharp at screen
+      zoom. The usual planning rule is one tenth of the contour interval: 1 cm/px for 0.1 m contours,
+      2 cm/px for 0.2 m. Photogrammetric specifications commonly ask for 1.5–2 cm/px for 1:500 and
+      3–5 cm/px for 1:1000.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Which height to enter</h2>
+    <p>
+      The formula wants the height above the ground <b>directly under the camera</b>, and nothing else.
+      It is not the altitude above sea level and not the barometric altitude the app displays.
+    </p>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>Terrain</th><th>What to enter</th><th>Consequence if you do not</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Flat site</td><td>The height you programme; take-off and ground are the same</td><td>None — the simple case</td></tr>
+          <tr><td>Sloping site, fixed altitude</td><td>Height above the <b>highest</b> ground, to stay legal</td><td>GSD varies along the slope; the uphill part is coarser than you planned</td></tr>
+          <tr><td>Sloping site, terrain following</td><td>The constant AGL height the aircraft holds</td><td>None — the GSD is constant, which is the reason to fly this way</td></tr>
+          <tr><td>Site at 1500 m elevation</td><td>Height above ground, not the altitude reading</td><td>Entering the altitude gives a GSD several times too large</td></tr>
+          <tr><td>Tall structures in the block</td><td>Height above ground; note them separately</td><td>Their tops are much closer to the camera, so their GSD is finer and their parallax larger</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      On a slope, the GSD varies with the <i>range</i> to each point, not its elevation. A point 100 m
+      uphill at the same range as a point downhill has the same GSD; what changes is the incidence angle
+      at the surface, which stretches the apparent pixel along the slope. This is why steep terrain needs
+      more overlap, not a different GSD.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked example</h2>
+    <p>
+      The default is a 4/3 sensor 13.2 × 8.8 mm, a focal length of 8.8 mm, images of 5472 × 3648 px and a
+      height of 120 m. Every number below can be done on a calculator in under a minute.
+    </p>
+    <p>
+      Convert the height to millimetres: <code>120 m = 120 000 mm</code>. Then
+      <code>GSD = 120 000 × 13.2 ÷ (8.8 × 5472) = 1 584 000 ÷ 48 154</code>, which rounds to
+      <b>32.89 mm/px</b>, or <b>3.29 cm/px</b>.
+    </p>
+    <p>
+      The footprint follows from the same proportion:
+      <code>width = 120 000 × 13.2 ÷ 8.8 = 180 000 mm = 180 m</code> and
+      <code>height = 120 000 × 8.8 ÷ 8.8 = 120 000 mm = 120 m</code>. One photo covers
+      <b>180 × 120 m = 2.16 ha</b>. Check it the other way: 5472 px × 32.89 mm = 180 m, which agrees.
+    </p>
+    <p>
+      Now suppose the deliverable is a 1:500 plan and the specification asks for 2 cm/px. Solve for the
+      height: <code>H = 20 × 8.8 × 5472 ÷ 13.2 = 72 960 mm = 72.96 m</code>. Every metre of altitude
+      is about 0.27 mm of GSD with this camera, so the difference between 73 m and 120 m is the
+      difference between a plan you can plot at 1:500 and one you cannot.
+    </p>
+    <p>
+      Switch the unit system to feet and the same camera at 400 ft gives a footprint of
+      <b>600 × 400 ft</b> exactly — 121.92 m of height, 182.88 × 121.92 m — and a GSD of
+      <b>1.316 in/px</b>. The footprint is a round number in feet because 13.2 ÷ 8.8 × 400 is exactly
+      600; that is a property of this lens, not of the units.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="drone-flight-planner">Drone flight planner</a>
+        <small>Turn the footprint into flight lines, photo count and battery time.</small></li>
+      <li><a href="map-scale-calculator">Map scale calculator</a>
+        <small>What a printed scale really means for the detail you can show.</small></li>
+      <li><a href="how-to-read-utm-coordinates">How to read UTM coordinates</a>
+        <small>The grid your orthomosaic is usually delivered on.</small></li>
+      <li><a href="geoid-vs-ellipsoid">Geoid vs ellipsoid</a>
+        <small>Why a drone's GNSS height is not the level you need for the model.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="drone-flight-planner">drone flight planner<small>Overlap, flight lines, photo count</small></a>
+      <a href="map-scale-calculator">map scale calculator<small>Scale to ground distance</small></a>
+      <a href="cut-fill-calculator">cut and fill calculator<small>Volumes from the surface you mapped</small></a>
+      <a href="stockpile-volume-calculator">stockpile volume calculator<small>The pile you came to measure</small></a>
+      <a href="unit-converter">unit converter<small>Metres to feet, centimetres to inches</small></a>
+      <a href="utm-coordinate-converter">UTM coordinate converter<small>Ground control into grid</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do you calculate drone GSD?</summary>
+      <p>GSD = H times sensor width divided by focal length times image width, with the height and the sensor width in the same unit. In practice: convert the flight height to millimetres, multiply by the physical sensor width in millimetres, and divide by the focal length in millimetres times the image width in pixels. The answer is in millimetres per pixel.</p>
+    </details>
+    <details>
+      <summary>What GSD do I need for a 1:500 map?</summary>
+      <p>About 2 cm per pixel. The usual planning rule is that the GSD should be around one tenth of the contour interval, so a 0.2 m interval calls for 2 cm; most specifications for 1:500 mapping ask for 1.5 to 2 cm. Fly lower if the site has hard edges you must resolve exactly.</p>
+    </details>
+    <details>
+      <summary>Does latitude or terrain height change the GSD?</summary>
+      <p>The GSD depends on the height above the ground under the camera, not on the barometric or above-sea-level altitude the aircraft reports. At 1000 m elevation a planned 120 m AGL flight is still 120 m above the ground if the aircraft uses a terrain-following or radar height, but a fixed take-off-relative altitude on sloping ground gives a smaller GSD uphill and a larger one downhill.</p>
+    </details>
+    <details>
+      <summary>Why does my measured GSD differ from the calculator?</summary>
+      <p>Three usual reasons: the focal length quoted is the 35 mm equivalent rather than the true focal length, the sensor size is the marketing 1-inch or 4/3 class rather than the actual active area, or the lens is focused closer than infinity at the height flown, which changes the effective focal length slightly. Compare a measured distance in the orthomosaic with the same distance on the ground to calibrate once.</p>
+    </details>
+    <details>
+      <summary>Should I use the full sensor or a cropped image size?</summary>
+      <p>Use the pixel dimensions of the images you will actually fly with. If the camera crops the full sensor for a 16:9 video mode but the photos are 4:3, the photo dimensions are the ones that matter. If you process with a fixed crop, use the cropped dimensions and the matching portion of the sensor.</p>
+    </details>
+    <details>
+      <summary>How many photos and how much flight time for a site?</summary>
+      <p>The GSD gives the footprint of one photo; the overlap then gives the spacing between flight lines and between shots. Divide the site by that spacing and multiply. The flight planner next to this page does exactly that, including turn distance and battery time.</p>
+    </details>
+    <details>
+      <summary>Is this drone GSD calculator free?</summary>
+      <p>Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no flight or project data is uploaded.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing specification and the aircraft's flight manual before you fly.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var FT = 3.280839895013123;
+  var IN = 25.4;
+
+  function el(id){ return document.getElementById(id); }
+
+  // Cameras: [sensorW mm, sensorH mm, focal mm, imageW px, imageH px]. True values, not
+  // 35 mm equivalents. The 4/3 sensor in the Mavic 3 is 17.3 x 13.0 mm but the stills use a
+  // 13.2 x 8.8 crop, so that is what is listed — the number that matters is the area the
+  // photo actually covers, not the silicon's full area.
+  var CAMS = {
+    "m3e":      [13.2, 8.8, 12.29, 5280, 3956],
+    "m3m":      [13.2, 8.8, 12.29, 5280, 3956],
+    "p4rtk":    [13.2, 8.8, 8.8, 5472, 3648],
+    "m300-p1":  [35.9, 24.0, 35.0, 8192, 5460],
+    "mavic2pro":[13.2, 8.8, 10.26, 5472, 3648],
+    "mini3":    [9.6, 7.2, 6.7, 4032, 3024]
+  };
+
+  // The default camera is the Phantom 4 RTK optics — the numbers the spec template uses,
+  // so the worked example on this page can be reproduced by hand.
+  var CAM_ORDER = ["m3e","m3m","p4rtk","m300-p1","mavic2pro","mini3"];
+
+  function num(id){
+    var v = parseFloat(el(id).value);
+    return isNaN(v) ? NaN : v;
+  }
+  function metric(){ return el("gs-units").value === "m"; }
+  function show(v, d){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-9 || a >= 1e12)) return v.toExponential(4);
+    return d === undefined ? String(v) : v.toFixed(d);
+  }
+  function row(k, v, sub, cls){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small'+(cls?' class="'+cls+'"':'')+'>'+sub+'</small>' : '') + '</span></div>';
+  }
+  // A tidy number: strip trailing zeros but keep at least one decimal. Only zeros AFTER the
+  // decimal point may go — a whole number such as 4560 must stay 4560, not become 456.
+  function tidy(v, d){
+    var s = v.toFixed(d);
+    if (s.indexOf(".") < 0) return s;
+    s = s.replace(/0+$/,"").replace(/\.$/,"");
+    return s;
+  }
+
+  function loadCamera(key){
+    var c = CAMS[key];
+    if (!c) return;
+    el("gs-sw").value = String(c[0]);
+    el("gs-sh").value = String(c[1]);
+    el("gs-f").value  = String(c[2]);
+    el("gs-w").value  = String(c[3]);
+    el("gs-h").value  = String(c[4]);
+  }
+
+  function calc(){
+    var sw = num("gs-sw"), sh = num("gs-sh"), f = num("gs-f");
+    var W = num("gs-w"), H = num("gs-h");
+    var solveH = el("gs-solve").value === "height";
+
+    // validity
+    var badCam = !(sw > 0) || !(sh > 0) || !(f > 0) || !(W > 0) || !(H > 0);
+    var altRaw = solveH ? num("gs-tgt") : num("gs-alt");
+    var badAlt = !(altRaw > 0);
+    el("gs-sw").classList.toggle("bad", !(sw > 0));
+    el("gs-sh").classList.toggle("bad", !(sh > 0));
+    el("gs-f").classList.toggle("bad", !(f > 0));
+    el("gs-w").classList.toggle("bad", !(W > 0));
+    el("gs-h").classList.toggle("bad", !(H > 0));
+    el("gs-alt").classList.toggle("bad", !solveH && !(num("gs-alt") > 0));
+    el("gs-tgt").classList.toggle("bad", solveH && !(num("gs-tgt") > 0));
+    var err = el("gs-err"), res = el("gs-results");
+    err.classList.toggle("show", badCam || badAlt);
+    if (badCam || badAlt){ res.classList.remove("show"); return; }
+
+    // Everything internal is metres and millimetres; the display converts.
+    var unitIn = metric() ? 1 : 1 / FT;      // typed length unit -> metres
+    var Hm;                                   // height in metres
+    var gsdMm;                                // mm per pixel
+    if (solveH){
+      // target GSD is typed in cm/px (metric) or in/px (imperial)
+      var tMm = metric() ? altRaw * 10 : altRaw * IN;
+      gsdMm = tMm;
+      Hm = tMm * f * W / sw / 1000;           // mm -> m
+    } else {
+      Hm = altRaw * unitIn;
+      gsdMm = Hm * 1000 * sw / (f * W);
+    }
+
+    var fpW = Hm * 1000 * sw / f / 1000;      // m
+    var fpH = Hm * 1000 * sh / f / 1000;      // m
+    var fpArea = fpW * fpH;                   // m2
+
+    // The two routes must agree: footprint width / image width must equal the GSD.
+    var gsdFromFp = (fpW * 1000) / W;
+    var okArith = Math.abs(gsdFromFp - gsdMm) < 1e-9;
+
+    var L = metric() ? 1 : FT;                 // metres -> display length unit
+    var lunit = metric() ? "m" : "ft";
+    var gsdUnit = metric() ? "cm/px" : "in/px";
+    var gsdVal = metric() ? gsdMm / 10 : gsdMm / IN;
+
+    el("gs-bk").textContent = solveH ? "Height for the target GSD" : "Ground sampling distance";
+    el("gs-bv").textContent = solveH
+      ? tidy(Hm * L, 4) + " " + lunit
+      : show(gsdVal, 4) + " " + gsdUnit;
+
+    // Keep the hidden height box in step with the solved height. Otherwise a user who solves for
+    // the height and then switches back to solve-for-GSD lands on whatever stale number was in
+    // that box, and the results silently change under them.
+    if (solveH) el("gs-alt").value = tidy(Hm * L, 2);
+
+    var rows = "";
+    if (!solveH){
+      rows += row("Height above ground", show(Hm * L, 2) + " " + lunit, "the value the formula uses");
+    } else {
+      rows += row("Target GSD", show(gsdVal, 2) + " " + gsdUnit, "what the deliverable asks for");
+    }
+    rows += row("GSD in millimetres per pixel", show(gsdMm, 4) + " mm/px", "the unit the formula returns");
+    rows += row("GSD in other units", show(gsdMm / 10, 4) + " cm/px · " + show(gsdMm / IN, 4) + " in/px",
+      "same number, three ways");
+    rows += row("Ground coverage", show(fpW * L, 2) + " × " + show(fpH * L, 2) + " " + lunit,
+      show(fpArea / (metric() ? 10000 : 4046.8564224), 4) + " " + (metric() ? "ha" : "ac") + " per photo");
+    rows += row("Ground coverage in feet", show(fpW * FT, 1) + " × " + show(fpH * FT, 1) + " ft",
+      show(fpArea / 4046.8564224, 3) + " acres");
+    rows += row("Sensor aspect ratio", show(sw / sh, 4) + " : 1",
+      (Math.abs(sw / sh - W / H) < 1e-6 ? "matches the image — no crop" : "image is cropped relative to the sensor"),
+      Math.abs(sw / sh - W / H) < 1e-6 ? "ok" : "warn");
+    rows += row("Pixels across the footprint", show(W, 0) + " × " + show(H, 0) + " px",
+      "image dimensions, unchanged by height");
+    el("gs-rows").innerHTML = rows;
+
+    var tb = el("gs-out").querySelector("tbody");
+    el("gs-h1").textContent = solveH ? "At the solved height" : "At " + show(Hm * L, 1) + " " + lunit;
+    el("gs-h2").textContent = "Value";
+    var rowsHtml = "";
+    rowsHtml += "<tr><td>Ground sampling distance</td><td>" + show(gsdVal, 4) + " " + gsdUnit + "</td></tr>";
+    rowsHtml += "<tr><td>Footprint width</td><td>" + show(fpW * L, 2) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>Footprint height</td><td>" + show(fpH * L, 2) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>Footprint area</td><td>" + show(fpArea / (metric() ? 10000 : 4046.8564224), 4) + " " + (metric() ? "ha" : "ac") + "</td></tr>";
+    rowsHtml += "<tr><td>Height above ground</td><td>" + show(Hm * L, 2) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>Ground distance per 100 px</td><td>" + show(gsdMm * 100 / 1000 * L, 2) + " " + lunit + "</td></tr>";
+    tb.innerHTML = rowsHtml;
+
+    el("gs-arith").textContent = okArith
+      ? "Identity check passed: footprint width ÷ image width = " + show(gsdFromFp / (metric() ? 10 : IN), 4)
+        + " " + gsdUnit + ", which equals the GSD. Both routes to the number agree."
+      : "Identity check FAILED — the footprint and the GSD disagree, please report this.";
+    el("gs-arith").style.color = okArith ? "#0f9d58" : "#d9534f";
+
+    res.classList.add("show");
+  }
+
+  // ---- wiring --------------------------------------------------------------
+  el("gs-cam").addEventListener("change", function(){
+    if (this.value !== "custom") loadCamera(this.value);
+    calc();
+  });
+  // Editing a camera field by hand means the preset no longer describes the camera.
+  ["gs-sw","gs-sh","gs-f","gs-w","gs-h"].forEach(function(id){
+    el(id).addEventListener("input", function(){
+      if (el("gs-cam").value !== "custom" && !CAMS[el("gs-cam").value]) return;
+      if (el("gs-cam").value !== "custom"){
+        var c = CAMS[el("gs-cam").value];
+        var same = Math.abs(num("gs-sw") - c[0]) < 1e-9 && Math.abs(num("gs-sh") - c[1]) < 1e-9
+                && Math.abs(num("gs-f") - c[2]) < 1e-9 && Math.abs(num("gs-w") - c[3]) < 1e-9
+                && Math.abs(num("gs-h") - c[4]) < 1e-9;
+        if (!same) el("gs-cam").value = "custom";
+      }
+      calc();
+    });
+  });
+
+  el("gs-solve").addEventListener("change", function(){
+    var solveH = this.value === "height";
+    el("gs-altwrap").style.display = solveH ? "none" : "";
+    el("gs-tgtwrap").style.display = solveH ? "" : "none";
+    calc();
+  });
+
+  el("gs-units").addEventListener("change", function(){
+    // The height and the target GSD are both typed in the unit on screen, so both have to
+    // move together. Reading them first commits the numbers in the unit they were typed in.
+    var hRaw = num("gs-alt"), tRaw = num("gs-tgt");
+    var toFeet = this.value === "ft";
+    var solveH = el("gs-solve").value === "height";
+    // The target GSD converts in its own dimension (cm <-> in); the height converts as a length.
+    if (!isNaN(tRaw)) el("gs-tgt").value = tidy(toFeet ? tRaw / 2.54 : tRaw * 2.54, 4);
+    if (solveH){
+      // In solve-for-height mode the height box is a hidden input the user cannot see or type in,
+      // so it has to be rewritten to the solved value in the new unit. Otherwise switching units
+      // leaves a stale number behind that reappears the moment they switch back to solve-for-GSD.
+      var t = num("gs-tgt");
+      var f = num("gs-f"), W = num("gs-w"), sw = num("gs-sw");
+      if (t > 0 && f > 0 && W > 0 && sw > 0){
+        var hm = (toFeet ? t * IN : t * 10) * f * W / sw / 1000;   // mm -> m
+        el("gs-alt").value = tidy(hm * (toFeet ? FT : 1), 2);
+      }
+    } else if (!isNaN(hRaw)){
+      el("gs-alt").value = tidy(toFeet ? hRaw * FT : hRaw / FT, 2);
+    }
+    el("gs-altu").textContent = toFeet ? "(ft)" : "(m)";
+    el("gs-tgtu").textContent = toFeet ? "(in/px)" : "(cm/px)";
+    calc();
+  });
+
+  ["gs-alt","gs-tgt"].forEach(function(id){
+    el(id).addEventListener("input", calc);
+  });
+
+  // ---- first paint ---------------------------------------------------------
+  // The default is the Phantom 4 RTK optics so the worked example matches the page.
+  el("gs-cam").value = "p4rtk";
+  loadCamera("p4rtk");
+  el("gs-alt").value = "120";
+  el("gs-tgt").value = "2";
+  calc();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Drone Flight Planner — Flight Lines, Photo Count and Time (Free)</title>
+<meta name="description" content="Free drone flight planner: flight line spacing from overlap, photo count, total distance and flight time for a site of a given size and GSD.">
+<link rel="canonical" href="https://coordcalc.com/drone-flight-planner">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/drone-flight-planner">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/drone-flight-planner">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/drone-flight-planner">
+<meta property="og:title" content="Drone Flight Planner — Flight Lines, Photo Count and Time">
+<meta property="og:description" content="Overlap to line spacing, site size to photo count, and the flight time it takes — all from the camera and the height you fly.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/drone-flight-planner">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Drone Flight Planner",
+  "url": "https://coordcalc.com/drone-flight-planner",
+  "description": "Free drone flight planner: flight line spacing from overlap, photo count, total distance and flight time for a site of a given size and GSD.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Drone and aerial mapping",
+      "item": "https://coordcalc.com/#drone"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Drone Flight Planner",
+      "item": "https://coordcalc.com/drone-flight-planner"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How many photos do I need to map a hectare?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "At 70 percent forward and 70 percent side overlap with a Phantom 4 RTK at 120 m, one photo covers 2.16 ha and the spacing is 54 m between lines and 36 m between shots, so a hectare needs roughly 5 photos on a pure area basis. Real sites need more because the spacing is rounded up to whole lines and whole shots, and the edges of the block need a buffer line outside the boundary."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What overlap should I fly?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "70 to 80 percent forward and 60 to 70 percent side for ordinary flat terrain. Go to 80/70 on vegetated ground, steep slopes or where the surface has few texture features, because parallax moves the apparent position of a point between shots and the matching needs spare frames to survive it. Above about 85 percent you gain little and the photo count climbs steeply."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does the flight planner include turns and acceleration?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The straight-line distance is the sum of the line lengths plus the spacing between adjacent lines, which already accounts for the turn width. A real flight adds time for decelerating into each turn and accelerating out of it, plus the climb to altitude and the return to the home point. The rule of thumb is to add 15 to 25 percent to the computed flight time for a block of a few dozen lines."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do the lines run across the short side?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Fewer, longer lines are more efficient than many short ones, because each turn costs time and each line loses a little at the ends. Running the lines along the long axis of the site minimises the number of turns. Some planners also rotate the block slightly so that the lines follow the dominant grain of the terrain or a road, which reduces the number of awkward partial lines."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the GSD affect the plan?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The GSD fixes the height, the height fixes the footprint of one photo, and the footprint fixes the line spacing. Halving the GSD halves the height and therefore does not just halve the spacing but quarters it in area terms, so the photo count goes up about four times. Doubling the resolution is roughly a four times longer flight, not twice."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I size the battery for the mission?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Take the practical endurance from the aircraft's manual, not the marketing number, and keep 30 percent in reserve for wind and the return leg. A Phantom 4 RTK flies about 25 minutes of usable hover time; a Mavic 3 Enterprise about 35. If the flight time exceeds two thirds of that, plan a battery swap and a second mission rather than pushing one aircraft to the limit."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this drone flight planner free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no site boundary or flight plan is uploaded anywhere."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:#0f9d58;font-weight:600;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  /* Wide tables have more columns than a phone has width: the wrapper needs an explicit
+     max-width and the table a max-content width, or the table's min-content width
+     propagates up and widens the document instead of scrolling. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  .tscroll > table{width:max-content;min-width:100%;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> › <a href="./#drone">Drone and aerial mapping</a> › Drone Flight Planner
+  </nav>
+
+  <h1>Drone Flight Planner</h1>
+
+  <p class="lead">
+    This drone flight planner turns the footprint of one photo into a mission: the spacing between
+    flight lines and between shots for a chosen overlap, the number of lines and photos for a site of a
+    given size, the distance flown and the time it takes. Set the camera and the height once, then read
+    off what the job actually costs in battery. Free, in your browser, no login.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 240px;">
+        <label for="fp-cam">Camera</label>
+        <select id="fp-cam">
+          <option value="custom">Custom — set sensor and lens below</option>
+          <option value="m3e">DJI Mavic 3 Enterprise (4/3, 24 mm)</option>
+          <option value="m3m">DJI Mavic 3 Multispectral (4/3, 24 mm)</option>
+          <option value="p4rtk" selected>DJI Phantom 4 RTK (1", 8.8 mm)</option>
+          <option value="m300-p1">DJI Zenmuse P1 (full frame, 35 mm)</option>
+          <option value="mavic2pro">DJI Mavic 2 Pro (1", 10.26 mm)</option>
+          <option value="mini3">DJI Mini 3 Pro (1/1.3", 6.7 mm)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="fp-units">Unit system</label>
+        <select id="fp-units">
+          <option value="m">Metric (m, km/h)</option>
+          <option value="ft">Imperial (ft, mph)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:0 0 126px;">
+        <label for="fp-sw">Sensor width (mm)</label>
+        <input id="fp-sw" type="number" step="any" value="13.2" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 126px;">
+        <label for="fp-sh">Sensor height (mm)</label>
+        <input id="fp-sh" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 130px;">
+        <label for="fp-f">Focal length (mm)</label>
+        <input id="fp-f" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 130px;">
+        <label for="fp-w">Image width (px)</label>
+        <input id="fp-w" type="number" step="1" value="5472" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 130px;">
+        <label for="fp-h">Image height (px)</label>
+        <input id="fp-h" type="number" step="1" value="3648" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:1;min-width:150px;">
+        <label for="fp-alt">Flight height AGL <span id="fp-altu">(m)</span></label>
+        <input id="fp-alt" type="number" step="any" value="120" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:150px;">
+        <label for="fp-len">Site length along the lines <span id="fp-lenu">(m)</span></label>
+        <input id="fp-len" type="number" step="any" value="400" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:150px;">
+        <label for="fp-wid">Site width across the lines <span id="fp-widu">(m)</span></label>
+        <input id="fp-wid" type="number" step="any" value="500" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:14px;">
+      <div class="field" style="flex:1;min-width:140px;">
+        <label for="fp-fwd">Forward overlap (%)</label>
+        <input id="fp-fwd" type="number" step="1" min="0" max="95" value="70" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:140px;">
+        <label for="fp-side">Side overlap (%)</label>
+        <input id="fp-side" type="number" step="1" min="0" max="95" value="70" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:140px;">
+        <label for="fp-spd">Ground speed <span id="fp-spdu">(km/h)</span></label>
+        <input id="fp-spd" type="number" step="any" value="29" autocomplete="off">
+      </div>
+    </div>
+
+    <p class="hint" style="margin-top:14px;">
+      Lines run along the <b>length</b> axis, so the planner wants the site measured along and across the
+      direction you intend to fly. Swap the two numbers if you would rather fly the other way. For a
+      non-rectangular site, take the bounding rectangle of the block — the planner is a rectangle model,
+      which over-estimates slightly on an irregular shape.
+    </p>
+
+    <p class="err" id="fp-err">Check the camera — sensor, focal length and image pixels must all be
+      positive, the site and the height must be greater than zero, and each overlap must be under 95%.</p>
+
+    <div class="results" id="fp-results">
+      <div class="big">
+        <span class="bk" id="fp-bk">Photos in the mission</span>
+        <span class="bv" id="fp-bv">—</span>
+      </div>
+      <div id="fp-rows"></div>
+      <h3 id="fp-fph">The mission in full</h3>
+      <div class="tscroll">
+        <table class="lookup" id="fp-out">
+          <thead>
+            <tr><th id="fp-h1">Item</th><th id="fp-h2">Value</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">The planner counts whole lines and whole shots — the spacing always rounds up,
+        because a partial line still has to be flown and a partial shot still has to be taken.</p>
+      <p class="hint" id="fp-arith" style="font-weight:600;"></p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>From the footprint to the spacing</h3>
+    <p>
+      The footprint of one photo comes from the camera and the height — the same proportion the
+      <a href="drone-gsd-calculator">GSD calculator</a> uses:
+      <code>footprint_width = H × S_w ÷ f</code> across and <code>footprint_height = H × S_h ÷ f</code> along.
+      The overlap then says how much of that footprint each successive photo or line may share:
+    </p>
+    <p><code>line spacing = footprint_width × (1 − side overlap)</code><br>
+       <code>shot spacing = footprint_height × (1 − forward overlap)</code></p>
+    <p>
+      Note which footprint each spacing uses. The lines step sideways across the <i>width</i> of a photo,
+      so the side overlap governs the spacing between lines; the shots step along the <i>height</i> of a
+      photo, so the forward overlap governs the spacing between shots. Mixing these two up is the single
+      most common planning error, and it produces a plan that is internally consistent but wrong.
+    </p>
+    <h3>From the spacing to the photo count</h3>
+    <p>
+      Divide the site by the spacing and round <b>up</b>, because the aircraft cannot fly a fraction of a
+      line:
+    </p>
+    <p><code>lines = ceil(site width ÷ line spacing)</code><br>
+       <code>shots per line = ceil(site length ÷ shot spacing)</code><br>
+       <code>photos = lines × shots per line</code></p>
+    <p>
+      The distance flown is the length of every line plus the width of every turn between them:
+      <code>distance = lines × site length + line spacing × (lines − 1)</code>. Dividing by the ground
+      speed gives the time.
+    </p>
+    <h3>Why the planner needs a buffer</h3>
+    <p>
+      The rectangle model leaves the outermost half-footprint of the block under-covered, because the
+      first line is on the edge and its photos extend only half a footprint outside — and not at all
+      inside the second row. Real missions therefore fly one extra line outside each edge and start the
+      first shot before the boundary. Add one line to the count and about half a footprint to the length
+      for a working number; the overlap you actually get at the edges is what decides whether the
+      orthomosaic can be cropped cleanly at the boundary.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Choosing the overlap</h2>
+    <p>
+      Overlap is not a quality dial you turn up for safety — it costs photos and flight time linearly, and
+      beyond a point it stops buying accuracy. These are the ranges that hold up in practice.
+    </p>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>Terrain</th><th>Forward</th><th>Side</th><th>Why</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Flat, hard surface, good texture</td><td>70%</td><td>60%</td><td>The matching has plenty of features to lock onto; more frames is wasted battery</td></tr>
+          <tr><td>Ordinary ground, mixed cover</td><td>75%</td><td>65%</td><td>A safe default for a survey deliverable</td></tr>
+          <tr><td>Grass, crops, bare sand</td><td>80%</td><td>70%</td><td>Features move with the wind and match poorly between distant frames</td></tr>
+          <tr><td>Steep slope or tall buildings</td><td>80%</td><td>75%</td><td>Parallax between the top and the base of a feature is large; the spare frames cover the occlusion</td></tr>
+          <tr><td>Corridor, road or pipeline</td><td>80%</td><td>—</td><td>Only one line each way, so all the redundancy has to come from the forward overlap</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">
+      Above about 85% the returns flatten and the photo count climbs steeply: going from 80/70 to 90/80
+      roughly doubles the mission. On a vegetated site it is usually cheaper to fly lower with 80/70 than
+      higher with 90/80, because the GSD improves as well.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked example</h2>
+    <p>
+      Take the defaults: a Phantom 4 RTK at 120 m, a 500 × 400 m block, 70% forward and 70% side overlap,
+      8 m/s ground speed. At 120 m one photo covers 180 × 120 m (2.16 ha), which the GSD calculator
+      confirms.
+    </p>
+    <p>
+      Spacing: across, <code>180 × (1 − 0.70) = 54 m</code> between lines; along,
+      <code>120 × (1 − 0.70) = 36 m</code> between shots.
+    </p>
+    <p>
+      Counts: <code>lines = ceil(500 ÷ 54) = 10</code>, <code>shots per line = ceil(400 ÷ 36) = 12</code>,
+      so <code>10 × 12 = 120 photos</code>.
+    </p>
+    <p>
+      Distance: <code>10 × 400 + 54 × 9 = 4 000 + 486 = 4 486 m</code>. At 8 m/s that is
+      <b>561 seconds</b>, or 9.3 minutes of straight-line flying. Add a quarter for the turns and the
+      climb and the mission is about 12 minutes — comfortable on one battery.
+    </p>
+    <p>
+      Now halve the GSD to 1.6 cm/px, which needs 60 m. The footprint halves to 90 × 60 m, so the spacing
+      halves to 27 m and 18 m and the counts double in each direction:
+      <code>ceil(500 ÷ 27) = 19</code> lines of <code>ceil(400 ÷ 18) = 23</code> shots, which is
+      <b>437 photos</b> and roughly 3.6 times the flight time. That is the real cost of doubling the
+      resolution, and it is why the deliverable specification matters before the flight, not after.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="drone-gsd-calculator">Drone GSD calculator</a>
+        <small>The footprint this planner starts from, and the height for a target GSD.</small></li>
+      <li><a href="map-scale-calculator">Map scale calculator</a>
+        <small>What the deliverable scale demands of the resolution.</small></li>
+      <li><a href="how-to-read-utm-coordinates">How to read UTM coordinates</a>
+        <small>The grid the flight plan and the control points live on.</small></li>
+      <li><a href="geoid-vs-ellipsoid">Geoid vs ellipsoid</a>
+        <small>Why the height above ground is not the height the aircraft reports.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="drone-gsd-calculator">drone GSD calculator<small>Footprint and height for a target GSD</small></a>
+      <a href="stockpile-volume-calculator">stockpile volume calculator<small>The pile you came to measure</small></a>
+      <a href="cut-fill-calculator">cut and fill calculator<small>Volumes from the mapped surface</small></a>
+      <a href="map-scale-calculator">map scale calculator<small>Scale to ground distance</small></a>
+      <a href="land-area-calculator">land area calculator<small>Size for a site that is not a rectangle</small></a>
+      <a href="unit-converter">unit converter<small>Metres to feet, km/h to mph</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How many photos do I need to map a hectare?</summary>
+      <p>At 70 percent forward and 70 percent side overlap with a Phantom 4 RTK at 120 m, one photo covers 2.16 ha and the spacing is 54 m between lines and 36 m between shots, so a hectare needs roughly 5 photos on a pure area basis. Real sites need more because the spacing is rounded up to whole lines and whole shots, and the edges of the block need a buffer line outside the boundary.</p>
+    </details>
+    <details>
+      <summary>What overlap should I fly?</summary>
+      <p>70 to 80 percent forward and 60 to 70 percent side for ordinary flat terrain. Go to 80/70 on vegetated ground, steep slopes or where the surface has few texture features, because parallax moves the apparent position of a point between shots and the matching needs spare frames to survive it. Above about 85 percent you gain little and the photo count climbs steeply.</p>
+    </details>
+    <details>
+      <summary>Does the flight planner include turns and acceleration?</summary>
+      <p>The straight-line distance is the sum of the line lengths plus the spacing between adjacent lines, which already accounts for the turn width. A real flight adds time for decelerating into each turn and accelerating out of it, plus the climb to altitude and the return to the home point. The rule of thumb is to add 15 to 25 percent to the computed flight time for a block of a few dozen lines.</p>
+    </details>
+    <details>
+      <summary>Why do the lines run across the short side?</summary>
+      <p>Fewer, longer lines are more efficient than many short ones, because each turn costs time and each line loses a little at the ends. Running the lines along the long axis of the site minimises the number of turns. Some planners also rotate the block slightly so that the lines follow the dominant grain of the terrain or a road, which reduces the number of awkward partial lines.</p>
+    </details>
+    <details>
+      <summary>How does the GSD affect the plan?</summary>
+      <p>The GSD fixes the height, the height fixes the footprint of one photo, and the footprint fixes the line spacing. Halving the GSD halves the height and therefore does not just halve the spacing but quarters it in area terms, so the photo count goes up about four times. Doubling the resolution is roughly a four times longer flight, not twice.</p>
+    </details>
+    <details>
+      <summary>How do I size the battery for the mission?</summary>
+      <p>Take the practical endurance from the aircraft's manual, not the marketing number, and keep 30 percent in reserve for wind and the return leg. A Phantom 4 RTK flies about 25 minutes of usable hover time; a Mavic 3 Enterprise about 35. If the flight time exceeds two thirds of that, plan a battery swap and a second mission rather than pushing one aircraft to the limit.</p>
+    </details>
+    <details>
+      <summary>Is this drone flight planner free?</summary>
+      <p>Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no site boundary or flight plan is uploaded anywhere.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing specification and the aircraft's flight manual before you fly.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var FT = 3.280839895013123;
+  var MI = 1609.344;
+
+  function el(id){ return document.getElementById(id); }
+
+  // Cameras: [sensorW mm, sensorH mm, focal mm, imageW px, imageH px]. True values, not
+  // 35 mm equivalents — the same table the GSD calculator uses, so a plan built here matches
+  // the footprint computed there.
+  var CAMS = {
+    "m3e":      [13.2, 8.8, 12.29, 5280, 3956],
+    "m3m":      [13.2, 8.8, 12.29, 5280, 3956],
+    "p4rtk":    [13.2, 8.8, 8.8, 5472, 3648],
+    "m300-p1":  [35.9, 24.0, 35.0, 8192, 5460],
+    "mavic2pro":[13.2, 8.8, 10.26, 5472, 3648],
+    "mini3":    [9.6, 7.2, 6.7, 4032, 3024]
+  };
+
+  function num(id){
+    var v = parseFloat(el(id).value);
+    return isNaN(v) ? NaN : v;
+  }
+  function metric(){ return el("fp-units").value === "m"; }
+  function show(v, d){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-9 || a >= 1e12)) return v.toExponential(4);
+    return d === undefined ? String(v) : v.toFixed(d);
+  }
+  function row(k, v, sub, cls){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small'+(cls?' class="'+cls+'"':'')+'>'+sub+'</small>' : '') + '</span></div>';
+  }
+  // A tidy number: drop zeros only after the decimal point, so a whole number keeps its digits.
+  function tidy(v, d){
+    var s = v.toFixed(d);
+    if (s.indexOf(".") < 0) return s;
+    return s.replace(/0+$/,"").replace(/\.$/,"");
+  }
+
+  function loadCamera(key){
+    var c = CAMS[key];
+    if (!c) return;
+    el("fp-sw").value = String(c[0]);
+    el("fp-sh").value = String(c[1]);
+    el("fp-f").value  = String(c[2]);
+    el("fp-w").value  = String(c[3]);
+    el("fp-h").value  = String(c[4]);
+  }
+
+  // Minutes -> "1 h 12 min" / "48 min" / "45 s"
+  function dur(minutes){
+    if (!isFinite(minutes) || minutes <= 0) return "—";
+    if (minutes < 1) return show(minutes * 60, 0) + " s";
+    var h = Math.floor(minutes / 60), m = minutes - h * 60;
+    if (h === 0) return show(m, 1) + " min";
+    return h + " h " + show(m, 0) + " min";
+  }
+
+  function calc(){
+    var sw = num("fp-sw"), sh = num("fp-sh"), f = num("fp-f");
+    var W = num("fp-w"), H = num("fp-h");
+    var altIn = num("fp-alt"), lenIn = num("fp-len"), widIn = num("fp-wid");
+    var ovF = num("fp-fwd") / 100, ovS = num("fp-side") / 100;
+    var spd = num("fp-spd");
+
+    var badCam = !(sw > 0) || !(sh > 0) || !(f > 0) || !(W > 0) || !(H > 0);
+    var badGeo = !(altIn > 0) || !(lenIn > 0) || !(widIn > 0) || !(spd > 0);
+    // A 100% overlap means zero spacing: infinite photos. 95% is the practical ceiling, and it
+    // has to stay reachable — a corridor mission with 95% side overlap is a real request.
+    var badOv  = !(ovF >= 0) || !(ovS >= 0) || ovF >= 0.950001 || ovS >= 0.950001;
+    var bad = badCam || badGeo || badOv;
+
+    el("fp-sw").classList.toggle("bad", !(sw > 0));
+    el("fp-sh").classList.toggle("bad", !(sh > 0));
+    el("fp-f").classList.toggle("bad", !(f > 0));
+    el("fp-w").classList.toggle("bad", !(W > 0));
+    el("fp-h").classList.toggle("bad", !(H > 0));
+    el("fp-alt").classList.toggle("bad", !(altIn > 0));
+    el("fp-len").classList.toggle("bad", !(lenIn > 0));
+    el("fp-wid").classList.toggle("bad", !(widIn > 0));
+    el("fp-spd").classList.toggle("bad", !(spd > 0));
+    el("fp-fwd").classList.toggle("bad", !(ovF >= 0) || ovF >= 0.950001);
+    el("fp-side").classList.toggle("bad", !(ovS >= 0) || ovS >= 0.950001);
+
+    var err = el("fp-err"), res = el("fp-results");
+    err.classList.toggle("show", bad);
+    if (bad){ res.classList.remove("show"); return; }
+
+    // Everything internal is metres; the display converts.
+    var L = metric() ? 1 : FT;                 // metres -> display length unit
+    var altM  = metric() ? altIn : altIn / FT;
+    var lenM  = metric() ? lenIn : lenIn / FT;
+    var widM  = metric() ? widIn : widIn / FT;
+    var spdMS = metric() ? spd / 3.6 : spd * MI / 3600;
+
+    // Footprint of one photo in metres
+    var fpW = altM * sw / f;
+    var fpH = altM * sh / f;
+    // Side overlap steps across the photo WIDTH; forward overlap steps along the photo HEIGHT.
+    var sAcross = fpW * (1 - ovS);
+    var sAlong  = fpH * (1 - ovF);
+
+    var nLines = Math.ceil(widM / sAcross);
+    var nPer   = Math.ceil(lenM / sAlong);
+    var nPhotos = nLines * nPer;
+
+    // The aircraft flies each line in full, then steps sideways to the next.
+    var distM = nLines * lenM + sAcross * (nLines - 1);
+    var secs  = distM / spdMS;
+    var mins  = secs / 60;
+
+    // Consistency check: the covered area must be at least the site, and lines × spacing must
+    // reach across the site. Both are cheap arithmetic that catch a swapped overlap.
+    var coveredM2 = nPhotos * fpW * fpH;
+    var siteM2 = lenM * widM;
+    var okArith = coveredM2 >= siteM2 - 1e-6 && nLines * sAcross >= widM - 1e-6;
+    // GSD, so the plan can be read against the deliverable spec
+    var gsdMm = altM * 1000 * sw / (f * W);
+
+    var lunit = metric() ? "m" : "ft";
+    var sunit = metric() ? "km/h" : "mph";
+
+    el("fp-bk").textContent = "Photos in the mission";
+    el("fp-bv").textContent = String(nPhotos);
+
+    var rows = "";
+    rows += row("Flight lines", String(nLines), "each one " + show(lenM * L, 0) + " " + lunit + " long");
+    rows += row("Photos per line", String(nPer), show(sAlong * L, 1) + " " + lunit + " between shots");
+    rows += row("Line spacing", show(sAcross * L, 1) + " " + lunit, "from " + show(ovS * 100, 0) + "% side overlap");
+    rows += row("Shot spacing", show(sAlong * L, 1) + " " + lunit, "from " + show(ovF * 100, 0) + "% forward overlap");
+    rows += row("Photo footprint", show(fpW * L, 1) + " × " + show(fpH * L, 1) + " " + lunit,
+      show(fpW * fpH / (metric() ? 10000 : 4046.8564224), 2) + " " + (metric() ? "ha" : "ac") + " per photo");
+    rows += row("GSD at this height", show(gsdMm / (metric() ? 10 : 25.4), 4) + " " + (metric() ? "cm/px" : "in/px"),
+      show(gsdMm, 4) + " mm/px");
+    el("fp-rows").innerHTML = rows;
+
+    var tb = el("fp-out").querySelector("tbody");
+    el("fp-h1").textContent = "Result";
+    el("fp-h2").textContent = "Value";
+    var rowsHtml = "";
+    rowsHtml += "<tr><td>Photos</td><td>" + nPhotos + "</td></tr>";
+    rowsHtml += "<tr><td>Flight lines</td><td>" + nLines + "</td></tr>";
+    rowsHtml += "<tr><td>Photos per line</td><td>" + nPer + "</td></tr>";
+    rowsHtml += "<tr><td>Line spacing</td><td>" + show(sAcross * L, 1) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>Shot spacing</td><td>" + show(sAlong * L, 1) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>Site area</td><td>" + show(siteM2 / (metric() ? 10000 : 4046.8564224), 2)
+      + " " + (metric() ? "ha" : "ac") + "</td></tr>";
+    rowsHtml += "<tr><td>Ground covered by all frames</td><td>"
+      + show(coveredM2 / (metric() ? 10000 : 4046.8564224), 2) + " " + (metric() ? "ha" : "ac") + "</td></tr>";
+    rowsHtml += "<tr><td>Distance flown</td><td>" + show(distM * L / (metric() ? 1000 : 5280), 2)
+      + " " + (metric() ? "km" : "mi") + "</td></tr>";
+    rowsHtml += "<tr><td>Flight time at " + show(spd, spd < 10 ? 1 : 0) + " " + sunit + "</td><td>"
+      + dur(mins) + "</td></tr>";
+    rowsHtml += "<tr><td>Photos per hectare" + (metric() ? "" : " (per acre)") + "</td><td>"
+      + show(nPhotos / (siteM2 / (metric() ? 10000 : 4046.8564224)), 1) + "</td></tr>";
+    tb.innerHTML = rowsHtml;
+
+    el("fp-arith").textContent = okArith
+      ? "Consistency check passed: " + show(nLines * sAcross * L, 0) + " " + lunit + " of line spacing covers the "
+        + show(widM * L, 0) + " " + lunit + " site width, and the frames together cover "
+        + show(coveredM2 / siteM2, 2) + "× the site area."
+      : "Consistency check FAILED — the spacing does not cover the site, please report this.";
+    el("fp-arith").style.color = okArith ? "#0f9d58" : "#d9534f";
+
+    res.classList.add("show");
+  }
+
+  // ---- wiring --------------------------------------------------------------
+  el("fp-cam").addEventListener("change", function(){
+    if (this.value !== "custom") loadCamera(this.value);
+    calc();
+  });
+  // Editing a camera field by hand means the preset no longer describes the camera.
+  ["fp-sw","fp-sh","fp-f","fp-w","fp-h"].forEach(function(id){
+    el(id).addEventListener("input", function(){
+      if (el("fp-cam").value !== "custom"){
+        var c = CAMS[el("fp-cam").value];
+        var same = Math.abs(num("fp-sw") - c[0]) < 1e-9 && Math.abs(num("fp-sh") - c[1]) < 1e-9
+                && Math.abs(num("fp-f") - c[2]) < 1e-9 && Math.abs(num("fp-w") - c[3]) < 1e-9
+                && Math.abs(num("fp-h") - c[4]) < 1e-9;
+        if (!same) el("fp-cam").value = "custom";
+      }
+      calc();
+    });
+  });
+
+  el("fp-units").addEventListener("change", function(){
+    // Every length on screen converts; the speed converts between km/h and mph, which is not a
+    // simple length ratio, so it gets its own factor.
+    var toFeet = this.value === "ft";
+    var a = num("fp-alt"), l = num("fp-len"), w = num("fp-wid"), s = num("fp-spd");
+    if (!isNaN(a)) el("fp-alt").value = tidy(toFeet ? a * FT : a / FT, 2);
+    if (!isNaN(l)) el("fp-len").value = tidy(toFeet ? l * FT : l / FT, 2);
+    if (!isNaN(w)) el("fp-wid").value = tidy(toFeet ? w * FT : w / FT, 2);
+    if (!isNaN(s)) el("fp-spd").value = tidy(toFeet ? s / 1.609344 : s * 1.609344, 1);
+    el("fp-altu").textContent  = toFeet ? "(ft)" : "(m)";
+    el("fp-lenu").textContent  = toFeet ? "(ft)" : "(m)";
+    el("fp-widu").textContent  = toFeet ? "(ft)" : "(m)";
+    el("fp-spdu").textContent  = toFeet ? "(mph)" : "(km/h)";
+    calc();
+  });
+
+  ["fp-alt","fp-len","fp-wid","fp-fwd","fp-side","fp-spd"].forEach(function(id){
+    el(id).addEventListener("input", calc);
+  });
+
+  // ---- first paint ---------------------------------------------------------
+  // The default is the Phantom 4 RTK optics so the worked example matches the page.
+  el("fp-cam").value = "p4rtk";
+  loadCamera("p4rtk");
+  el("fp-alt").value = "120";
+  el("fp-len").value = "400";
+  el("fp-wid").value = "500";
+  el("fp-fwd").value = "70";
+  el("fp-side").value = "70";
+  el("fp-spd").value = "29";
+  calc();
+})();
+</script>
+</body>
+</html>

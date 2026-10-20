@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无人机 GSD 怎么算 — 公式、单张覆盖范围与常见错误</title>
+<meta name="description" content="GSD 等于航高乘传感器宽度除以焦距乘像幅宽度。本文给出公式与米制/英尺两套算例，说明覆盖范围怎么算、需要某个 GSD 时航高怎么反解，以及让公式算错的三个常见错误：35mm 等效焦距、离地高度与高程基准、把出厂指标当成实测值。">
+<link rel="canonical" href="https://coordcalc.com/zh/how-to-calculate-drone-gsd">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-drone-gsd">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-drone-gsd">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-drone-gsd">
+<meta property="og:title" content="无人机 GSD 怎么算 — 公式与覆盖范围">
+<meta property="og:description" content="针孔几何、米制与英尺算例，以及为什么规格书上的数字通常和实际飞行对不上。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/how-to-calculate-drone-gsd">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "无人机 GSD 与单张覆盖范围怎么算",
+  "description": "无人机 GSD 怎么算 — 公式、单张覆盖范围与常见错误",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-20",
+  "dateModified": "2026-10-20",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-calculate-drone-gsd"},
+  "articleSection": "无人机航测"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../how-to-calculate-drone-gsd" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="guides">教程</a> › 无人机 GSD 怎么算
+  </nav>
+
+<h1>无人机 GSD 与单张覆盖范围怎么算</h1>
+
+  <p class="lead">
+    GSD——地面采样距离——就是你照片里一个像素对应的地面尺寸。这个数字决定了
+    一次无人机测绘能不能分辨出一道围栏还是只能看出地块边界，而它在飞行之前就已确定，
+    飞完再改已经来不及。好消息是它只取决于你本来就了解的四个相机参数，算术只有一次乘法；
+    坏消息是三个彼此独立的错误——而且都很常见——会让一个正确的公式悄悄给出错误答案。
+  </p>
+
+  <p class="meta">
+    <span>无人机航测</span><span>更新于 2026年10月20日</span><span>地面采样距离</span>
+  </p>
+
+  <h2>公式</h2>
+  <div class="formula">GSD =（航高 × 传感器宽度）÷（焦距 × 像幅宽度）</div>
+  <p>
+    相除之前，所有长度必须换算成同一单位，结果就是「每个像素对应的地面长度」，
+    单位与输入相同。实际工作里你想要的是毫米/像素或厘米/像素，所以常用的实用形式是：
+    航高用米、传感器宽度用毫米、焦距用毫米，最后再换算：
+  </p>
+  <div class="formula">GSD（mm/px）=（航高_m × 1000 × 传感器宽_mm）÷（焦距_mm × 像幅宽_px）</div>
+  <p>
+    把像幅宽度从分母里去掉，同一个式子给出的就是单张覆盖范围——一帧画面覆盖多大一片地面：
+  </p>
+  <div class="formula">横向覆盖 = 航高 × 传感器宽度 ÷ 焦距<br>纵向覆盖 = 航高 × 传感器高度 ÷ 焦距</div>
+  <p>
+    整个模型就这些。GSD 也等于「横向覆盖 ÷ 像幅宽度」，这个恒等式值得记住：
+    <code>GSD = 覆盖范围 ÷ 像素数</code>。如果两条路径算出的结果不一致，说明四个输入里有一个是错的。
+  </p>
+
+  <h2>算例：2000 万像素相机、120 m 航高</h2>
+  <p>
+    以大疆 Mavic 3 Enterprise 的相机为例：4/3 英寸传感器宽 13.2&nbsp;mm、高 8.8&nbsp;mm，
+    焦距 12.29&nbsp;mm，像幅 5280 × 3956 像素。在离地 120&nbsp;m 处飞行：
+  </p>
+  <p>
+    <code>横向覆盖 = 120 × 13.2 ÷ 12.29 = 128.9 m</code>，
+    <code>纵向覆盖 = 120 × 8.8 ÷ 12.29 = 85.9 m</code>，
+    所以一帧覆盖 128.9 × 85.9&nbsp;m，约 1.11 公顷。
+  </p>
+  <p>
+    <code>GSD = 128.9 m ÷ 5280 px = 0.0244 m/px</code>，即 2.44&nbsp;cm/px。换个方向验一遍：
+    <code>120 × 1000 × 13.2 ÷（12.29 × 5280）= 1&nbsp;584&nbsp;000 ÷ 64&nbsp;891 = 24.41 mm/px</code>。
+    结果相同，这正是那个恒等式的用处。
+  </p>
+  <p>
+    把航高减半到 60&nbsp;m，所有结果同步减半：覆盖 64.4 × 43.0&nbsp;m，GSD 1.22&nbsp;cm/px。
+    可见 GSD 与离地高度严格成正比，与其他任何一项都无关。航高翻倍，GSD 翻倍，
+    而覆盖同一块地所需的照片数变成四倍——这也正是为什么要求更精细的 GSD，
+    飞行时间的增长是平方关系而不是线性关系。
+  </p>
+
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>离地航高</th><th>GSD</th><th>单张覆盖</th><th>每 100 像素对应地面</th><th>典型用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>30 m</td><td>0.61 cm/px</td><td>32.2 × 21.5 m</td><td>0.61 m</td><td>巡检、裂缝与缺陷测绘</td></tr>
+        <tr><td>60 m</td><td>1.22 cm/px</td><td>64.4 × 43.0 m</td><td>1.22 m</td><td>细部测量、地籍界线</td></tr>
+        <tr><td>90 m</td><td>1.83 cm/px</td><td>96.7 × 64.4 m</td><td>1.83 m</td><td>1:500 地形测量</td></tr>
+        <tr><td>120 m</td><td>2.44 cm/px</td><td>128.9 × 85.9 m</td><td>2.44 m</td><td>常规成图、1:1000 细部</td></tr>
+        <tr><td>180 m</td><td>3.66 cm/px</td><td>193.3 × 128.9 m</td><td>3.66 m</td><td>大面积正射影像、1:2000</td></tr>
+        <tr><td>300 m</td><td>6.10 cm/px</td><td>322.2 × 214.8 m</td><td>6.10 m</td><td>踏勘、植被与方量估算</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>反解：要得到指定 GSD，该飞多高</h2>
+  <div class="formula">航高 =（GSD × 焦距 × 像幅宽度）÷ 传感器宽度</div>
+  <p>
+    如果技术要求是 1.5&nbsp;cm/px，仍用同一台相机：
+    <code>（15 mm × 12.29 × 5280）÷ 13.2 = 973&nbsp;560 ÷ 13.2 = 73&nbsp;755 mm</code>，
+    即离地 73.7&nbsp;m。注意单位：GSD、焦距和传感器宽度全部用毫米，
+    结果在最后除以 1000 之前也是毫米。在这里把毫米和米混用，
+    是整个计算里最常见的算术错误。
+  </p>
+
+  <h2>错误一：用了「35mm 等效焦距」</h2>
+  <p>
+    规格书会给出两个焦距。一个是真实的光学焦距（毫米），另一个是 35mm 等效焦距，
+    它把视场角按等效全画幅相机来描述。公式需要的是<b>真实</b>焦距，
+    并且要和<b>真实</b>传感器宽度配对。Mavic 3 的真实焦距是 12.29&nbsp;mm，
+    35mm 等效是 24&nbsp;mm；把 24 代进公式得到 1.25&nbsp;cm/px 而不是 2.44，
+    差了一倍，而且是往乐观的方向差——对一个已经飞完的测区来说，这是最糟的方向。
+  </p>
+  <p>
+    手机相机的坑更深：往往只标 35mm 等效，真实焦距和传感器宽度根本不给。
+    这种情况下公式里的传感器宽度必须填全画幅的 36&nbsp;mm，因为等效值已经默认了它。
+    两个数要么成对使用，要么都不用。
+  </p>
+
+  <h2>错误二：用的是离地高度，不是相对高程基准的高</h2>
+  <p>
+    本页所有公式里的航高都是<b>离地高度</b>。无人机遥测通常报的是相对起飞点的高度，
+    而起飞点常常就在测区的最高处。从采石场边缘或山坡上起飞，飞机读数是 120&nbsp;m，
+    而它下方的地面比起飞点低 150&nbsp;m：坑底的真实 GSD 是计划值的 1.9 倍。
+    仿地飞行存在的意义正是保持这个距离恒定，只要地形起伏相对航高不可忽略，
+    就应该打开它。
+  </p>
+  <p>
+    高程基准的混淆会让这件事更糟。GNSS 接收机报出的高可能是椭球高，而你要对的那张图
+    是正常高。在世界大部分地区两者相差几十米——见
+    <a href="../geoid-vs-ellipsoid">大地水准面与椭球面</a>——远远大于你想要控制的误差。
+    对比任何数据之前，先统一到同一个高程基准。
+  </p>
+
+  <h2>错误三：以为实测会和规格书一致</h2>
+  <p>
+    这个模型是针孔模型：无畸变、无卷帘效应、无镜头校正、相机绝对垂直。
+    真实结果与它相差的是百分之几而不是几倍，这是可以接受的——前提是你知道偏向哪一边。
+    镜头畸变在画面边缘最严重，所以角部的有效 GSD 比公式给出的中心值要粗。
+    卷帘效应会在运动中拖影，地速快的时候沿航向的实际采样比算术预测更差。
+    弱光下的自动曝光和对焦反复会让图像变软，而任何数字都不会变。
+  </p>
+  <p>
+    还有后处理。摄影测量软件会把正射影像重采样成你要求的像素大小，
+    而要求比拍摄 GSD 更细，等于凭空造出从未拍到的细节。输出分辨率不应该比飞行 GSD 更细；
+    取相等是诚实的设置，取一半是常见且站得住脚的折中。
+  </p>
+
+  <div class="note">
+    <p><b>用一个能量得出来的东西校核 GSD。</b>飞行前在重叠区放一根水准尺、一卷钢尺
+    或一块棋盘格标板。在交付的正射影像上量它占多少像素，真实 GSD 就直接出来了：
+    标板实长除以它的像素长度。一块标板只花一分钟，却能校验整条链路——
+    公式、基准、畸变和后处理。</p>
+  </div>
+
+  <h2>从 GSD 到航线规划</h2>
+  <p>
+    GSD 只给出比例尺，不告诉你需要多少张照片。那需要重叠度：同一航线上相邻两张照片之间的
+    航向重叠，以及平行航线之间的旁向重叠。航向重叠 70% 时，飞机每飞一步，
+    地面推进纵向覆盖的 30%；旁向重叠 70% 时，航线间距是横向覆盖的 30%。
+    其余的一切——航线数、照片数、飞行距离、飞行时间——都由这两个数字和场地尺寸推出来，
+    详见<a href="../how-to-plan-a-drone-mapping-flight">无人机航线怎么规划</a>。
+  </p>
+  <p>
+    在正式下单之前先做个粗算很有帮助：面积除以（覆盖 × 0.3 × 0.3），
+    得到 70/70 重叠下照片数的量级。1&nbsp;km² 的测区在 120&nbsp;m 航高下用上面的相机，
+    约合 1&nbsp;000&nbsp;000 ÷（128.9 × 85.9 × 0.09）≈ 1000 张，
+    也就是 25 分钟飞行和笔记本上两小时的解算。在离开办公室之前就知道这件事，
+    是「一份测绘任务书」和「一个猜测」之间的区别。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="drone-gsd-calculator">无人机 GSD 计算器<small>GSD、覆盖范围与目标 GSD 所需航高</small></a>
+      <a href="drone-flight-planner">无人机航线规划器<small>重叠度算航线间距、照片数与飞行时间</small></a>
+      <a href="map-scale-calculator">地图比例尺计算器<small>某个 GSD 能支撑多大的成图比例尺</small></a>
+      <a href="land-area-calculator">面积计算器<small>算飞行预算要用的测区面积</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../how-to-plan-a-drone-mapping-flight">无人机航线怎么规划</a>
+        <small>重叠度、航线间距、照片数，以及由此推出的飞行时间。</small></li>
+      <li><a href="../geoid-vs-ellipsoid">大地水准面与椭球面的区别</a>
+        <small>你的数据里的高程，为什么未必是离地高度。</small></li>
+      <li><a href="../how-to-read-utm-coordinates">UTM 坐标怎么看</a>
+        <small>你要飞的那块地，坐标最可能在的那个格网。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

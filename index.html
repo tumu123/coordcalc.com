@@ -10,7 +10,7 @@
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/">
 <link rel="alternate" hreflang="x-default" href="https://coordcalc.com/">
 <meta property="og:title" content="CoordCalc — Free Surveying & Coordinate Calculators Online">
-<meta property="og:description" content="Seventeen free browser-based calculators for coordinates, distance, area, slope, scale and traverse work, including a least squares traverse adjustment. No sign-up required.">
+<meta property="og:description" content="Nineteen free browser-based calculators for coordinates, distance, area, slope, scale, traverse work and drone flight planning, including a least squares traverse adjustment. No sign-up required.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://coordcalc.com/">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
@@ -103,11 +103,13 @@
     --cat-d:#0d9488;--cat-ds:#e6f7f4;
     --cat-s:#d97706;--cat-ss:#fdf3e3;
     --cat-p:#7c3aed;--cat-ps:#f3eefe;
+    --cat-r:#0891b2;--cat-rs:#e5f7fb;
   }
   .sec-coord{--cat:var(--cat-c);--cat-soft:var(--cat-cs);}
   .sec-dist{--cat:var(--cat-d);--cat-soft:var(--cat-ds);}
   .sec-slope{--cat:var(--cat-s);--cat-soft:var(--cat-ss);}
   .sec-pro{--cat:var(--cat-p);--cat-soft:var(--cat-ps);}
+  .sec-drone{--cat:var(--cat-r);--cat-soft:var(--cat-rs);}
   *{box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
@@ -283,6 +285,7 @@
       <a href="#distance">Distance &amp; Area</a>
       <a href="#slope">Slope &amp; Scale</a>
       <a href="#surveying">Surveying</a>
+      <a href="#drone">Drone</a>
     </nav>
   </div>
 </header>
@@ -554,7 +557,7 @@
         </a>
 
         <a class="tool-card" href="leveling-adjustment-calculator">
-          <span class="tag live">New</span>
+          <span class="tag live">Available</span>
           <span class="ico">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h4v6H3z"/><path d="M10 12h4"/><path d="M17 5h4v6h-4z"/><path d="M3 20h18" opacity=".5"/></svg>
           </span>
@@ -570,6 +573,44 @@
           </span>
           <h3>Request a calculator</h3>
           <p>The professional toolkit grows with user requests — traverse sheets and curve tables are planned.</p>
+        </div>      </div>
+    </div>
+  </section>
+
+  <!-- ================= 05 DRONE & AERIAL MAPPING ================= -->
+  <section id="drone" class="sec-drone">
+    <div class="container">
+      <div class="sec-head">
+        <h2 class="cat"><span class="idx">05</span>Drone &amp; aerial mapping</h2>
+        <p>Plan the flight before you fly it.</p>
+      </div>
+      <div class="grid">
+        <a class="tool-card" href="drone-gsd-calculator">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="9" width="18" height="6" rx="2"/><path d="M7 9V6M17 9V6M12 9V6"/><circle cx="12" cy="12" r="1.4"/></svg>
+          </span>
+          <h3>Drone GSD Calculator</h3>
+          <p>Ground sampling distance from the sensor, the lens and the height you fly, the ground footprint of one photo, and the height needed for a target GSD.</p>
+          <span class="kw">drone gsd calculator</span>
+        </a>
+
+        <a class="tool-card" href="drone-flight-planner">
+          <span class="tag live">New</span>
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h14M3 12h14M3 18h14"/><path d="M20 6v12"/></svg>
+          </span>
+          <h3>Drone Flight Planner</h3>
+          <p>Overlap to line and shot spacing, then the number of flight lines, the photo count, the distance flown and the battery time for a site of a given size.</p>
+          <span class="kw">drone flight planner</span>
+        </a>
+
+        <div class="tool-card filler">
+          <span class="ico">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          </span>
+          <h3>Request a calculator</h3>
+          <p>Flight-log area reconciliation and point-cloud density are next on this shelf.</p>
         </div>
       </div>
     </div>

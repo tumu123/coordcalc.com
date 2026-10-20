@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无人机航线怎么规划 — 重叠度、照片数与飞行时间</title>
+<meta name="description" content="重叠度先换算成航线间距与拍照间距，场地尺寸再决定各要多少条、每线多少张。本文用一个 500×400 m 的测区把整套航线规划手算一遍，并说明掉头航段、地速与续航这三个最容易漏掉的量。">
+<link rel="canonical" href="https://coordcalc.com/zh/how-to-plan-a-drone-mapping-flight">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-plan-a-drone-mapping-flight">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-plan-a-drone-mapping-flight">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-plan-a-drone-mapping-flight">
+<meta property="og:title" content="无人机航线怎么规划 — 重叠度与照片数">
+<meta property="og:description" content="从重叠度到航线间距、照片数、飞行距离与飞行时间，用真实测区完整算一遍。">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/zh/how-to-plan-a-drone-mapping-flight">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "headline": "无人机航线怎么规划：重叠度、照片数与飞行时间",
+  "description": "无人机航线怎么规划 — 重叠度、照片数与飞行时间",
+  "inLanguage": "zh-CN",
+  "datePublished": "2026-10-20",
+  "dateModified": "2026-10-20",
+  "author": {"@type": "Organization", "name": "CoordCalc 测绘计算器"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc 测绘计算器",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/zh/how-to-plan-a-drone-mapping-flight"},
+  "articleSection": "无人机航测"
+}
+</script>
+<link rel="stylesheet" href="../assets/article.css">
+<style>/* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../how-to-plan-a-drone-mapping-flight" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="guides">教程</a> › 无人机航线怎么规划
+  </nav>
+
+<h1>无人机航线怎么规划：重叠度、照片数与飞行时间</h1>
+
+  <p class="lead">
+    一份航线方案在起飞前要回答三个问题：航线相距多远、这样能拍多少张、
+    电池够不够。三个答案都来自同样的四个输入——航高、相机、重叠度和场地尺寸——
+    而算术一页纸就写完了。真正容易出错的不是算术，而是重叠度的方向：
+    旁向重叠管<b>航线之间</b>的间距，航向重叠管<b>航线之内</b>的拍照间距，
+    两者一调换，得到的方案看着像样，飞起来一团糟。
+  </p>
+
+  <p class="meta">
+    <span>无人机航测</span><span>更新于 2026年10月20日</span><span>航线规划</span>
+  </p>
+
+  <h2>先算单张覆盖范围</h2>
+  <p>
+    重叠度是单张照片所覆盖地面面积的一个比例，所以覆盖范围要先算。设航高 <code>H</code>、
+    传感器宽度 <code>Sw</code>、焦距 <code>f</code>：
+  </p>
+  <div class="formula">横向覆盖 = H × Sw ÷ f<br>纵向覆盖 = H × Sh ÷ f</div>
+  <p>
+    这些相机参数怎么取、为什么用 35mm 等效焦距会算错，见
+    <a href="../how-to-calculate-drone-gsd">无人机 GSD 怎么算</a>。
+    下面算例用的相机是 4/3 英寸传感器 13.2 × 8.8&nbsp;mm、焦距 12.29&nbsp;mm，
+    航高 120&nbsp;m，得到单张覆盖<b>横向 128.9&nbsp;m</b>、<b>纵向 85.9&nbsp;m</b>。
+  </p>
+
+  <h2>两个重叠度，两个间距</h2>
+  <div class="formula">航线间距 = 横向覆盖 ×（1 − 旁向重叠）<br>拍照间距 = 纵向覆盖 ×（1 − 航向重叠）</div>
+  <p>
+    旁向重叠 70% 时，相邻航线之间相隔横向覆盖的 30%，也就是
+    <code>128.9 × 0.30 = 38.7 m</code>。航向重叠 70% 时，飞机每拍一张前进
+    <code>85.9 × 0.30 = 25.8 m</code>。注意百分比的含义：70% 重叠意味着每一帧与前一帧
+    共享 70% 的地面，所以每步真正「新增」的地面是剩下的那 30%。
+  </p>
+  <p>
+    这里正是容易搞反的地方。人们倾向于把航向重叠用到航线间距上，因为「航向」听起来
+    就是沿着航线的方向，而航线本来就是沿线布设的。但航线间距是<b>跨</b>飞行方向量的，
+    量在两条平行航线之间，那是旁向重叠的职责。把 70% 的航向重叠套到 128.9&nbsp;m 那一维上，
+    在这个例子里结果一样，只是因为两个重叠度都取了 70%；一旦改成一个 80%、一个 60%，
+    两套方案立刻分道扬镳。
+  </p>
+
+  <h2>从间距到数量</h2>
+  <div class="formula">航线数 = ⌈ 场地跨航线宽 ÷ 航线间距 ⌉<br>每线张数 = ⌈ 场地沿航线长 ÷ 拍照间距 ⌉<br>照片数 = 航线数 × 每线张数</div>
+  <p>
+    「跨航线宽」是垂直于航线那一维，「沿航线长」是顺着飞机前进方向那一维——
+    是飞行方向，不是罗盘方向。取测区跨航线 500&nbsp;m、沿航线 400&nbsp;m：
+    <code>⌈500 ÷ 38.7⌉ = 13</code> 条航线，<code>⌈400 ÷ 25.8⌉ = 16</code> 张/线，
+    合计 <b>208 张</b>。向上取整这一步很关键：12.9 条就是 13 条，绝不能取 12 条，
+    否则最后 10&nbsp;m 的地面永远拍不到。有些规划软件会在两侧各加一条保险航线，
+    如果边界本身就是交付物，这个直觉是对的。
+  </p>
+  <p>
+    在相信这个数量之前先校核覆盖：208 帧 × 128.9 × 85.9&nbsp;m 的毛面积，
+    再乘（0.3 × 0.3）的净比例，约 207&nbsp;000&nbsp;m²，而测区是 200&nbsp;000&nbsp;m²。
+    余量很薄，这是正常的——一个正确的方案就是刚好把测区覆盖一遍、几乎不留富余，
+    因为重叠本身<b>就是</b>那份冗余。
+  </p>
+
+  <h2>飞行距离不是「航线数 × 长度」</h2>
+  <div class="formula">飞行距离 = 航线数 × 沿航线长 + 航线间距 ×（航线数 − 1）</div>
+  <p>
+    每条航线 400&nbsp;m，13 条就是 5&nbsp;200&nbsp;m；但飞机还要在相邻航线之间横移，
+    共 12 次、每次 38.7&nbsp;m，又加 464&nbsp;m。合计 <b>5&nbsp;664&nbsp;m</b>。
+    漏掉掉头航段，在本例里会把距离低估 8%，而在一个细长测区上，
+    掉头所占的比重会大得多。
+  </p>
+  <p>
+    用距离除以地速得到飞行时间——但只能是地速。一架在 12&nbsp;m/s 空速下顶着 5&nbsp;m/s 逆风
+    的飞机，对地只有 7&nbsp;m/s，需要的时间按比例更长。航向改变不了这件事，只有地速能。
+    按 29&nbsp;km/h（8.06&nbsp;m/s）算，5&nbsp;664&nbsp;m 需要飞行 <b>11.7 分钟</b>。
+  </p>
+
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>方案</th><th>航线间距</th><th>拍照间距</th><th>航线 × 每线</th><th>照片数</th><th>飞行距离</th><th>飞行时间</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>120 m，70/70</td><td>38.7 m</td><td>25.8 m</td><td>13 × 16</td><td>208</td><td>5 664 m</td><td>11.7 min</td></tr>
+        <tr><td>120 m，80/80</td><td>25.8 m</td><td>17.2 m</td><td>20 × 24</td><td>480</td><td>8 490 m</td><td>17.6 min</td></tr>
+        <tr><td>120 m，60/60</td><td>51.6 m</td><td>34.4 m</td><td>10 × 12</td><td>120</td><td>4 464 m</td><td>9.2 min</td></tr>
+        <tr><td>60 m，70/70</td><td>19.3 m</td><td>12.9 m</td><td>26 × 32</td><td>832</td><td>10 883 m</td><td>22.5 min</td></tr>
+        <tr><td>1 km × 1 km，70/70</td><td>38.7 m</td><td>25.8 m</td><td>26 × 39</td><td>1 014</td><td>26 967 m</td><td>55.8 min</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    把这张表往下读，账就很清楚了。重叠度从 60% 提到 80%，照片数变成四倍，
+    飞行时间变成两倍。航高减半，照片数也变成四倍。最后一行决定项目可行性：
+    1&nbsp;km² 要飞将近一小时，那是两三块电池的事，中间必然要换电重飞。
+  </p>
+
+  <h2>算术之外没算进去的东西</h2>
+  <p>
+    <b>电池与返航。</b>可用续航不是标称续航：它是标称时间减去你留的余量，再减去爬升。
+    一个需要 22 分钟、而飞机标称 25 分钟的方案，其实是装不下的；
+    一个需要 56 分钟的方案必须拆成多个架次，并且相邻架次之间要有足够重叠，
+    条带才能拼得起来。
+  </p>
+  <p>
+    <b>掉头与稳定时间。</b>航线之间飞机要减速、转弯、再加速。按每次掉头 2 秒算，
+    上面那 12 次掉头只多 24 秒，可以忽略；但一个 60 条航线的方案就是两分钟，
+    值得留出余量。
+  </p>
+  <p>
+    <b>地形。</b>相对起飞点的恒定高度，不等于离地恒定高度。在山坡上，
+    上坡一侧覆盖会缩小、下坡一侧会放大，覆盖范围和 GSD 因此同时漂移。
+    仿地飞行能解决，算术解决不了。
+  </p>
+  <p>
+    <b>风向与几何。</b>按与主导风向交叉的方向布航线，图像最平稳；
+    而与一条笔直的场地边界垂直布航线，条数最少。在不规则测区上，
+    实用做法是用一个矩形把测区框住，接受多拍了一些邻家的地——
+    解算时做个掩膜，比按多边形飞要便宜。
+  </p>
+
+  <div class="note">
+    <p><b>60% 重叠能盖住地面，但撑不过拼接。</b>上表里 60/60 那一行是一个正确的算术答案，
+    也是常见的宣传口径，但航向重叠 60% 给摄影测量匹配留下的素材太少，
+    在稀疏、均质的表面上尤其吃不消——草地、沙滩、新铺沥青。
+    做工程成果时，航向 75%～80%、旁向 65%～70% 才是换一季、换一个解算软件之后
+    仍然站得住的范围。按 70/70 规划，把多出来的照片花掉。</p>
+  </div>
+
+  <h2>操作的先后顺序</h2>
+  <p>
+    先定 GSD，因为它决定航高。再定重叠度，依据是交付物——正射影像能容忍的重叠比
+    密集点云少。然后算间距，再算数量，再算距离，最后算时间。
+    接着把时间和续航比一比，装不下就拆方案。按这个顺序做，
+    后面算出的每个数都还成立；反过来做，就意味着在把一个方案优化完之后，
+    才发现它装不进一次飞行。
+  </p>
+
+  <section class="card">
+    <h2>本文用到的工具</h2>
+    <div class="tools">
+      <a href="drone-flight-planner">无人机航线规划器<small>重叠度算航线间距、照片数与飞行时间</small></a>
+      <a href="drone-gsd-calculator">无人机 GSD 计算器<small>GSD、覆盖范围与目标 GSD 所需航高</small></a>
+      <a href="land-area-calculator">面积计算器<small>不是规整矩形时的测区面积</small></a>
+      <a href="map-scale-calculator">地图比例尺计算器<small>把 GSD 换算成交付成图比例尺</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关教程</h2>
+    <ul class="readon">
+      <li><a href="../how-to-calculate-drone-gsd">无人机 GSD 与单张覆盖范围怎么算</a>
+        <small>四个输入，以及让答案算错的三个错误。</small></li>
+      <li><a href="../how-to-calculate-acreage-from-coordinates">用坐标计算面积</a>
+        <small>从边界而不是卷尺得到测区尺寸。</small></li>
+      <li><a href="../how-to-read-utm-coordinates">UTM 坐标怎么看</a>
+        <small>你的测区坐标最可能用的那个格网。</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+
+</div>
+</body>
+</html>

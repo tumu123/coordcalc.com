@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Calculate Drone GSD and Photo Footprint</title>
+<meta name="description" content="GSD is height times sensor width divided by focal length times image width. The formula, worked examples in metres and feet, and the three mistakes that make drone GSD wrong.">
+<link rel="canonical" href="https://coordcalc.com/how-to-calculate-drone-gsd">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-calculate-drone-gsd">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-calculate-drone-gsd">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-calculate-drone-gsd">
+<meta property="og:title" content="How to Calculate Drone GSD and Photo Footprint">
+<meta property="og:description" content="The pinhole geometry behind ground sample distance, worked examples, and why the number on a spec sheet rarely matches the flight.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/how-to-calculate-drone-gsd">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "How to Calculate Drone GSD and Photo Footprint",
+  "description": "Ground sample distance from height, sensor width, focal length and image width, with worked examples and the errors that break the result.",
+  "datePublished": "2026-10-20",
+  "dateModified": "2026-10-20",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/how-to-calculate-drone-gsd"},
+  "articleSection": "Drone and aerial mapping"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> › <a href="guides">Guides</a> › How to calculate drone GSD
+  </nav>
+
+  <h1>How to Calculate Drone GSD and Photo Footprint</h1>
+
+  <p class="lead">
+    GSD — ground sample distance — is the ground size of one pixel in your photograph. It is the single
+    number that decides whether a drone survey can resolve a fence line or only a field boundary, and it
+    is fixed before the flight, not after. The good news is that it depends on four things you already
+    know about your camera, and the arithmetic is one multiplication. The bad news is that three
+    separate mistakes, all of them common, quietly turn a correct formula into a wrong answer.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 20 October 2026</span><span>Aerial mapping</span>
+  </p>
+
+  <h2>The formula</h2>
+  <div class="formula">GSD = (height × sensor width) ÷ (focal length × image width)</div>
+  <p>
+    Every length must be in the same unit before you divide, and the answer comes out in that unit per
+    pixel. In practice you want millimetres per pixel or centimetres per pixel, so the usual working form
+    keeps height in metres, sensor width in millimetres, focal length in millimetres, and converts at the
+    end:
+  </p>
+  <div class="formula">GSD (mm/px) = (height_m × 1000 × sensor_w_mm) ÷ (focal_mm × image_w_px)</div>
+  <p>
+    The same expression gives the footprint — how much ground one frame covers — if you drop the image
+    width from the divisor:
+  </p>
+  <div class="formula">footprint across = height × sensor width ÷ focal length<br>footprint along&nbsp; = height × sensor height ÷ focal length</div>
+  <p>
+    That is the whole model. GSD is also footprint across divided by image width, which is the identity
+    worth remembering: <code>GSD = footprint ÷ pixel count</code>. If two routes through the arithmetic
+    disagree, one of your four inputs is wrong.
+  </p>
+
+  <h2>Worked example: a 20 MP camera at 120 m</h2>
+  <p>
+    Take the camera in a DJI Mavic 3 Enterprise: a 4/3 sensor 13.2&nbsp;mm wide and 8.8&nbsp;mm high, a
+    12.29&nbsp;mm focal length, and 5280 × 3956 pixels. Fly at 120&nbsp;m above the ground:
+  </p>
+  <p>
+    <code>footprint across = 120 × 13.2 ÷ 12.29 = 128.9 m</code>,
+    <code>footprint along = 120 × 8.8 ÷ 12.29 = 85.9 m</code>, so one frame covers 128.9 × 85.9&nbsp;m,
+    about 1.11&nbsp;hectares.
+  </p>
+  <p>
+    <code>GSD = 128.9 m ÷ 5280 px = 0.0244 m/px</code>, that is 2.44&nbsp;cm/px. Check it the other way:
+    <code>120 × 1000 × 13.2 ÷ (12.29 × 5280) = 1&nbsp;584&nbsp;000 ÷ 64&nbsp;891 = 24.41 mm/px</code>. Same
+    answer, which is the point of the identity.
+  </p>
+  <p>
+    Now halve the height to 60&nbsp;m and everything halves: footprint 64.5 × 43.0&nbsp;m, GSD
+    1.22&nbsp;cm/px. GSD is directly proportional to height above ground and to nothing else on that list.
+    Double the height, double the GSD, and you need four times as many photos to cover the same field —
+    which is exactly why asking for a finer GSD costs flight time quadratically, not linearly.
+  </p>
+
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Height AGL</th><th>GSD</th><th>Footprint</th><th>Ground per 100 px</th><th>Typical use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>30 m</td><td>0.61 cm/px</td><td>32.2 × 21.5 m</td><td>0.61 m</td><td>Inspection, crack and defect mapping</td></tr>
+        <tr><td>60 m</td><td>1.22 cm/px</td><td>64.4 × 43.0 m</td><td>1.22 m</td><td>Detail survey, cadastral boundaries</td></tr>
+        <tr><td>90 m</td><td>1.83 cm/px</td><td>96.7 × 64.4 m</td><td>1.83 m</td><td>Topographic survey at 1:500</td></tr>
+        <tr><td>120 m</td><td>2.44 cm/px</td><td>128.9 × 85.9 m</td><td>2.44 m</td><td>Standard mapping, 1:1000 detail</td></tr>
+        <tr><td>180 m</td><td>3.66 cm/px</td><td>193.3 × 128.9 m</td><td>3.66 m</td><td>Large-area orthophoto, 1:2000</td></tr>
+        <tr><td>300 m</td><td>6.10 cm/px</td><td>322.2 × 214.8 m</td><td>6.10 m</td><td>Reconnaissance, vegetation and volume work</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2>Inverting it: what height gives the GSD I need?</h2>
+  <div class="formula">height = (GSD × focal length × image width) ÷ sensor width</div>
+  <p>
+    If a specification asks for 1.5&nbsp;cm/px from the same camera:
+    <code>(15 mm × 12.29 × 5280) ÷ 13.2 = 973&nbsp;560 ÷ 13.2 = 73&nbsp;755 mm</code>, so 73.7&nbsp;m above
+    ground. Note the units: the GSD and the focal length and the sensor width were all in millimetres,
+    and the answer came out in millimetres before the final division by 1000. Mixing millimetres and
+    metres here is the single most common arithmetic error in the whole calculation.
+  </p>
+
+  <h2>Mistake one: the "35 mm equivalent" focal length</h2>
+  <p>
+    Spec sheets quote two focal lengths. One is the real optical focal length in millimetres; the other is
+    the 35&nbsp;mm equivalent, which describes the field of view as if the lens were on a full-frame
+    camera. The formula needs the <b>real</b> focal length, paired with the <b>real</b> sensor width. The
+    Mavic 3 has a real focal length of 12.29&nbsp;mm and a 35&nbsp;mm equivalent of 24&nbsp;mm; using 24
+    in the formula gives a GSD of 1.25&nbsp;cm/px instead of 2.44 — a factor of two, in the optimistic
+    direction, which is the worst direction for a survey you have already flown.
+  </p>
+  <p>
+    A phone camera makes the trap sharper still: the 35&nbsp;mm equivalent is often quoted while the real
+    focal length and the sensor width are never published. In that case the sensor width in the formula
+    must be the full-frame 36&nbsp;mm, because the equivalent figure already assumes it. Use the two as a
+    matched pair or not at all.
+  </p>
+
+  <h2>Mistake two: height above ground, not above the datum</h2>
+  <p>
+    Every formula on this page takes height <b>above the ground</b>. Drone telemetry usually reports
+    height above the take-off point, and take-off points are frequently on the highest part of a site. Fly
+    a quarry or a hillside from the rim and the drone reads 120&nbsp;m while the ground beneath it is
+    150&nbsp;m below: the real GSD at the bottom of the pit is 1.9 times the planned figure. Terrain
+    following exists precisely to hold the distance constant, and it is worth enabling whenever the site
+    relief is a significant fraction of the flight height.
+  </p>
+  <p>
+    Vertical datum confusion compounds this. A height reported from a GNSS receiver may be ellipsoidal,
+    while the map you are matching is orthometric. Over most of the world the two differ by tens of
+    metres — see <a href="geoid-vs-ellipsoid">geoid vs ellipsoid</a> — which is far larger than the error
+    you are trying to control. Convert to a common vertical datum before comparing anything.
+  </p>
+
+  <h2>Mistake three: expecting the spec to match the flight</h2>
+  <p>
+    The model is a pinhole: no distortion, no rolling shutter, no lens profile, perfectly perpendicular
+    camera. Real results differ by percent, not by factor, and that is acceptable — but only if you know
+    which direction. Lens distortion is worst at the frame edges, so the effective GSD at the corners is
+    coarser than the centre value the formula gives. Rolling shutter smears pixels during motion, and at
+    a fast ground speed the along-track sampling gets worse than the arithmetic predicts. Auto-exposure
+    and focus hunting at low light soften the image without changing a single number.
+  </p>
+  <p>
+    Then there is processing. A photogrammetric pipeline resamples the orthophoto to whatever pixel size
+    you ask for, and asking for less than the capture GSD invents detail that was never captured. Output
+    resolution should never be finer than the flight GSD; equal is the honest setting, and half the value
+    is a common and defensible compromise.
+  </p>
+
+  <div class="note">
+    <p><b>Sanity-check the GSD against something you can measure.</b> Put a levelling staff, a surveyor's
+    tape or a chequerboard target in the overlap area before the flight. Measure it in pixels in the
+    delivered orthophoto and the true GSD falls out directly: staff length divided by its pixel length.
+    One target costs a minute and validates the whole chain — formula, datum, distortion and
+    processing.</p>
+  </div>
+
+  <h2>From GSD to a flight plan</h2>
+  <p>
+    GSD tells you the scale; it does not tell you how many photographs. That needs overlap: the forward
+    overlap between successive shots along a line, and the side overlap between parallel lines. At 70%
+    forward overlap the ground advances by 30% of the footprint along-track between shots; at 70% side
+    overlap the lines are 30% of the footprint across apart. Everything else — line count, photos, flight
+    distance, flight time — follows from those two numbers and the site dimensions, and is worked through
+    in <a href="how-to-plan-a-drone-mapping-flight">how to plan a mapping flight</a>.
+  </p>
+  <p>
+    A rough budget helps before you commit: area divided by (footprint × 0.3 × 0.3) gives the order of
+    magnitude of the photo count at 70/70 overlap. A 1&nbsp;km² site at 120&nbsp;m with the camera above
+    works out at 1&nbsp;000&nbsp;000 ÷ (128.9 × 85.9 × 0.09) ≈ 1000 photographs, which is a 25-minute
+    flight and a two-hour processing run on a laptop. Knowing that before you leave the office is the
+    difference between a survey brief and a guess.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="drone-gsd-calculator">drone GSD calculator<small>GSD, footprint and the height for a target GSD</small></a>
+      <a href="drone-flight-planner">drone flight planner<small>Overlap to line spacing, photo count and flight time</small></a>
+      <a href="map-scale-calculator">map scale calculator<small>The map scale a given GSD supports</small></a>
+      <a href="land-area-calculator">land area calculator<small>Site size for the flight budget</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-plan-a-drone-mapping-flight">How to plan a drone mapping flight</a>
+        <small>Overlap, line spacing, photo counts and the flight time that follows.</small></li>
+      <li><a href="geoid-vs-ellipsoid">Geoid vs ellipsoid</a>
+        <small>Why the height in your data may not be the height above the ground.</small></li>
+      <li><a href="how-to-read-utm-coordinates">How to read UTM coordinates</a>
+        <small>Eastings and northings for the site you are about to fly.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

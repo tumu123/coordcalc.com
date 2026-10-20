@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>How to Plan a Drone Mapping Flight: Overlap, Photos and Time</title>
+<meta name="description" content="Overlap sets line spacing and shot spacing, and the site dimensions set how many of each. The full flight plan worked by hand, plus the battery and overlap traps.">
+<link rel="canonical" href="https://coordcalc.com/how-to-plan-a-drone-mapping-flight">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/how-to-plan-a-drone-mapping-flight">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/how-to-plan-a-drone-mapping-flight">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/how-to-plan-a-drone-mapping-flight">
+<meta property="og:title" content="How to Plan a Drone Mapping Flight: Overlap, Photos and Time">
+<meta property="og:description" content="From overlap percentage to line spacing, photo count and flight time, worked through for a real site.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://coordcalc.com/how-to-plan-a-drone-mapping-flight">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "inLanguage": "en",
+  "headline": "How to Plan a Drone Mapping Flight: Overlap, Photos and Time",
+  "description": "Turning overlap percentages and site dimensions into line spacing, photo count, flight distance and flight time, with a full worked example.",
+  "datePublished": "2026-10-20",
+  "dateModified": "2026-10-20",
+  "author": {"@type": "Organization", "name": "CoordCalc"},
+  "publisher": {"@type": "Organization", "name": "CoordCalc",
+    "logo": {"@type": "ImageObject", "url": "https://coordcalc.com/assets/og-default.png"}},
+  "mainEntityOfPage": {"@type": "WebPage", "@id": "https://coordcalc.com/how-to-plan-a-drone-mapping-flight"},
+  "articleSection": "Drone and aerial mapping"
+}
+</script>
+<link rel="stylesheet" href="assets/article.css">
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+      <a href="./#drone">Drone</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> › <a href="guides">Guides</a> › How to plan a drone mapping flight
+  </nav>
+
+  <h1>How to Plan a Drone Mapping Flight: Overlap, Photos and Time</h1>
+
+  <p class="lead">
+    A flight plan answers three questions before you take off: how far apart the lines go, how many
+    photographs that produces, and whether the battery covers it. All three come out of the same four
+    inputs — height, camera, overlap and site size — and the arithmetic fits on one page. The part people
+    get wrong is not the arithmetic but the direction of the overlap: side overlap governs the spacing
+    <em>between</em> lines, forward overlap governs the spacing <em>along</em> a line, and swapping them
+    gives a plan that looks plausible and flies badly.
+  </p>
+
+  <p class="meta">
+    <span>Guide</span><span>Updated 20 October 2026</span><span>Aerial mapping</span>
+  </p>
+
+  <h2>Start from the footprint</h2>
+  <p>
+    Overlap is a fraction of the ground a single photograph covers, so the footprint comes first. With
+    height <code>H</code>, sensor width <code>Sw</code> and focal length <code>f</code>:
+  </p>
+  <div class="formula">footprint across = H × Sw ÷ f<br>footprint along&nbsp; = H × Sh ÷ f</div>
+  <p>
+    How to get those camera numbers, and why the 35&nbsp;mm equivalent focal length breaks the formula,
+    is covered in <a href="how-to-calculate-drone-gsd">how to calculate drone GSD</a>. For the worked
+    example below the camera is a 4/3 sensor 13.2 × 8.8&nbsp;mm with a 12.29&nbsp;mm lens, flown at
+    120&nbsp;m. That gives a footprint of <b>128.9&nbsp;m across</b> and <b>85.9&nbsp;m along</b>.
+  </p>
+
+  <h2>Two overlaps, two spacings</h2>
+  <div class="formula">line spacing = footprint across × (1 − side overlap)<br>shot spacing = footprint along&nbsp; × (1 − forward overlap)</div>
+  <p>
+    At 70% side overlap, adjacent lines are 30% of the footprint apart, so
+    <code>128.9 × 0.30 = 38.7 m</code> between lines. At 70% forward overlap the aircraft advances
+    <code>85.9 × 0.30 = 25.8 m</code> between shots. Note what the percentage means: 70% overlap means
+    each frame shares 70% of its ground with the previous one, which is why the <em>new</em> ground per
+    step is the remaining 30%.
+  </p>
+  <p>
+    This is where the swap happens. It is tempting to apply forward overlap to the line spacing, because
+    "forward" sounds like the along-track direction and lines are laid along-track. But line spacing is
+    measured <em>across</em> the flight direction, between parallel passes, and that is the side overlap's
+    job. Applying 70% forward overlap to a 128.9&nbsp;m dimension gives the same number here only because
+    both overlaps are 70%; set them to 80% and 60% and the two plans diverge immediately.
+  </p>
+
+  <h2>From spacing to counts</h2>
+  <div class="formula">lines&nbsp;&nbsp;&nbsp; = ⌈ site width ÷ line spacing ⌉<br>per line = ⌈ site length ÷ shot spacing ⌉<br>photos&nbsp;&nbsp; = lines × per line</div>
+  <p>
+    "Site width" is the dimension across the flight lines and "site length" is along them — the aircraft
+    direction, not the compass direction. Take a site 500&nbsp;m wide and 400&nbsp;m long:
+    <code>⌈500 ÷ 38.7⌉ = 13</code> lines and <code>⌈400 ÷ 25.8⌉ = 16</code> shots per line, so
+    <b>208 photographs</b>. The ceiling function matters: 12.9 lines is 13 lines, never 12, or the last
+    10&nbsp;m of the site is never photographed. Some planners add a line at each edge for insurance, and
+    on a site where the boundary is the deliverable that is the right instinct.
+  </p>
+  <p>
+    Check the coverage before believing the count: 208 frames × 128.9 × 85.9&nbsp;m gross, times
+    (0.3 × 0.3) net, is about 207&nbsp;000&nbsp;m² against a 200&nbsp;000&nbsp;m² site. The margin is
+    thin, which is expected — a correct plan covers the site once with almost nothing to spare, because
+    overlap <em>is</em> the redundancy.
+  </p>
+
+  <h2>Flight distance is not lines × length</h2>
+  <div class="formula">distance = lines × site length + line spacing × (lines − 1)</div>
+  <p>
+    Each pass is 400&nbsp;m, so 13 passes are 5&nbsp;200&nbsp;m; the aircraft also has to cross between
+    adjacent lines, 12 times at 38.7&nbsp;m, which is another 464&nbsp;m. Total
+    <b>5&nbsp;664&nbsp;m</b>. Forgetting the turn legs understates the distance by 8% on this plan and by
+    far more on a long, narrow site where the turns dominate.
+  </p>
+  <p>
+    Divide by ground speed for flight time — but only by ground speed. A drone flying into a 5&nbsp;m/s
+    headwind at 12&nbsp;m/s airspeed is making 7&nbsp;m/s over the ground and needs proportionally longer.
+    Compass heading does not change that; only ground speed does. At 29&nbsp;km/h (8.06&nbsp;m/s) the
+    5&nbsp;664&nbsp;m take <b>11.7 minutes</b> of flying.
+  </p>
+
+  <div class="tblwrap">
+    <table class="lookup">
+      <thead>
+        <tr><th>Scenario</th><th>Line spacing</th><th>Shot spacing</th><th>Lines × per line</th><th>Photos</th><th>Distance</th><th>Time</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>120 m, 70/70</td><td>38.7 m</td><td>25.8 m</td><td>13 × 16</td><td>208</td><td>5 664 m</td><td>11.7 min</td></tr>
+        <tr><td>120 m, 80/80</td><td>25.8 m</td><td>17.2 m</td><td>20 × 24</td><td>480</td><td>8 490 m</td><td>17.6 min</td></tr>
+        <tr><td>120 m, 60/60</td><td>51.6 m</td><td>34.4 m</td><td>10 × 12</td><td>120</td><td>4 464 m</td><td>9.2 min</td></tr>
+        <tr><td>60 m, 70/70</td><td>19.3 m</td><td>12.9 m</td><td>26 × 32</td><td>832</td><td>10 883 m</td><td>22.5 min</td></tr>
+        <tr><td>1 km × 1 km, 70/70</td><td>38.7 m</td><td>25.8 m</td><td>26 × 39</td><td>1 014</td><td>26 967 m</td><td>55.8 min</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p>
+    Read that table downwards and the economics become obvious. Doubling overlap from 60% to 80%
+    multiplies the photo count by four and the flight time by two. Halving the height multiplies the
+    photo count by four. The last row is the one that decides project feasibility: a square kilometre at
+    1&nbsp;km² takes nearly an hour of flying, which is two or three batteries and a partial-return
+    cycle in the middle.
+  </p>
+
+  <h2>What the arithmetic leaves out</h2>
+  <p>
+    <b>Battery and return.</b> Useful endurance is not the advertised flight time; it is the advertised
+    time minus the reserve you fly to, and minus the climb. A plan needing 22 minutes on a nominal
+    25-minute aircraft does not fit, and a plan needing 56 minutes must be split into missions with
+    enough overlap between them that the strips stitch together.
+  </p>
+  <p>
+    <b>Turn and stabilise time.</b> Between lines the aircraft must slow, turn and re-accelerate. With
+    2 seconds per turn the 12 turns above add 24 seconds — negligible here, but on a 60-line plan it is
+    two minutes and worth allowing for.
+  </p>
+  <p>
+    <b>Terrain.</b> A constant height above the take-off point is not a constant height above the
+    ground. Over a hillside the footprint shrinks on the uphill side and grows downhill, so both the
+    coverage and the GSD drift. Terrain following fixes it; nothing in the arithmetic does.
+  </p>
+  <p>
+    <b>Wind and geometry.</b> Lines laid at a bearing that crosses the prevailing wind give the
+    smoothest images, but lines square to a straight site boundary give the fewest of them. On an
+    irregular site, plan the rectangle that contains it and accept the photographs of the fields next
+    door — masking during processing is cheaper than flying a polygon.
+  </p>
+
+  <div class="note">
+    <p><b>Sixty percent overlap covers the ground; it does not survive the stitch.</b> The 60/60 row above
+    is a valid arithmetic answer and a common marketing figure, but 60% forward overlap gives a
+    photogrammetric matcher little to work with on sparse, uniform terrain — a pasture, a beach, fresh
+    asphalt. For engineering work, 75% to 80% forward with 65% to 70% side is the range that survives
+    a change of season and a tired processor. Plan at 70/70, spend the extra photos.</p>
+  </div>
+
+  <h2>The order of operations</h2>
+  <p>
+    Fix the GSD first, because it sets the height. Fix the overlap second, from the deliverable — an
+    orthophoto tolerates less overlap than a dense point cloud. Compute spacing, then counts, then
+    distance, then time. Then compare the time with endurance and split the plan if it fails. Doing it in
+    that order means every number you compute afterwards is still valid; doing it in the reverse order
+    means discovering the plan does not fit after you have already optimised it.
+  </p>
+
+  <section class="card">
+    <h2>Tools used in this article</h2>
+    <div class="tools">
+      <a href="drone-flight-planner">drone flight planner<small>Overlap to line spacing, photo count and flight time</small></a>
+      <a href="drone-gsd-calculator">drone GSD calculator<small>GSD, footprint and the height for a target GSD</small></a>
+      <a href="land-area-calculator">land area calculator<small>Site size, for anything that is not a clean rectangle</small></a>
+      <a href="map-scale-calculator">map scale calculator<small>Turning a GSD into a deliverable map scale</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Related guides</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-drone-gsd">How to calculate drone GSD and photo footprint</a>
+        <small>The four inputs, and the three mistakes that make the answer wrong.</small></li>
+      <li><a href="how-to-calculate-acreage-from-coordinates">How to calculate acreage from coordinates</a>
+        <small>Getting the site dimensions from a boundary rather than a tape.</small></li>
+      <li><a href="how-to-read-utm-coordinates">How to read UTM coordinates</a>
+        <small>The grid your site coordinates are most likely in.</small></li>
+    </ul>
+  </section>
+
+  <p class="foot">
+    CoordCalc publishes free surveying and coordinate calculators. Results are for reference — confirm
+    against the governing standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
+  </p>
+
+</div>
+</body>
+</html>

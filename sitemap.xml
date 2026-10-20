@@ -169,8 +169,20 @@
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://coordcalc.com/drone-gsd-calculator</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://coordcalc.com/drone-flight-planner</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
     <loc>https://coordcalc.com/guides</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -247,6 +259,18 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://coordcalc.com/how-to-calculate-drone-gsd</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://coordcalc.com/how-to-plan-a-drone-mapping-flight</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://coordcalc.com/zh/</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>weekly</changefreq>
@@ -278,6 +302,18 @@
   </url>
   <url>
     <loc>https://coordcalc.com/zh/leveling-adjustment-calculator</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://coordcalc.com/zh/drone-gsd-calculator</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://coordcalc.com/zh/drone-flight-planner</loc>
     <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -320,7 +356,7 @@
   </url>
   <url>
     <loc>https://coordcalc.com/zh/guides</loc>
-    <lastmod>2026-10-16</lastmod>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -399,6 +435,18 @@
   <url>
     <loc>https://coordcalc.com/zh/section-township-range</loc>
     <lastmod>2026-10-16</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://coordcalc.com/zh/how-to-calculate-drone-gsd</loc>
+    <lastmod>2026-10-20</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://coordcalc.com/zh/how-to-plan-a-drone-mapping-flight</loc>
+    <lastmod>2026-10-20</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.6</priority>
   </url>

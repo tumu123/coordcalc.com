@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>无人机 GSD 计算器 — 由航高算地面分辨率（免费）</title>
+<meta name="description" content="免费的无人机 GSD 计算器：由传感器尺寸、焦距与航高算出地面采样距离（GSD）、单张照片的地面覆盖范围，并可反解达到目标 GSD 所需的航高。支持米/英尺、cm/px 与 in/px，内置常见机型参数。">
+<link rel="canonical" href="https://coordcalc.com/zh/drone-gsd-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/drone-gsd-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/drone-gsd-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/drone-gsd-calculator">
+<meta property="og:title" content="无人机 GSD 计算器 — 由航高算地面分辨率">
+<meta property="og:description" content="由传感器尺寸、焦距与航高算 GSD、单张覆盖范围与目标 GSD 所需航高，内置常见机型参数。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/drone-gsd-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "无人机 GSD 计算器",
+  "url": "https://coordcalc.com/zh/drone-gsd-calculator",
+  "description": "免费的无人机 GSD 计算器：由传感器尺寸、焦距与航高算出地面采样距离（GSD）、单张照片的地面覆盖范围，并可反解达到目标 GSD 所需的航高。支持米/英尺、cm/px 与 in/px，内置常见机型参数。",
+  "inLanguage": "zh-CN",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "计算器",
+      "item": "https://coordcalc.com/#tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "无人机 GSD 计算器",
+      "item": "https://coordcalc.com/zh/drone-gsd-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "无人机 GSD 怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GSD = 航高 × 传感器宽度 ÷（焦距 × 图像宽度），其中航高与传感器宽度须同单位。实操做法：把航高换成毫米，乘以传感器物理宽度（毫米），再除以焦距（毫米）乘以图像宽度（像素）。结果单位是毫米/像素。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "出 1:500 图需要多大 GSD？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "约 2 cm/px。常用规划规则是 GSD 取等高距的十分之一，0.2 m 等高距对应 2 cm；多数 1:500 测绘规范要求 1.5 到 2 cm。若场地有必须精确分辨的硬边，再飞低一些。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "纬度或地形高程会改变 GSD 吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GSD 只取决于相机正下方相对地面的高度，与飞机上报的气压高度或海拔无关。海拔 1000 m 处，规划 120 m 离地飞行，若用仿地或雷达定高，仍然是离地 120 m；但坡地上用固定相对起飞点的高度，上坡处 GSD 更细、下坡处更粗。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "实测 GSD 与计算器不符是什么原因？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "常见三种：给出的焦距是 35 mm 等效焦距而非真实焦距；传感器尺寸用的是宣传的「1 英寸」「4/3」级别而非实际有效面积；在作业高度上镜头对焦不在无穷远，等效焦距会略变。拿正射影像上一段量距与地面同一段对比，标定一次即可。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "该用全传感器还是裁切后的图像尺寸？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "用以实际飞行的图像像素尺寸。若相机为 16:9 视频模式裁切了 3:2 传感器、而照片是 4:3，则以照片尺寸为准。若后期按固定裁切处理，则用裁切后的像素尺寸与传感器对应的那部分。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "一个场地需要多少张照片、飞多久？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "GSD 给出单张照片的覆盖范围，重叠度再给出航线间距与拍照间距。用场地尺寸除以间距再相乘即可。隔壁的航线规划器正是做这件事，含转弯距离与电池时间。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个无人机 GSD 计算器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费，不用登录、不用注册、不限次数。全部计算都在你的浏览器里完成，飞行与项目数据不会上传。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:#0f9d58;font-weight:600;}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  /* Wide tables have more columns than a phone has width: the wrapper needs an explicit
+     max-width and the table a max-content width, or the table's min-content width
+     propagates up and widens the document instead of scrolling. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  .tscroll > table{width:max-content;min-width:100%;}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../drone-gsd-calculator" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › 无人机 GSD 计算器
+  </nav>
+
+<h1>无人机 GSD 计算器</h1>
+
+  <p class="lead">
+    本站由传感器、镜头与航高算出地面采样距离——一个像元在地面上有多大，
+    同时给出单张照片的地面覆盖范围；反过来，也能算出达到目标 GSD 所需的航高。
+    相机参数只需输入一次，航高就成了设计变量。免费，浏览器本地计算，无需登录。
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 240px;">
+        <label for="gs-cam">相机</label>
+        <select id="gs-cam">
+          <option value="custom">自定义 — 在下方设定传感器与镜头</option>
+          <option value="m3e" selected>DJI Mavic 3E 御 3 行业版（4/3，24 mm）</option>
+          <option value="m3m">DJI Mavic 3M 多光谱（4/3，24 mm）</option>
+          <option value="p4rtk">DJI Phantom 4 RTK（1 英寸，8.8 mm）</option>
+          <option value="m300-p1">DJI 禅思 P1（全画幅，35 mm）</option>
+          <option value="mavic2pro">DJI Mavic 2 Pro（1 英寸，10.26 mm）</option>
+          <option value="mini3">DJI Mini 3 Pro（1/1.3 英寸，6.7 mm）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 190px;">
+        <label for="gs-units">单位制</label>
+        <select id="gs-units">
+          <option value="m">米（m、cm/px）</option>
+          <option value="ft">英尺（ft、in/px）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 200px;">
+        <label for="gs-solve">求解</label>
+        <select id="gs-solve">
+          <option value="gsd" selected>由航高算 GSD</option>
+          <option value="height">由目标 GSD 算航高</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:0 0 150px;">
+        <label for="gs-sw">传感器宽 (mm)</label>
+        <input id="gs-sw" type="number" step="any" value="13.2" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 150px;">
+        <label for="gs-sh">传感器高 (mm)</label>
+        <input id="gs-sh" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 140px;">
+        <label for="gs-f">焦距 (mm)</label>
+        <input id="gs-f" type="number" step="any" value="8.8" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 140px;">
+        <label for="gs-w">图像宽 (px)</label>
+        <input id="gs-w" type="number" step="1" value="5472" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 140px;">
+        <label for="gs-h">图像高 (px)</label>
+        <input id="gs-h" type="number" step="1" value="3648" autocomplete="off">
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:1;min-width:200px;" id="gs-altwrap">
+        <label for="gs-alt">相对地面航高 <span id="gs-altu">(m)</span></label>
+        <input id="gs-alt" type="number" step="any" value="120" autocomplete="off">
+      </div>
+      <div class="field" style="flex:1;min-width:200px;display:none;" id="gs-tgtwrap">
+        <label for="gs-tgt">目标 GSD <span id="gs-tgtu">(cm/px)</span></label>
+        <input id="gs-tgt" type="number" step="any" value="2" autocomplete="off">
+      </div>
+    </div>
+
+    <p class="hint" style="margin-top:14px;">
+      传感器尺寸与焦距是<b>真实值</b>，不是 35 mm 等效值。选定机型会自动填好五个相机参数；
+      任一参数被手改，机型选择会退回「自定义」。若你的相机在实际拍摄模式下裁切了传感器，
+      请填裁切后的传感器宽度与对应的像素数。
+    </p>
+
+    <p class="err" id="gs-err">请检查相机参数——传感器、焦距与图像像素都必须为正，
+      且航高或目标 GSD 必须大于零。</p>
+
+    <div class="results" id="gs-results">
+      <div class="big">
+        <span class="bk" id="gs-bk">地面采样距离</span>
+        <span class="bv" id="gs-bv">—</span>
+      </div>
+      <div id="gs-rows"></div>
+      <h3 id="gs-fph">单张照片的地面覆盖</h3>
+      <div class="tscroll">
+        <table class="lookup" id="gs-out">
+          <thead>
+            <tr><th id="gs-h1">当前航高下</th><th id="gs-h2">数值</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">覆盖范围必须等于图像像素尺寸乘以 GSD——计算器会检验这条恒等式，
+        并把结论显示在下方。</p>
+      <p class="hint" id="gs-arith" style="font-weight:600;"></p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <h3>一个公式管到底</h3>
+    <p>针孔相机把地面按比例投影到传感器上。一个像元对应的张角，与传感器上一个像元对应的张角相同，
+      因此这个角在地面上张开的大小，与到它的距离成正比：</p>
+    <p><code>GSD = H × S_w ÷ (f × W)</code></p>
+    <p>其中 <code>H</code> 为相对地面的航高，<code>S_w</code> 为传感器物理宽度，
+      <code>f</code> 为焦距，<code>W</code> 为图像宽度（像素）。航高与传感器宽度必须同单位；
+      焦距与传感器宽度都以毫米计时量纲相消，最稳妥的习惯是把航高也换成毫米。
+      结果是毫米/像素——除以 10 就是大家常说的厘米/像素。</p>
+    <p>同一个比例也能直接给出单张照片的地面覆盖，不必绕道 GSD：
+      <code>覆盖宽 = H × S_w ÷ f</code>、<code>覆盖长 = H × S_h ÷ f</code>。
+      两条路径必须一致——覆盖宽除以图像宽度恰好等于 GSD——计算器每次重算都检验这条恒等式，
+      因为「十倍」这类量纲错误滑进任一路径，是这类数字出错最常见的方式。</p>
+    <h3>反解航高</h3>
+    <p>移项得 <code>H = GSD × f × W ÷ S_w</code>。这才是实际作业里用的形式：成果指标固定了 GSD，
+      于是要算的是航高，然后把它敲进飞控。由于关系是线性的，GSD 减半就是航高减半——
+      这正是从 3 cm/px 提到 1.5 cm/px 时航线数翻倍、照片数约翻四倍的原因。</p>
+    <h3>GSD 用来做什么</h3>
+    <p>GSD 是整个成果的分辨率上限。地面上小于约两三个像素的地物，无论后期怎么处理都无法可靠判读，
+      所以 3 cm/px 的测绘飞不出可信的 1:500 图，即便正射影像在屏幕上放大看着很锐。
+      常用的规划规则是等高距的十分之一：0.1 m 等高距配 1 cm/px，0.2 m 配 2 cm/px。
+      摄影测量规范通常要求 1:500 用 1.5–2 cm/px，1:1000 用 3–5 cm/px。</p>
+  </section>
+
+  <section class="card">
+    <h2>该填哪个高度</h2>
+    <p>公式要的是<b>相机正下方</b>相对地面的高度，仅此而已。它既不是海拔，也不是 App 上显示的气压高度。</p>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>地形</th><th>该填什么</th><th>填错会怎样</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>平坦场地</td><td>设定的航高；起飞点与地面同高</td><td>没有影响——最简单的情形</td></tr>
+          <tr><td>坡地，定高飞行</td><td>相对<b>最高</b>地面的高度（为合规）</td><td>GSD 沿坡变化，上坡部分比你规划的更粗</td></tr>
+          <tr><td>坡地，仿地飞行</td><td>飞机保持的恒定离地高度</td><td>没有影响——GSD 恒定，这正是要仿地飞的理由</td></tr>
+          <tr><td>海拔 1500 m 的场地</td><td>相对地面的高度，不是海拔读数</td><td>填海拔会得到大了好几倍的 GSD</td></tr>
+          <tr><td>场地内有高耸结构</td><td>仍填相对地面高度，另作记录</td><td>结构顶离相机更近，其 GSD 更细、视差更大</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="hint">在坡地上，GSD 随到各点的<i>斜距</i>变化，而不是随它的高程变化。同斜距的上坡点与下坡点 GSD 相同；
+      真正变化的是该处的地面入射角，它沿坡向把像元拉长。这就是陡峭地形需要加大重叠度、
+      而不需要改 GSD 的原因。</p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>默认参数是 4/3 传感器 13.2 × 8.8 mm、焦距 8.8 mm、图像 5472 × 3648 px、航高 120 m。
+      下面每个数都能在一分钟内用普通计算器复算。</p>
+    <p>把航高换成毫米：<code>120 m = 120 000 mm</code>。于是
+      <code>GSD = 120 000 × 13.2 ÷ (8.8 × 5472) = 1 584 000 ÷ 48 154</code>，
+      约为 <b>32.89 mm/px</b>，即 <b>3.29 cm/px</b>。</p>
+    <p>覆盖范围由同一比例得到：
+      <code>宽 = 120 000 × 13.2 ÷ 8.8 = 180 000 mm = 180 m</code>，
+      <code>长 = 120 000 × 8.8 ÷ 8.8 = 120 000 mm = 120 m</code>。一张照片覆盖
+      <b>180 × 120 m = 2.16 公顷</b>。反过来验算：5472 px × 32.89 mm = 180 m，一致。</p>
+    <p>若成果是 1:500 图、规范要求 2 cm/px，则反解航高：
+      <code>H = 20 × 8.8 × 5472 ÷ 13.2 = 72 960 mm = 72.96 m</code>。
+      这台相机每米航高约对应 0.27 mm 的 GSD，所以 73 m 与 120 m 的差别，
+      就是「能出 1:500 图」与「不能」的差别。</p>
+    <p>把单位切到英尺，同一台相机在 400 ft 时的覆盖正好是 <b>600 × 400 ft</b>
+      （航高 121.92 m，覆盖 182.88 × 121.92 m），GSD 为 <b>1.316 in/px</b>。
+      覆盖在英尺下成为整数，是因为 13.2 ÷ 8.8 × 400 恰好等于 600——这是这支镜头的性质，与单位无关。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <ul class="readon">
+      <li><a href="drone-flight-planner">无人机航线规划器</a>
+        <small>把覆盖范围变成航线、照片数与电池时间。</small></li>
+      <li><a href="map-scale-calculator">地图比例尺计算器</a>
+        <small>图面比例尺对可表达细节意味着什么。</small></li>
+      <li><a href="how-to-read-utm-coordinates">如何读 UTM 坐标</a>
+        <small>正射影像通常交付所用的格网。</small></li>
+      <li><a href="geoid-vs-ellipsoid">大地水准面与椭球面</a>
+        <small>为什么无人机的 GNSS 高程不是建模所需的高程。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="drone-flight-planner">无人机航线规划器<small>重叠度、航线、照片数</small></a>
+      <a href="map-scale-calculator">地图比例尺计算器<small>比例尺与地面距离</small></a>
+      <a href="cut-fill-calculator">土方计算器<small>由所测地表面算方量</small></a>
+      <a href="stockpile-volume-calculator">料堆体积计算器<small>要量的那堆料</small></a>
+      <a href="unit-converter">单位换算器<small>米与英尺、厘米与英寸</small></a>
+      <a href="utm-coordinate-converter">UTM 坐标转换<small>把地面控制点转成格网坐标</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>无人机 GSD 怎么算？</summary>
+      <p>GSD = 航高 × 传感器宽度 ÷（焦距 × 图像宽度），其中航高与传感器宽度须同单位。实操做法：把航高换成毫米，乘以传感器物理宽度（毫米），再除以焦距（毫米）乘以图像宽度（像素）。结果单位是毫米/像素。</p>
+    </details>
+    <details>
+      <summary>出 1:500 图需要多大 GSD？</summary>
+      <p>约 2 cm/px。常用规划规则是 GSD 取等高距的十分之一，0.2 m 等高距对应 2 cm；多数 1:500 测绘规范要求 1.5 到 2 cm。若场地有必须精确分辨的硬边，再飞低一些。</p>
+    </details>
+    <details>
+      <summary>纬度或地形高程会改变 GSD 吗？</summary>
+      <p>GSD 只取决于相机正下方相对地面的高度，与飞机上报的气压高度或海拔无关。海拔 1000 m 处，规划 120 m 离地飞行，若用仿地或雷达定高，仍然是离地 120 m；但坡地上用固定相对起飞点的高度，上坡处 GSD 更细、下坡处更粗。</p>
+    </details>
+    <details>
+      <summary>实测 GSD 与计算器不符是什么原因？</summary>
+      <p>常见三种：给出的焦距是 35 mm 等效焦距而非真实焦距；传感器尺寸用的是宣传的「1 英寸」「4/3」级别而非实际有效面积；在作业高度上镜头对焦不在无穷远，等效焦距会略变。拿正射影像上一段量距与地面同一段对比，标定一次即可。</p>
+    </details>
+    <details>
+      <summary>该用全传感器还是裁切后的图像尺寸？</summary>
+      <p>用以实际飞行的图像像素尺寸。若相机为 16:9 视频模式裁切了 3:2 传感器、而照片是 4:3，则以照片尺寸为准。若后期按固定裁切处理，则用裁切后的像素尺寸与传感器对应的那部分。</p>
+    </details>
+    <details>
+      <summary>一个场地需要多少张照片、飞多久？</summary>
+      <p>GSD 给出单张照片的覆盖范围，重叠度再给出航线间距与拍照间距。用场地尺寸除以间距再相乘即可。隔壁的航线规划器正是做这件事，含转弯距离与电池时间。</p>
+    </details>
+    <details>
+      <summary>这个无人机 GSD 计算器免费吗？</summary>
+      <p>免费，不用登录、不用注册、不限次数。全部计算都在你的浏览器里完成，飞行与项目数据不会上传。</p>
+    </details>
+  </section>
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var FT = 3.280839895013123;
+  var IN = 25.4;
+
+  function el(id){ return document.getElementById(id); }
+
+  // Cameras: [sensorW mm, sensorH mm, focal mm, imageW px, imageH px]. True values, not
+  // 35 mm equivalents. The 4/3 sensor in the Mavic 3 is 17.3 x 13.0 mm but the stills use a
+  // 13.2 x 8.8 crop, so that is what is listed — the number that matters is the area the
+  // photo actually covers, not the silicon's full area.
+  var CAMS = {
+    "m3e":      [13.2, 8.8, 12.29, 5280, 3956],
+    "m3m":      [13.2, 8.8, 12.29, 5280, 3956],
+    "p4rtk":    [13.2, 8.8, 8.8, 5472, 3648],
+    "m300-p1":  [35.9, 24.0, 35.0, 8192, 5460],
+    "mavic2pro":[13.2, 8.8, 10.26, 5472, 3648],
+    "mini3":    [9.6, 7.2, 6.7, 4032, 3024]
+  };
+
+  // The default camera is the Phantom 4 RTK optics — the numbers the spec template uses,
+  // so the worked example on this page can be reproduced by hand.
+  var CAM_ORDER = ["m3e","m3m","p4rtk","m300-p1","mavic2pro","mini3"];
+
+  function num(id){
+    var v = parseFloat(el(id).value);
+    return isNaN(v) ? NaN : v;
+  }
+  function metric(){ return el("gs-units").value === "m"; }
+  function show(v, d){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-9 || a >= 1e12)) return v.toExponential(4);
+    return d === undefined ? String(v) : v.toFixed(d);
+  }
+  function row(k, v, sub, cls){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small'+(cls?' class="'+cls+'"':'')+'>'+sub+'</small>' : '') + '</span></div>';
+  }
+  // A tidy number: strip trailing zeros but keep at least one decimal. Only zeros AFTER the
+  // decimal point may go — a whole number such as 4560 must stay 4560, not become 456.
+  function tidy(v, d){
+    var s = v.toFixed(d);
+    if (s.indexOf(".") < 0) return s;
+    s = s.replace(/0+$/,"").replace(/\.$/,"");
+    return s;
+  }
+
+  function loadCamera(key){
+    var c = CAMS[key];
+    if (!c) return;
+    el("gs-sw").value = String(c[0]);
+    el("gs-sh").value = String(c[1]);
+    el("gs-f").value  = String(c[2]);
+    el("gs-w").value  = String(c[3]);
+    el("gs-h").value  = String(c[4]);
+  }
+
+  function calc(){
+    var sw = num("gs-sw"), sh = num("gs-sh"), f = num("gs-f");
+    var W = num("gs-w"), H = num("gs-h");
+    var solveH = el("gs-solve").value === "height";
+
+    // validity
+    var badCam = !(sw > 0) || !(sh > 0) || !(f > 0) || !(W > 0) || !(H > 0);
+    var altRaw = solveH ? num("gs-tgt") : num("gs-alt");
+    var badAlt = !(altRaw > 0);
+    el("gs-sw").classList.toggle("bad", !(sw > 0));
+    el("gs-sh").classList.toggle("bad", !(sh > 0));
+    el("gs-f").classList.toggle("bad", !(f > 0));
+    el("gs-w").classList.toggle("bad", !(W > 0));
+    el("gs-h").classList.toggle("bad", !(H > 0));
+    el("gs-alt").classList.toggle("bad", !solveH && !(num("gs-alt") > 0));
+    el("gs-tgt").classList.toggle("bad", solveH && !(num("gs-tgt") > 0));
+    var err = el("gs-err"), res = el("gs-results");
+    err.classList.toggle("show", badCam || badAlt);
+    if (badCam || badAlt){ res.classList.remove("show"); return; }
+
+    // Everything internal is metres and millimetres; the display converts.
+    var unitIn = metric() ? 1 : 1 / FT;      // typed length unit -> metres
+    var Hm;                                   // height in metres
+    var gsdMm;                                // mm per pixel
+    if (solveH){
+      // target GSD is typed in cm/px (metric) or in/px (imperial)
+      var tMm = metric() ? altRaw * 10 : altRaw * IN;
+      gsdMm = tMm;
+      Hm = tMm * f * W / sw / 1000;           // mm -> m
+    } else {
+      Hm = altRaw * unitIn;
+      gsdMm = Hm * 1000 * sw / (f * W);
+    }
+
+    var fpW = Hm * 1000 * sw / f / 1000;      // m
+    var fpH = Hm * 1000 * sh / f / 1000;      // m
+    var fpArea = fpW * fpH;                   // m2
+
+    // The two routes must agree: footprint width / image width must equal the GSD.
+    var gsdFromFp = (fpW * 1000) / W;
+    var okArith = Math.abs(gsdFromFp - gsdMm) < 1e-9;
+
+    var L = metric() ? 1 : FT;                 // metres -> display length unit
+    var lunit = metric() ? "m" : "ft";
+    var gsdUnit = metric() ? "cm/px" : "in/px";
+    var gsdVal = metric() ? gsdMm / 10 : gsdMm / IN;
+
+    el("gs-bk").textContent = solveH ? "目标 GSD 所需航高" : "地面采样距离";
+    el("gs-bv").textContent = solveH
+      ? tidy(Hm * L, 4) + " " + lunit
+      : show(gsdVal, 4) + " " + gsdUnit;
+
+    // Keep the hidden height box in step with the solved height. Otherwise a user who solves for
+    // the height and then switches back to solve-for-GSD lands on whatever stale number was in
+    // that box, and the results silently change under them.
+    if (solveH) el("gs-alt").value = tidy(Hm * L, 2);
+
+    var rows = "";
+    if (!solveH){
+      rows += row("相对地面航高", show(Hm * L, 2) + " " + lunit, "公式所用的高度");
+    } else {
+      rows += row("目标 GSD", show(gsdVal, 2) + " " + gsdUnit, "成果指标的要求");
+    }
+    rows += row("GSD（毫米/像素）", show(gsdMm, 4) + " mm/px", "公式返回的单位");
+    rows += row("GSD 的其他单位", show(gsdMm / 10, 4) + " cm/px · " + show(gsdMm / IN, 4) + " in/px",
+      "同一个数的三种写法");
+    rows += row("地面覆盖", show(fpW * L, 2) + " × " + show(fpH * L, 2) + " " + lunit,
+      show(fpArea / (metric() ? 10000 : 4046.8564224), 4) + " " + (metric() ? "ha" : "ac") + " 每张");
+    rows += row("地面覆盖（英尺）", show(fpW * FT, 1) + " × " + show(fpH * FT, 1) + " ft",
+      show(fpArea / 4046.8564224, 3) + " 英亩");
+    rows += row("传感器长宽比", show(sw / sh, 4) + " : 1",
+      (Math.abs(sw / sh - W / H) < 1e-6 ? "与图像一致 — 未裁切" : "图像相对传感器有裁切"),
+      Math.abs(sw / sh - W / H) < 1e-6 ? "ok" : "warn");
+    rows += row("覆盖范围对应的像素数", show(W, 0) + " × " + show(H, 0) + " px",
+      "图像尺寸，不随航高变化");
+    el("gs-rows").innerHTML = rows;
+
+    var tb = el("gs-out").querySelector("tbody");
+    el("gs-h1").textContent = solveH ? "在解出的航高处" : "在 " + show(Hm * L, 1) + " " + lunit + " 处";
+    el("gs-h2").textContent = "数值";
+    var rowsHtml = "";
+    rowsHtml += "<tr><td>地面采样距离</td><td>" + show(gsdVal, 4) + " " + gsdUnit + "</td></tr>";
+    rowsHtml += "<tr><td>覆盖宽</td><td>" + show(fpW * L, 2) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>覆盖长</td><td>" + show(fpH * L, 2) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>覆盖面积</td><td>" + show(fpArea / (metric() ? 10000 : 4046.8564224), 4) + " " + (metric() ? "ha" : "ac") + "</td></tr>";
+    rowsHtml += "<tr><td>相对地面航高</td><td>" + show(Hm * L, 2) + " " + lunit + "</td></tr>";
+    rowsHtml += "<tr><td>每 100 px 对应的地面距离</td><td>" + show(gsdMm * 100 / 1000 * L, 2) + " " + lunit + "</td></tr>";
+    tb.innerHTML = rowsHtml;
+
+    el("gs-arith").textContent = okArith
+      ? "恒等式校核通过：覆盖宽 ÷ 图像宽 = " + show(gsdFromFp / (metric() ? 10 : IN), 4)
+        + " " + gsdUnit + "，与 GSD 相等。两条路径一致。"
+      : "恒等式校核未通过——覆盖范围与 GSD 不符，请反馈。";
+    el("gs-arith").style.color = okArith ? "#0f9d58" : "#d9534f";
+
+    res.classList.add("show");
+  }
+
+  // ---- wiring --------------------------------------------------------------
+  el("gs-cam").addEventListener("change", function(){
+    if (this.value !== "custom") loadCamera(this.value);
+    calc();
+  });
+  // Editing a camera field by hand means the preset no longer describes the camera.
+  ["gs-sw","gs-sh","gs-f","gs-w","gs-h"].forEach(function(id){
+    el(id).addEventListener("input", function(){
+      if (el("gs-cam").value !== "custom" && !CAMS[el("gs-cam").value]) return;
+      if (el("gs-cam").value !== "custom"){
+        var c = CAMS[el("gs-cam").value];
+        var same = Math.abs(num("gs-sw") - c[0]) < 1e-9 && Math.abs(num("gs-sh") - c[1]) < 1e-9
+                && Math.abs(num("gs-f") - c[2]) < 1e-9 && Math.abs(num("gs-w") - c[3]) < 1e-9
+                && Math.abs(num("gs-h") - c[4]) < 1e-9;
+        if (!same) el("gs-cam").value = "custom";
+      }
+      calc();
+    });
+  });
+
+  el("gs-solve").addEventListener("change", function(){
+    var solveH = this.value === "height";
+    el("gs-altwrap").style.display = solveH ? "none" : "";
+    el("gs-tgtwrap").style.display = solveH ? "" : "none";
+    calc();
+  });
+
+  el("gs-units").addEventListener("change", function(){
+    // The height and the target GSD are both typed in the unit on screen, so both have to
+    // move together. Reading them first commits the numbers in the unit they were typed in.
+    var hRaw = num("gs-alt"), tRaw = num("gs-tgt");
+    var toFeet = this.value === "ft";
+    var solveH = el("gs-solve").value === "height";
+    // The target GSD converts in its own dimension (cm <-> in); the height converts as a length.
+    if (!isNaN(tRaw)) el("gs-tgt").value = tidy(toFeet ? tRaw / 2.54 : tRaw * 2.54, 4);
+    if (solveH){
+      // In solve-for-height mode the height box is a hidden input the user cannot see or type in,
+      // so it has to be rewritten to the solved value in the new unit. Otherwise switching units
+      // leaves a stale number behind that reappears the moment they switch back to solve-for-GSD.
+      var t = num("gs-tgt");
+      var f = num("gs-f"), W = num("gs-w"), sw = num("gs-sw");
+      if (t > 0 && f > 0 && W > 0 && sw > 0){
+        var hm = (toFeet ? t * IN : t * 10) * f * W / sw / 1000;   // mm -> m
+        el("gs-alt").value = tidy(hm * (toFeet ? FT : 1), 2);
+      }
+    } else if (!isNaN(hRaw)){
+      el("gs-alt").value = tidy(toFeet ? hRaw * FT : hRaw / FT, 2);
+    }
+    el("gs-altu").textContent = toFeet ? "(ft)" : "(m)";
+    el("gs-tgtu").textContent = toFeet ? "(in/px)" : "(cm/px)";
+    calc();
+  });
+
+  ["gs-alt","gs-tgt"].forEach(function(id){
+    el(id).addEventListener("input", calc);
+  });
+
+  // ---- first paint ---------------------------------------------------------
+  // The default is the Phantom 4 RTK optics so the worked example matches the page.
+  el("gs-cam").value = "p4rtk";
+  loadCamera("p4rtk");
+  el("gs-alt").value = "120";
+  el("gs-tgt").value = "2";
+  calc();
+})();
+</script>
+</body>
+</html>
