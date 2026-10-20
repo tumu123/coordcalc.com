@@ -156,8 +156,14 @@ python <本地工作区>/.workbuddy/scratch/preview.py --port 8080
 - 30 个工具页（15 EN + 15 ZH）都带 `WebApplication` + `BreadcrumbList` 结构化数据，
   由 `inject_appjson.py` 幂等注入，并已折进全部 `build_zh_*.py`；重建不会丢。
 - 品牌名与域名的批量替换脚本是 `rebrand.py`；若要换域名，改 `PAIRS` 后跑一次即可。
+- **`sitemap.xml` 的 `<lastmod>` 是脚本管的，不要手改。** 每条日期取自该页的
+  `git log -1 --format=%cs`；页面有未提交改动时按当天算。改完页面、**提交之后**跑
+  `build_sitemap.py` 再提交一次 sitemap（同一天内两次提交不影响结果）。
+  `build_sitemap.py --check` 只验不写；`audit.py` 的 `sitemap lastmod` 断言会在
+  日期与 git 不一致、或日期落在未来时直接报错。
 - 把 `.html` 链接改成无扩展名形式的脚本是 `extensionless.py`（幂等，可重复运行）；
   它当时漏掉了 `zh_templates/`，已由 `migrate_templates.py` 补齐。
 - `preview.py`（本地预览）、`crawl_links.py`（内链全量探活）、`url_matrix.py`
   （逐页校验规范地址与 `.html` 跳转）、`verify_appjson.py`（结构化数据与面包屑可达性）、
-  `verify_rebuild.py`（重建可复现性）是本地验证工具，不参与部署。
+  `verify_rebuild.py`（重建可复现性）、`build_sitemap.py`（按 git 刷新 lastmod）
+  是本地验证工具，不参与部署。
