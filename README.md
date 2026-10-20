@@ -167,3 +167,9 @@ python <本地工作区>/.workbuddy/scratch/preview.py --port 8080
   （逐页校验规范地址与 `.html` 跳转）、`verify_appjson.py`（结构化数据与面包屑可达性）、
   `verify_rebuild.py`（重建可复现性）、`build_sitemap.py`（按 git 刷新 lastmod）
   是本地验证工具，不参与部署。
+- **新增工具页的验收清单**：手算校验三组以上先于代码写死（TOOL-SPEC 第三节）；
+  EN 页 + `build_zh_*.py` 中文页；首页 EN/ZH 卡片、`sitemap.xml` 两条 URL、
+  `inject_appjson.py` 与 `audit.py`/`verify_appjson.py` 的 TOOLS 清单各加一项；
+  首页「N calculators / N 个计算器」的表述必须同步——`audit.py` 的
+  `stated tool counts` 断言会拦住漏改。浏览器断言：`stockpile_test.js`
+  （英文，33 项手算）与 `stockpile_zh_test.js`（中文，数值一致性 + 标签汉化）。

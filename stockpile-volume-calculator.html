@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stockpile Volume Calculator — Gravel, Sand, Aggregate (Free)</title>
+<meta name="description" content="Free stockpile volume calculator: cone, truncated cone and ridge piles from measured dimensions, plus tonnage from bulk density and an angle-of-repose check. Cubic metres, yards and feet.">
+<link rel="canonical" href="https://coordcalc.com/stockpile-volume-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/stockpile-volume-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/stockpile-volume-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/stockpile-volume-calculator">
+<meta property="og:title" content="Stockpile Volume Calculator — Gravel, Sand, Aggregate (Free)">
+<meta property="og:description" content="Volume and tonnage of a gravel, sand or aggregate pile from a few measured dimensions, with an angle-of-repose sanity check.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/stockpile-volume-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Stockpile Volume Calculator",
+  "url": "https://coordcalc.com/stockpile-volume-calculator",
+  "description": "Free stockpile volume calculator: cone, truncated cone and ridge piles from measured dimensions, plus tonnage from bulk density and an angle-of-repose check. Cubic metres, yards and feet.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Professional surveying",
+      "item": "https://coordcalc.com/#surveying"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Stockpile Volume Calculator",
+      "item": "https://coordcalc.com/stockpile-volume-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate the volume of a stockpile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Measure the base and the height, then choose the shape that matches the pile. A cone is V = \u03c0R\u00b2h \u00f7 3. A pile with a flat top is a truncated cone, V = \u03c0h \u00f7 3 \u00d7 (R\u00b2 + Rr + r\u00b2). A long ridge is a prism, V = \u00bd \u00d7 (W + w) \u00d7 h \u00d7 L, plus a cone or truncated cone for tapered ends. The default example here, a cone 10 m across and 3 m high, is 78.54 m\u00b3."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I measure a stockpile for volume?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Measure the base across the toe of the pile, not across the road, and take three widths at roughly 60 degrees to each other and average them, because a pile is never a perfect circle. Measure the height from the same base plane to the crest. For a ridge, take the length along the crest and the width at several points, and state whether the ends are tapered or square."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What angle of repose should I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Dry sand and gravel stand at about 34 to 40 degrees, crushed stone at 35 to 40, coal at 35 to 45 and grain at 25 to 30. The exact value depends on grading, moisture and how the pile was built. It matters here as a check rather than an input: if the measured height needs a face steeper than the material can stand, one of the measurements is wrong."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I convert stockpile volume to tonnes?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Multiply the volume by the bulk density of the material as stockpiled, not its solid density. Sand and gravel run about 1.5 to 1.7 t/m\u00b3, crushed stone 1.4 to 1.6, topsoil 1.0 to 1.3 and coal 0.8 to 0.9. Measure the density with a container of known volume if the tonnage is going into a contract."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why do tapered ends add a third of a cone?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A ridge pile is a prism with a triangular cross-section, but its ends are not vertical faces; they slope back at the same angle as the sides. Each end is half a cone standing on the same base width, so the two ends together add exactly one cone of that radius and height, \u03c0R\u00b2h \u00f7 3. On a 20 m ridge 6 m wide and 2 m high that is 18.85 m\u00b3 on top of the 120 m\u00b3 body."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use this for a gravel or sand pile?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Pick the material preset to load a typical bulk density and angle of repose, then enter the dimensions you measured. The presets are midpoints of normal ranges, so replace them with your own test results whenever the tonnage is contractual."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What if the pile is irregular?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A pile that has been pushed, partly loaded out, or built against a wall is not a cone or a prism, and three measurements will only give an order of magnitude. Measure a grid of heights over the footprint and use the grid method on the cut and fill calculator instead, or survey it by drone or total station. The dimensioned shapes here are for piles that were built by a conveyor or a tipper and have not been disturbed."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How accurate is a volume from three measurements?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "On a clean, freshly built cone, within about 5 percent, most of which comes from the base diameter because it enters the formula squared: a 2 percent error in the diameter is a 4 percent error in the volume. On a disturbed pile the figure is not a measurement at all, and it should not be used for inventory or payment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this stockpile volume calculator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes \u2014 free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no project data is uploaded."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> › <a href="./#surveying">Professional surveying</a> › Stockpile Volume Calculator
+  </nav>
+
+  <h1>Stockpile Volume Calculator</h1>
+
+  <p class="lead">
+    This stockpile volume calculator turns three or four tape measurements into a volume and a tonnage.
+    Pick the shape the pile actually is — a cone, a truncated cone with a flat top, or a ridge with
+    square or tapered ends — enter the base, the height and the length, and it returns the volume in
+    cubic metres, cubic yards or cubic feet, the mass at your bulk density, and the face angle so you
+    can check the measurement against the angle of repose the material can actually stand. Free, in
+    your browser, no login.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 250px;">
+        <label for="sp-shape">Pile shape</label>
+        <select id="sp-shape">
+          <option value="round" selected>Round — cone or truncated cone</option>
+          <option value="ridge">Ridge — long pile with a triangular section</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 200px;">
+        <label for="sp-units">Unit system</label>
+        <select id="sp-units">
+          <option value="m">Metres (m, m³, t)</option>
+          <option value="ft">Feet (ft, yd³, short tons)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="sp-mat">Material</label>
+        <select id="sp-mat">
+          <option value="custom">Custom — set density below</option>
+          <option value="sand">Sand, dry</option>
+          <option value="sand-wet">Sand, wet</option>
+          <option value="gravel" selected>Gravel, 20 mm</option>
+          <option value="crushed">Crushed stone</option>
+          <option value="topsoil">Topsoil</option>
+          <option value="clay">Clay, dry lumps</option>
+          <option value="coal">Coal, bituminous</option>
+          <option value="grain">Grain, wheat</option>
+          <option value="chips">Wood chips</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="sp-round" style="margin-top:16px;">
+      <div class="row">
+        <div class="field">
+          <label for="sp-d">Base diameter</label>
+          <input id="sp-d" type="number" step="any" value="10" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-dt">Top diameter (0 for a cone)</label>
+          <input id="sp-dt" type="number" step="any" value="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-h">Height</label>
+          <input id="sp-h" type="number" step="any" value="3" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint">
+        Measure the base across the toe of the pile in three directions about 60° apart and enter the
+        average. Height is from the same base plane to the crest, not to the top of the loader.
+      </p>
+    </div>
+
+    <div id="sp-ridge" style="margin-top:16px;display:none;">
+      <div class="row">
+        <div class="field">
+          <label for="sp-w">Base width</label>
+          <input id="sp-w" type="number" step="any" value="6" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-wt">Top width (0 for a sharp crest)</label>
+          <input id="sp-wt" type="number" step="any" value="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-L">Length along the crest</label>
+          <input id="sp-L" type="number" step="any" value="20" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-h2">Height</label>
+          <input id="sp-h2" type="number" step="any" value="2" autocomplete="off">
+        </div>
+      </div>
+      <label class="checkline" for="sp-taper">
+        <input id="sp-taper" type="checkbox" checked>
+        Ends are tapered, not cut off square
+      </label>
+      <p class="hint">
+        A ridge built by a stacker or a tipper has ends that slope back at the same angle as the sides;
+        the two ends together add one cone. Tick the box for that. Untick it only if the pile is
+        genuinely cut square against a wall or a berm.
+      </p>
+    </div>
+
+    <div class="row" style="margin-top:18px;">
+      <div class="field" style="flex:0 0 230px;">
+        <label for="sp-rho">Bulk density <span id="sp-rhou">(t/m³)</span></label>
+        <input id="sp-rho" type="number" step="any" value="1.6" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 230px;">
+        <label for="sp-phi">Angle of repose (°)</label>
+        <input id="sp-phi" type="number" step="any" value="37" autocomplete="off">
+      </div>
+      <p class="hint" style="flex:1;margin:0;">
+        The density is the <i>as-stockpiled</i> bulk density, voids included — not the density of the
+        solid rock. The angle of repose is only used to check the measurement; it does not change the
+        volume.
+      </p>
+    </div>
+
+    <p class="err" id="sp-err">Check the dimensions — the top must be smaller than the base, and every length must be greater than zero.</p>
+
+    <div class="results" id="sp-results">
+      <div class="big">
+        <span class="bk">Stockpile volume</span>
+        <span class="bv" id="sp-bv">—</span>
+      </div>
+      <div id="sp-rows"></div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>The three shapes, and one formula that covers two of them</h3>
+    <p>
+      A stockpile is one of three solids. A <b>cone</b> is what comes out of a conveyor or a belt
+      stacker: circular base, single crest. A <b>truncated cone</b> is the same pile levelled off, so
+      it has a flat circular top. A <b>ridge</b> is what a tipper leaves along a haul road: a long
+      prism with a triangular or trapezoidal cross-section.
+    </p>
+    <p>
+      The cone and the truncated cone are the same formula with the top radius set to zero:
+      <code>V = πh ÷ 3 × (R² + R·r + r²)</code>, where <code>R</code> is the base radius,
+      <code>r</code> the top radius and <code>h</code> the height. Put <code>r = 0</code> and it
+      collapses to <code>V = πR²h ÷ 3</code>, the cone. That is why the calculator asks for a top
+      diameter rather than a separate shape: leave it at 0 and you have a cone.
+    </p>
+    <h3>Ridge piles: the body plus the ends</h3>
+    <p>
+      The body of a ridge is a prism of trapezoidal section,
+      <code>V_body = ½ × (W + w) × h × L</code>, where <code>W</code> is the base width,
+      <code>w</code> the top width (0 for a sharp crest) and <code>L</code> the length along the crest.
+      The ends are the part most people forget. They are not vertical faces — the pile slopes back at
+      the same angle as its sides, so each end is half a cone (or half a truncated cone), and the two
+      halves together are exactly one whole one: <code>V_ends = πh ÷ 3 × (R² + R·r + r²)</code> with
+      <code>R = W ÷ 2</code> and <code>r = w ÷ 2</code>. The same frustum expression closes the
+      formula for both shapes, which is why the two never disagree.
+    </p>
+    <h3>Tonnage from bulk density</h3>
+    <p>
+      <code>mass = volume × bulk density</code>. The density that belongs here is the bulk density as
+      stockpiled, voids and all — a figure around 1.6 t/m³ for gravel, not the 2.6 t/m³ of the solid
+      stone. The gap between the two is the whole point: a pile is mostly air. If the tonnage is going
+      into a contract, weigh a container of known volume filled from the pile and use that number.
+    </p>
+    <h3>Face angle and angle of repose</h3>
+    <p>
+      The face angle of a pile is <code>arctan(h ÷ (R − r))</code> for a round pile and
+      <code>arctan(h ÷ ((W − w) ÷ 2))</code> for a ridge. A loose granular material cannot stand
+      steeper than its angle of repose, so the calculator works out what height the material could
+      reach on the base you measured and compares. If your measured height needs a steeper face than
+      the material allows, the pile cannot have those dimensions: the base is too small, or the height
+      was taken from a different plane, or the material is damp and cohesive. It is the cheapest error
+      check available on site and it costs nothing.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Which shape should you measure?</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Pile</th><th>What you measure</th><th>Volume</th><th>Typical case</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cone</td>
+          <td>Base diameter, height</td>
+          <td><code>πR²h ÷ 3</code></td>
+          <td>Conveyor or stacker discharge, sand and aggregate</td>
+        </tr>
+        <tr>
+          <td>Truncated cone</td>
+          <td>Base diameter, top diameter, height</td>
+          <td><code>πh ÷ 3 × (R² + R·r + r²)</code></td>
+          <td>Conical pile levelled for a loader, or built up to a maximum height</td>
+        </tr>
+        <tr>
+          <td>Ridge, square ends</td>
+          <td>Base width, top width, length, height</td>
+          <td><code>½(W + w)hL</code></td>
+          <td>Pile pushed against a wall, a berm or a bunker</td>
+        </tr>
+        <tr>
+          <td>Ridge, tapered ends</td>
+          <td>Same, plus the end slope</td>
+          <td><code>½(W + w)hL + πh ÷ 3 × (R² + R·r + r²)</code></td>
+          <td>Windrow from a tipper, the normal shape on a stockyard</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>
+      If the pile does not look like any of these — it has been partly loaded out, pushed into a corner,
+      or has several peaks — three measurements will not describe it. Survey a grid of spot heights over
+      the footprint and use the grid method instead, or fly it. A shape model is only as good as the
+      resemblance between the pile and the shape.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Measuring a stockpile without a survey instrument</h2>
+    <p>
+      Most stockpile volumes are still taken with a tape, and most of the error comes from two habits:
+      measuring the base at the wrong place and measuring the height from the wrong plane.
+    </p>
+    <p>
+      <b>The base.</b> The toe of a pile is a gradual transition, not a line. Walk the pile and find
+      where the material is one particle deep, and measure there — measuring at the visible edge of the
+      heap understates the base and therefore the volume. Take three widths about 60° apart and average
+      them; a pile that has been loaded from one side is never a circle, and a single diameter will be
+      wrong in a predictable direction.
+    </p>
+    <p>
+      <b>The height.</b> Measure from the same plane the base was measured on. If the base was taken on
+      the yard surface and the height was taken with the tape hooked over the crest, the two numbers
+      belong to different datums and the volume is out by the height of the hook. For a high pile, use
+      a levelling instrument or a GNSS rover on the crest; a tape dropped down the face will follow the
+      slope, not the vertical.
+    </p>
+    <p>
+      <b>The shape.</b> Look at the ends before you choose. A pile built by a tipper reversing along a
+      line has tapered ends and the difference is not small: on a 20 m ridge 6 m wide and 2 m high the
+      ends are 18.85 m³ of the 138.85 m³ total, about 14 percent. Getting that wrong is worth more than
+      the precision of the tape.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Bulk density and angle of repose by material</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Material</th><th>Bulk density (t/m³)</th><th>Angle of repose</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Sand, dry</td><td>1.4–1.7</td><td>34°</td><td>Drains freely, flattens quickly</td></tr>
+        <tr><td>Sand, wet</td><td>1.7–2.0</td><td>34–45°</td><td>Capillary suction can hold a much steeper face</td></tr>
+        <tr><td>Gravel, 20 mm</td><td>1.5–1.7</td><td>37°</td><td>The usual default for aggregate</td></tr>
+        <tr><td>Crushed stone</td><td>1.4–1.6</td><td>40°</td><td>Angular, interlocks, stands steeper than rounded gravel</td></tr>
+        <tr><td>Topsoil</td><td>1.0–1.3</td><td>35°</td><td>Depends heavily on moisture and organic content</td></tr>
+        <tr><td>Clay, dry lumps</td><td>1.0–1.3</td><td>40°</td><td>Cohesive; a wet clay pile can stand near vertical</td></tr>
+        <tr><td>Coal, bituminous</td><td>0.8–0.9</td><td>38°</td><td>Low density, and fines change the slope</td></tr>
+        <tr><td>Grain, wheat</td><td>0.75–0.80</td><td>27°</td><td>Very free-flowing; flattens in storage</td></tr>
+        <tr><td>Wood chips</td><td>0.25–0.35</td><td>40°</td><td>Low density, high voids, compresses with height</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      These are ranges from normal practice, not specification values. Moisture, grading, compaction
+      and the way the pile was built all move the number — use your own test results for anything
+      contractual.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked example</h2>
+    <p>
+      The default in the calculator is a cone with a base diameter of 10 m and a height of 3 m. The
+      radius is <code>R = 5 m</code>, so
+      <code>V = π × 3 ÷ 3 × (25 + 0 + 0) = 25π ≈ 78.54 m³</code>. At a bulk density of 1.6 t/m³ that is
+      <code>78.54 × 1.6 ≈ 125.66 t</code>, and the face angle is
+      <code>arctan(3 ÷ 5) ≈ 30.96°</code>. Gravel at 37° could stand at
+      <code>5 × tan 37° ≈ 3.77 m</code> on that base, so the measured 3 m is flatter than repose and
+      nothing is wrong — piles are normally built flatter than they could stand.
+    </p>
+    <p>
+      Change the top diameter to 4 m and it becomes a truncated cone. With <code>r = 2 m</code>,
+      <code>V = π × 3 ÷ 3 × (25 + 10 + 4) = 39π ≈ 122.52 m³</code> — 44 m³ less than the cone, because
+      the top 2 m of the pile have been taken off. The face angle goes to
+      <code>arctan(3 ÷ 3) = 45°</code>, which is steeper than gravel can stand, and the calculator says
+      so: a flat-topped gravel pile 10 m wide with a 2 m top and 3 m sides is not something that forms
+      by itself.
+    </p>
+    <p>
+      Now a ridge: base width 6 m, sharp crest, 20 m long, 2 m high. The body is
+      <code>½ × 6 × 2 × 20 = 120 m³</code>. With tapered ends, the two ends add one cone of radius 3 m
+      and height 2 m, <code>π × 2 ÷ 3 × 9 ≈ 18.85 m³</code>, for a total of
+      <code>138.85 m³</code>. Untick the tapered ends and you get 120 m³ — a 14 percent difference on
+      the same pile, decided by whether the ends were cut square or sloped back.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Common volume and tonnage conversions</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>Conversion</th><th>Value</th><th>Notes</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 cubic metre</td><td>1.30795062 yd³ = 35.3146667 ft³</td><td>Metric to imperial volume</td></tr>
+        <tr><td>1 cubic yard</td><td>27 ft³ = 0.764554858 m³</td><td>The default US aggregate unit</td></tr>
+        <tr><td>1 tonne</td><td>1.1023113 short tons = 0.9842 long tons</td><td>US short ton is 2,000 lb</td></tr>
+        <tr><td>1 t/m³</td><td>62.427961 lb/ft³</td><td>Bulk density across the two systems</td></tr>
+        <tr><td>1 short ton of gravel at 1.6 t/m³</td><td>About 0.567 m³ = 0.74 yd³</td><td>Useful for load counts</td></tr>
+        <tr><td>A 20 t tipper load of gravel</td><td>About 12.5 m³ bank</td><td>Varies with permit weight and material</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      Volumes here are geometric, so they depend entirely on the dimensions you enter. They carry no
+      allowance for compaction, settlement or material lost in handling.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-acreage-from-coordinates">How to calculate acreage from coordinates</a>
+        <small>The footprint area under the pile, if you surveyed it instead of taping it.</small></li>
+      <li><a href="how-to-calculate-slope-percentage">How to calculate slope percentage</a>
+        <small>Converting a face angle into the percent grade a spec talks about.</small></li>
+      <li><a href="survey-foot-vs-international-foot">Survey foot vs international foot</a>
+        <small>Which foot your volume was computed in, and why it matters at this scale.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="cut-fill-calculator">cut and fill calculator<small>Earthwork volumes from sections or a depth grid</small></a>
+      <a href="land-area-calculator">calculate acres from coordinates<small>Footprint area from a coordinate list</small></a>
+      <a href="slope-calculator">slope percentage calculator<small>Face angle as a percent grade</small></a>
+      <a href="unit-converter">cubic yards to cubic metres<small>Volume and density conversions</small></a>
+      <a href="dxf-coordinate-extractor">dxf coordinate extractor<small>Points out of a drawing take-off</small></a>
+      <a href="traverse-calculator">traverse calculator<small>Coordinates and closure for a surveyed pile</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do you calculate the volume of a stockpile?</summary>
+      <p>Measure the base and the height, then choose the shape that matches the pile. A cone is V = πR²h ÷ 3. A pile with a flat top is a truncated cone, V = πh ÷ 3 × (R² + Rr + r²). A long ridge is a prism, V = ½ × (W + w) × h × L, plus a cone or truncated cone for tapered ends. The default example here, a cone 10 m across and 3 m high, is 78.54 m³.</p>
+    </details>
+    <details>
+      <summary>How do I measure a stockpile for volume?</summary>
+      <p>Measure the base across the toe of the pile, not across the road, and take three widths at roughly 60 degrees to each other and average them, because a pile is never a perfect circle. Measure the height from the same base plane to the crest. For a ridge, take the length along the crest and the width at several points, and state whether the ends are tapered or square.</p>
+    </details>
+    <details>
+      <summary>What angle of repose should I use?</summary>
+      <p>Dry sand and gravel stand at about 34 to 40 degrees, crushed stone at 35 to 40, coal at 35 to 45 and grain at 25 to 30. The exact value depends on grading, moisture and how the pile was built. It matters here as a check rather than an input: if the measured height needs a face steeper than the material can stand, one of the measurements is wrong.</p>
+    </details>
+    <details>
+      <summary>How do I convert stockpile volume to tonnes?</summary>
+      <p>Multiply the volume by the bulk density of the material as stockpiled, not its solid density. Sand and gravel run about 1.5 to 1.7 t/m³, crushed stone 1.4 to 1.6, topsoil 1.0 to 1.3 and coal 0.8 to 0.9. Measure the density with a container of known volume if the tonnage is going into a contract.</p>
+    </details>
+    <details>
+      <summary>Why do tapered ends add a third of a cone?</summary>
+      <p>A ridge pile is a prism with a triangular cross-section, but its ends are not vertical faces; they slope back at the same angle as the sides. Each end is half a cone standing on the same base width, so the two ends together add exactly one cone of that radius and height, πR²h ÷ 3. On a 20 m ridge 6 m wide and 2 m high that is 18.85 m³ on top of the 120 m³ body.</p>
+    </details>
+    <details>
+      <summary>Can I use this for a gravel or sand pile?</summary>
+      <p>Yes. Pick the material preset to load a typical bulk density and angle of repose, then enter the dimensions you measured. The presets are midpoints of normal ranges, so replace them with your own test results whenever the tonnage is contractual.</p>
+    </details>
+    <details>
+      <summary>What if the pile is irregular?</summary>
+      <p>A pile that has been pushed, partly loaded out, or built against a wall is not a cone or a prism, and three measurements will only give an order of magnitude. Measure a grid of heights over the footprint and use the grid method on the cut and fill calculator instead, or survey it by drone or total station. The dimensioned shapes here are for piles that were built by a conveyor or a tipper and have not been disturbed.</p>
+    </details>
+    <details>
+      <summary>How accurate is a volume from three measurements?</summary>
+      <p>On a clean, freshly built cone, within about 5 percent, most of which comes from the base diameter because it enters the formula squared: a 2 percent error in the diameter is a 4 percent error in the volume. On a disturbed pile the figure is not a measurement at all, and it should not be used for inventory or payment.</p>
+    </details>
+    <details>
+      <summary>Is this stockpile volume calculator free?</summary>
+      <p>Yes — free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no project data is uploaded.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing design standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 10});
+
+  // The engine keeps everything in metres, tonnes and degrees, and converts only for
+  // display. Switching the unit system then preserves the physical pile instead of
+  // silently reinterpreting "10" from metres into feet.
+  var FT = 3.280839895013123;             // 1 m in ft
+  var LBFT3_PER_TM3 = 62.4279605761;      // 1 t/m3 in lb/ft3
+  var M3_TO_YD3 = 1.3079506192870205;
+
+  var M = {d:10, dt:0, h:3, w:6, wt:0, L:20, h2:2, rho:1.6, phi:37};
+
+  var DENSITY = {
+    "sand":      [1.6, 34],
+    "sand-wet":  [1.85, 38],
+    "gravel":    [1.6, 37],
+    "crushed":   [1.5, 40],
+    "topsoil":   [1.2, 35],
+    "clay":      [1.15, 40],
+    "coal":      [0.85, 38],
+    "grain":     [0.78, 27],
+    "chips":     [0.30, 40]
+  };
+
+  function metric(){ return el("sp-units").value === "m"; }
+  function fromM(v){ return metric() ? v : v * FT; }
+  function shape(){ return el("sp-shape").value; }
+
+  function show(v){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-6 || a >= 1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+  function row(k, v, sub, warn){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small'+ (warn ? ' class="warn"' : '') +'>'+sub+'</small>' : '')+'</span></div>';
+  }
+
+  // ---- input handling: display <-> canonical metric -------------------------
+  // `u` lets the unit-change handler commit the values that are still on screen in
+  // the OLD unit before the select flips, otherwise "6" would silently turn from
+  // 6 metres into 6 feet and the volume would collapse by a factor of 35.
+  function readInputs(u){
+    var mm = (u || el("sp-units").value) === "m";
+    var ids = ["sp-d", "sp-dt", "sp-h", "sp-w", "sp-wt", "sp-L", "sp-h2"];
+    for (var i = 0; i < ids.length; i++){
+      var v = parseFloat(el(ids[i]).value);
+      if (!isNaN(v)) M[ids[i].slice(3)] = mm ? v : v / FT;
+    }
+    var rho = parseFloat(el("sp-rho").value);
+    if (!isNaN(rho)) M.rho = mm ? rho : rho / LBFT3_PER_TM3;
+    var phi = parseFloat(el("sp-phi").value);
+    if (!isNaN(phi)) M.phi = phi;
+  }
+
+  function renderInputs(){
+    var ids = ["sp-d", "sp-dt", "sp-h", "sp-w", "sp-wt", "sp-L", "sp-h2"];
+    for (var i = 0; i < ids.length; i++){
+      var v = fromM(M[ids[i].slice(3)]);
+      el(ids[i]).value = Math.abs(v) < 1e-9 ? "0" : String(Math.round(v * 1e6) / 1e6);
+    }
+    el("sp-rho").value = metric()
+      ? String(Math.round(M.rho * 1000) / 1000)
+      : String(Math.round(M.rho * LBFT3_PER_TM3 * 10) / 10);
+    el("sp-phi").value = String(Math.round(M.phi * 10) / 10);
+    el("sp-rhou").textContent = metric() ? "(t/m³)" : "(lb/ft³)";
+  }
+
+  // ---- the calculation ------------------------------------------------------
+  // frustum(R, r, h) is the single expression behind both round piles and the
+  // tapered ends of a ridge: V = pi*h/3 * (R^2 + R r + r^2), and r = 0 gives the cone.
+  function frustum(R, r, h){
+    return Math.PI * h / 3 * (R * R + R * r + r * r);
+  }
+
+  function calc(){
+    var round = shape() === "round";
+    el("sp-round").style.display = round ? "block" : "none";
+    el("sp-ridge").style.display = round ? "none" : "block";
+
+    var h = round ? M.h : M.h2;
+    var base = round ? M.d : M.w;
+    var top  = round ? M.dt : M.wt;
+    var R = base / 2, r = top / 2;
+    var err = el("sp-err"), res = el("sp-results");
+
+    var bad = !(base > 0) || !(h > 0) || top < 0 || top >= base
+              || (!round && !(M.L > 0));
+    el("sp-d").classList.toggle("bad", round && bad && !(base > 0));
+    el("sp-h").classList.toggle("bad", round && bad && !(h > 0));
+    el("sp-h2").classList.toggle("bad", !round && bad && !(h > 0));
+    el("sp-w").classList.toggle("bad", !round && bad && !(base > 0));
+    el("sp-L").classList.toggle("bad", !round && bad && !(M.L > 0));
+    el("sp-dt").classList.toggle("bad", bad && top >= base);
+    el("sp-wt").classList.toggle("bad", bad && top >= base);
+    err.classList.toggle("show", bad);
+    if (bad){ res.classList.remove("show"); return; }
+
+    var tapered = !round && el("sp-taper").checked;
+    var body = round ? 0 : 0.5 * (base + top) * h * M.L;
+    var ends = round ? frustum(R, r, h) : (tapered ? frustum(R, r, h) : 0);
+    var v = round ? frustum(R, r, h) : body + ends;
+
+    // face angle: the slope of the side from the base to the crest
+    var run = round ? (R - r) : ((base - top) / 2);
+    var face = run > 1e-9 ? Math.atan(h / run) * 180 / Math.PI : 90;
+    // the height this material could stand on the base it has been given
+    var hRepose = run > 1e-9 ? run * Math.tan(M.phi * Math.PI / 180) : h;
+
+    var vOther = metric() ? v * M3_TO_YD3 : v / M3_TO_YD3;
+    var unit = metric() ? "m\u00B3" : "yd\u00B3";
+    var otherUnit = metric() ? "yd\u00B3" : "m\u00B3";
+    var tonnes = v * M.rho;                      // metric tonnes, always
+    var shortTons = tonnes * 1.10231131092;
+    var massUnit = metric() ? "t" : "short tons";
+    var mass = metric() ? tonnes : shortTons;
+    var planArea = round ? Math.PI * R * R : base * M.L;
+
+    el("sp-bv").textContent = show(metric() ? v : v * M3_TO_YD3) + " " + unit;
+
+    var rows = "";
+    rows += row("Shape", round ? (top > 0 ? "Truncated cone" : "Cone") : "Ridge",
+      round ? (top > 0 ? "flat top, V = πh÷3(R²+Rr+r²)" : "V = πR²h ÷ 3")
+            : "½(W+w)hL" + (tapered ? " + one frustum of ends" : ", square ends"));
+    if (!round){
+      rows += row("Body volume", show(metric() ? body : body * M3_TO_YD3) + " " + unit, "prism along the crest");
+      rows += row("Ends volume", show(metric() ? ends : ends * M3_TO_YD3) + " " + unit,
+        tapered ? "two half-frustums, i.e. one whole one" : "square ends, no added volume");
+    }
+    rows += row("Volume in " + otherUnit, show(metric() ? vOther : vOther * M3_TO_YD3) + " " + otherUnit,
+      "same pile, other system");
+    rows += row("Plan area (footprint)", show(metric() ? planArea : planArea * FT * FT) + " "
+      + (metric() ? "m\u00B2" : "ft\u00B2"),
+      round ? "πR², the circle at the toe" : "base width × length");
+    rows += row("Bulk density", metric()
+      ? show(M.rho) + " t/m\u00B3"
+      : show(M.rho * LBFT3_PER_TM3) + " lb/ft\u00B3", "as stockpiled, voids included");
+    rows += row("Mass", show(mass) + " " + massUnit,
+      metric() ? show(shortTons) + " short tons" : show(tonnes) + " tonnes");
+    rows += row("Face angle", show(face) + "\u00B0",
+      "measured slope from toe to crest");
+
+    var steeper = face > M.phi + 0.5;
+    rows += row("Angle of repose for the material", show(M.phi) + "\u00B0",
+      steeper ? "measured face is STEEPER than the material can stand — re-check the base"
+              : "the measured face is within what this material will stand",
+      steeper);
+    rows += row("Height this material would reach", show(metric() ? hRepose : hRepose * FT)
+      + " " + (metric() ? "m" : "ft"),
+      steeper ? "your height exceeds it: one of the dimensions is wrong"
+              : "measured height is at or below it, which is normal");
+
+    el("sp-rows").innerHTML = rows;
+    res.classList.add("show");
+  }
+
+  // ---- wiring ---------------------------------------------------------------
+  var prevUnit = el("sp-units").value;
+  el("sp-shape").addEventListener("change", function(){ readInputs(); calc(); });
+  el("sp-mat").addEventListener("change", function(){
+    var preset = DENSITY[el("sp-mat").value];
+    if (preset){ M.rho = preset[0]; M.phi = preset[1]; renderInputs(); }
+    calc();
+  });
+  el("sp-units").addEventListener("change", function(){
+    readInputs(prevUnit);            // commit what was typed in the old unit
+    prevUnit = el("sp-units").value;
+    renderInputs();                  // then draw the same pile in the new one
+    calc();
+  });
+  el("sp-taper").addEventListener("change", calc);
+  var inputs = ["sp-d", "sp-dt", "sp-h", "sp-w", "sp-wt", "sp-L", "sp-h2", "sp-rho", "sp-phi"];
+  for (var i = 0; i < inputs.length; i++){
+    el(inputs[i]).addEventListener("input", function(){
+      if (/^sp-(rho|phi)$/.test(this.id)) el("sp-mat").value = "custom";
+      readInputs();
+      calc();
+    });
+  }
+
+  renderInputs();
+  calc();
+})();
+</script>
+</body>
+</html>

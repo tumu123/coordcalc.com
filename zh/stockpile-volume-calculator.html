@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>堆料体积计算器 — 砂石料堆体积与吨位（免费）</title>
+<meta name="description" content="免费的堆料体积计算器：由底面直径与高度算圆锥、截头圆锥料堆，或由宽、长、高算长条料堆（两端可锥收）；按堆积密度换算吨位，并用安息角校核量测是否自相矛盾。立方米、立方码、立方英尺，全部在浏览器本地计算。">
+<link rel="canonical" href="https://coordcalc.com/zh/stockpile-volume-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/stockpile-volume-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/stockpile-volume-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/stockpile-volume-calculator">
+<meta property="og:title" content="堆料体积计算器 — 砂石料堆体积与吨位（免费）">
+<meta property="og:description" content="免费的堆料体积计算器：由底面直径与高度算圆锥、截头圆锥料堆，或由宽、长、高算长条料堆（两端可锥收）；按堆积密度换算吨位，并用安息角校核量测是否自相矛盾。立方米、立方码、立方英尺，全部在浏览器本地计算。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/stockpile-volume-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "堆料体积计算器",
+  "url": "https://coordcalc.com/zh/stockpile-volume-calculator",
+  "description": "免费的堆料体积计算器：由底面直径与高度算圆锥、截头圆锥料堆，或由宽、长、高算长条料堆（两端可锥收）；按堆积密度换算吨位，并用安息角校核量测是否自相矛盾。立方米、立方码、立方英尺，全部在浏览器本地计算。",
+  "inLanguage": "zh-CN",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "计算器",
+      "item": "https://coordcalc.com/#tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "堆料体积计算器",
+      "item": "https://coordcalc.com/zh/stockpile-volume-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "料堆体积怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "先量底面和高，再按料堆的实际形状选公式。圆锥为 V = πR²h ÷ 3；有平台顶的是截头圆锥，V = πh ÷ 3 × (R² + Rr + r²)；长条堆是棱柱 V = ½ × (W + w) × h × L，两端锥收时再加一个对应的圆锥或截头圆锥。本页默认的算例——底径 10 m、高 3 m 的圆锥——是 78.54 m³。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "料堆怎么量才能算体积？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "底面要量在坡脚处，不要量到路上；取大约相隔 60° 的三个方向各量一次再平均，因为料堆从来不是正圆。高度要从同一个基准面量到堆顶。长条堆要沿堆顶量长度，并在几个位置量宽度，同时说明两端是锥收还是切平。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "安息角该取多少？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "干砂和砾石大约 34–40°，碎石 35–40°，煤 35–45°，粮食 25–30°。具体值取决于是级配、含水率和堆料方式。在这里它不是一个输入参数而是一道校核：如果量出的高度需要一个比物料能站的更陡的坡面，那尺寸就有一处是错的。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "体积怎么换算成吨？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "体积乘以物料堆积状态的密度，不是母岩密度。砂石一般 1.5–1.7 t/m³，碎石 1.4–1.6，表土 1.0–1.3，煤 0.8–0.9。如果吨位要进合同，用已知容积的容器装一桶称一下再算。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么两端锥收要多加三分之一个圆锥？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "长条堆是三角截面的棱柱，但两端不是竖直的切面，而是顺着同样的坡角收回去。每一端相当于以底宽为直径的半个圆锥，两端正好合成一整个：πR²h ÷ 3。对一堆长 20 m、宽 6 m、高 2 m 的料来说，这就是堆体 120 m³ 之外再加 18.85 m³。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "砾石堆、砂堆能直接用这个算吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "可以。先在物料里选一项，载入该物料常见的堆积密度和安息角，再填入你量到的尺寸。这些预置值是常规范围的中点，凡涉及结算的吨位都应换成自己实测的数据。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "料堆不规则怎么办？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "被推过、被取走一部分、或者顶在墙上的料堆既不是圆锥也不是棱柱，三个尺寸只能给出量级。应该在平面范围内按方格网量一批高程，改用土方计算器的方格网法，或者用无人机、全站仪实测。本页列的形状适用于皮带机或自卸车刚堆出来、尚未被扰动的料堆。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "量三个尺寸算出来的体积有多准？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "对刚堆好的圆锥形料堆，大约 5% 以内，其中误差主要来自底面直径——它以平方进入公式：直径差 2%，体积就差 4%。对已被扰动的料堆，这个数算不上测量结果，不能用于盘点或结算。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个堆料体积计算器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费，无需注册、无账号、无次数限制。所有计算都在你的浏览器里完成，项目数据不会上传。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:820px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select,textarea{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:820px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  @media(max-width:640px){
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../stockpile-volume-calculator" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › 堆料体积计算器
+  </nav>
+
+<h1>堆料体积计算器</h1>
+
+  <p class="lead">
+    把三个、四个卷尺读数变成体积和吨位。按料堆的实际形状选——圆锥、带平台顶的截头圆锥，
+    或两端可以是锥收的长条堆——填入底面、高度（长条堆再加长度），就得到立方米、立方码或立方英尺的体积、
+    按堆积密度换算的吨位，以及坡面角，用来核对所量的尺寸与物料安息角是否自相矛盾。
+    免费、无需登录、数据不上传。
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 250px;">
+        <label for="sp-shape">料堆形状</label>
+        <select id="sp-shape">
+          <option value="round" selected>圆形 — 圆锥或截头圆锥</option>
+          <option value="ridge">长条 — 三角截面的条形堆</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 200px;">
+        <label for="sp-units">单位制</label>
+        <select id="sp-units">
+          <option value="m">公制（m、m³、吨）</option>
+          <option value="ft">英制（ft、立方码、短吨）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 210px;">
+        <label for="sp-mat">物料</label>
+        <select id="sp-mat">
+          <option value="custom">自定义 — 在下方填密度</option>
+          <option value="sand">砂，干</option>
+          <option value="sand-wet">砂，湿</option>
+          <option value="gravel" selected>砾石，20 mm</option>
+          <option value="crushed">碎石</option>
+          <option value="topsoil">种植土 / 表土</option>
+          <option value="clay">黏土，干块状</option>
+          <option value="coal">烟煤</option>
+          <option value="grain">小麦</option>
+          <option value="chips">木片</option>
+        </select>
+      </div>
+    </div>
+
+    <div id="sp-round" style="margin-top:16px;">
+      <div class="row">
+        <div class="field">
+          <label for="sp-d">底面直径</label>
+          <input id="sp-d" type="number" step="any" value="10" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-dt">顶面直径（圆锥填 0）</label>
+          <input id="sp-dt" type="number" step="any" value="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-h">高</label>
+          <input id="sp-h" type="number" step="any" value="3" autocomplete="off">
+        </div>
+      </div>
+      <p class="hint">
+        底面要量在坡脚处，取大约相隔 60° 的三个方向各量一次再填平均值。
+        高度从同一基准面量到堆顶，不是量到铲车铲斗的高度。
+      </p>
+    </div>
+
+    <div id="sp-ridge" style="margin-top:16px;display:none;">
+      <div class="row">
+        <div class="field">
+          <label for="sp-w">底宽</label>
+          <input id="sp-w" type="number" step="any" value="6" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-wt">顶宽（尖顶填 0）</label>
+          <input id="sp-wt" type="number" step="any" value="0" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-L">沿堆顶的长度</label>
+          <input id="sp-L" type="number" step="any" value="20" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="sp-h2">高</label>
+          <input id="sp-h2" type="number" step="any" value="2" autocomplete="off">
+        </div>
+      </div>
+      <label class="checkline" for="sp-taper">
+        <input id="sp-taper" type="checkbox" checked>
+        两端是收坡的，不是竖直切平
+      </label>
+      <p class="hint">
+        堆料机或自卸车堆出的条堆，两端是顺着同样的坡角收回去的；两端合起来相当于一个完整的圆锥。
+        这种情况就勾上。只有当料堆确实被挡墙或土埂切平时，才取消勾选。
+      </p>
+    </div>
+
+    <div class="row" style="margin-top:18px;">
+      <div class="field" style="flex:0 0 230px;">
+        <label for="sp-rho">堆积密度 <span id="sp-rhou">(t/m³)</span></label>
+        <input id="sp-rho" type="number" step="any" value="1.6" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 230px;">
+        <label for="sp-phi">安息角（°）</label>
+        <input id="sp-phi" type="number" step="any" value="37" autocomplete="off">
+      </div>
+      <p class="hint" style="flex:1;margin:0;">
+        密度要填<b>堆积状态</b>的密度，含孔隙——不是母岩的密度。安息角只用来校核量测，
+        不参与体积计算。
+      </p>
+    </div>
+
+    <p class="err" id="sp-err">请检查尺寸——顶面必须小于底面，所有长度必须大于 0。</p>
+
+    <div class="results" id="sp-results">
+      <div class="big">
+        <span class="bk">料堆体积</span>
+        <span class="bv" id="sp-bv">—</span>
+      </div>
+      <div id="sp-rows"></div>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <h3>三种形状，一条公式覆盖其中两种</h3>
+    <p>料堆只有三种立体形状。<b>圆锥</b>是皮带机或堆料机卸料形成的：底面是圆，顶部一个尖。
+      <b>截头圆锥</b>是同一个堆被平掉的版本，顶面是一个圆形平台。<b>长条堆</b>是自卸车沿一条线
+      卸料留下的：等截面棱柱，截面是三角形或梯形。</p>
+    <p>圆锥和截头圆锥是同一条公式，只是把顶半径取成零：
+      <code>V = πh ÷ 3 × (R² + R·r + r²)</code>，其中 <code>R</code> 为底面半径、
+      <code>r</code> 为顶面半径、<code>h</code> 为高。令 <code>r = 0</code>，它就退化成
+      <code>V = πR²h ÷ 3</code>，即圆锥。所以计算器只要一个「顶面直径」而不是多一个形状选项：
+      留 0 就是圆锥。</p>
+    <h3>长条堆：堆体加两端</h3>
+    <p>长条堆的堆体是梯形截面的棱柱，
+      <code>V_体 = ½ × (W + w) × h × L</code>，其中 <code>W</code> 为底宽、<code>w</code> 为顶宽
+      （尖顶取 0）、<code>L</code> 为沿堆顶的长度。两端是最容易被漏掉的部分。它们不是竖直切面——
+      料堆是顺着坡面收回去的，所以每一端都是半个圆锥（或半个截头圆锥），两端合起来正好是一整个：
+      <code>V_端 = πh ÷ 3 × (R² + R·r + r²)</code>，其中 <code>R = W ÷ 2</code>、<code>r = w ÷ 2</code>。
+      同一个棱台表达式同时收尾了两种形状，所以两边的结果不会互相矛盾。</p>
+    <h3>由堆积密度算吨位</h3>
+    <p><code>质量 = 体积 × 堆积密度</code>。这里要用的是<b>堆积状态</b>的密度，含孔隙——
+      砾石大约 1.6 t/m³，而不是母岩的 2.6 t/m³。两者之差正是关键：料堆里大部分是空气。
+      如果吨位要进合同，就用已知容积的容器从堆上装满称一次，用那个数。</p>
+    <h3>坡面角与安息角</h3>
+    <p>圆形料堆的坡面角为 <code>arctan(h ÷ (R − r))</code>，长条堆为
+      <code>arctan(h ÷ ((W − w) ÷ 2))</code>。松散颗粒物料不可能站得比它的安息角更陡，
+      所以计算器会反算「按你量的这个底面，这种物料最多能堆多高」再作比较。如果你量的高度需要
+      一个比物料能力更陡的坡面，那这个尺寸就不成立：要么底面量小了，要么高度不是在同一个基准面上
+      量的，要么物料含水偏高、有黏聚力。这是现场成本最低的一道校核，不花任何额外工夫。</p>
+  </section>
+
+  <section class="card">
+    <h2>该按哪种形状量</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>料堆</th><th>要量什么</th><th>体积</th><th>典型场合</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>圆锥</td>
+          <td>底面直径、高</td>
+          <td><code>πR²h ÷ 3</code></td>
+          <td>皮带机或堆料机卸料，砂石骨料</td>
+        </tr>
+        <tr>
+          <td>截头圆锥</td>
+          <td>底面直径、顶面直径、高</td>
+          <td><code>πh ÷ 3 × (R² + R·r + r²)</code></td>
+          <td>被铲平便于装车的锥形堆，或按限高堆起来的料堆</td>
+        </tr>
+        <tr>
+          <td>长条堆（平方端）</td>
+          <td>底宽、顶宽、长、高</td>
+          <td><code>½(W + w)hL</code></td>
+          <td>顶在挡墙、土埂或料仓里的堆</td>
+        </tr>
+        <tr>
+          <td>长条堆（锥收端）</td>
+          <td>同上，并确认两端是收坡的</td>
+          <td><code>½(W + w)hL + πh ÷ 3 × (R² + R·r + r²)</code></td>
+          <td>自卸车沿线的条形堆，料场最常见的形状</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>如果料堆不像其中任何一种——被取走了一部分、推进了角落、有几个峰——那三个尺寸描述不了它。
+      应该按方格网在平面范围内量一批高程，用方格网法算，或者直接航测。形状模型的精度上限，
+      就是料堆与这个形状的相似程度。</p>
+  </section>
+
+  <section class="card">
+    <h2>不用仪器怎么量堆料</h2>
+    <p>多数料堆体积仍是拿卷尺量的，而误差主要来自两个习惯：底面量错位置，高度量错基准面。</p>
+    <p><b>底面。</b>料堆的坡脚是一条逐渐过渡的带，不是一个清晰边界。绕堆走一圈，找到物料只剩一层颗粒
+      厚的位置在那里量——在肉眼看到的堆边量，会把底面量小，体积也就偏小。取大约间隔 60° 的三个方向
+      各量一次取平均；单侧装料形成的堆从来不是圆，只量一条直径会有一个方向性的偏差。</p>
+    <p><b>高度。</b>要和底面用同一个基准面。如果底面量在场地上、高度是拿卷尺勾住堆顶量的，
+      两个数就分属不同基准，体积会差出一个钩子的高度。堆比较高时，用水平仪或 GNSS 流动站测堆顶；
+      拿卷尺顺着坡面往下拉，量到的是斜距不是竖直高。</p>
+    <p><b>形状。</b>选形状之前先看两端。自卸车沿一条线倒料形成的堆，两端是收坡的，而且差别不小：
+      一个长 20 m、宽 6 m、高 2 m 的条堆，两端占 18.85 m³，总量 138.85 m³ 里约 14%。
+      这一点判错，比卷尺量得准不准重要得多。</p>
+  </section>
+
+  <section class="card">
+    <h2>常见物料的堆积密度与安息角</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>物料</th><th>堆积密度（t/m³）</th><th>安息角</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>砂，干</td><td>1.4–1.7</td><td>34°</td><td>排水快，很快塌平</td></tr>
+        <tr><td>砂，湿</td><td>1.7–2.0</td><td>34–45°</td><td>毛细作用可以把坡面撑得很陡</td></tr>
+        <tr><td>砾石，20 mm</td><td>1.5–1.7</td><td>37°</td><td>骨料常用的默认值</td></tr>
+        <tr><td>碎石</td><td>1.4–1.6</td><td>40°</td><td>棱角互相咬合，比圆砾站得更陡</td></tr>
+        <tr><td>种植土 / 表土</td><td>1.0–1.3</td><td>35°</td><td>受含水率与有机质影响很大</td></tr>
+        <tr><td>黏土，干块状</td><td>1.0–1.3</td><td>40°</td><td>有黏聚力；湿黏土堆可以接近直立</td></tr>
+        <tr><td>烟煤</td><td>0.8–0.9</td><td>38°</td><td>密度低，细颗粒会改变坡面</td></tr>
+        <tr><td>小麦</td><td>0.75–0.80</td><td>27°</td><td>流动性极好，堆放中会自己变平</td></tr>
+        <tr><td>木片</td><td>0.25–0.35</td><td>40°</td><td>密度低、孔隙多，堆高后会被压密</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">这些是常规工程范围，不是规范给定值。含水率、级配、压实程度和堆料方式都会改变它，
+      凡是涉及结算的，请用自己实测的数据。</p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>计算器的默认值是一堆底面直径 10 m、高 3 m 的圆锥。半径 <code>R = 5 m</code>，于是
+      <code>V = π × 3 ÷ 3 × (25 + 0 + 0) = 25π ≈ 78.54 m³</code>。按堆积密度 1.6 t/m³，
+      <code>78.54 × 1.6 ≈ 125.66 t</code>；坡面角
+      <code>arctan(3 ÷ 5) ≈ 30.96°</code>。砾石在 37° 下于同样底面可以站到
+      <code>5 × tan 37° ≈ 3.77 m</code>，实测 3 m 比安息角更缓——这很正常，料堆通常都堆得比它能站的更缓。</p>
+    <p>把顶面直径改成 4 m，它就变成截头圆锥。此时 <code>r = 2 m</code>，
+      <code>V = π × 3 ÷ 3 × (25 + 10 + 4) = 39π ≈ 122.52 m³</code>——比圆锥少 44 m³，因为堆顶被削掉了。
+      坡面角变成 <code>arctan(3 ÷ 3) = 45°</code>，已经陡过砾石能站的角度，计算器会提示：
+      一堆底宽 10 m、顶面 2 m、边坡 3 m 的砾石，不会自然形成这个样子。</p>
+    <p>再看长条堆：底宽 6 m、尖顶、长 20 m、高 2 m。堆体是
+      <code>½ × 6 × 2 × 20 = 120 m³</code>。若两端为锥收，两端合起来相当于一个半径 3 m、高 2 m 的圆锥，
+      <code>π × 2 ÷ 3 × 9 ≈ 18.85 m³</code>，合计 <code>138.85 m³</code>。把「两端锥收」取消勾选，
+      结果就是 120 m³——同一堆料，差 14%，只取决于两端是切平还是收坡。</p>
+  </section>
+
+  <section class="card">
+    <h2>常用体积与吨位换算</h2>
+    <table class="lookup">
+      <thead>
+        <tr><th>换算</th><th>数值</th><th>说明</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>1 立方米</td><td>1.30795062 立方码 = 35.3146667 立方英尺</td><td>公制转英制体积</td></tr>
+        <tr><td>1 立方码</td><td>27 立方英尺 = 0.764554858 立方米</td><td>美国骨料计量的默认单位</td></tr>
+        <tr><td>1 吨</td><td>1.1023113 短吨 = 0.9842 长吨</td><td>短吨为 2000 磅</td></tr>
+        <tr><td>1 t/m³</td><td>62.427961 lb/ft³</td><td>两种单位制下的堆积密度</td></tr>
+        <tr><td>1 短吨砾石（1.6 t/m³）</td><td>约 0.567 m³ = 0.74 立方码</td><td>算车数时常用</td></tr>
+        <tr><td>20 t 自卸车一车砾石</td><td>约 12.5 m³ 天然方</td><td>随限重与物料而变</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">这里的体积都是几何体积，完全取决于你输入的尺寸，不含压实、沉降或装卸损耗的余量。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <div class="links">
+      <a href="../how-to-calculate-acreage-from-coordinates" hreflang="en">由坐标算面积（英文）<small>如果你是用坐标而不是卷尺量的平面范围</small></a>
+      <a href="../how-to-calculate-slope-percentage" hreflang="en">坡度百分比怎么算（英文）<small>把坡面角换成规范里写的百分数</small></a>
+      <a href="../survey-foot-vs-international-foot" hreflang="en">测量英尺与国际英尺（英文）<small>这个量级下,用错英尺会差出多少</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="cut-fill-calculator">土方计算器<small>按断面或方格网算挖填方量</small></a>
+      <a href="land-area-calculator">地块面积计算<small>由坐标算平面投影面积</small></a>
+      <a href="slope-calculator">坡度计算器<small>坡面角与百分比坡度互转</small></a>
+      <a href="../unit-converter" hreflang="en">单位换算（英文）<small>体积与密度的单位换算</small></a>
+      <a href="../dxf-coordinate-extractor" hreflang="en">DXF 坐标提取（英文）<small>从图纸里取出量测点</small></a>
+      <a href="traverse-calculator">导线平差计算<small>实测料堆的坐标与闭合差</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>料堆体积怎么算？</summary>
+      <p>先量底面和高，再按料堆的实际形状选公式。圆锥为 V = πR²h ÷ 3；有平台顶的是截头圆锥，V = πh ÷ 3 × (R² + Rr + r²)；长条堆是棱柱 V = ½ × (W + w) × h × L，两端锥收时再加一个对应的圆锥或截头圆锥。本页默认的算例——底径 10 m、高 3 m 的圆锥——是 78.54 m³。</p>
+    </details>
+    <details>
+      <summary>料堆怎么量才能算体积？</summary>
+      <p>底面要量在坡脚处，不要量到路上；取大约相隔 60° 的三个方向各量一次再平均，因为料堆从来不是正圆。高度要从同一个基准面量到堆顶。长条堆要沿堆顶量长度，并在几个位置量宽度，同时说明两端是锥收还是切平。</p>
+    </details>
+    <details>
+      <summary>安息角该取多少？</summary>
+      <p>干砂和砾石大约 34–40°，碎石 35–40°，煤 35–45°，粮食 25–30°。具体值取决于是级配、含水率和堆料方式。在这里它不是一个输入参数而是一道校核：如果量出的高度需要一个比物料能站的更陡的坡面，那尺寸就有一处是错的。</p>
+    </details>
+    <details>
+      <summary>体积怎么换算成吨？</summary>
+      <p>体积乘以物料<b>堆积状态</b>的密度，不是母岩密度。砂石一般 1.5–1.7 t/m³，碎石 1.4–1.6，表土 1.0–1.3，煤 0.8–0.9。如果吨位要进合同，用已知容积的容器装一桶称一下再算。</p>
+    </details>
+    <details>
+      <summary>为什么两端锥收要多加三分之一个圆锥？</summary>
+      <p>长条堆是三角截面的棱柱，但两端不是竖直的切面，而是顺着同样的坡角收回去。每一端相当于以底宽为直径的半个圆锥，两端正好合成一整个：πR²h ÷ 3。对一堆长 20 m、宽 6 m、高 2 m 的料来说，这就是堆体 120 m³ 之外再加 18.85 m³。</p>
+    </details>
+    <details>
+      <summary>砾石堆、砂堆能直接用这个算吗？</summary>
+      <p>可以。先在物料里选一项，载入该物料常见的堆积密度和安息角，再填入你量到的尺寸。这些预置值是常规范围的中点，凡涉及结算的吨位都应换成自己实测的数据。</p>
+    </details>
+    <details>
+      <summary>料堆不规则怎么办？</summary>
+      <p>被推过、被取走一部分、或者顶在墙上的料堆既不是圆锥也不是棱柱，三个尺寸只能给出量级。应该在平面范围内按方格网量一批高程，改用土方计算器的方格网法，或者用无人机、全站仪实测。本页列的形状适用于皮带机或自卸车刚堆出来、尚未被扰动的料堆。</p>
+    </details>
+    <details>
+      <summary>量三个尺寸算出来的体积有多准？</summary>
+      <p>对刚堆好的圆锥形料堆，大约 5% 以内，其中误差主要来自底面直径——它以平方进入公式：直径差 2%，体积就差 4%。对已被扰动的料堆，这个数算不上测量结果，不能用于盘点或结算。</p>
+    </details>
+    <details>
+      <summary>这个堆料体积计算器免费吗？</summary>
+      <p>免费，无需注册、无账号、无次数限制。所有计算都在你的浏览器里完成，项目数据不会上传。</p>
+    </details>
+  </section>
+
+
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 10});
+
+  // The engine keeps everything in metres, tonnes and degrees, and converts only for
+  // display. Switching the unit system then preserves the physical pile instead of
+  // silently reinterpreting "10" from metres into feet.
+  var FT = 3.280839895013123;             // 1 m in ft
+  var LBFT3_PER_TM3 = 62.4279605761;      // 1 t/m3 in lb/ft3
+  var M3_TO_YD3 = 1.3079506192870205;
+
+  var M = {d:10, dt:0, h:3, w:6, wt:0, L:20, h2:2, rho:1.6, phi:37};
+
+  var DENSITY = {
+    "sand":      [1.6, 34],
+    "sand-wet":  [1.85, 38],
+    "gravel":    [1.6, 37],
+    "crushed":   [1.5, 40],
+    "topsoil":   [1.2, 35],
+    "clay":      [1.15, 40],
+    "coal":      [0.85, 38],
+    "grain":     [0.78, 27],
+    "chips":     [0.30, 40]
+  };
+
+  function metric(){ return el("sp-units").value === "m"; }
+  function fromM(v){ return metric() ? v : v * FT; }
+  function shape(){ return el("sp-shape").value; }
+
+  function show(v){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-6 || a >= 1e12)) return v.toExponential(6);
+    return num.format(v);
+  }
+  function row(k, v, sub, warn){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small'+ (warn ? ' class="warn"' : '') +'>'+sub+'</small>' : '')+'</span></div>';
+  }
+
+  // ---- input handling: display <-> canonical metric -------------------------
+  // `u` lets the unit-change handler commit the values that are still on screen in
+  // the OLD unit before the select flips, otherwise "6" would silently turn from
+  // 6 metres into 6 feet and the volume would collapse by a factor of 35.
+  function readInputs(u){
+    var mm = (u || el("sp-units").value) === "m";
+    var ids = ["sp-d", "sp-dt", "sp-h", "sp-w", "sp-wt", "sp-L", "sp-h2"];
+    for (var i = 0; i < ids.length; i++){
+      var v = parseFloat(el(ids[i]).value);
+      if (!isNaN(v)) M[ids[i].slice(3)] = mm ? v : v / FT;
+    }
+    var rho = parseFloat(el("sp-rho").value);
+    if (!isNaN(rho)) M.rho = mm ? rho : rho / LBFT3_PER_TM3;
+    var phi = parseFloat(el("sp-phi").value);
+    if (!isNaN(phi)) M.phi = phi;
+  }
+
+  function renderInputs(){
+    var ids = ["sp-d", "sp-dt", "sp-h", "sp-w", "sp-wt", "sp-L", "sp-h2"];
+    for (var i = 0; i < ids.length; i++){
+      var v = fromM(M[ids[i].slice(3)]);
+      el(ids[i]).value = Math.abs(v) < 1e-9 ? "0" : String(Math.round(v * 1e6) / 1e6);
+    }
+    el("sp-rho").value = metric()
+      ? String(Math.round(M.rho * 1000) / 1000)
+      : String(Math.round(M.rho * LBFT3_PER_TM3 * 10) / 10);
+    el("sp-phi").value = String(Math.round(M.phi * 10) / 10);
+    el("sp-rhou").textContent = metric() ? "(t/m³)" : "(lb/ft³)";
+  }
+
+  // ---- the calculation ------------------------------------------------------
+  // frustum(R, r, h) is the single expression behind both round piles and the
+  // tapered ends of a ridge: V = pi*h/3 * (R^2 + R r + r^2), and r = 0 gives the cone.
+  function frustum(R, r, h){
+    return Math.PI * h / 3 * (R * R + R * r + r * r);
+  }
+
+  function calc(){
+    var round = shape() === "round";
+    el("sp-round").style.display = round ? "block" : "none";
+    el("sp-ridge").style.display = round ? "none" : "block";
+
+    var h = round ? M.h : M.h2;
+    var base = round ? M.d : M.w;
+    var top  = round ? M.dt : M.wt;
+    var R = base / 2, r = top / 2;
+    var err = el("sp-err"), res = el("sp-results");
+
+    var bad = !(base > 0) || !(h > 0) || top < 0 || top >= base
+              || (!round && !(M.L > 0));
+    el("sp-d").classList.toggle("bad", round && bad && !(base > 0));
+    el("sp-h").classList.toggle("bad", round && bad && !(h > 0));
+    el("sp-h2").classList.toggle("bad", !round && bad && !(h > 0));
+    el("sp-w").classList.toggle("bad", !round && bad && !(base > 0));
+    el("sp-L").classList.toggle("bad", !round && bad && !(M.L > 0));
+    el("sp-dt").classList.toggle("bad", bad && top >= base);
+    el("sp-wt").classList.toggle("bad", bad && top >= base);
+    err.classList.toggle("show", bad);
+    if (bad){ res.classList.remove("show"); return; }
+
+    var tapered = !round && el("sp-taper").checked;
+    var body = round ? 0 : 0.5 * (base + top) * h * M.L;
+    var ends = round ? frustum(R, r, h) : (tapered ? frustum(R, r, h) : 0);
+    var v = round ? frustum(R, r, h) : body + ends;
+
+    // face angle: the slope of the side from the base to the crest
+    var run = round ? (R - r) : ((base - top) / 2);
+    var face = run > 1e-9 ? Math.atan(h / run) * 180 / Math.PI : 90;
+    // the height this material could stand on the base it has been given
+    var hRepose = run > 1e-9 ? run * Math.tan(M.phi * Math.PI / 180) : h;
+
+    var vOther = metric() ? v * M3_TO_YD3 : v / M3_TO_YD3;
+    var unit = metric() ? "m\u00B3" : "yd\u00B3";
+    var otherUnit = metric() ? "yd\u00B3" : "m\u00B3";
+    var tonnes = v * M.rho;                      // metric tonnes, always
+    var shortTons = tonnes * 1.10231131092;
+    var massUnit = metric() ? "吨" : "短吨";
+    var mass = metric() ? tonnes : shortTons;
+    var planArea = round ? Math.PI * R * R : base * M.L;
+
+    el("sp-bv").textContent = show(metric() ? v : v * M3_TO_YD3) + " " + unit;
+
+    var rows = "";
+    rows += row("形状", round ? (top > 0 ? "截头圆锥" : "圆锥") : "长条堆",
+      round ? (top > 0 ? "平台顶，V = πh÷3(R²+Rr+r²)" : "V = πR²h ÷ 3")
+            : "½(W+w)hL" + (tapered ? " + 两端一个棱台" : "，平方端"));
+    if (!round){
+      rows += row("堆体体积", show(metric() ? body : body * M3_TO_YD3) + " " + unit, "沿堆顶的棱柱");
+      rows += row("两端体积", show(metric() ? ends : ends * M3_TO_YD3) + " " + unit,
+        tapered ? "两个半棱台，合起来是一个整的" : "平方端，不再加体积");
+    }
+    rows += row("换算为 " + otherUnit, show(metric() ? vOther : vOther * M3_TO_YD3) + " " + otherUnit,
+      "同一堆料，换一种单位制");
+    rows += row("平面范围（占地）", show(metric() ? planArea : planArea * FT * FT) + " "
+      + (metric() ? "m\u00B2" : "ft\u00B2"),
+      round ? "πR²，坡脚处的圆" : "底宽 × 长度");
+    rows += row("堆积密度", metric()
+      ? show(M.rho) + " t/m\u00B3"
+      : show(M.rho * LBFT3_PER_TM3) + " lb/ft\u00B3", "堆积状态，含孔隙");
+    rows += row("吨位", show(mass) + " " + massUnit,
+      metric() ? show(shortTons) + " 短吨" : show(tonnes) + " 吨");
+    rows += row("坡面角", show(face) + "\u00B0",
+      "坡脚到堆顶的实测坡度");
+
+    var steeper = face > M.phi + 0.5;
+    rows += row("该物料的安息角", show(M.phi) + "\u00B0",
+      steeper ? "实测坡面陡于物料能站的角度——请复核底面"
+              : "实测坡面在该物料能站的范围内",
+      steeper);
+    rows += row("该物料在此底面上能堆到", show(metric() ? hRepose : hRepose * FT)
+      + " " + (metric() ? "m" : "ft"),
+      steeper ? "你填的高度超过了它：有一处尺寸是错的"
+              : "实测高度等于或低于它，属正常");
+
+    el("sp-rows").innerHTML = rows;
+    res.classList.add("show");
+  }
+
+  // ---- wiring ---------------------------------------------------------------
+  var prevUnit = el("sp-units").value;
+  el("sp-shape").addEventListener("change", function(){ readInputs(); calc(); });
+  el("sp-mat").addEventListener("change", function(){
+    var preset = DENSITY[el("sp-mat").value];
+    if (preset){ M.rho = preset[0]; M.phi = preset[1]; renderInputs(); }
+    calc();
+  });
+  el("sp-units").addEventListener("change", function(){
+    readInputs(prevUnit);            // commit what was typed in the old unit
+    prevUnit = el("sp-units").value;
+    renderInputs();                  // then draw the same pile in the new one
+    calc();
+  });
+  el("sp-taper").addEventListener("change", calc);
+  var inputs = ["sp-d", "sp-dt", "sp-h", "sp-w", "sp-wt", "sp-L", "sp-h2", "sp-rho", "sp-phi"];
+  for (var i = 0; i < inputs.length; i++){
+    el(inputs[i]).addEventListener("input", function(){
+      if (/^sp-(rho|phi)$/.test(this.id)) el("sp-mat").value = "custom";
+      readInputs();
+      calc();
+    });
+  }
+
+  renderInputs();
+  calc();
+})();
+</script>
+</body>
+</html>
