@@ -1,0 +1,935 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>水准平差计算器 — 高差归化、闭合差与限差（免费）</title>
+<meta name="description" content="免费的水准平差计算器：把后视、前视读数按高差法归化为各点高程，与已知水准点比较得出闭合差，按距离或测站数反号分配到各点，并给出限差（k·√L）与超限倍数。支持闭合环与附合水准、米/英尺、保留 0.001 或 0.0001。全部在浏览器本地计算。">
+<link rel="canonical" href="https://coordcalc.com/zh/leveling-adjustment-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/leveling-adjustment-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/leveling-adjustment-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/leveling-adjustment-calculator">
+<meta property="og:title" content="水准平差计算器 — 高差归化、闭合差与限差">
+<meta property="og:description" content="由后视、前视读数归化高程，算闭合差与限差，按距离或测站数分配修正。闭合环与附合水准、米/英尺，浏览器本地计算。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/zh/leveling-adjustment-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="../assets/site.webmanifest">
+<link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "水准平差计算器",
+  "url": "https://coordcalc.com/zh/leveling-adjustment-calculator",
+  "description": "免费的水准平差计算器：把后视、前视读数按高差法归化为各点高程，与已知水准点比较得出闭合差，按距离或测站数反号分配到各点，并给出限差（k·√L）与超限倍数。支持闭合环与附合水准、米/英尺、保留 0.001 或 0.0001。全部在浏览器本地计算。",
+  "inLanguage": "zh-CN",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "计算器",
+      "item": "https://coordcalc.com/#tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "水准平差计算器",
+      "item": "https://coordcalc.com/zh/leveling-adjustment-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "zh-CN",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "水准平差怎么算？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "先按高差法把读数归化成各点高程；把算得的终点高程减去已知高程，得闭合差；再让每个点按它之前的累计距离（或测站数）分摊一个反向修正。所有修正之和等于闭合差的反号，因此调整后的测线在高程上精确闭合。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "水准测量里的闭合差是什么？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "测线算出来的终点高程与该点已知高程之差。闭合差为正是测高了。它不是事后可以找出来剔除的误差——平差只是把它摊开，真正衡量这次作业质量的是闭合差与限值的比值。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "该按距离分配还是按测站数分配？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "有距离就按距离，因为限差本身就是按距离表述的，而且它给长视线更大的权重。没量距离就按测站数，前提是各测站视线长度相近。千万不要为了让两种方法结果一致而去编造距离。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "闭合差多少算合格？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "一般是以 mm 为单位的常数乘以测线长度（km）的平方根：精密控制 4 mm，施工水准 12 mm，粗测 20 mm。具体数值看技术规格。闭合差超过限值两倍左右，就不要平差了，重测。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么前后视距必须相等？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "地球曲率、大气折光和视准轴残余倾斜的影响都与距离成正比。视线等长的测站上，这些影响对两个读数完全相同，相减时抵消；视线不等长，这两个误差之差就留在了测线里。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "什么是转点？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "被读数两次的点：在离开的测站上是前视，在下一个测站上是后视。它是唯一把高程从一个仪器位置传递到下一个位置的点，所以必须稳固，而且两次读到的必须是同一个实物标志。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "为什么算术校核通过不代表高程是对的？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "因为它只证明归化内部自洽。外业读数如果错了——读错尺、转点动了、气泡没居中——算术照样完美平衡。只有闭合到已知高程，或者重测一遍，才能发现这一类错误。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "水准高程能直接当作 GNSS 高程用吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "不行，中间必须用高程异常（似大地水准面）模型转换。水准给出的是相对大地水准面的高程（正常高）；GNSS 给出的是相对椭球面的高。两者相差可达几十米，且沿线变化，不做转换不能互换。"
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "这个水准平差计算器免费吗？",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "免费，不用登录、不用注册、不限次数。全部计算都在你的浏览器里完成，测量数据不会上传。"
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:var(--ok);font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  table.lookup td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:900px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  /* Both result tables have more columns than a phone has width. A plain
+     overflow-x:auto wrapper is not enough: the table's min-content width propagates
+     through the block chain and widens the document instead of scrolling, so the
+     wrapper needs an explicit max-width and the table a min-width of zero. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  /* width:100% alone lets a wide table lay itself out beyond the scroller, which then
+     reports scrollWidth == clientWidth and nothing ever scrolls. max-content gives the
+     table a width the scroller can actually be smaller than. */
+  .tscroll > table{width:max-content;min-width:100%;}
+  #lv-table input{min-width:0;}
+  @media(max-width:640px){
+    #lv-out{font-size:12.5px;}
+    #lv-table table{font-size:13px;}
+    #lv-table input{font-size:13px;padding:5px 6px;}
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+
+  /* 中文版：字体与行高 */
+  body{line-height:1.75;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
+  /* embed 视图：?embed=1 时只留计算器 */
+  body.embed{background:#fff;}
+  body.embed header.site,body.embed nav.crumb,body.embed h1,body.embed p.lead,
+  body.embed section.card,body.embed .foot,body.embed .embed-hide{display:none;}
+  body.embed .wrap{max-width:100%;padding:10px 12px 14px;}
+  body.embed .card{margin:0;border:0;border-radius:0;box-shadow:none;padding:0;}
+  body.embed .toast{bottom:14px;}
+</style>
+<script src="../assets/consent.js" defer></script>
+<script src="../assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc 测绘计算器</a>
+    <nav class="topnav">
+      <a href="./#tools">计算器</a>
+      <a href="guides">教程</a>
+      <a href="../leveling-adjustment-calculator" hreflang="en">English</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">首页</a> › <a href="./#tools">计算器</a> › 水准平差计算器
+  </nav>
+
+<h1>水准平差计算器</h1>
+
+  <p class="lead">
+    本站把一串水准尺读数按高差法归化为各点高程，与你所闭合的水准点比较得出闭合差，
+    再把闭合差按工作量反号摊回每个点——量了距离就按距离，没量就按测站数。
+    从已知高程起算，沿线输入后视与前视，即可读出闭合差、限差与调整后高程。免费，浏览器本地计算，无需登录。
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 170px;">
+        <label for="lv-units">单位</label>
+        <select id="lv-units">
+          <option value="m">米（m、mm）</option>
+          <option value="ft">英尺（ft）</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 230px;">
+        <label for="lv-method">分配方式</label>
+        <select id="lv-method">
+          <option value="dist" selected>按距离 — 累计 km 或英里</option>
+          <option value="stations">按测站数 — 每站等分</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 230px;">
+        <label for="lv-order">闭合差限值</label>
+        <select id="lv-order">
+          <option value="custom">自定义常数</option>
+          <option value="4" selected>4 mm — 一等 / FGCS class I</option>
+          <option value="6">6 mm — 二等 class I（FM）</option>
+          <option value="8">8 mm — 二等 class II</option>
+          <option value="12">12 mm — 三等 / GB/T 12898 平地</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:0 0 250px;">
+        <label for="lv-start">起点高程（已知水准点）</label>
+        <input id="lv-start" type="number" step="any" value="50.000" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 220px;">
+        <label for="lv-k">闭合差限值常数 k</label>
+        <input id="lv-k" type="number" step="any" value="4" autocomplete="off">
+        <span class="hint" id="lv-ku" style="margin:0;">mm/√km</span>
+      </div>
+      <div class="field" style="flex:1;min-width:180px;">
+        <label for="lv-close">终点已知高程（可空）</label>
+        <input id="lv-close" type="number" step="any" placeholder="留空：闭合回起点" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 150px;">
+        <label for="lv-precision">高程位数</label>
+        <select id="lv-precision">
+          <option value="3" selected>0.001</option>
+          <option value="4">0.0001</option>
+        </select>
+      </div>
+    </div>
+
+    <h3 style="margin-top:22px;">观测记录</h3>
+    <p class="hint" style="margin-top:-4px;">
+      一次视线一行，按观测顺序填写。后视填<b>后视</b>，前视填<b>前视</b>；
+      若该点为转点（仪器在此迁站），两个都填。量过距离就填上，没量留 0——
+      此时按距离分配会自动回退为按测站数。末尾空行会被忽略。
+    </p>
+    <div class="tscroll" id="lv-table" style="margin-top:10px;"></div>
+    <div class="row" style="margin-top:12px;">
+      <button type="button" id="lv-add" style="font:inherit;font-weight:600;font-size:14px;padding:9px 16px;
+        border-radius:9px;border:1px solid #cfd6e0;background:#fff;color:var(--accent-d);cursor:pointer;">
+        + 增加一行</button>
+      <button type="button" id="lv-reset" style="font:inherit;font-weight:500;font-size:14px;padding:9px 16px;
+        border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer;">
+        恢复为算例</button>
+    </div>
+
+    <p class="err" id="lv-err">请检查读数 — 每次视线必须有正的后视或前视读数；闭合到水准点、
+      或闭合回起点的测线，最后一次读数必须是前视。</p>
+
+    <div class="results" id="lv-results">
+      <div class="big">
+        <span class="bk">调整后终点高程</span>
+        <span class="bv" id="lv-bv">—</span>
+      </div>
+      <div id="lv-rows"></div>
+      <h3>各点高程</h3>
+      <div class="tscroll">
+        <table class="lookup" id="lv-out">
+          <thead>
+            <tr><th>点号</th><th id="lv-h-bs">后视</th><th id="lv-h-fs">前视</th><th id="lv-h-ri">高差</th>
+              <th id="lv-h-fa">降低</th><th>高程</th><th id="lv-h-d">距离</th><th id="lv-h-c">修正</th>
+              <th>调整后</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">算术校核：Σ后视 − Σ前视 = Σ高差 − Σ降低，且该值应等于末点高程减首点高程。
+        三项都会检验，结论显示在表格下方。</p>
+      <p class="hint" id="lv-arith" style="font-weight:600;"></p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>计算原理</h2>
+    <h3>高差法归化</h3>
+    <p>一次水准测量给出的是一对对水准尺读数。在每个转点上，仪器先读立在<b>前一个点</b>上的尺——
+      即<b>后视</b>，再读立在新点上的尺——即<b>前视</b>。前视比后视小，说明地面升高，
+      高差 <code>高差 = 后视 − 前视</code>；前视比后视大，说明地面降低，
+      <code>降低 = 前视 − 后视</code>。每个点的高程等于前一点高程加高差或减降低。</p>
+    <p>两列必须自相平衡。求和得
+      <code>Σ后视 − Σ前视 = Σ高差 − Σ降低 = 末点高程 − 首点高程</code>。
+      这是一条<b>算术校核</b>：它能抓住归化时抄错一位数，但抓不住外业读错尺——
+      那个误差只会以闭合差的形式出现。</p>
+    <h3>仪器高法</h3>
+    <p>同一组数字换一种记账方式：每次后视后，仪器高
+      <code>HI = 后视点高程 + 后视读数</code>，前视点高程
+      <code>= HI − 前视读数</code>。算术完全一样，只是按测站记一次而不是按每尺记一次。
+      本站按高差法计算，因为上面那两条列校核可以直接得到；但真正关键的是<b>配对</b>：
+      一个前视只能与它自己那个后视所产生的仪器高相减。若前视没有可配的后视，
+      这次归化就不成立。</p>
+    <h3>闭合差</h3>
+    <p>如果测线终止于一个已知高程——水准点，或者回到起点——算出的高程不会与它恰好相等。
+      这个差值就是<b>闭合差</b>：<code>e = 算得值 − 已知值</code>。
+      闭合差为正，说明测高了，所有调整后高程都要<b>往下</b>压。</p>
+    <h3>闭合差的分配</h3>
+    <p>按距离分配时，各点的修正为 <code>c_i = −e × (d_i ÷ Σd)</code>，
+      其中 <code>d_i</code> 是从起点到该点的累计距离。既按比例又在终点精确闭合：
+      最后一点的比例和为 1。按测站数分配则把距离换成测站数，在你没量距离、
+      且各测站视线长度相近时，这是一个诚实的选择。两种方法都<b>不会让测量变好</b>，
+      它们只是把一个你消不掉的数摊开而已。</p>
+  </section>
+
+  <section class="card">
+    <h2>闭合差多少算合格</h2>
+    <p>通用标准与测线长度的平方根成正比：<code>e_限 = k × √L</code>，
+      <code>L</code> 以 km 计、<code>k</code> 以 mm 计。取平方根是因为随机误差就是这样累积的：
+      长度翻倍，误差只增大到约 1.4 倍，不是 2 倍。下表是长期沿用的 FGCS 等级方案
+      （美国联邦大地测量控制委员会，1984），多数技术规格至今仍直接引用它。</p>
+    <table class="lookup">
+      <thead>
+        <tr><th>等级</th><th>环线闭合差最大值</th><th>典型用途</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>一等（class I）</td><td>4 mm × √K</td><td>国家框架；变形监测与研究网</td></tr>
+        <tr><td>二等 class I</td><td>6 mm × √K</td><td>城市控制网、大型工程</td></tr>
+        <tr><td>二等 class II</td><td>8 mm × √K</td><td>局部控制网、地形测图</td></tr>
+        <tr><td>三等</td><td>12 mm × √K</td><td>施工测量、小型工程、局部测量</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      K 为环线长度，以 km 计。若是两个水准点之间的单程路线（测段而非环线），
+      一等 class I 收紧到 3 mm × √K，其余等级不变。<b>国内工程</b>按 GB/T 12898：
+      三等往返测不符值 <code>±12√K</code>；附合或环线平地 <code>±12√L</code>、山地 <code>±15√L</code>；
+      四等往返 <code>±20√K</code>、平地 <code>±20√L</code>、山地 <code>±25√L</code>（L 以 km 计、单位 mm）。
+      注意不要把「每公里水准测量全中误差」（0.5 / 0.7 / 1.0 / 1.3 / 2.0 mm）与「环线闭合差限值」
+      （4 / 5 / 6 / 8 / 12 mm）混为一谈，两者差约 4 倍。具体数值一律以项目技术设计书为准。
+    </p>
+    <p class="hint">
+      若技术规格给的是「每测站」的固定限值而不是按距离的公式，把它除以测站数的平方根即可。
+      另外：闭合差一旦超过限值两倍左右，平差就没有意义了——重测这一测段。
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>让闭合差变小的外业习惯</h2>
+    <p>几乎所有的超限闭合差都来自四个习惯问题，没有一个是算术问题。</p>
+    <p><b>前后视距相等。</b>每个测站让后视与前视的视线长度相等。地球曲率与大气折光的影响、
+      以及视准轴残余 i 角的影响，都与两段距离之差成正比；视线等长时它们相互抵消。
+      这是最有效的一件事，代价只是多走几步路。</p>
+    <p><b>转点要转对。</b>转点必须落在坚实稳定的地面，尺要立直，且闭合读数与打开读数是<b>同一个点</b>。
+      松软地面要用尺垫。从你以为放下尺的位置到实际放下的位置差两拃，就是一个真实误差，
+      而且它会在测线里进入两次。</p>
+    <p><b>读满整个测站。</b>三丝都读，并检查中丝是否为上下丝的均值。
+      一根尺这根读到毫米、下根靠猜，问题会在这个检查里暴露，不会在高差归化里暴露。</p>
+    <p><b>闭合到已知点，而不只是闭合回自己。</b>回到起点的环线只能证明没有犯粗差，
+      它发现不了水准点本身动了。只要附近有独立水准点就附合过去，并把差值记下来——
+      有时候是水准点动了，那是一个发现，不是一次失败。</p>
+  </section>
+
+  <section class="card">
+    <h2>算例</h2>
+    <p>默认表格是一条四个测站的闭合环，回到 <code>50.000 m</code> 的水准点。
+      每一行是一个尺位，所以距离列就是该次视线的长度，累计距离是从起点累加。</p>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>点号</th><th>后视</th><th>前视</th><th>高差</th><th>降低</th><th>高程</th><th>累计距离 (m)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>BM（起）</td><td>—</td><td>—</td><td>—</td><td>—</td><td>50.000</td><td>0</td></tr>
+          <tr><td>P1</td><td>1.428</td><td>1.536</td><td>—</td><td>0.108</td><td>49.892</td><td>300</td></tr>
+          <tr><td>P2</td><td>1.502</td><td>1.494</td><td>0.008</td><td>—</td><td>49.900</td><td>600</td></tr>
+          <tr><td>P3</td><td>1.455</td><td>1.512</td><td>—</td><td>0.057</td><td>49.843</td><td>900</td></tr>
+          <tr><td>BM（合）</td><td>1.507</td><td>1.483</td><td>0.024</td><td>—</td><td>49.867</td><td>1200</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>两条算术校核都成立：<code>Σ后视 = 5.892</code>、<code>Σ前视 = 6.025</code>、
+      <code>Σ高差 = 0.032</code>、<code>Σ降低 = 0.165</code>，两者之差均为 <code>−0.133 m</code>，
+      也正是 <code>49.867 − 50.000</code>。这条环线<b>低了 133 mm</b>。</p>
+    <p>在 <code>1.2 km</code> 上，<code>k = 4 mm/√km</code> 的限差为
+      <code>4 × √1.2 = 4.38 mm</code>，<code>k = 8</code> 时为 <code>8.76 mm</code>。
+      闭合差是最严一档的 30 倍，这条测线过不了表里任何一级——一条含粗差的测量就是这样。
+      而且这 133 mm 并不是平均分布在四个测站上的：其中 108 mm 就出现在第一个测站，
+      这正是你该先去看的地方。</p>
+    <p>若仍然平差，按距离法修正为 <code>−e × (累计 ÷ 1200)</code>：
+      P1 <code>+33.3 mm</code>、P2 <code>+66.5</code>、P3 <code>+99.8</code>、水准点 <code>+133.0</code>，
+      调整后高程分别为 <code>49.925</code>、<code>49.966</code>、<code>49.943</code>，
+      终点恰好回到 <code>50.000</code>。把分配方式换成<i>按测站数</i>，
+      四个点各得 <code>+33.3 mm</code>。两种方法都不会让这条环线变得更好——
+      它们只是摊开一个消不掉的数。正因为如此，结果面板上给出的是<b>与限差的倍数</b>，
+      而不是闭合差本身。</p>
+  </section>
+
+  <section class="card">
+    <h2>延伸阅读</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-closure-error">闭合差怎么算（导线）</a>
+        <small>同样的思路用在导线上，那里的闭合差是向量而不是标量。</small></li>
+      <li><a href="how-to-calculate-slope-percentage">坡度百分比怎么算</a>
+        <small>把两点高程差变成坡度。</small></li>
+      <li><a href="geoid-vs-ellipsoid">大地水准面与椭球面</a>
+        <small>为什么水准测出的高与 GNSS 测出的高不是一个数。</small></li>
+      <li><a href="survey-foot-vs-international-foot">测量英尺与国际英尺</a>
+        <small>百万分之二——在毫米上看不出，在长测线上就不是。</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>相关计算器</h2>
+    <div class="links">
+      <a href="traverse-calculator">导线计算器<small>平面内的闭合差与平差</small></a>
+      <a href="slope-calculator">坡度计算器<small>高程差转坡度</small></a>
+      <a href="cut-fill-calculator">土方计算器<small>把高程变成土方量</small></a>
+      <a href="curve-calculator">竖曲线计算器<small>由坡度算曲线高程</small></a>
+      <a href="unit-converter">单位换算<small>米与英尺、毫米与英寸</small></a>
+      <a href="utm-coordinate-converter">UTM 坐标转换<small>为你测过的点配平面坐标</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>常见问题</h2>
+    <details open>
+      <summary>水准平差怎么算？</summary>
+      <p>先按高差法把读数归化成各点高程；把算得的终点高程减去已知高程，得闭合差；再让每个点按它之前的累计距离（或测站数）分摊一个反向修正。所有修正之和等于闭合差的反号，因此调整后的测线在高程上精确闭合。</p>
+    </details>
+    <details>
+      <summary>水准测量里的闭合差是什么？</summary>
+      <p>测线算出来的终点高程与该点已知高程之差。闭合差为正是测高了。它不是事后可以找出来剔除的误差——平差只是把它摊开，真正衡量这次作业质量的是闭合差与限值的比值。</p>
+    </details>
+    <details>
+      <summary>该按距离分配还是按测站数分配？</summary>
+      <p>有距离就按距离，因为限差本身就是按距离表述的，而且它给长视线更大的权重。没量距离就按测站数，前提是各测站视线长度相近。千万不要为了让两种方法结果一致而去编造距离。</p>
+    </details>
+    <details>
+      <summary>闭合差多少算合格？</summary>
+      <p>一般是以 mm 为单位的常数乘以测线长度（km）的平方根：精密控制 4 mm，施工水准 12 mm，粗测 20 mm。具体数值看技术规格。闭合差超过限值两倍左右，就不要平差了，重测。</p>
+    </details>
+    <details>
+      <summary>为什么前后视距必须相等？</summary>
+      <p>地球曲率、大气折光和视准轴残余倾斜的影响都与距离成正比。视线等长的测站上，这些影响对两个读数完全相同，相减时抵消；视线不等长，这两个误差之差就留在了测线里。</p>
+    </details>
+    <details>
+      <summary>什么是转点？</summary>
+      <p>被读数两次的点：在离开的测站上是前视，在下一个测站上是后视。它是唯一把高程从一个仪器位置传递到下一个位置的点，所以必须稳固，而且两次读到的必须是同一个实物标志。</p>
+    </details>
+    <details>
+      <summary>为什么算术校核通过不代表高程是对的？</summary>
+      <p>因为它只证明归化内部自洽。外业读数如果错了——读错尺、转点动了、气泡没居中——算术照样完美平衡。只有闭合到已知高程，或者重测一遍，才能发现这一类错误。</p>
+    </details>
+    <details>
+      <summary>水准高程能直接当作 GNSS 高程用吗？</summary>
+      <p>不行，中间必须用高程异常（似大地水准面）模型转换。水准给出的是相对大地水准面的高程（正常高）；GNSS 给出的是相对椭球面的高。两者相差可达几十米，且沿线变化，不做转换不能互换。</p>
+    </details>
+    <details>
+      <summary>这个水准平差计算器免费吗？</summary>
+      <p>免费，不用登录、不用注册、不限次数。全部计算都在你的浏览器里完成，测量数据不会上传。</p>
+    </details>
+  </section>
+  <p class="foot">
+    所有计算均在浏览器本地完成，结果仅供核对与参考；用于施工、放样或结算前，
+    请按项目采用的坐标系统与技术标准复核。
+    <span style="display:block;margin-top:9px;"><a href="../about">关于</a> · <a href="../privacy">隐私与 Cookie</a> · <a href="../terms">使用条款</a> · <a href="../developers">开发者</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 10});
+
+  // Everything is held in metres. Switching the unit system converts the displayed
+  // readings and the RLs, so a run entered in feet does not silently become a run
+  // entered in metres with the same digits.
+  var FT = 3.280839895013123;
+  var MI = 1609.344;
+
+  var M = {
+    start: 50.000,
+    close: null,          // null = closed loop, use the start level
+    k: 4,                 // mm per sqrt(km), or ft per sqrt(mile) when in feet
+    rows: [],
+    metresTyped: true     // the unit the readings on screen were typed in
+  };
+
+  // A closed loop of four set-ups, 1.2 km, closing 133 mm low. It is deliberately a
+  // bad run: an example that closes to a tenth of a millimetre teaches nothing about
+  // what the allowance is for. The numbers are reproduced by hand in leveling_test.js.
+  var EXAMPLE = [
+    {bs: 1.428, fs: 1.536, d: 300},
+    {bs: 1.502, fs: 1.494, d: 300},
+    {bs: 1.455, fs: 1.512, d: 300},
+    {bs: 1.507, fs: 1.483, d: 300}
+  ];
+
+  function metric(){ return el("lv-units").value === "m"; }
+  function method(){ return el("lv-method").value; }
+  function dp(){ return parseInt(el("lv-precision").value, 10) || 3; }
+
+  function show(v, d){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-9 || a >= 1e12)) return v.toExponential(6);
+    if (d === undefined) return num.format(v);
+    return v.toFixed(d);
+  }
+  function row(k, v, sub, cls){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small' + (cls ? ' class="'+cls+'"' : '') + '>'+sub+'</small>' : '') + '</span></div>';
+  }
+
+  function fromM(v){ return metric() ? v : v * FT; }
+  function toM(v){ return metric() ? v : v / FT; }
+  // run length in the unit the k constant is quoted in: km, or statute miles
+  function runLen(v){ return metric() ? v / 1000 : v / MI; }
+  function runUnit(){ return metric() ? "km" : "mi"; }
+  // misclosure and corrections are quoted in mm, or in feet to four places
+  function mm(v){ return metric() ? v * 1000 : v * FT * 1000; }   // metres -> mm
+  function mmFromM(v){ return metric() ? v * 1000 : v * FT; }     // metres -> mm or ft
+  function mmUnit(){ return metric() ? "mm" : "ft"; }
+  // p.corr is already the signed correction applied to the RL; convert, never negate.
+  function corrText(m){ return (m >= 0 ? "+" : "") + show(m, metric() ? 2 : 4); }
+  function misText(m){
+    var x = mmFromM(m);
+    return (x >= 0 ? "+" : "") + show(x, metric() ? 1 : 4);
+  }
+
+  // ---- the table ------------------------------------------------------------
+  // Rebuilt by hand rather than from a row template so a new row cannot inherit the
+  // values of the last one; each input carries its row index in a data attribute.
+  function fmtIn(v){
+    var x = fromM(v);
+    return String(Math.round(x * 1e6) / 1e6);
+  }
+  function buildTable(){
+    var h = '<table class="lookup"><thead><tr>'
+          + '<th>#</th><th>点号</th><th>后视</th><th>前视</th><th>距离</th>'
+          + '</tr></thead><tbody>';
+    for (var i = 0; i < M.rows.length; i++){
+      var r = M.rows[i];
+      h += '<tr>'
+        + '<td>' + (i + 1) + '</td>'
+        + '<td><input type="text" data-i="'+i+'" data-f="name" value="'+(r.name || "")+'"></td>'
+        + '<td><input type="number" step="any" data-i="'+i+'" data-f="bs" value="'+(r.bs ? fmtIn(r.bs) : "")+'"></td>'
+        + '<td><input type="number" step="any" data-i="'+i+'" data-f="fs" value="'+(r.fs ? fmtIn(r.fs) : "")+'"></td>'
+        + '<td><input type="number" step="any" data-i="'+i+'" data-f="d" value="'+(r.d ? fmtIn(r.d) : "")+'"></td>'
+        + '</tr>';
+    }
+    h += '</tbody></table>';
+    el("lv-table").innerHTML = h;
+  }
+
+  function readTable(u){
+    // `u` is the unit that is still on screen when the select has already flipped,
+    // so the typed numbers are committed in the unit they were typed in.
+    var mm2 = (u || el("lv-units").value) === "m";
+    M.metresTyped = mm2;
+    var inputs = el("lv-table").querySelectorAll("input");
+    for (var i = 0; i < inputs.length; i++){
+      var inp = inputs[i], r = M.rows[+inp.dataset.i];
+      if (!r) continue;
+      var f = inp.dataset.f;
+      if (f === "name"){ r.name = inp.value; continue; }
+      var v = parseFloat(inp.value);
+      if (isNaN(v)){ r[f] = 0; continue; }
+      r[f] = (mm2 ? 1 : 1 / FT) * v;
+    }
+  }
+
+  // ---- the calculation ------------------------------------------------------
+  function calc(){
+    var startRaw = parseFloat(el("lv-start").value);
+    if (!isNaN(startRaw)) M.start = toM(startRaw);
+    var closeRaw = el("lv-close").value.trim();
+    M.close = closeRaw === "" ? null : toM(parseFloat(closeRaw));
+    var kRaw = parseFloat(el("lv-k").value);
+    if (!isNaN(kRaw)) M.k = kRaw;
+
+    var err = el("lv-err"), res = el("lv-results");
+
+    // --- gather the sights, dropping blank lines
+    var used = [], badInput = false, noDistance = false;
+    for (var i = 0; i < M.rows.length; i++){
+      var r = M.rows[i];
+      var bs = r.bs || 0, fs = r.fs || 0, d = r.d || 0;
+      if (bs === 0 && fs === 0 && d === 0) continue;          // an untouched blank row
+      if (bs < 0 || fs < 0 || d < 0 || (bs === 0 && fs === 0)) badInput = true;
+      if (d <= 0) noDistance = true;
+      used.push({name: (r.name || "").trim(), bs: bs, fs: fs, d: d});
+    }
+    var lastIsFore = used.length > 0 && used[used.length - 1].fs > 0;
+    var bad = badInput || used.length === 0 || !lastIsFore;
+    // An unpaired fore sight is shown (the field book has to be readable) but it makes the
+    // reduction invalid, so the adjustment is withheld and the arithmetic check fails loudly.
+
+    el("lv-start").classList.toggle("bad", isNaN(startRaw));
+    el("lv-close").classList.toggle("bad", closeRaw !== "" && isNaN(M.close));
+    err.classList.toggle("show", bad);
+    if (bad){ res.classList.remove("show"); return; }
+
+    // --- rise-and-fall reduction
+    // A fore sight is only meaningful against the instrument height set by the back
+    // sight that preceded it. A fore sight with no back sight yet is still reduced
+    // (against the last RL) so the table is readable, but it is counted and reported:
+    // a run cannot be adjusted from readings that have no back sight to pair with.
+    var sbs = 0, sfs = 0, srise = 0, sfall = 0, totalD = 0, unpaired = 0;
+    var rl = M.start, hi = null, hiCount = 0, hiFresh = false;
+    var line = [{name: "BM（起）", bs: 0, fs: 0, rise: 0, fall: 0, rl: rl, cum: 0, corr: 0, adj: rl}];
+    for (var j = 0; j < used.length; j++){
+      var u = used[j];
+      var rise = 0, fall = 0;
+      // hiFresh marks a back sight that has not yet produced a fore sight: only that
+      // instrument height can carry the level forward. A second fore sight read from the
+      // same set-up would otherwise silently reduce against a height that was never reset.
+      if (u.bs > 0){ sbs += u.bs; hi = rl + u.bs; hiCount++; hiFresh = true; }
+      if (u.fs > 0){
+        sfs += u.fs;
+        var next;
+        if (!hiFresh){ next = rl - u.fs; unpaired++; }        // no back sight to stand on
+        else { next = hi - u.fs; hiFresh = false; }
+        var diff = next - rl;
+        if (diff >= 0) rise = diff; else fall = -diff;
+        rl = next;
+      }
+      srise += rise; sfall += fall; totalD += u.d;
+      line.push({name: u.name || ("P" + (j + 1)), bs: u.bs, fs: u.fs, rise: rise, fall: fall,
+                 rl: rl, cum: totalD, corr: 0, adj: rl});
+    }
+
+    // No closing benchmark means the loop comes back to the start. `running` records which,
+    // because the two are different survey situations and read differently.
+    var running = M.close !== null;
+    var known = running ? M.close : M.start;
+    var e = rl - known;                    // misclosure, computed minus known
+    var L = runLen(totalD);                // km or miles
+    // The allowance is expressible in the unit the run is measured in either way, so
+    // comparing it with e in metres keeps the ratio (and the verdict) unit-free.
+    var allowM = metric() ? M.k * Math.sqrt(L) / 1000 : M.k * Math.sqrt(L) / FT;  // -> metres
+    var within = Math.abs(e) <= allowM + 1e-12;
+
+
+    // --- corrections
+    // Proportional to the cumulative distance, or to the count of sights taken so far.
+    // With no distances the distance rule would divide by zero, so it falls back - and
+    // says so, rather than silently reporting an unlimited allowance.
+    var mode = method();
+    var fallback = false;
+    if (mode === "dist" && (totalD <= 0 || noDistance)){ mode = "stations"; fallback = true; }
+    var denom = 0, acc = 0;
+    if (mode === "dist"){ denom = totalD; }
+    else { for (var c = 1; c < line.length; c++) denom++; }
+    for (var t = 1; t < line.length; t++){
+      var w = mode === "dist" ? line[t].cum : ++acc;
+      line[t].corr = denom > 0 ? -e * (w / denom) : 0;
+      line[t].adj = line[t].rl + line[t].corr;
+    }
+
+    var unit = metric() ? "m" : "ft";
+    el("lv-h-bs").textContent = "后视 (" + unit + ")";
+    el("lv-h-fs").textContent = "前视 (" + unit + ")";
+    el("lv-h-ri").textContent = "高差 (" + unit + ")";
+    el("lv-h-fa").textContent = "降低 (" + unit + ")";
+    el("lv-h-d").textContent = "距离 (" + unit + ")";
+    el("lv-h-c").textContent = "修正 (" + mmUnit() + ")";
+    var last = line[line.length - 1];
+    el("lv-bv").textContent = show(fromM(last.adj), dp()) + " " + unit;
+
+    var rows = "";
+    rows += row("起点高程", show(fromM(M.start), dp()) + " " + unit, "平差中固定不变");
+    rows += row("算得终点高程", show(fromM(rl), dp()) + " " + unit, "仅由读数算得");
+    rows += row("已知终点高程", show(fromM(known), dp()) + " " + unit,
+      running ? "你所闭合的水准点" : "环线闭合回自身起点");
+    rows += row("闭合差", misText(e) + " " + mmUnit(),
+      (e >= 0 ? "测高了 " : "测低了 ")
+      + show(Math.abs(mmFromM(e)), metric() ? 1 : 4) + " " + mmUnit());
+    rows += row("测线长度", show(L, metric() ? 3 : 4) + " " + runUnit(),
+      used.length + " 次视线、" + hiCount + " 个测站");
+    rows += row("限差", show(M.k * Math.sqrt(L), metric() ? 2 : 4) + " " + mmUnit(),
+      "k × √L, k = " + show(M.k, 4) + " " + mmUnit() + "/√" + runUnit());
+    rows += row("超限倍数", show(Math.abs(e) / (allowM || 1), 2) + " ×",
+      within ? "在限差之内" : "超过限差 — 应重测，不要平差",
+      within ? "ok" : "warn");
+    rows += row("Σ后视", show(fromM(sbs), dp()) + " " + unit, "后视读数之和");
+    rows += row("Σ前视", show(fromM(sfs), dp()) + " " + unit, "前视读数之和");
+    rows += row("Σ高差 − Σ降低", show(fromM(srise - sfall), dp()) + " " + unit,
+      "应等于 Σ后视 − Σ前视");
+    rows += row("修正总和", corrText(mmFromM(-e)) + " " + mmUnit(),
+      "全线分摊，等于闭合差的反号");
+    rows += row("分配方式", mode === "dist" ? "按距离" : "按测站数",
+      fallback ? "未输入距离 — 已回退为按测站数"
+      : (mode === "dist" ? "−e × 累计 ÷ 总长度" : "每站等分"),
+      fallback ? "warn" : "");
+    if (unpaired) rows += row("未配对的前视", String(unpaired) + " 次",
+      "按上一点高程归化，缺少仪器高 — 请检查记录", "warn");
+    el("lv-rows").innerHTML = rows;
+
+    // --- reduced level table
+    var tb = el("lv-out").querySelector("tbody"), html = "";
+    for (var v = 0; v < line.length; v++){
+      var p = line[v];
+      html += '<tr>'
+        + '<td>' + p.name + '</td>'
+        + '<td class="num">' + (p.bs > 0 ? show(fromM(p.bs), dp()) : "—") + '</td>'
+        + '<td class="num">' + (p.fs > 0 ? show(fromM(p.fs), dp()) : "—") + '</td>'
+        + '<td class="num">' + (p.rise > 0 ? show(fromM(p.rise), dp()) : "—") + '</td>'
+        + '<td class="num">' + (p.fall > 0 ? show(fromM(p.fall), dp()) : "—") + '</td>'
+        + '<td class="num">' + show(fromM(p.rl), dp()) + '</td>'
+        + '<td class="num">' + (p.cum > 0 ? show(fromM(p.cum), 1) : "—") + '</td>'
+        + '<td class="num">' + (v === 0 ? "—" : corrText(mmFromM(p.corr))) + '</td>'
+        + '<td class="num">' + show(fromM(p.adj), dp()) + '</td>'
+        + '</tr>';
+    }
+    tb.innerHTML = html;
+
+    var okArith = Math.abs((sbs - sfs) - (srise - sfall)) < 1e-9
+                  && Math.abs((srise - sfall) - (rl - M.start)) < 1e-9
+                  && unpaired === 0;
+    // With an unpaired fore sight the columns cannot agree by construction, so say why
+    // once instead of blaming the arithmetic twice.
+    el("lv-arith").textContent = okArith
+      ? "算术校核通过：Σ后视 − Σ前视 = Σ高差 − Σ降低 = 末点高程 − 首点高程，"
+        + "且每个前视都有可配对的后视。"
+      : (unpaired
+          ? "算术校核未通过：" + unpaired + " 个前视没有后视，其高差是相对一个并非仪器高的高程算出的。"
+            + "下表高程不构成一条有效测线。"
+          : "算术校核未通过——请反馈，归化结果自相矛盾。");
+    if (unpaired){
+      // The corrections are proportional to a misclosure that does not exist; do not
+      // dress them up as an adjustment.
+      var cellsWithCorr = el("lv-out").querySelectorAll("tbody tr");
+      for (var q = 0; q < cellsWithCorr.length; q++){
+        cellsWithCorr[q].children[7].textContent = "—";
+        cellsWithCorr[q].children[8].textContent = cellsWithCorr[q].children[5].textContent;
+      }
+      el("lv-bv").textContent = "无法平差";
+      el("lv-rows").insertAdjacentHTML("afterbegin",
+        row("平差", "已扣住", "存在未配对的前视，这条测线不成立 — 请修正记录", "warn"));
+    }
+    el("lv-arith").style.color = okArith ? "#0f9d58" : "#d9534f";
+
+    res.classList.add("show");
+  }
+
+  // ---- wiring ---------------------------------------------------------------
+  function seed(){
+    M.rows = EXAMPLE.map(function(r){ return {name: "", bs: r.bs, fs: r.fs, d: r.d}; });
+    buildTable();
+  }
+
+  el("lv-table").addEventListener("input", function(ev){
+    if (ev.target.tagName !== "INPUT") return;
+    readTable();
+    calc();
+  });
+
+  el("lv-add").addEventListener("click", function(){
+    readTable();
+    M.rows.push({name: "", bs: 0, fs: 0, d: 0});
+    buildTable();
+    calc();
+  });
+
+  el("lv-reset").addEventListener("click", function(){
+    seed();
+    el("lv-start").value = "50.000";
+    el("lv-close").value = "";
+    el("lv-k").value = "4";
+    el("lv-order").value = "4";
+    el("lv-method").value = "dist";
+    calc();
+  });
+
+  var prevUnit = el("lv-units").value;
+  el("lv-units").addEventListener("change", function(){
+    // The readings, the benchmark levels and the displayed precision all live in the
+    // unit on screen, so all of them have to move together. Reading the inputs first
+    // commits them in the unit they were typed in.
+    var sRaw = parseFloat(el("lv-start").value), cRaw = parseFloat(el("lv-close").value);
+    readTable(prevUnit);
+    if (!isNaN(sRaw)) M.start = prevUnit === "m" ? sRaw : sRaw / FT;
+    if (!isNaN(cRaw)) M.close = prevUnit === "m" ? cRaw : cRaw / FT;
+    var goingToFeet = prevUnit === "m";
+    el("lv-start").value = (goingToFeet ? M.start * FT : M.start).toFixed(goingToFeet ? 3 : 3);
+    el("lv-close").value = (isNaN(cRaw) ? "" : (goingToFeet ? M.close * FT : M.close).toFixed(3));
+    el("lv-precision").value = goingToFeet ? "3" : (dp() === 3 ? "3" : "4");
+    // The k constant is quoted per sqrt of the run unit, so the number has to be
+    // re-expressed: 4 mm/√km is 0.25 ft/√mile (4 mm x 3.28084 ... / 1.60934).
+    var kk = parseFloat(el("lv-k").value);
+    if (!isNaN(kk)){
+      if (prevUnit === "m" && el("lv-units").value === "ft"){      // mm/√km -> ft/√mile
+        el("lv-k").value = String(Math.round((kk / 1000 * FT * Math.sqrt(1.609344)) * 1e6) / 1e6);
+      } else if (prevUnit === "ft" && el("lv-units").value === "m"){  // ft/√mile -> mm/√km
+        el("lv-k").value = String(Math.round((kk / FT / Math.sqrt(1.609344) * 1000) * 1e3) / 1e3);
+      }
+    }
+    el("lv-order").value = "custom";
+    if (!metric() && !parseFloat(el("lv-precision").value)){
+      el("lv-precision").value = "3";
+    }
+    prevUnit = el("lv-units").value;
+    el("lv-ku").textContent = metric() ? "mm/√km" : "ft/√mi";
+    buildTable();                           // redraw the same readings in the new one
+    calc();
+  });
+
+  el("lv-method").addEventListener("change", calc);
+  el("lv-precision").addEventListener("change", calc);
+  el("lv-order").addEventListener("change", function(){
+    var v = el("lv-order").value;
+    if (v !== "custom"){ el("lv-k").value = v; }
+    calc();
+  });
+  var head = ["lv-start", "lv-close", "lv-k"];
+  for (var i = 0; i < head.length; i++){
+    el(head[i]).addEventListener("input", function(){
+      if (this.id === "lv-k") el("lv-order").value = "custom";
+      calc();
+    });
+  }
+
+  seed();
+  calc();
+})();
+</script>
+</body>
+</html>

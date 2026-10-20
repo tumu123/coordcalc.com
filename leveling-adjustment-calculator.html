@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leveling Adjustment Calculator — Rise &amp; Fall, Misclosure (Free)</title>
+<meta name="description" content="Reduce a level run from back and fore sights, compare it with the benchmark you closed on, and share the misclosure out by distance or by number of sights.">
+<link rel="canonical" href="https://coordcalc.com/leveling-adjustment-calculator">
+<link rel="alternate" hreflang="en" href="https://coordcalc.com/leveling-adjustment-calculator">
+<link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/leveling-adjustment-calculator">
+<link rel="alternate" hreflang="x-default" href="https://coordcalc.com/leveling-adjustment-calculator">
+<meta property="og:title" content="Leveling Adjustment Calculator — Rise &amp; Fall, Misclosure (Free)">
+<meta property="og:description" content="Level a run, find the misclosure, test it against k x sqrt(L), and adjust by distance or by number of sights. Metres or feet.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://coordcalc.com/leveling-adjustment-calculator">
+<meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="manifest" href="assets/site.webmanifest">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
+<meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Leveling Adjustment Calculator",
+  "url": "https://coordcalc.com/leveling-adjustment-calculator",
+  "description": "Reduce a level run from back and fore sights, compare it with the benchmark you closed on, and share the misclosure out by distance or by number of sights.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Professional surveying",
+      "item": "https://coordcalc.com/#surveying"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Leveling Adjustment Calculator",
+      "item": "https://coordcalc.com/leveling-adjustment-calculator"
+    }
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "inLanguage": "en",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How do you calculate a leveling adjustment?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Reduce the readings rise and fall, take the difference between the computed and the known closing level as the misclosure, then give every point a correction proportional to the distance (or the number of sights) up to it. The corrections sum to minus the misclosure, so the adjusted run closes exactly on the benchmark."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a misclosure in leveling?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is the difference between the level the run gives for the closing point and the level that point is known to have. A positive misclosure means the run came out above the truth. The adjustment only spreads it; the size of the misclosure against the allowance is the real measure of the work."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Should I adjust by distance or by number of sights?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "By distance if you have the distances, because the tolerance is expressed against distance and it weights a long sight more than a short one. If you did not measure, by number of sights is the honest approximation, provided the set-ups were of similar length."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is an acceptable misclosure?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Typically a constant in millimetres times the square root of the run in kilometres: 4 mm for precise control, 12 mm for site leveling, 20 mm for rough work. Take the figure from the project specification, and re-observe rather than adjust if the misclosure is more than about twice the allowance."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why must back and fore sights be equal in length?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because the earth curvature, atmospheric refraction and any residual tilt in the line of sight all act in proportion to distance. At a set-up with equal sights those effects are identical on both readings, so they cancel in the difference."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a change point?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "A point read twice: as a fore sight from the set-up being left and as a back sight from the next one. It is the only point that carries the level from one instrument position to the next, so it must be stable and be the same physical mark both times."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Why does the arithmetic check not prove the levels are right?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Because it only proves the reduction is internally consistent. If the field readings are wrong the arithmetic still balances perfectly. Only closing on a known level, or repeating the run, finds that class of error."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use a levelled height where a GNSS height is needed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Only with a geoid model in between. Leveling gives height above the geoid, GNSS gives height above the ellipsoid; the separation is tens of metres and varies along the line."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is this leveling adjustment calculator free?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes, free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no survey data is uploaded."
+      }
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#f7f8fa;--card:#ffffff;--line:#e6e8ec;--text:#1f2430;--sub:#5b6472;
+    --accent:#2563eb;--accent-d:#1d4ed8;--ok:#0f9d58;--soft:#eef2f9;--cat:#7c3aed;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);line-height:1.65;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;}
+  .wrap{max-width:900px;margin:0 auto;padding:28px 20px 60px;}
+  nav.crumb{font-size:13px;color:var(--sub);margin-bottom:18px;}
+  nav.crumb a{color:var(--sub);text-decoration:none;}
+  nav.crumb a:hover{color:var(--accent);}
+  h1{font-size:27px;line-height:1.3;margin:0 0 12px;letter-spacing:-.2px;}
+  h2{font-size:18px;margin:30px 0 12px;}
+  h3{font-size:15px;margin:22px 0 8px;}
+  p{margin:0 0 14px;font-size:15px;}
+  .lead{font-size:15.5px;color:#3b4353;}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px 24px;margin:20px 0;
+    box-shadow:0 1px 2px rgba(16,24,40,.05);}
+  .row{display:flex;gap:16px;flex-wrap:wrap;align-items:flex-end;}
+  .field{display:flex;flex-direction:column;gap:6px;flex:1;min-width:130px;}
+  .field>label{font-size:12.5px;font-weight:600;color:var(--sub);letter-spacing:.2px;}
+  input[type=number],input[type=text],select{
+    font-family:inherit;font-size:15px;font-weight:500;padding:10px 12px;border:1px solid #cfd6e0;border-radius:9px;
+    background:#fff;color:var(--text);transition:.15s;width:100%;min-width:0;}
+  input[type=number],select{font-size:16px;font-weight:600;}
+  input:focus,select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(37,99,235,.13);}
+  input.bad{border-color:#d9534f;box-shadow:0 0 0 3px rgba(217,83,79,.1);}
+  .hint{font-size:12.5px;color:var(--sub);margin-top:10px;}
+  .err{display:none;font-size:13px;color:#d9534f;margin-top:10px;font-weight:500;}
+  .err.show{display:block;}
+  .results{margin-top:22px;border-top:1px solid var(--line);padding-top:18px;display:none;}
+  .results.show{display:block;}
+  .big{background:var(--soft);border-radius:11px;padding:15px 18px;margin-bottom:14px;display:flex;
+    justify-content:space-between;align-items:baseline;gap:14px;flex-wrap:wrap;}
+  .big .bk{font-size:12.5px;font-weight:700;color:var(--accent-d);letter-spacing:.3px;text-transform:uppercase;}
+  .big .bv{font-size:24px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--accent-d);}
+  .result-row{display:flex;justify-content:space-between;align-items:baseline;gap:16px;
+    padding:11px 0;border-bottom:1px dashed var(--line);}
+  .result-row:last-of-type{border-bottom:0;}
+  .result-row .k{font-size:13px;color:var(--sub);}
+  .result-row .v{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums;text-align:right;word-break:break-all;}
+  .result-row .v small{display:block;font-size:12px;font-weight:500;color:var(--sub);}
+  .result-row .v small.warn{color:#b45309;font-weight:600;}
+  .result-row .v small.ok{color:var(--ok);font-weight:600;}
+  .checkline{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;color:var(--sub);
+    padding:10px 0 2px;}
+  .checkline input{width:17px;height:17px;flex:0 0 auto;accent-color:var(--accent);}
+  .links{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+  .links a{display:block;padding:12px 14px;border:1px solid var(--line);border-radius:10px;
+    text-decoration:none;color:var(--text);font-size:14px;font-weight:600;transition:.15s;background:#fff;}
+  .links a:hover{border-color:var(--accent);color:var(--accent-d);}
+  .links a small{display:block;font-weight:400;color:var(--sub);font-size:12.5px;margin-top:3px;}
+  .readon{list-style:none;margin:0;padding:0;}
+  .readon li{margin-bottom:9px;font-size:14.5px;}
+  .readon a{color:var(--accent-d);text-decoration:none;font-weight:600;}
+  .readon a:hover{text-decoration:underline;}
+  .readon small{display:block;color:var(--sub);font-weight:400;font-size:12.5px;}
+  details{border:1px solid var(--line);border-radius:10px;padding:0 16px;margin-bottom:10px;background:#fff;}
+  details[open]{border-color:#d5dce7;}
+  summary{cursor:pointer;padding:14px 0;font-weight:600;font-size:14.5px;list-style:none;position:relative;padding-right:26px;}
+  summary::-webkit-details-marker{display:none;}
+  summary::after{content:"+";position:absolute;right:2px;top:12px;font-size:19px;color:var(--sub);font-weight:400;}
+  details[open] summary::after{content:"–";}
+  details p{font-size:14px;color:#3b4353;padding-bottom:6px;}
+  table.lookup{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:10px;}
+  table.lookup th,table.lookup td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;}
+  table.lookup th{background:#f1f3f7;font-weight:600;font-size:12.5px;}
+  table.lookup td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  code{background:var(--soft);padding:2px 7px;border-radius:5px;font-size:13.5px;color:var(--accent-d);
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;}
+  .foot{margin-top:34px;font-size:12.5px;color:var(--sub);text-align:center;border-top:1px solid var(--line);padding-top:18px;}
+
+  header.site{background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);
+    position:sticky;top:0;z-index:40;}
+  .hwrap{max-width:900px;margin:0 auto;padding:0 20px;display:flex;align-items:center;
+    justify-content:space-between;height:56px;gap:16px;}
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px;
+    text-decoration:none;color:var(--text);}
+  .brand .logo{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,#2563eb,#4f9cff);
+    display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:800;}
+  nav.topnav{display:flex;gap:18px;font-size:13px;color:var(--sub);font-weight:500;}
+  nav.topnav a{text-decoration:none;color:var(--sub);}
+  nav.topnav a:hover{color:var(--accent);}
+  .accentbar{height:3px;background:var(--cat);}
+  /* Both result tables have more columns than a phone has width. A plain
+     overflow-x:auto wrapper is not enough: the table's min-content width propagates
+     through the block chain and widens the document instead of scrolling, so the
+     wrapper needs an explicit max-width and the table a min-width of zero. */
+  .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%;}
+  /* width:100% alone lets a wide table lay itself out beyond the scroller, which then
+     reports scrollWidth == clientWidth and nothing ever scrolls. max-content gives the
+     table a width the scroller can actually be smaller than. */
+  .tscroll > table{width:max-content;min-width:100%;}
+  #lv-table input{min-width:0;}
+  @media(max-width:640px){
+    #lv-out{font-size:12.5px;}
+    #lv-table table{font-size:13px;}
+    #lv-table input{font-size:13px;padding:5px 6px;}
+    .links{grid-template-columns:1fr;}
+    h1{font-size:23px;}
+    .result-row{flex-direction:column;gap:2px;}
+    .result-row .v{text-align:left;}
+    .big .bv{font-size:20px;}
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
+  }
+</style>
+<script src="assets/consent.js" defer></script>
+<script src="assets/track.js" defer></script>
+</head>
+<body>
+<header class="site">
+  <div class="hwrap">
+    <a class="brand" href="./"><span class="logo">C</span>CoordCalc</a>
+    <nav class="topnav">
+      <a href="./#coordinates">Coordinates</a>
+      <a href="./#distance">Distance &amp; Area</a>
+      <a href="./#slope">Slope &amp; Scale</a>
+      <a href="./#surveying">Surveying</a>
+    </nav>
+  </div>
+  <div class="accentbar"></div>
+</header>
+
+<div class="wrap">
+
+  <nav class="crumb">
+    <a href="./">CoordCalc</a> › <a href="./#surveying">Professional surveying</a> › Leveling Adjustment Calculator
+  </nav>
+
+  <h1>Leveling Adjustment Calculator</h1>
+
+  <p class="lead">
+    This differential leveling calculator reduces a run of staff readings to reduced levels, compares
+    the result with the benchmark you closed on, and hands the misclosure back out to every point in
+    proportion to the work done — by distance if you measured it, by number of sights if you did not.
+    Start from a known level, enter back and fore sights down the line, and read the misclosure, the
+    allowable tolerance and the adjusted levels. Free, in your browser, no login.
+  </p>
+
+  <div class="card">
+    <div class="row">
+      <div class="field" style="flex:0 0 170px;">
+        <label for="lv-units">Unit system</label>
+        <select id="lv-units">
+          <option value="m">Metres (m, mm)</option>
+          <option value="ft">Feet (ft, ft)</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 230px;">
+        <label for="lv-method">Distribute by</label>
+        <select id="lv-method">
+          <option value="dist" selected>Distance — cumulative km or miles</option>
+          <option value="stations">Number of sights — every set-up equal</option>
+        </select>
+      </div>
+      <div class="field" style="flex:0 0 230px;">
+        <label for="lv-order">Allowed misclosure</label>
+        <select id="lv-order">
+          <option value="custom">Custom constant</option>
+          <option value="4" selected>4 mm — first order (FGCS)</option>
+          <option value="6">6 mm — second order, class I (FGCS)</option>
+          <option value="8">8 mm — second order, class II (FGCS)</option>
+          <option value="12">12 mm — third order (FGCS)</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:16px;">
+      <div class="field" style="flex:0 0 250px;">
+        <label for="lv-start">Starting reduced level (benchmark)</label>
+        <input id="lv-start" type="number" step="any" value="50.000" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 220px;">
+        <label for="lv-k">Allowed misclosure constant</label>
+        <input id="lv-k" type="number" step="any" value="4" autocomplete="off">
+        <span class="hint" id="lv-ku" style="margin:0;">mm per √km</span>
+      </div>
+      <div class="field" style="flex:1;min-width:180px;">
+        <label for="lv-close">Closing benchmark level (optional)</label>
+        <input id="lv-close" type="number" step="any" placeholder="closed loop on the start" autocomplete="off">
+      </div>
+      <div class="field" style="flex:0 0 150px;">
+        <label for="lv-precision">Show levels to</label>
+        <select id="lv-precision">
+          <option value="3" selected>0.001</option>
+          <option value="4">0.0001</option>
+        </select>
+      </div>
+    </div>
+
+    <h3 style="margin-top:22px;">Sights</h3>
+    <p class="hint" style="margin-top:-4px;">
+      One line per sight, in the order it was taken. Fill <b>Back</b> for a back sight, <b>Fore</b> for a
+      fore sight, or both when the instrument moved at that point (the change point). Add a distance
+      for each sight if you paced or taped it — leave it at 0 and the distance method falls back on
+      sights. Blank last rows are ignored.
+    </p>
+    <div class="tscroll" id="lv-table" style="margin-top:10px;"></div>
+    <div class="row" style="margin-top:12px;">
+      <button type="button" id="lv-add" style="font:inherit;font-weight:600;font-size:14px;padding:9px 16px;
+        border-radius:9px;border:1px solid #cfd6e0;background:#fff;color:var(--accent-d);cursor:pointer;">
+        + Add a row</button>
+      <button type="button" id="lv-reset" style="font:inherit;font-weight:500;font-size:14px;padding:9px 16px;
+        border-radius:9px;border:1px solid var(--line);background:#fff;color:var(--sub);cursor:pointer;">
+        Reset to the worked example</button>
+    </div>
+
+    <p class="err" id="lv-err">Check the readings — every sight needs a positive back or fore reading,
+      and a line that closes on a benchmark or on the start needs the last reading to be a fore sight.</p>
+
+    <div class="results" id="lv-results">
+      <div class="big">
+        <span class="bk">Adjusted closing level</span>
+        <span class="bv" id="lv-bv">—</span>
+      </div>
+      <div id="lv-rows"></div>
+      <h3>Reduced levels</h3>
+      <div class="tscroll">
+        <table class="lookup" id="lv-out">
+          <thead>
+            <tr><th>Point</th><th id="lv-h-bs">Back</th><th id="lv-h-fs">Fore</th><th id="lv-h-ri">Rise</th>
+              <th id="lv-h-fa">Fall</th><th>RL</th><th id="lv-h-d">Dist</th><th id="lv-h-c">Corr</th>
+              <th>Adj. RL</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="hint">Arithmetic check: Σ back − Σ fore must equal Σ rise − Σ fall, and that value must
+        equal the last RL minus the first. The calculator tests all three and says so below the table.</p>
+      <p class="hint" id="lv-arith" style="font-weight:600;"></p>
+    </div>
+  </div>
+
+  <section class="card">
+    <h2>How the calculation works</h2>
+    <h3>The rise-and-fall reduction</h3>
+    <p>
+      A level run gives pairs of staff readings. At each change point the instrument is read on the
+      staff held at the previous point — the <b>back sight</b> — and then on the staff at the new point —
+      the <b>fore sight</b>. If the fore sight is smaller than the back sight the ground went up, and the
+      rise is <code>back − fore</code>; if it is larger the ground fell, and the fall is
+      <code>fore − back</code>. Each reduced level is the previous one plus the rise, or minus the fall.
+    </p>
+    <p>
+      The two columns have to balance. Summing gives <code>Σ back − Σ fore = Σ rise − Σ fall = RL_last − RL_first</code>,
+      which is an arithmetic check that catches a transposed digit in the reduction but <b>not</b> a wrong
+      reading in the field — that only shows up as a misclosure.
+    </p>
+    <h3>The height-of-instrument route</h3>
+    <p>
+      The same numbers come out of the other bookkeeping method: after each back sight the instrument
+      height is <code>HI = RL_back + back</code>, and the fore sight gives
+      <code>RL_fore = HI − fore</code>. It is the same arithmetic written once per set-up instead of once
+      per sight. This calculator runs rise and fall, because the two column checks above fall out of it
+      for free, but the pairing is what matters: a fore sight is only ever reduced against the instrument
+      height its own back sight produced.
+    </p>
+    <h3>Misclosure</h3>
+    <p>
+      If the run ends on a known level — a benchmark, or the starting point again — the computed level
+      will not agree with it exactly. The difference is the <b>misclosure</b>:
+      <code>e = computed − known</code>. A positive misclosure means the run came out high, and every
+      adjusted level has to be brought <b>down</b>.
+    </p>
+    <h3>Distributing the misclosure</h3>
+    <p>
+      With the distance rule, the correction at a point is
+      <code>c_i = −e × (d_i ÷ Σd)</code>, where <code>d_i</code> is the cumulative distance to that point.
+      It is proportional and it closes exactly: at the last point the sum of the fractions is 1. The
+      sights rule does the same thing with the number of sights in place of distance, which is the honest
+      choice when you have no distances and the set-ups were of similar length. Neither rule improves the
+      survey; they both just spread a number you cannot remove.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>What misclosure is acceptable?</h2>
+    <p>
+      The usual standard is proportional to the square root of the length of the run,
+      <code>e_allow = k × √L</code>, with <code>L</code> in km and <code>k</code> in mm. The square root
+      reflects the way random errors accumulate: a run twice as long has about 1.4 times the error, not
+      twice. The order/class system in the table below is the long-standing FGCS scheme (Federal Geodetic
+      Control Subcommittee, 1984); it is still what most specifications quote, even where the current
+      positional-accuracy standard has replaced orders with uncertainty values.
+    </p>
+    <table class="lookup">
+      <thead>
+        <tr><th>Order / class</th><th>Max loop misclosure</th><th>Typical use</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>First order, class I</td><td>4 mm × √K</td><td>National framework; deformation and research networks</td></tr>
+        <tr><td>Second order, class I</td><td>6 mm × √K</td><td>Metropolitan control, large engineering projects</td></tr>
+        <tr><td>Second order, class II</td><td>8 mm × √K</td><td>Local control networks, topographic mapping</td></tr>
+        <tr><td>Third order</td><td>12 mm × √K</td><td>Construction, small projects, local surveys</td></tr>
+      </tbody>
+    </table>
+    <p class="hint">
+      K is the length of the loop in kilometres. For a one-way line between two benchmarks (a section
+      rather than a loop) first order class I tightens to 3 mm × √K; the other classes keep the same
+      constant. China's GB/T 12898 applies a similar √L rule with different constants — ±12√L mm for
+      third order and ±20√L mm for fourth order on flat ground, relaxed to ±15√L and ±25√L mm in
+      mountainous terrain. Always take the figure from the project specification.
+    </p>
+    <p class="hint">
+      Where the specification gives a fixed figure per set-up instead of a distance rule, divide it by
+      the square root of the number of set-ups. And if the misclosure is more than about twice the
+      allowance, adjusting is pointless: re-observe the run.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Field practice that keeps the misclosure small</h2>
+    <p>
+      Almost every large misclosure comes from four habits, and none of them is arithmetic.
+    </p>
+    <p>
+      <b>Equalise the sights.</b> Keep the back sight and the fore sight the same length at each set-up.
+      The curvature and refraction error and the residual error of the instrument's line of sight both
+      grow with the difference between the two distances; if the sights are equal they cancel. It is the
+      single most effective thing you can do, and it costs nothing but walking.
+    </p>
+    <p>
+      <b>Change points properly.</b> A change point must sit on solid, stable ground, be read on a
+      straight staff held vertical, and be the <b>same point</b> for the closing and the opening sight.
+      Use a turning plate on soft ground. Two hand spans from where you placed the staff to where you
+      thought you placed it is a real error, and it enters the run twice.
+    </p>
+    <p>
+      <b>Read to the full station.</b> Read all three hairs and check that the middle hair is the mean of
+      the other two; a staff read to one millimetre on one sight and guessed on the next shows up in that
+      check, not in the reduction.
+    </p>
+    <p>
+      <b>Close the job, not just the loop.</b> A run that returns to its own start proves only that no
+      gross error was made; it does not detect a reference mark that has moved. Close onto an
+      independent benchmark whenever one exists, and note the difference — sometimes the benchmark is
+      what has moved, and that is a finding, not a failure.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Worked example</h2>
+    <p>
+      The default table is a closed loop of four set-ups returning to a benchmark at <code>50.000 m</code>.
+      Each line is one staff position, so the distance column is the length of that sight and the
+      cumulative distance is the running total from the start.
+    </p>
+    <div class="tscroll">
+      <table class="lookup">
+        <thead>
+          <tr><th>Point</th><th>Back</th><th>Fore</th><th>Rise</th><th>Fall</th><th>RL</th><th>Cum. dist (m)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>BM (start)</td><td>—</td><td>—</td><td>—</td><td>—</td><td>50.000</td><td>0</td></tr>
+          <tr><td>P1</td><td>1.428</td><td>1.536</td><td>—</td><td>0.108</td><td>49.892</td><td>300</td></tr>
+          <tr><td>P2</td><td>1.502</td><td>1.494</td><td>0.008</td><td>—</td><td>49.900</td><td>600</td></tr>
+          <tr><td>P3</td><td>1.455</td><td>1.512</td><td>—</td><td>0.057</td><td>49.843</td><td>900</td></tr>
+          <tr><td>BM (close)</td><td>1.507</td><td>1.483</td><td>0.024</td><td>—</td><td>49.867</td><td>1200</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>
+      Both arithmetic checks agree: <code>Σ back = 5.892</code>, <code>Σ fore = 6.025</code>,
+      <code>Σ rise = 0.032</code>, <code>Σ fall = 0.165</code>, and in each case the net is
+      <code>−0.133 m</code>, which is also <code>49.867 − 50.000</code>. The loop closes
+      <b>133 mm low</b>.
+    </p>
+    <p>
+      Over <code>1.2 km</code> the allowance at <code>k = 4 mm/√km</code> is
+      <code>4 × √1.2 = 4.38 mm</code>, and at <code>k = 8</code> it is <code>8.76 mm</code>. The
+      misclosure is 30 times the tighter figure, so this run fails every order in the table — which is
+      what a survey with a blunder looks like. The miss is not spread evenly through the four set-ups
+      either: 108 mm of it arrives on the very first one, which is where you would look first.
+    </p>
+    <p>
+      Adjusting anyway, the distance rule gives <code>−e × (cum ÷ 1200)</code>:
+      <code>+33.3 mm</code> at P1, <code>+66.5</code> at P2, <code>+99.8</code> at P3 and
+      <code>+133.0</code> at the benchmark, taking the adjusted levels to
+      <code>49.925</code>, <code>49.967</code>, <code>49.943</code> and exactly <code>50.000</code>.
+      Switch the method to <i>number of sights</i> and each of the four gets <code>+33.3 mm</code>
+      instead. Neither method makes the loop better than it is — both only spread a number you cannot
+      remove, which is why the ratio to the allowance is on the result panel and the misclosure is not.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Further reading</h2>
+    <ul class="readon">
+      <li><a href="how-to-calculate-closure-error">How to calculate closure error</a>
+        <small>The same idea in a traverse, where the closure is a vector rather than a scalar.</small></li>
+      <li><a href="how-to-calculate-slope-percentage">How to calculate slope percentage</a>
+        <small>Turning a level difference into a grade between two reduced levels.</small></li>
+      <li><a href="geoid-vs-ellipsoid">Geoid vs ellipsoid</a>
+        <small>Why a levelled height and a GNSS height are not the same number.</small></li>
+      <li><a href="survey-foot-vs-international-foot">Survey foot vs international foot</a>
+        <small>Two parts per million — invisible in millimeters, not in a long run.</small></li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Related calculators</h2>
+    <div class="links">
+      <a href="traverse-calculator">traverse calculator<small>Closure error and adjustment in plan</small></a>
+      <a href="slope-calculator">slope percentage calculator<small>Level difference to grade</small></a>
+      <a href="cut-fill-calculator">cut and fill calculator<small>Levels into earthwork volumes</small></a>
+      <a href="curve-calculator">curve calculator<small>Vertical curve elevations from grades</small></a>
+      <a href="unit-converter">unit converter<small>Metres to feet, millimetres to inches</small></a>
+      <a href="utm-coordinate-converter">UTM coordinate converter<small>Plan position for the points you levelled</small></a>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <details open>
+      <summary>How do you calculate a leveling adjustment?</summary>
+      <p>Reduce the readings rise and fall, take the difference between the computed and the known closing level as the misclosure, then give every point a correction proportional to the distance (or the number of sights) up to it. The corrections sum to minus the misclosure, so the adjusted run closes exactly on the benchmark.</p>
+    </details>
+    <details>
+      <summary>What is a misclosure in leveling?</summary>
+      <p>It is the difference between the level the run gives for the closing point and the level that point is known to have. A positive misclosure means the run came out above the truth. It is not an error you can find and remove after the fact — the adjustment only spreads it, and the size of the misclosure against the allowance is the real measure of the work.</p>
+    </details>
+    <details>
+      <summary>Should I adjust by distance or by number of sights?</summary>
+      <p>By distance if you have the distances, because it is what the tolerance is expressed against and it weights a long sight more than a short one. If you did not measure, by number of sights is the honest approximation, provided the set-ups were of similar length. Never adjust by distance that you made up so the two methods agree.</p>
+    </details>
+    <details>
+      <summary>What is an acceptable misclosure?</summary>
+      <p>Typically a constant in millimetres times the square root of the run in kilometres — 4 mm for precise control, 12 mm for site leveling, 20 mm for rough work. Take the figure from the project specification. If the misclosure is more than about twice the allowance, adjust nothing and re-observe.</p>
+    </details>
+    <details>
+      <summary>Why must back and fore sights be equal in length?</summary>
+      <p>Because the earth's curvature, atmospheric refraction and any residual tilt in the instrument's line of sight all act in proportion to distance. At a set-up with equal sights those effects are identical on both readings, so they cancel in the difference. Unequal sights leave the difference of the two errors in the run.</p>
+    </details>
+    <details>
+      <summary>What is a change point?</summary>
+      <p>A point that is read twice: as a fore sight from the set-up you are leaving and as a back sight from the next one. It is the only point that carries the level from one instrument position to the next, so it must be stable and it must be the same physical mark both times.</p>
+    </details>
+    <details>
+      <summary>Why does the arithmetic check not prove the levels are right?</summary>
+      <p>Because it only proves the reduction is internally consistent. If the field readings are wrong — a staff misread, a change point moved, a bubble not centred — the arithmetic still balances perfectly. Only closing on a known level, or repeating the run, finds that class of error.</p>
+    </details>
+    <details>
+      <summary>Can I use a levelled height where a GNSS height is needed?</summary>
+      <p>Only with a geoid model in between. Leveling gives height above the geoid (orthometric height); GNSS gives height above the ellipsoid. The separation is tens of metres and varies along the line, so the two are not interchangeable without a conversion. The geoid versus ellipsoid guide covers the reasoning.</p>
+    </details>
+    <details>
+      <summary>Is this leveling adjustment calculator free?</summary>
+      <p>Yes — free, no login, no account, no usage limit. Every calculation runs locally in your browser, so no survey data is uploaded.</p>
+    </details>
+  </section>
+
+  <p class="foot">
+    Calculations run locally in your browser. Results are for reference — confirm against the
+    governing design standard before construction or procurement.
+  <span style="display:block;margin-top:9px;"><a href="about">About</a> · <a href="privacy">Privacy &amp; cookies</a> · <a href="terms">Terms of use</a> · <a href="developers">Developers</a></span>
+  </p>
+
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var el = function(id){ return document.getElementById(id); };
+  var num = new Intl.NumberFormat("en-US", {maximumSignificantDigits: 10});
+
+  // Everything is held in metres. Switching the unit system converts the displayed
+  // readings and the RLs, so a run entered in feet does not silently become a run
+  // entered in metres with the same digits.
+  var FT = 3.280839895013123;
+  var MI = 1609.344;
+
+  var M = {
+    start: 50.000,
+    close: null,          // null = closed loop, use the start level
+    k: 4,                 // mm per sqrt(km), or ft per sqrt(mile) when in feet
+    rows: [],
+    metresTyped: true     // the unit the readings on screen were typed in
+  };
+
+  // A closed loop of four set-ups, 1.2 km, closing 133 mm low. It is deliberately a
+  // bad run: an example that closes to a tenth of a millimetre teaches nothing about
+  // what the allowance is for. The numbers are reproduced by hand in leveling_test.js.
+  var EXAMPLE = [
+    {bs: 1.428, fs: 1.536, d: 300},
+    {bs: 1.502, fs: 1.494, d: 300},
+    {bs: 1.455, fs: 1.512, d: 300},
+    {bs: 1.507, fs: 1.483, d: 300}
+  ];
+
+  function metric(){ return el("lv-units").value === "m"; }
+  function method(){ return el("lv-method").value; }
+  function dp(){ return parseInt(el("lv-precision").value, 10) || 3; }
+
+  function show(v, d){
+    if (!isFinite(v)) return "—";
+    var a = Math.abs(v);
+    if (a !== 0 && (a < 1e-9 || a >= 1e12)) return v.toExponential(6);
+    if (d === undefined) return num.format(v);
+    return v.toFixed(d);
+  }
+  function row(k, v, sub, cls){
+    return '<div class="result-row"><span class="k">'+k+'</span><span class="v">'+v
+      + (sub ? '<small' + (cls ? ' class="'+cls+'"' : '') + '>'+sub+'</small>' : '') + '</span></div>';
+  }
+
+  function fromM(v){ return metric() ? v : v * FT; }
+  function toM(v){ return metric() ? v : v / FT; }
+  // run length in the unit the k constant is quoted in: km, or statute miles
+  function runLen(v){ return metric() ? v / 1000 : v / MI; }
+  function runUnit(){ return metric() ? "km" : "mi"; }
+  // misclosure and corrections are quoted in mm, or in feet to four places
+  function mm(v){ return metric() ? v * 1000 : v * FT * 1000; }   // metres -> mm
+  function mmFromM(v){ return metric() ? v * 1000 : v * FT; }     // metres -> mm or ft
+  function mmUnit(){ return metric() ? "mm" : "ft"; }
+  // p.corr is already the signed correction applied to the RL; convert, never negate.
+  function corrText(m){ return (m >= 0 ? "+" : "") + show(m, metric() ? 2 : 4); }
+  function misText(m){
+    var x = mmFromM(m);
+    return (x >= 0 ? "+" : "") + show(x, metric() ? 1 : 4);
+  }
+
+  // ---- the table ------------------------------------------------------------
+  // Rebuilt by hand rather than from a row template so a new row cannot inherit the
+  // values of the last one; each input carries its row index in a data attribute.
+  function fmtIn(v){
+    var x = fromM(v);
+    return String(Math.round(x * 1e6) / 1e6);
+  }
+  function buildTable(){
+    var h = '<table class="lookup"><thead><tr>'
+          + '<th>#</th><th>Point</th><th>Back sight</th><th>Fore sight</th><th>Distance</th>'
+          + '</tr></thead><tbody>';
+    for (var i = 0; i < M.rows.length; i++){
+      var r = M.rows[i];
+      h += '<tr>'
+        + '<td>' + (i + 1) + '</td>'
+        + '<td><input type="text" data-i="'+i+'" data-f="name" value="'+(r.name || "")+'"></td>'
+        + '<td><input type="number" step="any" data-i="'+i+'" data-f="bs" value="'+(r.bs ? fmtIn(r.bs) : "")+'"></td>'
+        + '<td><input type="number" step="any" data-i="'+i+'" data-f="fs" value="'+(r.fs ? fmtIn(r.fs) : "")+'"></td>'
+        + '<td><input type="number" step="any" data-i="'+i+'" data-f="d" value="'+(r.d ? fmtIn(r.d) : "")+'"></td>'
+        + '</tr>';
+    }
+    h += '</tbody></table>';
+    el("lv-table").innerHTML = h;
+  }
+
+  function readTable(u){
+    // `u` is the unit that is still on screen when the select has already flipped,
+    // so the typed numbers are committed in the unit they were typed in.
+    var mm2 = (u || el("lv-units").value) === "m";
+    M.metresTyped = mm2;
+    var inputs = el("lv-table").querySelectorAll("input");
+    for (var i = 0; i < inputs.length; i++){
+      var inp = inputs[i], r = M.rows[+inp.dataset.i];
+      if (!r) continue;
+      var f = inp.dataset.f;
+      if (f === "name"){ r.name = inp.value; continue; }
+      var v = parseFloat(inp.value);
+      if (isNaN(v)){ r[f] = 0; continue; }
+      r[f] = (mm2 ? 1 : 1 / FT) * v;
+    }
+  }
+
+  // ---- the calculation ------------------------------------------------------
+  function calc(){
+    var startRaw = parseFloat(el("lv-start").value);
+    if (!isNaN(startRaw)) M.start = toM(startRaw);
+    var closeRaw = el("lv-close").value.trim();
+    M.close = closeRaw === "" ? null : toM(parseFloat(closeRaw));
+    var kRaw = parseFloat(el("lv-k").value);
+    if (!isNaN(kRaw)) M.k = kRaw;
+
+    var err = el("lv-err"), res = el("lv-results");
+
+    // --- gather the sights, dropping blank lines
+    var used = [], badInput = false, noDistance = false;
+    for (var i = 0; i < M.rows.length; i++){
+      var r = M.rows[i];
+      var bs = r.bs || 0, fs = r.fs || 0, d = r.d || 0;
+      if (bs === 0 && fs === 0 && d === 0) continue;          // an untouched blank row
+      if (bs < 0 || fs < 0 || d < 0 || (bs === 0 && fs === 0)) badInput = true;
+      if (d <= 0) noDistance = true;
+      used.push({name: (r.name || "").trim(), bs: bs, fs: fs, d: d});
+    }
+    var lastIsFore = used.length > 0 && used[used.length - 1].fs > 0;
+    var bad = badInput || used.length === 0 || !lastIsFore;
+    // An unpaired fore sight is shown (the field book has to be readable) but it makes the
+    // reduction invalid, so the adjustment is withheld and the arithmetic check fails loudly.
+
+    el("lv-start").classList.toggle("bad", isNaN(startRaw));
+    el("lv-close").classList.toggle("bad", closeRaw !== "" && isNaN(M.close));
+    err.classList.toggle("show", bad);
+    if (bad){ res.classList.remove("show"); return; }
+
+    // --- rise-and-fall reduction
+    // A fore sight is only meaningful against the instrument height set by the back
+    // sight that preceded it. A fore sight with no back sight yet is still reduced
+    // (against the last RL) so the table is readable, but it is counted and reported:
+    // a run cannot be adjusted from readings that have no back sight to pair with.
+    var sbs = 0, sfs = 0, srise = 0, sfall = 0, totalD = 0, unpaired = 0;
+    var rl = M.start, hi = null, hiCount = 0, hiFresh = false;
+    var line = [{name: "BM", bs: 0, fs: 0, rise: 0, fall: 0, rl: rl, cum: 0, corr: 0, adj: rl}];
+    for (var j = 0; j < used.length; j++){
+      var u = used[j];
+      var rise = 0, fall = 0;
+      // hiFresh marks a back sight that has not yet produced a fore sight: only that
+      // instrument height can carry the level forward. A second fore sight read from the
+      // same set-up would otherwise silently reduce against a height that was never reset.
+      if (u.bs > 0){ sbs += u.bs; hi = rl + u.bs; hiCount++; hiFresh = true; }
+      if (u.fs > 0){
+        sfs += u.fs;
+        var next;
+        if (!hiFresh){ next = rl - u.fs; unpaired++; }        // no back sight to stand on
+        else { next = hi - u.fs; hiFresh = false; }
+        var diff = next - rl;
+        if (diff >= 0) rise = diff; else fall = -diff;
+        rl = next;
+      }
+      srise += rise; sfall += fall; totalD += u.d;
+      line.push({name: u.name || ("P" + (j + 1)), bs: u.bs, fs: u.fs, rise: rise, fall: fall,
+                 rl: rl, cum: totalD, corr: 0, adj: rl});
+    }
+
+    // No closing benchmark means the loop comes back to the start. `running` records which,
+    // because the two are different survey situations and read differently.
+    var running = M.close !== null;
+    var known = running ? M.close : M.start;
+    var e = rl - known;                    // misclosure, computed minus known
+    var L = runLen(totalD);                // km or miles
+    // The allowance is expressible in the unit the run is measured in either way, so
+    // comparing it with e in metres keeps the ratio (and the verdict) unit-free.
+    var allowM = metric() ? M.k * Math.sqrt(L) / 1000 : M.k * Math.sqrt(L) / FT;  // -> metres
+    var within = Math.abs(e) <= allowM + 1e-12;
+
+
+    // --- corrections
+    // Proportional to the cumulative distance, or to the count of sights taken so far.
+    // With no distances the distance rule would divide by zero, so it falls back - and
+    // says so, rather than silently reporting an unlimited allowance.
+    var mode = method();
+    var fallback = false;
+    if (mode === "dist" && (totalD <= 0 || noDistance)){ mode = "stations"; fallback = true; }
+    var denom = 0, acc = 0;
+    if (mode === "dist"){ denom = totalD; }
+    else { for (var c = 1; c < line.length; c++) denom++; }
+    for (var t = 1; t < line.length; t++){
+      var w = mode === "dist" ? line[t].cum : ++acc;
+      line[t].corr = denom > 0 ? -e * (w / denom) : 0;
+      line[t].adj = line[t].rl + line[t].corr;
+    }
+
+    var unit = metric() ? "m" : "ft";
+    el("lv-h-bs").textContent = "Back (" + unit + ")";
+    el("lv-h-fs").textContent = "Fore (" + unit + ")";
+    el("lv-h-ri").textContent = "Rise (" + unit + ")";
+    el("lv-h-fa").textContent = "Fall (" + unit + ")";
+    el("lv-h-d").textContent = "Dist (" + unit + ")";
+    el("lv-h-c").textContent = "Corr (" + mmUnit() + ")";
+    var last = line[line.length - 1];
+    el("lv-bv").textContent = show(fromM(last.adj), dp()) + " " + unit;
+
+    var rows = "";
+    rows += row("Starting level", show(fromM(M.start), dp()) + " " + unit, "held fixed by the adjustment");
+    rows += row("Computed closing level", show(fromM(rl), dp()) + " " + unit, "from the readings alone");
+    rows += row("Known closing level", show(fromM(known), dp()) + " " + unit,
+      running ? "the benchmark you closed on" : "the loop returns to its own start");
+    rows += row("Misclosure", misText(e) + " " + mmUnit(),
+      (e >= 0 ? "the run came out HIGH by " : "the run came out LOW by ")
+      + show(Math.abs(mmFromM(e)), metric() ? 1 : 4) + " " + mmUnit());
+    rows += row("Run length", show(L, metric() ? 3 : 4) + " " + runUnit(),
+      used.length + " sight(s), " + hiCount + " set-up(s)");
+    rows += row("Allowed misclosure", show(M.k * Math.sqrt(L), metric() ? 2 : 4) + " " + mmUnit(),
+      "k × √L, k = " + show(M.k, 4) + " " + mmUnit() + "/√" + runUnit());
+    rows += row("Ratio to the allowance", show(Math.abs(e) / (allowM || 1), 2) + " ×",
+      within ? "within the allowance" : "EXCEEDS the allowance — re-observe, do not adjust",
+      within ? "ok" : "warn");
+    rows += row("Σ back", show(fromM(sbs), dp()) + " " + unit, "sum of the back sights");
+    rows += row("Σ fore", show(fromM(sfs), dp()) + " " + unit, "sum of the fore sights");
+    rows += row("Σ rise − Σ fall", show(fromM(srise - sfall), dp()) + " " + unit,
+      "must equal Σ back − Σ fore");
+    rows += row("Total correction", corrText(mmFromM(-e)) + " " + mmUnit(),
+      "spread over the run, minus the misclosure");
+    rows += row("Correction method", mode === "dist" ? "Distance" : "Number of sights",
+      fallback ? "no distances entered — fell back to the count of sights"
+      : (mode === "dist" ? "−e × cumulative ÷ total length" : "equal share per sight"),
+      fallback ? "warn" : "");
+    if (unpaired) rows += row("Fore sights with no back sight", String(unpaired) + " sight(s)",
+      "reduced against the last level, not an instrument height — check the field book", "warn");
+    el("lv-rows").innerHTML = rows;
+
+    // --- reduced level table
+    var tb = el("lv-out").querySelector("tbody"), html = "";
+    for (var v = 0; v < line.length; v++){
+      var p = line[v];
+      html += '<tr>'
+        + '<td>' + p.name + '</td>'
+        + '<td class="num">' + (p.bs > 0 ? show(fromM(p.bs), dp()) : "—") + '</td>'
+        + '<td class="num">' + (p.fs > 0 ? show(fromM(p.fs), dp()) : "—") + '</td>'
+        + '<td class="num">' + (p.rise > 0 ? show(fromM(p.rise), dp()) : "—") + '</td>'
+        + '<td class="num">' + (p.fall > 0 ? show(fromM(p.fall), dp()) : "—") + '</td>'
+        + '<td class="num">' + show(fromM(p.rl), dp()) + '</td>'
+        + '<td class="num">' + (p.cum > 0 ? show(fromM(p.cum), 1) : "—") + '</td>'
+        + '<td class="num">' + (v === 0 ? "—" : corrText(mmFromM(p.corr))) + '</td>'
+        + '<td class="num">' + show(fromM(p.adj), dp()) + '</td>'
+        + '</tr>';
+    }
+    tb.innerHTML = html;
+
+    var okArith = Math.abs((sbs - sfs) - (srise - sfall)) < 1e-9
+                  && Math.abs((srise - sfall) - (rl - M.start)) < 1e-9
+                  && unpaired === 0;
+    // With an unpaired fore sight the columns cannot agree by construction, so say why
+    // once instead of blaming the arithmetic twice.
+    el("lv-arith").textContent = okArith
+      ? "Arithmetic check passed: Σ back − Σ fore = Σ rise − Σ fall = last RL − first RL, "
+        + "and every fore sight had a back sight to pair with."
+      : (unpaired
+          ? "Arithmetic check FAILED: " + unpaired + " fore sight(s) have no back sight, so the "
+            + "rise-and-fall column is measured against a level that is not an instrument height. "
+            + "Levels below are not a valid run."
+          : "Arithmetic check FAILED — please report this, the reduction is inconsistent.");
+    if (unpaired){
+      // The corrections are proportional to a misclosure that does not exist; do not
+      // dress them up as an adjustment.
+      var cellsWithCorr = el("lv-out").querySelectorAll("tbody tr");
+      for (var q = 0; q < cellsWithCorr.length; q++){
+        cellsWithCorr[q].children[7].textContent = "—";
+        cellsWithCorr[q].children[8].textContent = cellsWithCorr[q].children[5].textContent;
+      }
+      el("lv-bv").textContent = "not adjustable";
+      el("lv-rows").insertAdjacentHTML("afterbegin",
+        row("Adjustment", "withheld", "an unpaired fore sight makes the run invalid — fix the field book", "warn"));
+    }
+    el("lv-arith").style.color = okArith ? "#0f9d58" : "#d9534f";
+
+    res.classList.add("show");
+  }
+
+  // ---- wiring ---------------------------------------------------------------
+  function seed(){
+    M.rows = EXAMPLE.map(function(r){ return {name: "", bs: r.bs, fs: r.fs, d: r.d}; });
+    buildTable();
+  }
+
+  el("lv-table").addEventListener("input", function(ev){
+    if (ev.target.tagName !== "INPUT") return;
+    readTable();
+    calc();
+  });
+
+  el("lv-add").addEventListener("click", function(){
+    readTable();
+    M.rows.push({name: "", bs: 0, fs: 0, d: 0});
+    buildTable();
+    calc();
+  });
+
+  el("lv-reset").addEventListener("click", function(){
+    seed();
+    el("lv-start").value = "50.000";
+    el("lv-close").value = "";
+    el("lv-k").value = "4";
+    el("lv-order").value = "4";
+    el("lv-method").value = "dist";
+    calc();
+  });
+
+  var prevUnit = el("lv-units").value;
+  el("lv-units").addEventListener("change", function(){
+    // The readings, the benchmark levels and the displayed precision all live in the
+    // unit on screen, so all of them have to move together. Reading the inputs first
+    // commits them in the unit they were typed in.
+    var sRaw = parseFloat(el("lv-start").value), cRaw = parseFloat(el("lv-close").value);
+    readTable(prevUnit);
+    if (!isNaN(sRaw)) M.start = prevUnit === "m" ? sRaw : sRaw / FT;
+    if (!isNaN(cRaw)) M.close = prevUnit === "m" ? cRaw : cRaw / FT;
+    var goingToFeet = prevUnit === "m";
+    el("lv-start").value = (goingToFeet ? M.start * FT : M.start).toFixed(goingToFeet ? 3 : 3);
+    el("lv-close").value = (isNaN(cRaw) ? "" : (goingToFeet ? M.close * FT : M.close).toFixed(3));
+    el("lv-precision").value = goingToFeet ? "3" : (dp() === 3 ? "3" : "4");
+    // The k constant is quoted per sqrt of the run unit, so the number has to be
+    // re-expressed: 4 mm/√km is 0.25 ft/√mile (4 mm x 3.28084 ... / 1.60934).
+    var kk = parseFloat(el("lv-k").value);
+    if (!isNaN(kk)){
+      if (prevUnit === "m" && el("lv-units").value === "ft"){      // mm/√km -> ft/√mile
+        el("lv-k").value = String(Math.round((kk / 1000 * FT * Math.sqrt(1.609344)) * 1e6) / 1e6);
+      } else if (prevUnit === "ft" && el("lv-units").value === "m"){  // ft/√mile -> mm/√km
+        el("lv-k").value = String(Math.round((kk / FT / Math.sqrt(1.609344) * 1000) * 1e3) / 1e3);
+      }
+    }
+    el("lv-order").value = "custom";
+    if (!metric() && !parseFloat(el("lv-precision").value)){
+      el("lv-precision").value = "3";
+    }
+    prevUnit = el("lv-units").value;
+    el("lv-ku").textContent = metric() ? "mm per √km" : "ft per √mile";
+    buildTable();                           // redraw the same readings in the new one
+    calc();
+  });
+
+  el("lv-method").addEventListener("change", calc);
+  el("lv-precision").addEventListener("change", calc);
+  el("lv-order").addEventListener("change", function(){
+    var v = el("lv-order").value;
+    if (v !== "custom"){ el("lv-k").value = v; }
+    calc();
+  });
+  var head = ["lv-start", "lv-close", "lv-k"];
+  for (var i = 0; i < head.length; i++){
+    el(head[i]).addEventListener("input", function(){
+      if (this.id === "lv-k") el("lv-order").value = "custom";
+      calc();
+    });
+  }
+
+  seed();
+  calc();
+})();
+</script>
+</body>
+</html>
