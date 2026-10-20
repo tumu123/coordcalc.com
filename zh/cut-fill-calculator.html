@@ -614,7 +614,7 @@
         var cEnd = Math.max(c1, c2), fEnd = Math.max(f1, f2);
         vc = cEnd * (c1 >= c2 ? x0 : (L - x0)) / 2;
         vf = fEnd * (f1 >= f2 ? x0 : (L - x0)) / 2;
-        sub = "零点楛形切分 x\u2080 = " + show(x0);
+        sub = "零点楔形切分 x\u2080 = " + show(x0);
       } else if (method === "prism"){
         // prismoidal with the mid-section estimated by area interpolation
         vc = (c1 > 0 && c2 > 0)
@@ -623,7 +623,7 @@
         vf = (f1 > 0 && f2 > 0)
           ? L / 3 * (f1 + f2 + Math.sqrt(f1 * f2))
           : L * (f1 + f2) / 2;
-        sub = "段体积（楑台公式）";
+        sub = "段体积（棱台公式）";
       } else {
         vc = L * (c1 + c2) / 2;
         vf = L * (f1 + f2) / 2;
