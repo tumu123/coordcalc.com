@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Cut and Fill Calculator — Earthwork Volumes (Free)</title>
-<meta name="description" content="Free cut and fill calculator: volumes from cross sections by average end area or from a depth grid, with swell and shrinkage. Cubic metres, yards and feet.">
+<meta name="description" content="Free cut and fill calculator: volumes from cross sections by average end area or prismoidal method with zero-point wedge splits, or from a depth grid, with swell and shrinkage. Cubic metres, yards and feet.">
 <link rel="canonical" href="https://coordcalc.com/cut-fill-calculator">
 <link rel="alternate" hreflang="en" href="https://coordcalc.com/cut-fill-calculator">
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/cut-fill-calculator">
 <link rel="alternate" hreflang="x-default" href="https://coordcalc.com/cut-fill-calculator">
 <meta property="og:title" content="Cut and Fill Calculator — Earthwork Volumes (Free)">
-<meta property="og:description" content="Average end area and grid-method earthwork volumes with swell and shrinkage — free, in-browser, in m³, yd³ or ft³.">
+<meta property="og:description" content="Average end area, prismoidal and grid-method earthwork volumes with swell and shrinkage — free, in-browser, in m³, yd³ or ft³.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://coordcalc.com/cut-fill-calculator">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
@@ -19,6 +19,50 @@
 <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Cut and Fill Calculator",
+  "url": "https://coordcalc.com/cut-fill-calculator",
+  "description": "Free cut and fill calculator: volumes from cross sections by average end area or prismoidal method with zero-point wedge splits, or from a depth grid, with swell and shrinkage. Cubic metres, yards and feet.",
+  "inLanguage": "en",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "CoordCalc",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Professional surveying",
+      "item": "https://coordcalc.com/#surveying"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "Cut and Fill Calculator",
+      "item": "https://coordcalc.com/cut-fill-calculator"
+    }
+  ]
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,7 +98,7 @@
       "name": "What is the prismoidal correction?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "A refinement of average end area. The prism assumption slightly overstates volume when two sections differ in shape as well as size. The prismoidal formula uses a mid-section area — V = L ÷ 6 × (A₁ + 4Am + A₂) — and worth applying on high-value earthwork."
+        "text": "A refinement of average end area. The prism assumption slightly overstates volume when two sections differ in shape as well as size. The true formula uses a surveyed mid-section area, V = L \u00f7 6 \u00d7 (A\u2081 + 4Am + A\u2082); when only end areas are known, the mid-section can be estimated by area interpolation, giving V = L \u00f7 3 \u00d7 (A\u2081 + A\u2082 + \u221a(A\u2081\u00b7A\u2082)). The method selector applies this, and at cut-to-fill transitions it splits the segment at the zero point instead of counting a cut prism and a fill prism across the full length."
       }
     },
     {
@@ -215,10 +259,11 @@
 
   <p class="lead">
     This cut and fill calculator turns the sections you already measured into earthwork volumes. Enter
-    cross sections station by station and it applies the average end area method; or enter a grid of
-    depths over a pad, a lot or a borrow pit and it applies the corner-average grid method. Both modes
-    report cut and fill separately, net the two, and apply a swell or shrinkage factor so the numbers
-    match what the trucks and the compactor will actually do. Free, in your browser, no login.
+    cross sections station by station and choose the average end area method or the prismoidal method
+    with zero-point wedge splits at cut–fill transitions; or enter a grid of depths over a pad, a lot
+    or a borrow pit and it applies the corner-average grid method. Both modes report cut and fill
+    separately, net the two, and apply a swell or shrinkage factor so the numbers match what the
+    trucks and the compactor will actually do. Free, in your browser, no login.
   </p>
 
   <div class="card">
@@ -247,6 +292,21 @@
     </div>
 
     <div id="cf-xs" style="margin-top:16px;">
+      <div class="row" style="margin-top:2px;">
+        <div class="field" style="flex:0 0 300px;">
+          <label for="cf-xsmethod">Method</label>
+          <select id="cf-xsmethod">
+            <option value="avg" selected>Average end area — full-span prisms</option>
+            <option value="prism">Prismoidal — zero-point wedge at transitions</option>
+          </select>
+        </div>
+        <p class="hint" style="flex:1;margin:0;">
+          The prismoidal option uses <code>V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂))</code> between same-type
+          sections and splits cut–fill transitions at the zero point, instead of running a cut prism
+          and a fill prism each across the whole segment. Wherever a section changes from cut to fill,
+          it reports a smaller volume than the prism model.
+        </p>
+      </div>
       <label style="font-size:12.5px;font-weight:600;color:var(--sub);">Cross sections — one per line: station, cut area, fill area</label>
       <textarea id="cf-xstext" spellcheck="false">0, 12.4, 0
 50, 18.9, 0
@@ -304,6 +364,19 @@
       cut on one side of the centre line and fill on the other is normally split at the centre line
       before the areas are entered.
     </p>
+    <h3>Prismoidal method and the zero point</h3>
+    <p>
+      Selecting the prismoidal method changes two things. Between two sections of the same type it
+      uses <code>V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂))</code> — the prismoidal formula with the mid-section
+      area estimated by area interpolation, <code>A_m = ((√A₁ + √A₂) ÷ 2)²</code>, which sits between
+      the mean and the root-mean-square of the end areas and tracks the true mid-section closely when
+      the two sections are similar in shape. Where the sections change from cut to fill it locates the
+      zero point from the net areas, <code>x₀ = A_net₁ ÷ (A_net₁ + A_net₂) × L</code>, and integrates
+      each side as a wedge instead of running a cut prism and a fill prism across the full length — on
+      a 50 m segment changing from 7.2 m² of cut to pure fill, that difference alone is about 140 m³.
+      A surveyed mid-section area, where the specification demands the true prismoidal volume, remains
+      the more accurate option; this is the standard estimate when only end areas are available.
+    </p>
     <h3>Grid method (corner average)</h3>
     <p>
       Over an area that is broad in both directions, depths are taken at grid nodes. Each cell of the
@@ -344,8 +417,8 @@
         <tr>
           <td>Prismoidal</td>
           <td>High-value earthwork where a few percent is money</td>
-          <td>Cross sections plus a mid-section area</td>
-          <td>Closer than average end area, at the cost of extra survey work</td>
+          <td>Cross-section end areas (mid-section interpolated)</td>
+          <td>Closer than average end area on transition ground, at no extra survey cost</td>
         </tr>
       </tbody>
     </table>
@@ -393,6 +466,15 @@
       <code>50 × (7.2 + 0) ÷ 2 = 180.0 m³</code> and the fill prism is
       <code>50 × (3.1 + 14.6) ÷ 2 = 442.5 m³</code>. The cut prism ends where the cut area reaches zero,
       which is what makes the mid-section the natural transition point.
+    </p>
+    <p>
+      Switch the method selector to prismoidal and the transition segment changes. The net areas at
+      stations 100 and 150 are <code>7.2 − 3.1 = 4.1 m²</code> and <code>−14.6 m²</code>, so the zero
+      point sits at <code>4.1 ÷ (4.1 + 14.6) × 50 ≈ 10.96 m</code> past station 100. The cut solid
+      becomes a wedge, <code>7.2 × 10.96 ÷ 2 ≈ 39.5 m³</code> instead of the 180.0 m³ full-span prism,
+      and the fill wedge from the zero point to station 150 gives
+      <code>14.6 × 39.04 ÷ 2 ≈ 285.0 m³</code> instead of 442.5 m³. Same field data, two defensible
+      models — the segment table shows which one produced each pair of numbers.
     </p>
     <p>
       In grid mode, a 10 m grid with corner depths of 0.4, 0.6, 0.5 and 0.2 m gives an average depth of
@@ -465,7 +547,7 @@
     </details>
     <details>
       <summary>What is the prismoidal correction?</summary>
-      <p>A refinement of average end area. The prism assumption slightly overstates volume when two sections differ in shape as well as size. The prismoidal formula uses a mid-section area — V = L ÷ 6 × (A₁ + 4A<sub>m</sub> + A₂) — and worth applying on high-value earthwork.</p>
+      <p>A refinement of average end area. The prism assumption slightly overstates volume when two sections differ in shape as well as size. The true formula uses a surveyed mid-section area, V = L ÷ 6 × (A₁ + 4Am + A₂); when only end areas are known, the mid-section can be estimated by area interpolation, giving V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂)). The method selector applies this, and at cut-to-fill transitions it splits the segment at the zero point instead of counting a cut prism and a fill prism across the full length.</p>
     </details>
     <details>
       <summary>Do I need to apply swell and shrinkage?</summary>
@@ -518,6 +600,7 @@
 
   function calcXs(){
     var metric = el("cf-units").value === "m";
+    var method = el("cf-xsmethod").value;          // "avg" | "prism"
     var lines = el("cf-xstext").value.split(/\r?\n/);
     var pts = [];
     for (var i = 0; i < lines.length; i++){
@@ -535,11 +618,36 @@
     var cut = 0, fill = 0, rows = "";
     for (var k = 1; k < pts.length; k++){
       var L = pts[k].s - pts[k-1].s;
-      var vc = L * (pts[k-1].c + pts[k].c) / 2;
-      var vf = L * (pts[k-1].f + pts[k].f) / 2;
+      var c1 = Math.max(0, pts[k-1].c), c2 = Math.max(0, pts[k].c);
+      var f1 = Math.max(0, pts[k-1].f), f2 = Math.max(0, pts[k].f);
+      var n1 = c1 - f1, n2 = c2 - f2;               // net area per end (+ cut / - fill)
+      var vc, vf, sub = "segment volume";
+      var transition = (n1 > 0 && n2 < 0) || (n1 < 0 && n2 > 0);
+
+      if (method === "prism" && transition){
+        // zero point from the net areas, then each side integrated as a wedge
+        var x0 = n1 * L / (n1 - n2);
+        if (x0 < 0) x0 = 0; else if (x0 > L) x0 = L;
+        var cEnd = Math.max(c1, c2), fEnd = Math.max(f1, f2);
+        vc = cEnd * (c1 >= c2 ? x0 : (L - x0)) / 2;
+        vf = fEnd * (f1 >= f2 ? x0 : (L - x0)) / 2;
+        sub = "wedge split at x\u2080 = " + show(x0);
+      } else if (method === "prism"){
+        // prismoidal with the mid-section estimated by area interpolation
+        vc = (c1 > 0 && c2 > 0)
+          ? L / 3 * (c1 + c2 + Math.sqrt(c1 * c2))
+          : L * (c1 + c2) / 2;
+        vf = (f1 > 0 && f2 > 0)
+          ? L / 3 * (f1 + f2 + Math.sqrt(f1 * f2))
+          : L * (f1 + f2) / 2;
+        sub = "segment volume (prismoidal)";
+      } else {
+        vc = L * (c1 + c2) / 2;
+        vf = L * (f1 + f2) / 2;
+      }
       cut += vc; fill += vf;
       rows += row(show(pts[k-1].s)+" \u2192 "+show(pts[k].s)+"  ("+show(L)+")",
-        "cut "+show(vc)+"  /  fill "+show(vf), "segment volume");
+        "cut "+show(vc)+"  /  fill "+show(vf), sub);
     }
     return {bad:false, cut:cut, fill:fill, n:pts.length-1, rows:rows};
   }
@@ -632,6 +740,7 @@
   el("cf-units").addEventListener("change", calc);
   el("cf-swell").addEventListener("input", calc);
   el("cf-spacing").addEventListener("input", calc);
+  el("cf-xsmethod").addEventListener("change", calc);
   el("cf-xstext").addEventListener("input", calc);
   el("cf-gridtext").addEventListener("input", calc);
 

@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>场地土方量计算器 — 断面法与方格网法，挖填分算</title>
-<meta name="description" content="免费在线土方量计算：按断面输入挖填面积用平均断面法计算，或按方格网输入深度用角点平均法计算；挖方、填方分别统计并求净量，可加松散与压实系数。全部在浏览器本地完成，无需登录。">
+<meta name="description" content="免费在线土方量计算：按断面输入挖填面积，平均断面法或棱台公式（挖填过渡段按零点楔形切分）任选；或按方格网输入深度用角点平均法计算；挖方、填方分别统计并求净量，可加松散与压实系数。全部在浏览器本地完成，无需登录。">
 <link rel="canonical" href="https://coordcalc.com/zh/cut-fill-calculator">
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/cut-fill-calculator">
 <link rel="alternate" hreflang="en" href="https://coordcalc.com/cut-fill-calculator">
 <link rel="alternate" hreflang="x-default" href="https://coordcalc.com/cut-fill-calculator">
 <meta property="og:title" content="场地土方量计算器 — 断面法与方格网法">
-<meta property="og:description" content="挖方填方分算、净值与松散压实系数调整，支持断面法与方格网法两种算法，浏览器本地完成。">
+<meta property="og:description" content="平均断面法、棱台公式与方格网法三种算法，挖填分算、净值与松散压实系数调整，浏览器本地完成。">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://coordcalc.com/zh/cut-fill-calculator">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
@@ -19,6 +19,50 @@
 <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#2563eb">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "场地土方量计算器",
+  "url": "https://coordcalc.com/zh/cut-fill-calculator",
+  "description": "免费在线土方量计算：按断面输入挖填面积，平均断面法或棱台公式（挖填过渡段按零点楔形切分）任选；或按方格网输入深度用角点平均法计算；挖方、填方分别统计并求净量，可加松散与压实系数。全部在浏览器本地完成，无需登录。",
+  "inLanguage": "zh-CN",
+  "applicationCategory": "UtilitiesApplication",
+  "operatingSystem": "Any (web browser)",
+  "browserRequirements": "Requires JavaScript",
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "首页",
+      "item": "https://coordcalc.com/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "计算器",
+      "item": "https://coordcalc.com/#tools"
+    },
+    {
+      "@type": "ListItem",
+      "position": 3,
+      "name": "场地土方量计算",
+      "item": "https://coordcalc.com/zh/cut-fill-calculator"
+    }
+  ]
+}
+</script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -54,7 +98,7 @@
       "name": "棱柱体修正是什么？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "平均断面法的精细化。当两个断面不仅大小不同、形状也不同时，棱柱假设会略微高估体积。 棱柱体公式引入中间断面面积：V = L ÷ 6 × (A₁ + 4Am + A₂)，高价值土方值得采用。"
+        "text": "平均断面法的精细化。当两个断面不仅大小不同、形状也不同时，棱柱假设会略微高估体积。 真公式用实测中间断面面积：V = L ÷ 6 × (A₁ + 4Am + A₂)；只有端面积时， 中间断面可按面积内插估计，得 V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂))。本页的方法选择器即采用此式， 且在挖填过渡段按零点切分，而不是让挖、填棱柱各自跨越整段。"
       }
     },
     {
@@ -213,9 +257,10 @@
   <h1>场地土方量计算器</h1>
 
   <p class="lead">
-    把你已经测得的断面或方格网数据换算成土方量。按桩号输入各断面的挖、填面积，工具用平均断面法计算；
-    按方格网输入场地各节点深度，工具用角点平均法计算。两种方式都把挖方与填方分别统计、
-    求出净值，并可施加松散或压实系数，让数字与实际运力和碾压结果对应得上。免费、在浏览器里算、无需登录。
+    把你已经测得的断面或方格网数据换算成土方量。按桩号输入各断面的挖、填面积，
+    在平均断面法与棱台公式（挖填过渡段按零点楔形切分）之间任选；按方格网输入场地各节点深度，
+    工具用角点平均法计算。两种方式都把挖方与填方分别统计、求出净值，并可施加松散或压实系数，
+    让数字与实际运力和碾压结果对应得上。免费、在浏览器里算、无需登录。
   </p>
 
   <div class="card">
@@ -243,6 +288,20 @@
     </div>
 
     <div id="cf-xs" style="margin-top:16px;">
+      <div class="row" style="margin-top:2px;">
+        <div class="field" style="flex:0 0 300px;">
+          <label for="cf-xsmethod">计算方法</label>
+          <select id="cf-xsmethod">
+            <option value="avg" selected>平均断面法（整段棱柱）</option>
+            <option value="prism">棱台公式 — 过渡段按零点楔形切分</option>
+          </select>
+        </div>
+        <p class="hint" style="flex:1;margin:0;">
+          棱台选项在同类断面之间用 <code>V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂))</code> 计算；
+          挖填过渡段按零点切分为两个楔形体，而不是让挖、填棱柱各自跨越整段。
+          凡断面由挖转填的段落，结果都比整段棱柱小。
+        </p>
+      </div>
       <label style="font-size:12.5px;font-weight:600;color:var(--sub);">断面数据 — 每行一个断面：桩号，挖方面积，填方面积</label>
       <textarea id="cf-xstext" spellcheck="false">0, 12.4, 0
 50, 18.9, 0
@@ -297,6 +356,16 @@
       因此从挖转填的断面上会同时产生一个挖方棱柱和一个填方棱柱。
       如果同一断面中线一侧为挖、另一侧为填，规范做法是先在中线处把断面分开，再把两边面积分别填入。
     </p>
+    <h3>棱台公式与零点</h3>
+    <p>
+      选择棱台公式后有两处不同。同类型断面（两端同为挖或同为填）之间改用
+      <code>V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂))</code>——中间断面面积按面积内插估计：
+      <code>A_m = ((√A₁ + √A₂) ÷ 2)²</code>，在两断面形状接近时与真实中间断面吻合得很好。
+      断面由挖转填时，先按净面积定出零点位置 <code>x₀ = A净₁ ÷ (A净₁ + A净₂) × L</code>，
+      再把两侧各自按楔形体积分，而不是让挖、填棱柱各自跨越整段——一段 50 米、
+      从挖方 7.2 m² 转为纯填的段落，仅此一项就差约 140 m³。规范要求真棱柱体法时，
+      实测中间断面面积仍是更精确的做法；本选项是只有端面积时的标准估计。
+    </p>
     <h3>方格网法（角点平均）</h3>
     <p>
       对两个方向都很宽的场地，在方格网节点上测深度。每个方格的贡献是
@@ -333,10 +402,10 @@
           <td>取决于方格间距；间距减半，误差大约缩小到四分之一</td>
         </tr>
         <tr>
-          <td>棱柱体法</td>
+          <td>棱台公式</td>
           <td>金额较大、几个百分点就是钱的土方工程</td>
-          <td>断面数据外加中间断面面积</td>
-          <td>比平均断面法更接近真值，代价是外业量增加</td>
+          <td>断面端面积（中间断面按面积内插）</td>
+          <td>挖填过渡地段比平均断面法更接近真值，且不增加外业量</td>
         </tr>
       </tbody>
     </table>
@@ -378,6 +447,14 @@
       挖方棱柱为 <code>50 × (7.2 + 0) ÷ 2 = 180.0 m³</code>，填方棱柱为
       <code>50 × (3.1 + 14.6) ÷ 2 = 442.5 m³</code>。挖方面积归零的位置就是挖方棱柱的终点，
       这也是把中间断面作为换算点最自然的原因。
+    </p>
+    <p>
+      把方法切换到棱台公式，过渡段的结果就不同了。桩号 100 与 150 的净面积分别为
+      <code>7.2 − 3.1 = 4.1 m²</code> 与 <code>−14.6 m²</code>，零点位于桩号 100 以后
+      <code>4.1 ÷ (4.1 + 14.6) × 50 ≈ 10.96 m</code> 处。挖方体变成楔形体：
+      <code>7.2 × 10.96 ÷ 2 ≈ 39.5 m³</code>，而不是整段棱柱的 180.0 m³；
+      从零点到桩号 150 的填方楔形体为 <code>14.6 × 39.04 ÷ 2 ≈ 285.0 m³</code>，
+      而不是 442.5 m³。同一份外业数据、两种都讲得通的模型——分段明细表会标明每一行用的是哪一种。
     </p>
     <p>
       方格网模式下，10 m 方格、四角深度 0.4、0.6、0.5、0.2 m 时，单格平均深度 0.425 m，
@@ -425,7 +502,7 @@
       <a href="utm-coordinate-converter">经纬度与UTM互转<small>坐标系统与批量换算</small></a>
       <a href="unit-converter">测量单位换算<small>立方码、立方米与测量英尺</small></a>
       <a href="../slope-calculator" hreflang="en">坡度计算器<small>挖填边坡与坡率</small></a>
-      <a href="traverse-calculator">导线平差<small>闭合差与调整</small></a>
+      <a href="../traverse-calculator" hreflang="en">导线平差<small>闭合差与调整</small></a>
       <a href="../curve-calculator" hreflang="en">圆曲线测设计算<small>线路土方对应的平面要素</small></a>
     </div>
   </section>
@@ -449,7 +526,9 @@
     <details>
       <summary>棱柱体修正是什么？</summary>
       <p>平均断面法的精细化。当两个断面不仅大小不同、形状也不同时，棱柱假设会略微高估体积。
-      棱柱体公式引入中间断面面积：V = L ÷ 6 × (A₁ + 4A<sub>m</sub> + A₂)，高价值土方值得采用。</p>
+      真公式用实测中间断面面积：V = L ÷ 6 × (A₁ + 4A<sub>m</sub> + A₂)；只有端面积时，
+      中间断面可按面积内插估计，得 V = L ÷ 3 × (A₁ + A₂ + √(A₁·A₂))。本页的方法选择器即采用此式，
+      且在挖填过渡段按零点切分，而不是让挖、填棱柱各自跨越整段。</p>
     </details>
     <details>
       <summary>要不要加松散与压实系数？</summary>
@@ -504,6 +583,7 @@
 
   function calcXs(){
     var metric = el("cf-units").value === "m";
+    var method = el("cf-xsmethod").value;          // "avg" | "prism"
     var lines = el("cf-xstext").value.split(/\r?\n/);
     var pts = [];
     for (var i = 0; i < lines.length; i++){
@@ -521,11 +601,36 @@
     var cut = 0, fill = 0, rows = "";
     for (var k = 1; k < pts.length; k++){
       var L = pts[k].s - pts[k-1].s;
-      var vc = L * (pts[k-1].c + pts[k].c) / 2;
-      var vf = L * (pts[k-1].f + pts[k].f) / 2;
+      var c1 = Math.max(0, pts[k-1].c), c2 = Math.max(0, pts[k].c);
+      var f1 = Math.max(0, pts[k-1].f), f2 = Math.max(0, pts[k].f);
+      var n1 = c1 - f1, n2 = c2 - f2;               // net area per end (+ cut / - fill)
+      var vc, vf, sub = "段体积";
+      var transition = (n1 > 0 && n2 < 0) || (n1 < 0 && n2 > 0);
+
+      if (method === "prism" && transition){
+        // zero point from the net areas, then each side integrated as a wedge
+        var x0 = n1 * L / (n1 - n2);
+        if (x0 < 0) x0 = 0; else if (x0 > L) x0 = L;
+        var cEnd = Math.max(c1, c2), fEnd = Math.max(f1, f2);
+        vc = cEnd * (c1 >= c2 ? x0 : (L - x0)) / 2;
+        vf = fEnd * (f1 >= f2 ? x0 : (L - x0)) / 2;
+        sub = "零点楛形切分 x\u2080 = " + show(x0);
+      } else if (method === "prism"){
+        // prismoidal with the mid-section estimated by area interpolation
+        vc = (c1 > 0 && c2 > 0)
+          ? L / 3 * (c1 + c2 + Math.sqrt(c1 * c2))
+          : L * (c1 + c2) / 2;
+        vf = (f1 > 0 && f2 > 0)
+          ? L / 3 * (f1 + f2 + Math.sqrt(f1 * f2))
+          : L * (f1 + f2) / 2;
+        sub = "段体积（楑台公式）";
+      } else {
+        vc = L * (c1 + c2) / 2;
+        vf = L * (f1 + f2) / 2;
+      }
       cut += vc; fill += vf;
       rows += row(show(pts[k-1].s)+" \u2192 "+show(pts[k].s)+"  ("+show(L)+")",
-        "挖 "+show(vc)+"  /  填 "+show(vf), "段体积");
+        "挖 "+show(vc)+"  /  填 "+show(vf), sub);
     }
     return {bad:false, cut:cut, fill:fill, n:pts.length-1, rows:rows};
   }
@@ -618,6 +723,7 @@
   el("cf-units").addEventListener("change", calc);
   el("cf-swell").addEventListener("input", calc);
   el("cf-spacing").addEventListener("input", calc);
+  el("cf-xsmethod").addEventListener("change", calc);
   el("cf-xstext").addEventListener("input", calc);
   el("cf-gridtext").addEventListener("input", calc);
 

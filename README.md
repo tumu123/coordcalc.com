@@ -144,7 +144,16 @@ python <本地工作区>/.workbuddy/scratch/preview.py --port 8080
 - 中文页面由 `build_zh_*.py` 依据对应的英文页面生成，**不要直接手改**中文页——
   改完英文页后重新生成，否则下次重建会被覆盖。唯一例外是英文 `404.html`：
   它是中文 404 页的源文件，改动后需同步重建 `zh/404.html`。
+- 四个工具页（UTM / 单位换算 / 面积 / 土方）走「英文引擎 + 翻译表 + 中文模板」：
+  模板在 `.workbuddy/scratch/zh_templates/`，文案改模板、引擎里的字符串改 `build_zh.py`
+  的翻译表。**只改产物会在下次重建时丢失。**
+- 每个工具页底部必须有 Related 区块，且**至少 3 条指向同语言的其它工具**
+  （`audit.py` 的 `related tool links` 断言会拦住退化；语言切换链接不算）。
+- 30 个工具页（15 EN + 15 ZH）都带 `WebApplication` + `BreadcrumbList` 结构化数据，
+  由 `inject_appjson.py` 幂等注入，并已折进全部 `build_zh_*.py`；重建不会丢。
 - 品牌名与域名的批量替换脚本是 `rebrand.py`；若要换域名，改 `PAIRS` 后跑一次即可。
-- 把 `.html` 链接改成无扩展名形式的脚本是 `extensionless.py`（幂等，可重复运行）。
+- 把 `.html` 链接改成无扩展名形式的脚本是 `extensionless.py`（幂等，可重复运行）；
+  它当时漏掉了 `zh_templates/`，已由 `migrate_templates.py` 补齐。
 - `preview.py`（本地预览）、`crawl_links.py`（内链全量探活）、`url_matrix.py`
-  （逐页校验规范地址与 `.html` 跳转）是本地验证工具，不参与部署。
+  （逐页校验规范地址与 `.html` 跳转）、`verify_appjson.py`（结构化数据与面包屑可达性）、
+  `verify_rebuild.py`（重建可复现性）是本地验证工具，不参与部署。
