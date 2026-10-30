@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>开发者指南 — URL 参数、嵌入 iframe 与 JavaScript API</title>
-<meta name="description" content="用代码驱动 CoordCalc 计算器：查询字符串 API 可为每个工具预填参数，embed 模式提供无外壳的 iframe 面板，window.Geo 是背后的测量库。">
+<meta name="description" content="用代码驱动 CoordCalc 计算器：查询字符串 API 为 UTM 与单位换算器预填参数，embed 模式提供无外壳的 iframe 面板，window.Geo 在每个工具页面都可用。">
 <link rel="canonical" href="https://coordcalc.com/zh/developers">
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/developers">
 <link rel="alternate" hreflang="en" href="https://coordcalc.com/developers">
@@ -24,7 +24,7 @@
   "@context": "https://schema.org",
   "@type": "TechArticle",
   "headline": "开发者指南：URL 参数、iframe 嵌入与 JavaScript API",
-  "description": "如何用查询字符串预填 CoordCalc 测绘计算器、把它嵌入 iframe，以及直接调用背后的 window.Geo 大地测量库。",
+  "description": "如何用查询字符串预填 UTM 与单位换算器、把计算器嵌入 iframe，以及直接调用背后的 window.Geo 大地测量库。",
   "url": "https://coordcalc.com/zh/developers",
   "inLanguage": "zh-CN",
   "about": ["横轴墨卡托投影", "MGRS", "坐标转换", "测量计算器 API"],
@@ -42,7 +42,7 @@
       "name": "可以直接用链接预填计算器吗？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "可以。每个工具都会从查询字符串读取状态。?lat=43.642567&lon=-79.387139 打开 UTM 转换器时已经换算完毕；?value=100&from=usft&to=m 打开单位换算器并停在测量英尺换算上。缺失或无法识别的参数会被忽略，工具回退到自己的默认值。"
+        "text": "可以，但仅限 UTM 转换器与单位换算器——目前从查询字符串读取状态的就是这两个工具。?lat=43.642567&lon=-79.387139 打开 UTM 转换器时已经换算完毕；?value=100&from=usft&to=m 打开单位换算器并停在测量英尺换算上。缺失或无法识别的参数会被忽略，工具回退到自己的默认值。"
       }
     },
     {
@@ -58,7 +58,7 @@
       "name": "怎么把计算器嵌入我自己的页面？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "加上 embed=1，再用 iframe 加载这个 URL。它会隐藏页头、面包屑、正文和页脚，单坐标类工具的框架高度约 520 px。框架内一切照常工作，包括切换标签页和导出 CSV。"
+        "text": "在 UTM 转换器或单位换算器的 URL 后加上 embed=1，再用 iframe 加载。它会隐藏页头、面包屑、正文和页脚，框架高度约 520 px。框架内一切照常工作，包括切换标签页和导出 CSV。"
       }
     },
     {
@@ -158,9 +158,10 @@
 <h1>开发者指南：URL 参数、嵌入与 JavaScript API</h1>
 
   <p class="lead">
-    每一个 CoordCalc 计算器都可以从页面外部驱动。有三条入口，彼此独立：<b>查询字符串</b>可以为任意工具预填参数；
-    <b>嵌入模式</b>把工具变成一块无外壳的面板，供 iframe 使用；以及 <b><code>window.Geo</code></b>，
-    即计算器背后、可直接调用的大地测量库。不需要 API 密钥、不需要账号、没有频率限制——
+    CoordCalc 的计算器可以从页面外部驱动。有三条入口，彼此独立。<b>查询字符串</b>预填与
+    <b>嵌入模式</b>目前已在 UTM 转换器和单位换算器上实现，后续会覆盖更多工具；
+    <b><code>window.Geo</code></b> 是计算器背后的大地测量库，内联在每个工具页面里，
+    任何一个都能直接调用。不需要 API 密钥、不需要账号、没有频率限制——
     算术都在访问者的浏览器里完成。
   </p>
 
@@ -172,19 +173,21 @@
         <tr>
           <td><b>查询字符串</b></td>
           <td>你手上有一个坐标、一个数值或一整份清单，想让计算器打开时就已经填好——
-              来源可以是电子表格、CMS 字段、邮件里的链接或一个 <code>&lt;a href&gt;</code>。</td>
+              来源可以是电子表格、CMS 字段、邮件里的链接或一个 <code>&lt;a href&gt;</code>。
+              已在 <code>utm-coordinate-converter</code> 与 <code>unit-converter</code> 上实现。</td>
           <td><a href="#params">参数速查</a></td>
         </tr>
         <tr>
           <td><b>iframe 嵌入</b></td>
           <td>这个计算器该出现在你自己的页面或内网里，但你不想重做一遍。
-              加上 <code>embed=1</code>，页头、正文和页脚就都不见了。</td>
+              加上 <code>embed=1</code>，页头、正文和页脚就都不见了。
+              已在 <code>utm-coordinate-converter</code> 与 <code>unit-converter</code> 上实现。</td>
           <td><a href="#embed">嵌入方法</a></td>
         </tr>
         <tr>
           <td><b><code>window.Geo</code></b></td>
           <td>你要的是数字，不是界面——批量处理坐标文件、构建步骤中调用，
-              或者在同一个引擎上搭你自己的 UI。</td>
+              或者在同一个引擎上搭你自己的 UI。每个工具页面都可用。</td>
           <td><a href="#jsapi">JavaScript API</a></td>
         </tr>
       </tbody>
@@ -194,7 +197,8 @@
   <div class="card" id="params">
     <h2>查询字符串 API</h2>
     <p>
-      参数只在页面加载时读取一次。工具不认识的内容一律忽略，
+      目前有两个工具会从查询字符串读取状态——UTM 转换器与单位换算器，
+      也就是实现了嵌入模式的这两个。参数只在页面加载时读取一次。工具不认识的内容一律忽略，
       所以 URL 里混进一个多余参数绝不会弄坏计算器——它只是不起作用，工具照常使用默认值。
       参数值必须做 URL 编码，而 <code>+</code> 会被解码为空格，所以粘贴进来的坐标清单可以安全传递。
     </p>
@@ -302,8 +306,10 @@
   <div class="card" id="embed">
     <h2>把计算器嵌入你自己的页面</h2>
     <p>
-      加上 <code>embed=1</code>，页面会隐藏除计算器以外的一切：没有页头、没有面包屑、
+      在 UTM 转换器或单位换算器的 URL 后加上 <code>embed=1</code>，
+      页面会隐藏除计算器以外的一切：没有页头、没有面包屑、
       没有大标题、没有正文、没有页脚。剩下的就是工具卡片本身，按它的自然高度呈现，随时可以放进框架。
+      目前实现嵌入模式的就是这两个工具；其余计算器在 iframe 里加载的仍是完整页面。
     </p>
 <pre class="code">&lt;iframe
   src="https://coordcalc.com/utm-coordinate-converter?embed=1&amp;lat=43.642567&amp;lon=-79.387139"
@@ -322,13 +328,13 @@
         <tbody>
           <tr><td>utm-coordinate-converter</td><td>560 px</td><td>批量标签页是最高的状态；如果你直接链接到它，再加 120 px</td></tr>
           <tr><td>unit-converter</td><td>620 px</td><td>结果列表很长；角度标签页最高</td></tr>
-          <tr><td>dms-converter</td><td>560 px</td><td>单个坐标对</td></tr>
-          <tr><td>mgrs-converter</td><td>560 px</td><td>单条格网参考号</td></tr>
-          <tr><td>state-plane-converter</td><td>640 px</td><td>投影带选择器加上若干结果行</td></tr>
-          <tr><td>land-area-calculator</td><td>720 px</td><td>坐标输入表会随点数增加而变高</td></tr>
         </tbody>
       </table>
     </div>
+    <p>
+      嵌入支持会逐个工具补齐。其余计算器放进 iframe 仍然可用——它们就是普通文档——
+      只是页头、面包屑和页脚会一起进来，看起来像「页面里套页面」，而不是一块干净的面板。
+    </p>
     <p>
       被嵌入的工具与独立页面是同一份文档，所以每种行为都保留：标签页可以切换、
       结果随输入实时重算、<b>复制链接</b>能生成 URL、批量标签页照旧导出 CSV。
@@ -507,7 +513,7 @@ a.orientation;               // "counter-clockwise"</pre>
     <h2>常见问题</h2>
     <details open>
       <summary>可以直接用链接预填计算器吗？</summary>
-      <p>可以。每个工具都会从查询字符串读取状态。<code>?lat=43.642567&amp;lon=-79.387139</code> 打开 UTM 转换器时已经换算完毕；<code>?value=100&amp;from=usft&amp;to=m</code> 打开单位换算器并停在测量英尺换算上。缺失或无法识别的参数会被忽略，工具回退到自己的默认值。</p>
+      <p>可以，但仅限 UTM 转换器与单位换算器——目前从查询字符串读取状态的就是这两个工具。<code>?lat=43.642567&amp;lon=-79.387139</code> 打开 UTM 转换器时已经换算完毕；<code>?value=100&amp;from=usft&amp;to=m</code> 打开单位换算器并停在测量英尺换算上。缺失或无法识别的参数会被忽略，工具回退到自己的默认值。</p>
     </details>
     <details>
       <summary>需要 API 密钥吗？有调用频率限制吗？</summary>
@@ -515,7 +521,7 @@ a.orientation;               // "counter-clockwise"</pre>
     </details>
     <details>
       <summary>怎么把计算器嵌入我自己的页面？</summary>
-      <p>加上 <code>embed=1</code>，再用 iframe 加载这个 URL。它会隐藏页头、面包屑、正文和页脚，单坐标类工具的框架高度约 520 px。框架内一切照常工作，包括切换标签页和导出 CSV。</p>
+      <p>在 UTM 转换器或单位换算器的 URL 后加上 <code>embed=1</code>，再用 iframe 加载。它会隐藏页头、面包屑、正文和页脚，框架高度约 520 px。框架内一切照常工作，包括切换标签页和导出 CSV。</p>
     </details>
     <details>
       <summary><code>window.Geo</code> 是什么？</summary>
