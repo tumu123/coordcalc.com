@@ -186,7 +186,9 @@
   <section class="card">
     <h2>打开 DXF</h2>
     <div class="toolbar">
-      <input type="file" id="file" accept=".dxf,.txt,text/plain">
+      <input type="file" id="file" accept=".dxf,.txt,text/plain" class="vh-input">
+      <label class="btn file-btn" for="file">选择 DXF 文件</label>
+      <span class="file-name" id="fileName">未选择文件</span>
       <button type="button" class="btn" id="sample">载入示例地块</button>
       <span class="spacer"></span>
       <button type="button" class="btn primary" id="dl" disabled>下载顶点 CSV</button>
@@ -657,9 +659,9 @@
     render(v ? parseDxf(v) : { err: null });
   });
 
-  $("file").addEventListener("change", function () {
-    var f = this.files && this.files[0];
-    if (!f) { return; }
+  function loadFile(f) {
+    if (!f) { $("fileName").textContent = "未选择文件"; return; }
+    $("fileName").textContent = f.name;
     var fr = new FileReader();
     fr.onload = function () {
       $("text").value = String(fr.result);
@@ -667,6 +669,28 @@
     };
     fr.onerror = function () { render({ err: "文件读取失败。" }); };
     fr.readAsText(f);
+  }
+
+  $("file").addEventListener("change", function () {
+    loadFile(this.files && this.files[0]);
+  });
+
+  /* drag and drop — the lead paragraph promises it, so it has to work.
+     dragover must be cancelled or the browser never fires drop and would
+     instead navigate to the dropped file. */
+  ["dragover", "drop"].forEach(function (type) {
+    document.addEventListener(type, function (ev) {
+      var dt = ev.dataTransfer;
+      if (!dt) { return; }
+      var hasFiles = false;
+      for (var i = 0; i < (dt.types || []).length; i++) {
+        if (dt.types[i] === "Files") { hasFiles = true; }
+      }
+      if (!hasFiles) { return; }
+      ev.preventDefault();
+      if (type === "dragover") { dt.dropEffect = "copy"; }
+      else { loadFile(dt.files && dt.files[0]); }
+    });
   });
 
   /* show nothing until something arrives */

@@ -140,6 +140,18 @@ button.rowbtn{border:0;background:transparent;font:inherit;font-size:15px;line-h
 .btn.primary:hover{background:var(--accent-d);border-color:var(--accent-d);color:#fff;}
 .btn[disabled]{opacity:.5;cursor:default;}
 
+/* A file input is drawn by the browser and its button text follows the browser's UI
+   language, not the page. Hide the control and let a <label> stand in for it, so the
+   wording stays in the language of the page and the chosen file name can be shown. */
+.vh-input{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;
+  clip:rect(0 0 0 0);white-space:nowrap;border:0;}
+.toolbar label.file-btn{display:inline-flex;align-items:center;font-size:14px;
+  font-weight:600;color:var(--text);line-height:1.2;}
+.toolbar label.file-btn:hover{color:var(--accent-d);}
+.toolbar .vh-input:focus-visible + .file-btn{outline:2px solid var(--accent);outline-offset:2px;}
+.file-name{font-size:13px;color:var(--sub);max-width:220px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;}
+
 textarea.box{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
   font-size:13px;line-height:1.6;padding:12px;border:1px solid var(--line);border-radius:10px;
   background:#fff;color:var(--text);resize:vertical;}
