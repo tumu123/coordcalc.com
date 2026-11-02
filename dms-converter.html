@@ -233,6 +233,11 @@
     .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
     nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
   }
+
+  /* horizontally scrollable tables on narrow screens */
+  .tscroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
+  .tscroll>table{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
 </style>
 <script src="assets/consent.js" defer></script>
 <script src="assets/track.js" defer></script>
@@ -390,7 +395,8 @@
       0.19 × 60 = 11.40 seconds, giving <code>77° 02′ 11.40″ W</code>. The table below lists values the
       converter produces — you can type any of them into the box above to check the rounding yourself.
     </p>
-    <table class="lookup">
+    <div class="tscroll">
+        <table class="lookup">
       <thead>
         <tr><th>Decimal degrees</th><th>Hemisphere</th><th>DMS</th><th>DDM</th></tr>
       </thead>
@@ -401,6 +407,7 @@
         <tr><td class="nw">116.3974</td><td>E</td><td class="nw">116° 23′ 50.64″</td><td class="nw">E 116° 23.844′</td></tr>
       </tbody>
     </table>
+      </div>
     <p class="hint">The calculator's default is two decimal places on the seconds; the DDM column is shown to three decimal places on the minutes, as most charts are.</p>
   </section>
 
@@ -595,13 +602,19 @@
 
   function renderDD(){
     var raw = ddInput.value.trim().replace(/\s+/g,"");
+    var type = coordType.value;
+    var lim = type === "lat" ? 90 : 180;
     if (raw === "") { results.classList.remove("show"); errDD.classList.remove("show"); return; }
     var v = Number(raw);
-    if (!isFinite(v) || Math.abs(v) > 180) { errDD.classList.add("show"); results.classList.remove("show"); return; }
+    if (!isFinite(v) || Math.abs(v) > lim) {
+      errDD.textContent = type === "lat"
+        ? "Latitude must be between -90 and 90 degrees."
+        : "Longitude must be between -180 and 180 degrees.";
+      errDD.classList.add("show"); results.classList.remove("show"); return;
+    }
     errDD.classList.remove("show");
 
     var prec = parseInt(precision.value, 10);
-    var type = coordType.value;
     var out = decimalToDMS(v, prec, type);
 
     el("r-dd").textContent = out.decimal + "\u00B0";
@@ -617,18 +630,26 @@
     var d = dStr === "" ? 0 : Number(dStr);
     var m = mStr === "" ? 0 : Number(mStr);
     var s = sStr === "" ? 0 : Number(sStr);
+    var h = hemi.value;
+    var isLat = (h === "N" || h === "S");
+    var degLim = isLat ? 90 : 180;
 
-    if (!isFinite(d) || !isFinite(m) || !isFinite(s) ||
-        d < 0 || m < 0 || s < 0 || m >= 60 || s >= 60 || d > 180) {
+    if (!isFinite(d) || !isFinite(m) || !isFinite(s) || d < 0 || m < 0 || s < 0 || m >= 60 || s >= 60) {
+      errDMS.textContent = "Degrees must be zero or more, and minutes and seconds must be less than 60.";
+      errDMS.classList.add("show"); results.classList.remove("show"); return;
+    }
+    if (d > degLim) {
+      errDMS.textContent = isLat
+        ? "Latitude degrees must be between 0 and 90."
+        : "Longitude degrees must be between 0 and 180.";
       errDMS.classList.add("show"); results.classList.remove("show"); return;
     }
     errDMS.classList.remove("show");
 
-    var h = hemi.value;
     var sign = (h === "S" || h === "W") ? -1 : 1;
     var dec = sign * (d + m / 60 + s / 3600);
     var prec = parseInt(precision.value, 10);
-    var out = decimalToDMS(dec, prec, (h === "N" || h === "S") ? "lat" : "lon");
+    var out = decimalToDMS(dec, prec, isLat ? "lat" : "lon");
 
     el("r-dd").textContent = out.decimal + "\u00B0";
     el("r-dms").textContent = out.dms;

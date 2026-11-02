@@ -291,6 +291,8 @@
   a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
   summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
   @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
     .links{grid-template-columns:1fr;}
     h1{font-size:23px;}
     .result-row{flex-direction:column;gap:2px;}
@@ -1521,11 +1523,17 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     setTimeout(function () { URL.revokeObjectURL(url); }, 2000);
   }
 
+  /* A ratio written as 1:N. Near unity the integer rounding is misleading, so keep two
+     decimals below 1:10 and one below 1:100 before falling back to whole numbers. */
+  function fmtRatio(p) {
+    return "1:" + Geo.fmt(p, p < 10 ? 2 : p < 100 ? 1 : 0);
+  }
+
   function rating(p) {
     if (p >= 10000) { return "优良"; }
     if (p >= 5000) { return "良好"; }
     if (p >= 2000) { return "可满足多数低等工程"; }
-    return "较差——请复核外业数据";
+    return "较差，平差结果不可信，请复核外业数据";
   }
 
   var lastLS = null;
@@ -1658,7 +1666,9 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     txt("r-sumN", Geo.fmt(sumN, 4) + suffix);
     txt("r-sumE", Geo.fmt(sumE, 4) + suffix);
     txt("r-mis", Geo.fmt(mis, 4) + suffix);
-    txt("r-prec", mis > 1e-12 ? "1:" + Geo.fmt(total / mis, 0) : "完全闭合");
+    /* Keep the ratio honest near unity: 1:1.17 rounded to whole numbers reads as 1:1,
+       which hides how far outside tolerance the closure really is. */
+    txt("r-prec", mis > 1e-12 ? fmtRatio(total / mis) : "完全闭合");
     txt("r-close", Geo.fmt(n0 + sumN, 3) + " N, " + Geo.fmt(e0 + sumE, 3) + " E   （目标 "
       + Geo.fmt(knownN, 3) + " N, " + Geo.fmt(knownE, 3) + " E）");
     txt("r-closeAdj", Geo.fmt(n, 3) + " N, " + Geo.fmt(e, 3) + " E");
@@ -1766,7 +1776,7 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     } else if (mis <= 1e-12) {
       msg = "<b>完全闭合。</b>没有需要调整的量——导线在目标点上完美闭合。";
     } else if (useBowditch) {
-      msg = "<b>相对精度 1:" + Geo.fmt(total / mis, 0) + "——" + rating(total / mis)
+      msg = "<b>相对精度 " + fmtRatio(total / mis) + "——" + rating(total / mis)
         + "。</b>已施加博迪茨调整，平差后坐标在目标点上严格闭合。本导线是否合格取决于项目规范要求的精度，不能只看这个标签。";
     } else {
       msg = "<b>未施加调整。</b>显示的是未调整坐标，终点偏离目标点 "
@@ -1775,7 +1785,10 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     if (!closed && !lsMode) {
       msg += " 终点坐标按给定控制点采用，因此本导线按附合导线处理。";
     }
-    note.className = "note";
+    /* A closure weaker than 1:2,000 deserves a warning colour, not just a word buried in
+       a sentence the reader may skim past. */
+    var weak = !lsRes && mis > 1e-12 && total / mis < 2000;
+    note.className = weak ? "note warn" : "note";
     note.innerHTML = msg;
     note.style.display = "";
   }

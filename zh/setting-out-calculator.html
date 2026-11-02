@@ -230,6 +230,12 @@
     nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
   }
 
+  /* horizontally scrollable tables on narrow screens */
+  .tscroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
+  .plot svg{display:block;width:100%;height:auto;}
+  .tscroll>table{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
+
   /* 中文版：字体与行高 */
   body{line-height:1.75;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
@@ -1264,7 +1270,7 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     function X(e) { return pad + (e - minE) * sc + ((W - 2 * pad) - spanE * sc) / 2; }
     function Y(n) { return H - pad - (n - minN) * sc - ((H - 2 * pad) - spanN * sc) / 2; }
 
-    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" role="img" '
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" '
       + 'aria-label="Station, backsight and the points to set out">';
 
     /* a light graticule, so the drawing reads as a plan rather than a diagram */

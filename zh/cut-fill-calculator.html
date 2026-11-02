@@ -231,6 +231,12 @@
     .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
     nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
   }
+
+  .tscroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
+  .tscroll>table.lookup{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
+  .tscroll>table{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
 </style>
 <script src="../assets/consent.js" defer></script>
 <script src="../assets/track.js" defer></script>
@@ -384,6 +390,7 @@
 
   <section class="card">
     <h2>平均断面法还是方格网法？</h2>
+    <div class="tscroll">
     <table class="lookup">
       <thead>
         <tr><th>方法</th><th>适用对象</th><th>需要的外业数据</th><th>典型精度</th></tr>
@@ -409,6 +416,7 @@
         </tr>
       </tbody>
     </table>
+  </div>
     <p>
       两种方法不是同一问题的两种答案，而是两个不同问题的答案。道路是细长体，所以切成棱柱；
       场地是宽平体，所以切成方格。当线路拓宽成场地时——互通立交、港湾式停车带、处理厂——
@@ -421,6 +429,7 @@
     <p>
       施工方与设计方关于土方量的争执，绝大多数源于双方数的是不同的体积。体积有三种，数值各不相同。
     </p>
+    <div class="tscroll">
     <table class="lookup">
       <thead>
         <tr><th>体积</th><th>存在于</th><th>用途</th><th>与天然方的关系</th></tr>
@@ -431,6 +440,7 @@
         <tr><td>压实方</td><td>填筑碾压完成后</td><td>借土数量、填筑能力</td><td>0.85–0.95，随土质与压实标准而异</td></tr>
       </tbody>
     </table>
+  </div>
     <p>
       实际后果是：即便设计上刻意做了挖填平衡，两个总量也很少相等。假设场地需要 10,000 m³ 压实填料，
       而挖方可提供同土质天然方 10,000 m³，压缩系数 10%：这批挖方压实后只有约 9,000 m³ 可用，
@@ -466,6 +476,7 @@
 
   <section class="card">
     <h2>常用土方换算</h2>
+    <div class="tscroll">
     <table class="lookup">
       <thead>
         <tr><th>换算</th><th>数值</th><th>说明</th></tr>
@@ -479,6 +490,7 @@
         <tr><td>按 200 mm 分层填筑</td><td>每 m³ 压实填料约摊 20 m²</td><td>分层厚度决定压实成本</td></tr>
       </tbody>
     </table>
+  </div>
     <p class="hint">
       松散与压实系数随土质、含水率和压实标准差别极大。请采用项目技术标准或现场实测的系数，
       不要套用网页上的通用数值。

@@ -229,6 +229,12 @@
     .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
     nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
   }
+
+  /* horizontally scrollable tables on narrow screens */
+  .tscroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
+  .plot svg{display:block;width:100%;height:auto;}
+  .tscroll>table{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
 </style>
 <script src="assets/consent.js" defer></script>
 <script src="assets/track.js" defer></script>
@@ -1266,7 +1272,7 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     function X(e) { return pad + (e - minE) * sc + ((W - 2 * pad) - spanE * sc) / 2; }
     function Y(n) { return H - pad - (n - minN) * sc - ((H - 2 * pad) - spanN * sc) / 2; }
 
-    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" role="img" '
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" '
       + 'aria-label="Station, backsight and the points to set out">';
 
     /* a light graticule, so the drawing reads as a plan rather than a diagram */

@@ -231,6 +231,11 @@
     .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
     nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
   }
+
+  /* horizontally scrollable tables on narrow screens */
+  .tscroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
+  .tscroll>table{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
 </style>
 <script src="assets/consent.js" defer></script>
 <script src="assets/track.js" defer></script>
@@ -398,7 +403,8 @@
 
   <section class="card">
     <h2>Average end area or grid method — which to use?</h2>
-    <table class="lookup">
+    <div class="tscroll">
+        <table class="lookup">
       <thead>
         <tr><th>Method</th><th>Best for</th><th>Field data needed</th><th>Typical accuracy</th></tr>
       </thead>
@@ -423,6 +429,7 @@
         </tr>
       </tbody>
     </table>
+      </div>
     <p>
       The two methods are not competing answers to the same question, they are answers to different
       questions. A road is a long thin solid, so it is cut into prisms. A pad is a wide flat solid, so it
@@ -438,7 +445,8 @@
       Almost every disagreement between a contractor and a designer about earthwork quantities is a
       disagreement about which volume is being counted. There are three, and they are different numbers.
     </p>
-    <table class="lookup">
+    <div class="tscroll">
+        <table class="lookup">
       <thead>
         <tr><th>Volume</th><th>Where it exists</th><th>Used for</th><th>Typical relation to bank volume</th></tr>
       </thead>
@@ -448,6 +456,7 @@
         <tr><td>Compacted</td><td>Placed and rolled in the fill</td><td>Borrow quantity, fill capacity</td><td>0.85–0.95 depending on soil and specification</td></tr>
       </tbody>
     </table>
+      </div>
     <p>
       The practical consequence is that cut and fill totals rarely balance even when the design intends
       them to. Suppose a site needs 10,000 m³ of compacted fill and offers 10,000 m³ of bank cut of the
@@ -488,7 +497,8 @@
 
   <section class="card">
     <h2>Common earthwork conversions</h2>
-    <table class="lookup">
+    <div class="tscroll">
+        <table class="lookup">
       <thead>
         <tr><th>Conversion</th><th>Value</th><th>Notes</th></tr>
       </thead>
@@ -501,6 +511,7 @@
         <tr><td>Fills placed in 200 mm layers</td><td>About 20 m² per m³ of compacted fill</td><td>Layer thickness governs compaction cost</td></tr>
       </tbody>
     </table>
+      </div>
     <p class="hint">
       Swell and shrinkage factors vary widely with soil type, moisture content and the compaction
       specification. Always use the factors stated in the project specification or measured on site

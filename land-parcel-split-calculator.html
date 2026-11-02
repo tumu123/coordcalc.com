@@ -246,7 +246,7 @@
   .result-row .v small.warn{color:#b45309;font-weight:600;}
   .result-row .v small.ok{color:#0f9d58;font-weight:600;}
   .plot{background:#fbfcfe;border:1px solid var(--line);border-radius:10px;padding:8px;margin-top:8px;}
-  .plot svg{display:block;}
+  .plot svg{display:block;width:100%;height:auto;}
   textarea{width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:13.5px;
     line-height:1.7;padding:11px 12px;border:1px solid #cfd6e0;border-radius:9px;background:#fff;
     color:var(--text);resize:vertical;}
@@ -1246,7 +1246,7 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
 
     var palette = ["#e0edff", "#d8f5ec", "#fdeccd", "#ece0fb", "#d9f2fb", "#fbe0e6"];
     var stroke = ["#2563eb", "#0d9488", "#b45309", "#7c3aed", "#0891b2", "#be123c"];
-    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" height="auto" role="img" '
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" width="100%" role="img" '
       + 'aria-label="Parcel outline with the cutting lines">';
     var i, j, d;
     for (i = 0; i < pieces.length; i++) {
@@ -1340,6 +1340,14 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
       var av = Number($("lp-aw").value), au = $("lp-aunit").value;
       if (!isFinite(av) || av <= 0) { fail("The area per piece must be greater than zero."); return; }
       var per = au === "ac" ? av * ACRE_M2 : au === "ha" ? av * HA_M2 : au === "ft2" ? av * FT * FT : av;
+      /* A target at or above the whole parcel leaves a single "piece" that is really just
+         the parcel itself, and labelling it with the target area contradicts the plot. */
+      if (per >= total - 1e-9) {
+        fail("A target of " + fmt(per, 2) + " m\u00B2 per piece is not smaller than the whole parcel ("
+          + fmt(total, 2) + " m\u00B2), so it cannot be cut. Enter a smaller area, or switch to "
+          + "\u201CEqual pieces\u201D and set the count.");
+        return;
+      }
       n = Math.ceil(total / per - 1e-9);
       if (n < 1) { fail("The area per piece is larger than the whole parcel."); return; }
       if (n > 20) { n = 20; }

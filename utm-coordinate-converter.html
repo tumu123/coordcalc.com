@@ -294,6 +294,8 @@
   a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,
   summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px;}
   @media(max-width:640px){
+    .hwrap{flex-direction:column;align-items:flex-start;height:auto;padding:10px 0 0;gap:6px;}
+    nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
     .links{grid-template-columns:1fr;}
     h1{font-size:23px;}
     .result-row{flex-direction:column;gap:2px;}
@@ -1502,7 +1504,8 @@ if (typeof module !== "undefined" && module.exports) { module.exports = Geo; }
     }
     setErr(false, "", "err-fwd");
     var u = Geo.utmForward(lat, lon);
-    txt("f-zone", u.zone + (u.north ? "N" : "S") + "   (band " + u.band + ")");
+    txt("f-zone", u.zone + (u.north ? "N" : "S")
+      + (u.band ? "   (band " + u.band + ")" : "   (outside the UTM latitude bands)"));
     txt("f-easting", Geo.fmt(u.easting, 3) + " m");
     txt("f-northing", Geo.fmt(u.northing, 3) + " m");
     txt("f-cm", Geo.formatDMS(u.centralMeridian, 0, "lon"));

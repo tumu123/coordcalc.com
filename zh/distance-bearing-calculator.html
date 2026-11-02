@@ -588,7 +588,7 @@
     inputs.forEach(function(inp){
       var raw = inp.value.trim();
       inp.classList.remove("bad");
-      if (raw === "") { ok = false; return; }
+      if (raw === "") { inp.classList.add("bad"); ok = false; return; }
       var n = Number(raw);
       if (!isFinite(n)) { inp.classList.add("bad"); ok = false; return; }
       v.push(n);
@@ -602,10 +602,11 @@
   function run(){
     var v = readInputs();
     if (!v) {
-      if (inputs.some(function(i){ return i.value.trim() !== ""; })) {
-        results.classList.add("show");
-      } else {
-        results.classList.remove("show");
+      /* Never leave a stale distance on screen: if the inputs no longer support a
+         calculation, the result panel goes away. The error banner is only cleared when
+         the form is empty, so a cleared field does not also raise a range complaint. */
+      results.classList.remove("show");
+      if (!inputs.some(function(i){ return i.value.trim() !== ""; })) {
         err.classList.remove("show");
       }
       return;

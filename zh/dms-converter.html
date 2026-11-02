@@ -242,6 +242,11 @@
     nav.topnav{width:100%;overflow-x:auto;padding-bottom:10px;}
   }
 
+  /* horizontally scrollable tables on narrow screens */
+  .tscroll{overflow-x:auto;max-width:100%;-webkit-overflow-scrolling:touch;}
+  .tscroll>table{width:100%;}
+  .tscroll th,.tscroll td{overflow-wrap:break-word;}
+
   /* 中文版：字体与行高 */
   body{line-height:1.75;
     font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",Roboto,sans-serif;}
@@ -625,13 +630,19 @@
 
   function renderDD(){
     var raw = ddInput.value.trim().replace(/\s+/g,"");
+    var type = coordType.value;
+    var lim = type === "lat" ? 90 : 180;
     if (raw === "") { results.classList.remove("show"); errDD.classList.remove("show"); return; }
     var v = Number(raw);
-    if (!isFinite(v) || Math.abs(v) > 180) { errDD.classList.add("show"); results.classList.remove("show"); return; }
+    if (!isFinite(v) || Math.abs(v) > lim) {
+      errDD.textContent = type === "lat"
+        ? "纬度必须在 -90 到 90 度之间。"
+        : "经度必须在 -180 到 180 度之间。";
+      errDD.classList.add("show"); results.classList.remove("show"); return;
+    }
     errDD.classList.remove("show");
 
     var prec = parseInt(precision.value, 10);
-    var type = coordType.value;
     var out = decimalToDMS(v, prec, type);
 
     el("r-dd").textContent = out.decimal + "\u00B0";
@@ -647,18 +658,26 @@
     var d = dStr === "" ? 0 : Number(dStr);
     var m = mStr === "" ? 0 : Number(mStr);
     var s = sStr === "" ? 0 : Number(sStr);
+    var h = hemi.value;
+    var isLat = (h === "N" || h === "S");
+    var degLim = isLat ? 90 : 180;
 
-    if (!isFinite(d) || !isFinite(m) || !isFinite(s) ||
-        d < 0 || m < 0 || s < 0 || m >= 60 || s >= 60 || d > 180) {
+    if (!isFinite(d) || !isFinite(m) || !isFinite(s) || d < 0 || m < 0 || s < 0 || m >= 60 || s >= 60) {
+      errDMS.textContent = "度数不能为负，分和秒必须小于 60。";
+      errDMS.classList.add("show"); results.classList.remove("show"); return;
+    }
+    if (d > degLim) {
+      errDMS.textContent = isLat
+        ? "纬度度数必须在 0 到 90 之间。"
+        : "经度度数必须在 0 到 180 之间。";
       errDMS.classList.add("show"); results.classList.remove("show"); return;
     }
     errDMS.classList.remove("show");
 
-    var h = hemi.value;
     var sign = (h === "S" || h === "W") ? -1 : 1;
     var dec = sign * (d + m / 60 + s / 3600);
     var prec = parseInt(precision.value, 10);
-    var out = decimalToDMS(dec, prec, (h === "N" || h === "S") ? "lat" : "lon");
+    var out = decimalToDMS(dec, prec, isLat ? "lat" : "lon");
 
     el("r-dd").textContent = out.decimal + "\u00B0";
     el("r-dms").textContent = out.dms;
