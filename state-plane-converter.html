@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>State Plane Coordinate Converter — NAD83 State Plane to Lat Long</title>
-<meta name="description" content="Free state plane converter: NAD83 easting and northing to latitude and longitude and back, in metres, US survey feet or international feet. All 50 states.">
+<meta name="description" content="Free state plane converter: turn NAD83 easting and northing into lat long and back, in metres, US survey feet or international feet. All 50 states, 134 zones.">
 <link rel="canonical" href="https://coordcalc.com/state-plane-converter">
 <link rel="alternate" hreflang="en" href="https://coordcalc.com/state-plane-converter">
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/state-plane-converter">
@@ -25,7 +25,7 @@
   "@type": "WebApplication",
   "name": "State Plane Coordinate Converter",
   "url": "https://coordcalc.com/state-plane-converter",
-  "description": "Free state plane converter: NAD83 easting and northing to latitude and longitude and back, in metres, US survey feet or international feet. All 50 states.",
+  "description": "Free state plane converter: turn NAD83 easting and northing into lat long and back, in metres, US survey feet or international feet. All 50 states, 134 zones.",
   "inLanguage": "en",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any (web browser)",
@@ -465,6 +465,37 @@
       hundred kilometres of the false easting. If an easting comes back far from the false easting, or a
       northing is negative in a zone that should have none, you are almost certainly in the wrong zone
       or the wrong unit.
+    </p>
+  </section>
+
+  <section class="card">
+    <h2>Converting state plane to lat long</h2>
+    <p>
+      The conversion is a projection inverse, so the inputs have to be complete before any arithmetic
+      happens. Work through these four steps in order.
+    </p>
+    <ol>
+      <li><b>Identify the zone, not just the state.</b> A state can hold several zones — Texas has
+        five, California six and New York three — and each zone has its own false origin and standard
+        parallels. An easting of 2,000,000 ft is a plausible value in more than one zone, so the zone
+        must come from the survey metadata, the coordinate label or the project record, never from
+        guesswork.</li>
+      <li><b>Confirm the datum.</b> Nearly all State Plane work in the United States is on NAD83, but
+        older records still carry NAD27. The two differ by up to about 100 m on the ground, so reading
+        an NAD27 coordinate as NAD83 puts the point in the wrong field.</li>
+      <li><b>Check the unit before typing.</b> Zones are defined in metres, US survey feet or
+        international feet, and the three are close enough that a wrong choice produces a result that
+        looks right and is wrong by hundreds of metres. US survey feet differ from international feet
+        by two parts per million, so the error grows with distance from the false origin.</li>
+      <li><b>Enter easting and northing in that order.</b> The northing usually runs from a few tens
+        of thousands to a few hundred thousand metres, while the easting sits near the false easting
+        of the zone. If the two look swapped, they probably are.</li>
+    </ol>
+    <p>
+      The converter then returns latitude and longitude in decimal degrees. To check the answer,
+      convert back: the easting and northing should return to the values you started with, to the
+      millimetre. A round trip that does not close means the zone or the unit is wrong, not that the
+      projection is imprecise.
     </p>
   </section>
 

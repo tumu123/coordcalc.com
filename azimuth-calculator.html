@@ -3,16 +3,16 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bearing to Azimuth Converter — Quadrant Bearing Calculator (Free)</title>
-<meta name="description" content="Free bearing to azimuth converter: turn a quadrant bearing into a whole-circle azimuth and back, with DMS and a 16-point compass direction. No login required.">
+<title>Azimuth Calculator: Definition, Formula and Bearing Converter</title>
+<meta name="description" content="An azimuth is a bearing measured clockwise from north, 0–360°. See how it differs from a quadrant bearing, then convert either way with worked examples.">
 <link rel="canonical" href="https://coordcalc.com/azimuth-calculator">
 <link rel="alternate" hreflang="en" href="https://coordcalc.com/azimuth-calculator">
 <link rel="alternate" hreflang="zh-CN" href="https://coordcalc.com/zh/azimuth-calculator">
 <link rel="alternate" hreflang="x-default" href="https://coordcalc.com/azimuth-calculator">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563eb'/%3E%3Ctext x='16' y='22.5' font-family='Arial,sans-serif' font-size='18' font-weight='700' fill='white' text-anchor='middle'%3EC%3C/text%3E%3C/svg%3E">
 <meta name="theme-color" content="#0d9488">
-<meta property="og:title" content="Bearing to Azimuth Converter — Quadrant Bearing Calculator (Free)">
-<meta property="og:description" content="Free bearing to azimuth converter: quadrant bearing to whole-circle azimuth and azimuth to bearing, in decimal degrees or DMS, with compass point. No login, runs in your browser.">
+<meta property="og:title" content="Azimuth Calculator: Definition, Formula and Bearing Converter">
+<meta property="og:description" content="An azimuth is a bearing measured clockwise from north, 0–360°. See how it differs from a quadrant bearing, then convert either way with worked examples.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://coordcalc.com/azimuth-calculator">
 <meta property="og:image" content="https://coordcalc.com/assets/og-default.png">
@@ -25,7 +25,7 @@
   "@type": "WebApplication",
   "name": "Bearing to Azimuth Converter",
   "url": "https://coordcalc.com/azimuth-calculator",
-  "description": "Free bearing to azimuth converter: turn a quadrant bearing into a whole-circle azimuth and back, with DMS and a 16-point compass direction. No login required.",
+  "description": "An azimuth is a bearing measured clockwise from north, 0–360°. See how it differs from a quadrant bearing, then convert either way with worked examples.",
   "inLanguage": "en",
   "applicationCategory": "UtilitiesApplication",
   "operatingSystem": "Any (web browser)",
@@ -365,6 +365,25 @@
       </table>
     </div>
   </div>
+
+  <section class="card">
+    <h2>What an azimuth is</h2>
+    <p>An <b>azimuth</b> is a direction written as a single angle, measured clockwise from north.
+      North is 0&deg;, east is 90&deg;, south is 180&deg; and west is 270&deg;, so every direction lies
+      somewhere in the 0&ndash;360&deg; range. Because the reference direction never changes, azimuths
+      can be added and subtracted directly, which is why traverse computation, setting out and COGO
+      software all work in azimuths rather than in bearings.</p>
+    <p>Three different norths are in use, and they do not coincide. A <b>true azimuth</b> is measured
+      from the geographic meridian, the line joining the point to the geographic pole. A <b>magnetic
+      azimuth</b> is measured from the direction the needle points, which drifts with place and time;
+      the gap between the two is magnetic declination. A <b>grid azimuth</b> is measured from the grid
+      north of a projected system such as UTM or State Plane, and the correction to true north is the
+      convergence of the meridian. On a small site the three may agree to within a fraction of a
+      degree; along a long baseline, or at high latitude, the difference is large enough to matter.</p>
+    <p>An azimuth is not the same thing as a <b>quadrant bearing</b>, which gives the acute angle away
+      from the nearer north&ndash;south line and never exceeds 90&deg;. A bearing of S&nbsp;40&deg;
+      E&nbsp;is an azimuth of 140&deg;; the rule for converting in every quadrant is set out below.</p>
+  </section>
 
   <section class="card">
     <h2>How the calculation works</h2>
